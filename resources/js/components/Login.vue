@@ -69,7 +69,7 @@ export default {
                     this.loading = false
                     this.errors = error.response.data.errors
                 })
-            }).catch(error => {
+            }).catch(() => {
                 this.$store.dispatch('showAlert', {
                     isVisible: true,
                     msg: 'CSRF error',

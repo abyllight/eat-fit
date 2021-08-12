@@ -118,7 +118,7 @@ class OrderController extends Controller
                 'a1'        => null,
                 'a2'        => null,
                 'logistic'  => null,
-                'diet'   => null
+                'diet'      => null
             ];
 
             $fields['amo_id'] = $id;
@@ -249,16 +249,16 @@ class OrderController extends Controller
 
     public function updateOrder(Order $order, array $fields = [])
     {
-        $order->amo_id    = $fields['amo_id'];
-        $order->name      = $fields['name'];
-        $order->type      = $fields['type'];
-        $order->size      = $fields['size'];
-        $order->phone     = $fields['phone'];
-        $order->whatsapp  = $fields['whatsapp'];
-        $order->course    = $fields['course'];
-        $order->address1  = $fields['a1'];
-        $order->address2  = $fields['a2'];
-        $order->logistic  = $fields['logistic'];
+        $order->amo_id   = $fields['amo_id'];
+        $order->name     = $fields['name'];
+        $order->type     = $fields['type'];
+        $order->size     = $fields['size'];
+        $order->phone    = $fields['phone'];
+        $order->whatsapp = $fields['whatsapp'];
+        $order->course   = $fields['course'];
+        $order->address1 = $fields['a1'];
+        $order->address2 = $fields['a2'];
+        $order->logistic = $fields['logistic'];
 
         $now = Carbon::now();
 
@@ -519,5 +519,25 @@ class OrderController extends Controller
 
         $writer = new Xlsx($spreadsheet);
         $writer->save('php://output');
+    }
+
+    public function setBlacklist(Request $request): JsonResponse
+    {
+        $order = Order::find($request->id);
+
+        if ($order){
+            $order->blacklist()->sync($request->blacklist);
+            $order->save();
+
+            return response()->json([
+                'status' => true,
+                'msg' => 'Ингредиенты добавлены в черный список'
+            ]);
+        }
+
+        return response()->json([
+            'status' => false,
+            'msg' => 'Order not found'
+        ]);
     }
 }

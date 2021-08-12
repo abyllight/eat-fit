@@ -56,6 +56,11 @@ class Order extends Model
         return $this->belongsTo(Courier::class, $c_id,'id');
     }
 
+    public function blacklist()
+    {
+        return $this->belongsToMany(Ingredient::class, 'blacklists', 'order_id', 'ingredient_id');
+    }
+
     public function reports()
     {
         return $this->hasMany('App\Models\Report', 'order_id', 'id');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use AmoCRM\Client;
+use App\Models\Week;
 use Illuminate\Http\JsonResponse;
 
 class AdminController extends Controller
@@ -16,8 +17,8 @@ class AdminController extends Controller
                 'limit_rows'=>500,
                 'status' => 142,
                 'date_create' => [
-                    'from' => 1606791685,
-                    'to' => 1609383685
+                    'from' => 1626285600,
+                    'to' => 1627668000
                 ]
             ]);
             return response()->json(count($success));
@@ -41,5 +42,12 @@ class AdminController extends Controller
         }catch (\AmoCRM\Exception $e){
             return response()->json($e->getMessage());
         }
+    }
+
+    public function setWeek() {
+        $week = Week::find(1);
+
+        $week->is_weekend = !$week->is_weekend;
+        $week->save();
     }
 }

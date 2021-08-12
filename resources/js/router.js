@@ -65,6 +65,12 @@ const router = new VueRouter({
             meta: { auth: true },
             component: () => import('./components/Cuisine')
         },
+        {
+            path: '/custom',
+            name: 'custom',
+            meta: { auth: true },
+            component: () => import('./components/CustomDishes')
+        },
     ]
 })
 

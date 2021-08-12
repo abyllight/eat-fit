@@ -28,9 +28,15 @@
             >
                 Интервал
             </v-btn>
+
+            <v-switch
+                color="primary"
+                v-model="is_weekend"
+                :label="week"
+            ></v-switch>
         </v-row>
         <v-row>
-            <v-col cols="10">
+            <v-col cols="10" sm="12" lg="10">
                 <v-card>
                     <v-card-title>
                         <v-text-field
@@ -52,8 +58,12 @@
                         hide-default-footer
                         @click:row="showDetails"
                     >
+
                         <template v-slot:item.index="{ index }">
                             {{ index + 1 }}
+                        </template>
+                        <template v-slot:item.tag="{ item }">
+                            <span :class="item.blacklist.length > 0 ? 'green--text' : ''">{{item.tag}}</span>
                         </template>
                         <template v-slot:item.time="{ item }">
                             <span :class="item.time_old ? 'green--text': ''">{{ item.time }}</span>
@@ -80,7 +90,7 @@
                                 x-small
                                 text-color="white"
                             >
-                                int
+                                {{ item.interval }}
                             </v-chip>
                         </template>
                     </v-data-table>
@@ -186,6 +196,79 @@
                 </v-card>
             </v-col>
         </v-row>
+        <v-row justify="center">
+            <v-dialog
+                v-model="dialog"
+                fullscreen
+                hide-overlay
+                transition="dialog-bottom-transition"
+            >
+                <v-card>
+                    <v-toolbar
+                        dark
+                        color="primary"
+                    >
+                        <v-btn
+                            icon
+                            dark
+                            @click="close"
+                        >
+                            <v-icon>mdi-close</v-icon>
+                        </v-btn>
+                        <v-toolbar-title>Анкета</v-toolbar-title>
+                        <v-spacer></v-spacer>
+                        <v-toolbar-items>
+                            <v-btn
+                                dark
+                                text
+                                @click="save"
+                            >
+                                Сохранить
+                            </v-btn>
+                        </v-toolbar-items>
+                    </v-toolbar>
+                    <v-card-title>
+                        <span class="text-h5"> {{order.name}}</span>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-container fluid>
+                            <v-row>
+                                <v-col
+                                    sm="12"
+                                    lg="4"
+                                >
+                                    <v-card v-if="order.diet" color="lime lighten-4">
+                                        <v-card-text>
+                                            {{order.diet}}
+                                        </v-card-text>
+                                    </v-card>
+
+                                    <v-card v-if="order.diet_old" class="mt-4" color="red lighten-4">
+                                        <v-card-text>
+                                            {{order.diet_old}}
+                                        </v-card-text>
+                                    </v-card>
+                                </v-col>
+                                <v-col sm="12" lg="8">
+                                    <h3 class="mb-4">Черный список</h3>
+                                    <v-autocomplete
+                                        v-model="blacklist"
+                                        :items="ingredients"
+                                        item-text="name"
+                                        item-value="id"
+                                        clearable
+                                        outlined
+                                        small-chips
+                                        label="Ингредиенты"
+                                        multiple
+                                    ></v-autocomplete>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-card-text>
+                </v-card>
+            </v-dialog>
+        </v-row>
     </div>
 </template>
 <script>
@@ -197,6 +280,8 @@
             select: [],
             detox: 0,
             go: 0,
+            week: '',
+            is_weekend: false,
             itemsPerPage: 200,
             search: '',
             headers: [
@@ -210,9 +295,20 @@
             ],
             amo_loading: false,
             loading: true,
+            dialog: false,
+            ingredients: [],
+            blacklist: [],
+            order: {}
         }),
         mounted() {
+            this.getWeek()
             this.getLeads()
+            this.getIngredients()
+        },
+        watch: {
+            is_weekend() {
+                this.setWeek()
+            }
         },
         methods: {
             async getLeads() {
@@ -255,9 +351,9 @@
                     .finally(() => (this.amo_loading = false))
             },
             showDetails(index){
-                console.log(index)
+                this.order = index
+                this.blacklist = index.blacklist
                 this.dialog = true
-                this.client = index
             },
             async geocode() {
                 this.amo_loading = true
@@ -305,6 +401,76 @@
                     })
                     .finally(() => (this.amo_loading = false))
             },
+            getWeek(){
+                 axios
+                    .get('/api/week/get')
+                    .then(response => {
+                        this.is_weekend = response.data
+                        this.week = this.is_weekend ? 'Выходные' : 'Будни'
+                    })
+                    .catch(error => {
+                        this.$store.dispatch('showAlert', {
+                            'isVisible': true,
+                            'msg': error.message,
+                            'color': 'error',
+                            'type': 'error'
+                        })
+                    })
+            },
+            setWeek(){
+                axios
+                    .post('/api/week/set')
+                    .then(() => {
+                        this.getWeek()
+                        this.getLeads()
+                    })
+                    .catch(error => {
+                        this.$store.dispatch('showAlert', {
+                            'isVisible': true,
+                            'msg': error.message,
+                            'color': 'error',
+                            'type': 'error'
+                        })
+                    })
+            },
+            async getIngredients(){
+                await axios
+                    .get('/api/ingredients')
+                    .then(response => {
+                        this.ingredients = response.data.data
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+            },
+            close(){
+                this.order = {}
+                this.blacklist = []
+                this.dialog = false
+            },
+            save(){
+                axios
+                    .post('/api/blacklist', {
+                        id: this.order.id,
+                        blacklist: this.blacklist
+                    })
+                    .then(response => {
+                        this.close()
+
+                        this.$store.dispatch('showAlert', {
+                            'isVisible': true,
+                            'msg': response.data.msg,
+                            'color': 'green',
+                            'type': 'success'
+                        })
+
+                        this.getLeads()
+                    })
+                    .catch(error => {
+                        console.log(error)
+                        this.errors = error.response.data.errors
+                    })
+            }
         }
     }
 </script>

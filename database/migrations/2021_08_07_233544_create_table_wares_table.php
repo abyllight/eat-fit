@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWeeksTable extends Migration
+class CreateTableWaresTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,12 @@ class CreateWeeksTable extends Migration
      */
     public function up()
     {
-        Schema::create('weeks', function (Blueprint $table) {
+        Schema::create('table_wares', function (Blueprint $table) {
             $table->id();
-            $table->boolean('is_weekend')->default(false);
-            $table->integer('cuisine_id');
+            $table->string('name');
+            $table->integer('type')->default(0);
+            $table->string('img');
+            $table->integer('size');
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@ class CreateWeeksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('weeks');
+        Schema::dropIfExists('table_wares');
     }
 }

@@ -87,7 +87,7 @@ __webpack_require__.r(__webpack_exports__);
           _this.loading = false;
           _this.errors = error.response.data.errors;
         });
-      })["catch"](function (error) {
+      })["catch"](function () {
         _this.$store.dispatch('showAlert', {
           isVisible: true,
           msg: 'CSRF error',

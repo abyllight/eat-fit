@@ -10,8 +10,18 @@ class Cuisine extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'iiko_id'
+        'i_name', 'i_id', 'name'
     ];
+
+    public function dishes()
+    {
+        return $this->hasMany(Dish::class, 'cuisine_id', 'id');
+    }
+
+    public function active()
+    {
+        return $this->hasOne(Week::class, 'cuisine_id', 'id');
+    }
 
    /* public static $cuisines = [
         [

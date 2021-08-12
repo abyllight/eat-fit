@@ -209,6 +209,89 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Client',
   data: function data() {
@@ -218,6 +301,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       select: [],
       detox: 0,
       go: 0,
+      week: '',
+      is_weekend: false,
       itemsPerPage: 200,
       search: '',
       headers: [{
@@ -243,11 +328,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         value: 'int'
       }],
       amo_loading: false,
-      loading: true
+      loading: true,
+      dialog: false,
+      ingredients: [],
+      blacklist: [],
+      order: {}
     };
   },
   mounted: function mounted() {
+    this.getWeek();
     this.getLeads();
+    this.getIngredients();
+  },
+  watch: {
+    is_weekend: function is_weekend() {
+      this.setWeek();
+    }
   },
   methods: {
     getLeads: function getLeads() {
@@ -319,9 +415,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     showDetails: function showDetails(index) {
-      console.log(index);
+      this.order = index;
+      this.blacklist = index.blacklist;
       this.dialog = true;
-      this.client = index;
     },
     geocode: function geocode() {
       var _this3 = this;
@@ -398,6 +494,87 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }, _callee4);
       }))();
+    },
+    getWeek: function getWeek() {
+      var _this5 = this;
+
+      axios.get('/api/week/get').then(function (response) {
+        _this5.is_weekend = response.data;
+        _this5.week = _this5.is_weekend ? 'Выходные' : 'Будни';
+      })["catch"](function (error) {
+        _this5.$store.dispatch('showAlert', {
+          'isVisible': true,
+          'msg': error.message,
+          'color': 'error',
+          'type': 'error'
+        });
+      });
+    },
+    setWeek: function setWeek() {
+      var _this6 = this;
+
+      axios.post('/api/week/set').then(function () {
+        _this6.getWeek();
+
+        _this6.getLeads();
+      })["catch"](function (error) {
+        _this6.$store.dispatch('showAlert', {
+          'isVisible': true,
+          'msg': error.message,
+          'color': 'error',
+          'type': 'error'
+        });
+      });
+    },
+    getIngredients: function getIngredients() {
+      var _this7 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                _context5.next = 2;
+                return axios.get('/api/ingredients').then(function (response) {
+                  _this7.ingredients = response.data.data;
+                })["catch"](function (error) {
+                  console.log(error);
+                });
+
+              case 2:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5);
+      }))();
+    },
+    close: function close() {
+      this.order = {};
+      this.blacklist = [];
+      this.dialog = false;
+    },
+    save: function save() {
+      var _this8 = this;
+
+      axios.post('/api/blacklist', {
+        id: this.order.id,
+        blacklist: this.blacklist
+      }).then(function (response) {
+        _this8.close();
+
+        _this8.$store.dispatch('showAlert', {
+          'isVisible': true,
+          'msg': response.data.msg,
+          'color': 'green',
+          'type': 'success'
+        });
+
+        _this8.getLeads();
+      })["catch"](function (error) {
+        console.log(error);
+        _this8.errors = error.response.data.errors;
+      });
     }
   }
 });
@@ -538,7 +715,18 @@ var render = function() {
               on: { click: _vm.setInterval }
             },
             [_vm._v("\n            Интервал\n        ")]
-          )
+          ),
+          _vm._v(" "),
+          _c("v-switch", {
+            attrs: { color: "primary", label: _vm.week },
+            model: {
+              value: _vm.is_weekend,
+              callback: function($$v) {
+                _vm.is_weekend = $$v
+              },
+              expression: "is_weekend"
+            }
+          })
         ],
         1
       ),
@@ -548,7 +736,7 @@ var render = function() {
         [
           _c(
             "v-col",
-            { attrs: { cols: "10" } },
+            { attrs: { cols: "10", sm: "12", lg: "10" } },
             [
               _c(
                 "v-card",
@@ -597,6 +785,22 @@ var render = function() {
                               "\n                        " +
                                 _vm._s(index + 1) +
                                 "\n                    "
+                            )
+                          ]
+                        }
+                      },
+                      {
+                        key: "item.tag",
+                        fn: function(ref) {
+                          var item = ref.item
+                          return [
+                            _c(
+                              "span",
+                              {
+                                class:
+                                  item.blacklist.length > 0 ? "green--text" : ""
+                              },
+                              [_vm._v(_vm._s(item.tag))]
                             )
                           ]
                         }
@@ -676,7 +880,9 @@ var render = function() {
                               },
                               [
                                 _vm._v(
-                                  "\n                            int\n                        "
+                                  "\n                            " +
+                                    _vm._s(item.interval) +
+                                    "\n                        "
                                 )
                               ]
                             )
@@ -901,6 +1107,179 @@ var render = function() {
                         "\n                "
                     )
                   ])
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-row",
+        { attrs: { justify: "center" } },
+        [
+          _c(
+            "v-dialog",
+            {
+              attrs: {
+                fullscreen: "",
+                "hide-overlay": "",
+                transition: "dialog-bottom-transition"
+              },
+              model: {
+                value: _vm.dialog,
+                callback: function($$v) {
+                  _vm.dialog = $$v
+                },
+                expression: "dialog"
+              }
+            },
+            [
+              _c(
+                "v-card",
+                [
+                  _c(
+                    "v-toolbar",
+                    { attrs: { dark: "", color: "primary" } },
+                    [
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { icon: "", dark: "" },
+                          on: { click: _vm.close }
+                        },
+                        [_c("v-icon", [_vm._v("mdi-close")])],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c("v-toolbar-title", [_vm._v("Анкета")]),
+                      _vm._v(" "),
+                      _c("v-spacer"),
+                      _vm._v(" "),
+                      _c(
+                        "v-toolbar-items",
+                        [
+                          _c(
+                            "v-btn",
+                            {
+                              attrs: { dark: "", text: "" },
+                              on: { click: _vm.save }
+                            },
+                            [
+                              _vm._v(
+                                "\n                            Сохранить\n                        "
+                              )
+                            ]
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c("v-card-title", [
+                    _c("span", { staticClass: "text-h5" }, [
+                      _vm._v(" " + _vm._s(_vm.order.name))
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "v-card-text",
+                    [
+                      _c(
+                        "v-container",
+                        { attrs: { fluid: "" } },
+                        [
+                          _c(
+                            "v-row",
+                            [
+                              _c(
+                                "v-col",
+                                { attrs: { sm: "12", lg: "4" } },
+                                [
+                                  _vm.order.diet
+                                    ? _c(
+                                        "v-card",
+                                        { attrs: { color: "lime lighten-4" } },
+                                        [
+                                          _c("v-card-text", [
+                                            _vm._v(
+                                              "\n                                        " +
+                                                _vm._s(_vm.order.diet) +
+                                                "\n                                    "
+                                            )
+                                          ])
+                                        ],
+                                        1
+                                      )
+                                    : _vm._e(),
+                                  _vm._v(" "),
+                                  _vm.order.diet_old
+                                    ? _c(
+                                        "v-card",
+                                        {
+                                          staticClass: "mt-4",
+                                          attrs: { color: "red lighten-4" }
+                                        },
+                                        [
+                                          _c("v-card-text", [
+                                            _vm._v(
+                                              "\n                                        " +
+                                                _vm._s(_vm.order.diet_old) +
+                                                "\n                                    "
+                                            )
+                                          ])
+                                        ],
+                                        1
+                                      )
+                                    : _vm._e()
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "v-col",
+                                { attrs: { sm: "12", lg: "8" } },
+                                [
+                                  _c("h3", { staticClass: "mb-4" }, [
+                                    _vm._v("Черный список")
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("v-autocomplete", {
+                                    attrs: {
+                                      items: _vm.ingredients,
+                                      "item-text": "name",
+                                      "item-value": "id",
+                                      clearable: "",
+                                      outlined: "",
+                                      "small-chips": "",
+                                      label: "Ингредиенты",
+                                      multiple: ""
+                                    },
+                                    model: {
+                                      value: _vm.blacklist,
+                                      callback: function($$v) {
+                                        _vm.blacklist = $$v
+                                      },
+                                      expression: "blacklist"
+                                    }
+                                  })
+                                ],
+                                1
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
                 ],
                 1
               )

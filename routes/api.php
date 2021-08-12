@@ -7,8 +7,13 @@ use App\Http\Controllers\MapController;
 use App\Http\Controllers\OrderController;
 use App\Http\Resources\CourierCollection;
 use App\Http\Resources\CuisineCollection;
+use App\Http\Resources\DishCollection;
+use App\Http\Resources\IngredientCollection;
 use App\Models\Courier;
 use App\Models\Cuisine;
+use App\Models\Dish;
+use App\Models\Ingredient;
+use App\Models\Week;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
@@ -40,6 +45,10 @@ Route::patch('/couriers/{id}', [CourierController::class, 'updatePassword']);
 Route::delete('/couriers/{id}', [CourierController::class, 'delete']);
 
 Route::get('/orders', [OrderController::class, 'index']);
+Route::get('/week/get', function (){
+    return response()->json(Week::isWeekend());
+});
+Route::post('/week/set', [AdminController::class, 'setWeek']);
 
 Route::get('/map/geocode', [MapController::class, 'geocode']);
 Route::get('/map/interval', [MapController::class, 'setInterval']);
@@ -53,9 +62,25 @@ Route::get('/list/export', [OrderController::class, 'export']);
 Route::get('/amo/leads', [OrderController::class, 'getOrders']);
 
 Route::get('/cuisines', function () {
-    return CuisineCollection::collection(Cuisine::all());
+    return CuisineCollection::collection(Cuisine::orderBy('name')->get());
 });
+Route::get('/custom_dishes', function () {
+    return DishCollection::collection(Dish::where('is_custom', true)->orderBy('name')->get());
+});
+Route::get('/ingredients', function () {
+    return IngredientCollection::collection(Ingredient::orderBy('name')->get());
+});
+
+Route::post('/cuisine/set', [CuisineController::class, 'setCuisine']);
 Route::get('/iiko/cuisines', [CuisineController::class, 'fetchCuisines']);
+Route::get('/iiko/dishes', [CuisineController::class, 'fetchDishes']);
+Route::post('/iiko/ingredients', [CuisineController::class, 'fetchIngredients']);
+
+Route::post('/dish/update', [CuisineController::class, 'updateDish']);
+Route::post('/dish/create', [CuisineController::class, 'createDish']);
+Route::post('/dish/delete', [CuisineController::class, 'deleteDish']);
+
+Route::post('/blacklist', [OrderController::class, 'setBlacklist']);
 
 Route::get('/webhook', [AdminController::class, 'webhook']);
 

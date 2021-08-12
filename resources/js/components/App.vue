@@ -72,7 +72,13 @@
                   <v-list-item-icon>
                       <v-icon>mdi-folder</v-icon>
                   </v-list-item-icon>
-                  <v-list-item-title>Cuisine</v-list-item-title>
+                  <v-list-item-title>Кухни мира</v-list-item-title>
+              </v-list-item>
+              <v-list-item to="/custom">
+                  <v-list-item-icon>
+                      <v-icon>mdi-folder</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-title>Частные блюда</v-list-item-title>
               </v-list-item>
           </template>
       </v-list>

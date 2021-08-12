@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Http;
 
 class IikoController extends Controller
 {
-    public function getAuthToken(): array
+    public function getAuthToken(): ?string
     {
         $link = env('IIKO_HOST') . ':' .
             env('IIKO_PORT') . '/resto/api/auth?login=' .
@@ -15,10 +15,7 @@ class IikoController extends Controller
 
         $response = Http::get($link);
 
-        return [
-            'status' => (bool) $response->body(),
-            'token' => $response->body()
-        ];
+        return $response->body();
     }
 
     public function logout($token): array
@@ -32,5 +29,15 @@ class IikoController extends Controller
             'status' => (bool) $response->body(),
             'msg' => $response->body()
         ];
+    }
+
+    public function doRequest(string $token, string $link)
+    {
+        $link = env('IIKO_HOST') . ':' .
+            env('IIKO_PORT') . $link . $token;
+
+        $response = Http::get($link);
+
+        return $response->json();
     }
 }
