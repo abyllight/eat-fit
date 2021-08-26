@@ -26,7 +26,7 @@ class Order extends Model
         'course',
         'interval',
         'position',
-        'address_description',
+        'logistic',
         'time1',
         'time2',
         'time1_old',
@@ -44,8 +44,8 @@ class Order extends Model
         'courier1_id',
         'courier2_id',
         'is_active',
-        'diet_description',
-        'diet_description_old',
+        'diet',
+        'diet_old',
         'has_water'
     ];
 
@@ -115,6 +115,18 @@ class Order extends Model
         }
 
         return $color;
+    }
+
+    public function getDietColor() {
+        if ($this->diet_old) {
+            return 'red--text';
+        }
+
+        if ($this->blacklist()->count() > 0) {
+            return 'green--text';
+        }
+
+        return '';
     }
 
     public function getTime()

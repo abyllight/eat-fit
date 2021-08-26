@@ -42,7 +42,8 @@ class OrderCollection extends JsonResource
             'courier_id' => $this->getCourierId(),
             'diet' => $this->diet,
             'diet_old' => $this->diet_old,
-            'blacklist' => $this->blacklist
+            'blacklist' => $this->blacklist,
+            'diet_color' => $this->getDietColor()
         ];
     }
 }

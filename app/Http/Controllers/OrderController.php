@@ -10,6 +10,7 @@ use App\Models\Week;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
@@ -97,7 +98,8 @@ class OrderController extends Controller
             return response()->json($orders['message'], $orders['code']);
         }
 
-        Order::where('is_active', true)->update(['is_active' => false]);
+        Order::where('is_active', true)->update(['is_active' => false, 'updated_at' => DB::raw('updated_at')]);
+        $now = Carbon::now();
 
         foreach ($orders['data'] as $order) {
             $id = $order['id'];
@@ -210,7 +212,7 @@ class OrderController extends Controller
             $existing_order = Order::where('amo_id', $id)->orWhere('name', $name)->first();
 
             if ($existing_order) {
-                $this->updateOrder($existing_order, $fields);
+                $this->updateOrder($existing_order, $now, $fields);
             }else {
                 Order::create([
                     'amo_id'    => $id,
@@ -247,7 +249,7 @@ class OrderController extends Controller
         return response()->json('Success');
     }
 
-    public function updateOrder(Order $order, array $fields = [])
+    public function updateOrder(Order $order, $now, array $fields = [])
     {
         $order->amo_id   = $fields['amo_id'];
         $order->name     = $fields['name'];
@@ -260,8 +262,6 @@ class OrderController extends Controller
         $order->address2 = $fields['a2'];
         $order->logistic = $fields['logistic'];
 
-        $now = Carbon::now();
-
         if ($order->day !== $fields['day']) {
             $order->day_old = $order->day;
             $order->day     = $fields['day'];
@@ -270,6 +270,10 @@ class OrderController extends Controller
         if ($order->diet !== $fields['diet']) {
             $order->diet_old = $order->diet;
             $order->diet     = $fields['diet'];
+        }
+
+        if($now->diffInDays($order->updated_at) > 0 && $order->diet_old) {
+            $order->diet_old = null;
         }
 
         if($order->time1 !== $fields['t1']) {

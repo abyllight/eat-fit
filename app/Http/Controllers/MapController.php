@@ -49,6 +49,13 @@ class MapController extends Controller
             ]);
         }
 
+        $context = stream_context_create(array('ssl'=>array(
+            'verify_peer' => false,
+            "verify_peer_name"=>false
+        )));
+
+        libxml_set_streams_context($context);
+
         foreach ($orders as $order) {
             $yaddress = $is_weekend ? $order->yaddress2 : $order->yaddress1;
 

@@ -192,6 +192,10 @@ export default {
                 name: 'Обед основной'
             },
             {
+                id: 8,
+                name: 'Обед гарнир'
+            },
+            {
                 id: 5,
                 name: 'Обед салат'
             },
@@ -201,8 +205,12 @@ export default {
             },
             {
                 id: 7,
-                name: 'Ужин'
-            }
+                name: 'Ужин основной'
+            },
+            {
+                id: 9,
+                name: 'Ужин овощи'
+            },
         ],
         dish_ings: [],
         errors: [],
@@ -269,6 +277,7 @@ export default {
                 description: '',
                 ingredients: []
             }
+            this.dish_ings = []
         },
         editItem(dish){
             this.edit = 1

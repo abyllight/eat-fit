@@ -292,6 +292,59 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Client',
   data: function data() {
@@ -332,18 +385,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       dialog: false,
       ingredients: [],
       blacklist: [],
-      order: {}
+      order: {},
+      duty: {},
+      t: []
     };
   },
   mounted: function mounted() {
     this.getWeek();
     this.getLeads();
     this.getIngredients();
-  },
-  watch: {
-    is_weekend: function is_weekend() {
-      this.setWeek();
-    }
   },
   methods: {
     getLeads: function getLeads() {
@@ -416,7 +466,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     showDetails: function showDetails(index) {
       this.order = index;
-      this.blacklist = index.blacklist;
+      this.blacklist = index.blacklist.map(function (a) {
+        return a.id;
+      });
       this.dialog = true;
     },
     geocode: function geocode() {
@@ -499,8 +551,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this5 = this;
 
       axios.get('/api/week/get').then(function (response) {
-        _this5.is_weekend = response.data;
+        _this5.is_weekend = response.data.is_weekend;
         _this5.week = _this5.is_weekend ? 'Выходные' : 'Будни';
+        _this5.duty = response.data.duty;
       })["catch"](function (error) {
         _this5.$store.dispatch('showAlert', {
           'isVisible': true,
@@ -719,6 +772,7 @@ var render = function() {
           _vm._v(" "),
           _c("v-switch", {
             attrs: { color: "primary", label: _vm.week },
+            on: { change: _vm.setWeek },
             model: {
               value: _vm.is_weekend,
               callback: function($$v) {
@@ -794,14 +848,9 @@ var render = function() {
                         fn: function(ref) {
                           var item = ref.item
                           return [
-                            _c(
-                              "span",
-                              {
-                                class:
-                                  item.blacklist.length > 0 ? "green--text" : ""
-                              },
-                              [_vm._v(_vm._s(item.tag))]
-                            )
+                            _c("span", { class: item.diet_color }, [
+                              _vm._v(_vm._s(item.tag))
+                            ])
                           ]
                         }
                       },
@@ -1183,7 +1232,12 @@ var render = function() {
                   _vm._v(" "),
                   _c("v-card-title", [
                     _c("span", { staticClass: "text-h5" }, [
-                      _vm._v(" " + _vm._s(_vm.order.name))
+                      _vm._v(
+                        " " +
+                          _vm._s(_vm.order.name) +
+                          " " +
+                          _vm._s(_vm.order.tag)
+                      )
                     ])
                   ]),
                   _vm._v(" "),
@@ -1199,7 +1253,7 @@ var render = function() {
                             [
                               _c(
                                 "v-col",
-                                { attrs: { sm: "12", lg: "4" } },
+                                { attrs: { sm: "12", lg: "6" } },
                                 [
                                   _vm.order.diet
                                     ? _c(
@@ -1216,8 +1270,14 @@ var render = function() {
                                         ],
                                         1
                                       )
-                                    : _vm._e(),
-                                  _vm._v(" "),
+                                    : _vm._e()
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "v-col",
+                                [
                                   _vm.order.diet_old
                                     ? _c(
                                         "v-card",
@@ -1239,11 +1299,18 @@ var render = function() {
                                     : _vm._e()
                                 ],
                                 1
-                              ),
-                              _vm._v(" "),
+                              )
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-row",
+                            { staticClass: "mb-4" },
+                            [
                               _c(
                                 "v-col",
-                                { attrs: { sm: "12", lg: "8" } },
+                                { attrs: { cols: "12" } },
                                 [
                                   _c("h3", { staticClass: "mb-4" }, [
                                     _vm._v("Черный список")
@@ -1267,13 +1334,182 @@ var render = function() {
                                       },
                                       expression: "blacklist"
                                     }
-                                  })
+                                  }),
+                                  _vm._v(" "),
+                                  _c(
+                                    "v-btn",
+                                    {
+                                      attrs: { dark: "" },
+                                      on: { click: _vm.save }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                                    Сохранить\n                                "
+                                      )
+                                    ]
+                                  )
                                 ],
                                 1
                               )
                             ],
                             1
-                          )
+                          ),
+                          _vm._v(" "),
+                          _c("v-divider", { staticClass: "my-6" }),
+                          _vm._v(" "),
+                          _c("h2", { staticClass: "mb-3" }, [
+                            _vm._v(_vm._s(_vm.duty.name))
+                          ]),
+                          _vm._v(" "),
+                          Object.keys(_vm.duty).length > 0
+                            ? _c(
+                                "v-row",
+                                { staticClass: "py-3" },
+                                [
+                                  _c(
+                                    "v-expansion-panels",
+                                    [
+                                      _c(
+                                        "v-expansion-panel",
+                                        [
+                                          _c("v-expansion-panel-header", [
+                                            _vm._v(
+                                              "\n                                        Завтрак 1\n                                    "
+                                            )
+                                          ]),
+                                          _vm._v(" "),
+                                          _c(
+                                            "v-expansion-panel-content",
+                                            [
+                                              _c(
+                                                "v-row",
+                                                [
+                                                  _c("v-col"),
+                                                  _vm._v(" "),
+                                                  _c(
+                                                    "v-col",
+                                                    [
+                                                      _c(
+                                                        "v-list",
+                                                        {
+                                                          attrs: { dense: "" }
+                                                        },
+                                                        [
+                                                          _c(
+                                                            "v-list-item-group",
+                                                            {
+                                                              attrs: {
+                                                                multiple: ""
+                                                              },
+                                                              model: {
+                                                                value: _vm.t,
+                                                                callback: function(
+                                                                  $$v
+                                                                ) {
+                                                                  _vm.t = $$v
+                                                                },
+                                                                expression: "t"
+                                                              }
+                                                            },
+                                                            _vm._l(
+                                                              _vm.duty.dishes[0]
+                                                                .ingredients,
+                                                              function(
+                                                                ing,
+                                                                index
+                                                              ) {
+                                                                return _c(
+                                                                  "v-list-item",
+                                                                  {
+                                                                    key: ing.id,
+                                                                    class: _vm.blacklist.includes(
+                                                                      ing.id
+                                                                    )
+                                                                      ? "red lighten-3"
+                                                                      : "",
+                                                                    attrs: {
+                                                                      dense: ""
+                                                                    },
+                                                                    scopedSlots: _vm._u(
+                                                                      [
+                                                                        {
+                                                                          key:
+                                                                            "default",
+                                                                          fn: function(
+                                                                            ref
+                                                                          ) {
+                                                                            var active =
+                                                                              ref.active
+                                                                            return [
+                                                                              _c(
+                                                                                "v-list-item-action",
+                                                                                [
+                                                                                  _c(
+                                                                                    "v-checkbox",
+                                                                                    {
+                                                                                      attrs: {
+                                                                                        "input-value": active
+                                                                                      }
+                                                                                    }
+                                                                                  )
+                                                                                ],
+                                                                                1
+                                                                              ),
+                                                                              _vm._v(
+                                                                                " "
+                                                                              ),
+                                                                              _c(
+                                                                                "v-list-item-title",
+                                                                                [
+                                                                                  _vm._v(
+                                                                                    _vm._s(
+                                                                                      index +
+                                                                                        1
+                                                                                    ) +
+                                                                                      ". " +
+                                                                                      _vm._s(
+                                                                                        ing.name
+                                                                                      )
+                                                                                  )
+                                                                                ]
+                                                                              )
+                                                                            ]
+                                                                          }
+                                                                        }
+                                                                      ],
+                                                                      null,
+                                                                      true
+                                                                    )
+                                                                  }
+                                                                )
+                                                              }
+                                                            ),
+                                                            1
+                                                          )
+                                                        ],
+                                                        1
+                                                      )
+                                                    ],
+                                                    1
+                                                  ),
+                                                  _vm._v(" "),
+                                                  _c("v-col")
+                                                ],
+                                                1
+                                              )
+                                            ],
+                                            1
+                                          )
+                                        ],
+                                        1
+                                      )
+                                    ],
+                                    1
+                                  )
+                                ],
+                                1
+                              )
+                            : _vm._e()
                         ],
                         1
                       )

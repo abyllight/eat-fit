@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use AmoCRM\Client;
+use App\Http\Resources\CuisineCollection;
 use App\Models\Week;
 use Illuminate\Http\JsonResponse;
 
@@ -42,6 +43,15 @@ class AdminController extends Controller
         }catch (\AmoCRM\Exception $e){
             return response()->json($e->getMessage());
         }
+    }
+
+    public function getWeek(){
+        $week = Week::find(1);
+
+        return response()->json([
+            'is_weekend' => $week->is_weekend,
+            'duty' => new CuisineCollection($week->cuisine)
+        ]);
     }
 
     public function setWeek() {

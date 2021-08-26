@@ -97,7 +97,7 @@
                         >
                             <v-list-item-content>
                                 <v-list-item-title>{{index+1}}. {{dish.name}}</v-list-item-title>
-                                <v-list-item-subtitle>[{{dish.ration}}] {{dish.i_name}}</v-list-item-subtitle>
+                                <v-list-item-subtitle><span class="font-weight-bold">[{{dish.ration}}]</span> {{dish.i_name}}</v-list-item-subtitle>
                             </v-list-item-content>
 
                             <v-list-item-action>

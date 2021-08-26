@@ -3,7 +3,7 @@
       <v-alert
           :type="alert.type"
           :value="alert.isVisible"
-          style="position: absolute; z-index: 100; top: 16px; left: 0; right: 0; margin: 0 auto;"
+          style="position: fixed; z-index: 10000; top: 16px; left: 0; right: 0; margin: 0 auto;"
           :color="alert.color"
           dark
           max-width="374"
@@ -79,6 +79,18 @@
                       <v-icon>mdi-folder</v-icon>
                   </v-list-item-icon>
                   <v-list-item-title>Частные блюда</v-list-item-title>
+              </v-list-item>
+              <v-list-item to="/ingredients">
+                  <v-list-item-icon>
+                      <v-icon>mdi-folder</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-title>Ингредиенты</v-list-item-title>
+              </v-list-item>
+              <v-list-item to="/select">
+                  <v-list-item-icon>
+                      <v-icon>mdi-folder</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-title>Select</v-list-item-title>
               </v-list-item>
           </template>
       </v-list>

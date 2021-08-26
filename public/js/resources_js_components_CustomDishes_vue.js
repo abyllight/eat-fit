@@ -208,6 +208,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         id: 4,
         name: 'Обед основной'
       }, {
+        id: 8,
+        name: 'Обед гарнир'
+      }, {
         id: 5,
         name: 'Обед салат'
       }, {
@@ -215,7 +218,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         name: 'Полдник'
       }, {
         id: 7,
-        name: 'Ужин'
+        name: 'Ужин основной'
+      }, {
+        id: 9,
+        name: 'Ужин овощи'
       }],
       dish_ings: [],
       errors: [],
@@ -309,6 +315,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         description: '',
         ingredients: []
       };
+      this.dish_ings = [];
     },
     editItem: function editItem(dish) {
       this.edit = 1;

@@ -33,6 +33,7 @@
                 color="primary"
                 v-model="is_weekend"
                 :label="week"
+                @change="setWeek"
             ></v-switch>
         </v-row>
         <v-row>
@@ -63,7 +64,7 @@
                             {{ index + 1 }}
                         </template>
                         <template v-slot:item.tag="{ item }">
-                            <span :class="item.blacklist.length > 0 ? 'green--text' : ''">{{item.tag}}</span>
+                            <span :class="item.diet_color">{{item.tag}}</span>
                         </template>
                         <template v-slot:item.time="{ item }">
                             <span :class="item.time_old ? 'green--text': ''">{{ item.time }}</span>
@@ -228,28 +229,31 @@
                         </v-toolbar-items>
                     </v-toolbar>
                     <v-card-title>
-                        <span class="text-h5"> {{order.name}}</span>
+                        <span class="text-h5"> {{order.name}} {{order.tag}}</span>
                     </v-card-title>
                     <v-card-text>
                         <v-container fluid>
                             <v-row>
                                 <v-col
                                     sm="12"
-                                    lg="4"
+                                    lg="6"
                                 >
                                     <v-card v-if="order.diet" color="lime lighten-4">
                                         <v-card-text>
                                             {{order.diet}}
                                         </v-card-text>
                                     </v-card>
-
+                                </v-col>
+                                <v-col>
                                     <v-card v-if="order.diet_old" class="mt-4" color="red lighten-4">
                                         <v-card-text>
                                             {{order.diet_old}}
                                         </v-card-text>
                                     </v-card>
                                 </v-col>
-                                <v-col sm="12" lg="8">
+                            </v-row>
+                            <v-row class="mb-4">
+                                <v-col cols="12">
                                     <h3 class="mb-4">Черный список</h3>
                                     <v-autocomplete
                                         v-model="blacklist"
@@ -262,7 +266,56 @@
                                         label="Ингредиенты"
                                         multiple
                                     ></v-autocomplete>
+                                    <v-btn
+                                        dark
+                                        @click="save"
+                                    >
+                                        Сохранить
+                                    </v-btn>
                                 </v-col>
+                            </v-row>
+                            <v-divider class="my-6"></v-divider>
+                            <h2 class="mb-3">{{duty.name}}</h2>
+                            <v-row class="py-3" v-if="Object.keys(duty).length > 0">
+                                <v-expansion-panels>
+                                    <v-expansion-panel>
+                                        <v-expansion-panel-header>
+                                            Завтрак 1
+                                        </v-expansion-panel-header>
+                                        <v-expansion-panel-content>
+                                            <v-row>
+                                                <v-col>
+
+                                                </v-col>
+                                                <v-col>
+                                                    <v-list dense>
+                                                        <v-list-item-group
+                                                            v-model="t"
+                                                            multiple
+                                                        >
+                                                            <v-list-item
+                                                                v-for="(ing, index) in duty.dishes[0].ingredients"
+                                                                :key="ing.id"
+                                                                :class="blacklist.includes(ing.id) ? 'red lighten-3' : ''"
+                                                                dense
+                                                            >
+                                                                <template v-slot:default="{ active }">
+                                                                    <v-list-item-action>
+                                                                        <v-checkbox :input-value="active"></v-checkbox>
+                                                                    </v-list-item-action>
+                                                                    <v-list-item-title>{{index+1}}. {{ing.name}}</v-list-item-title>
+                                                                </template>
+                                                            </v-list-item>
+                                                        </v-list-item-group>
+                                                    </v-list>
+                                                </v-col>
+                                                <v-col>
+
+                                                </v-col>
+                                            </v-row>
+                                        </v-expansion-panel-content>
+                                    </v-expansion-panel>
+                                </v-expansion-panels>
                             </v-row>
                         </v-container>
                     </v-card-text>
@@ -298,17 +351,14 @@
             dialog: false,
             ingredients: [],
             blacklist: [],
-            order: {}
+            order: {},
+            duty: {},
+            t: []
         }),
         mounted() {
             this.getWeek()
             this.getLeads()
             this.getIngredients()
-        },
-        watch: {
-            is_weekend() {
-                this.setWeek()
-            }
         },
         methods: {
             async getLeads() {
@@ -352,7 +402,7 @@
             },
             showDetails(index){
                 this.order = index
-                this.blacklist = index.blacklist
+                this.blacklist = index.blacklist.map(a => a.id)
                 this.dialog = true
             },
             async geocode() {
@@ -405,8 +455,9 @@
                  axios
                     .get('/api/week/get')
                     .then(response => {
-                        this.is_weekend = response.data
+                        this.is_weekend = response.data.is_weekend
                         this.week = this.is_weekend ? 'Выходные' : 'Будни'
+                        this.duty = response.data.duty
                     })
                     .catch(error => {
                         this.$store.dispatch('showAlert', {

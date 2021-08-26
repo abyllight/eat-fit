@@ -13,7 +13,7 @@ class Dish extends Model
         'i_id', 'i_name', 'name', 'time', 'cuisine_id', 'is_custom'
     ];
 
-    public const RATIONS = ['Завтрак 1', 'Завтрак 2', 'Обед суп', 'Обед основной', 'Обед салат', 'Полдник', 'Ужин'];
+    public const RATIONS = ['Завтрак 1', 'Завтрак 2', 'Обед суп', 'Обед основной', 'Обед салат', 'Полдник', 'Ужин основной', 'Обед гарнир', 'Ужин овощи'];
 
     public function cuisine()
     {

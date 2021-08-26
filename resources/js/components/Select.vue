@@ -1,14 +1,14 @@
 <template>
     <div>
         <v-row>
-
+            Select
         </v-row>
     </div>
 </template>
 
 <script>
 export default {
-    name: "Dossier",
+    name: "Select",
     props: [
 
     ],

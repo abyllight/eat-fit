@@ -736,12 +736,12 @@ var render = function() {
                               ]),
                               _vm._v(" "),
                               _c("v-list-item-subtitle", [
-                                _vm._v(
-                                  "[" +
-                                    _vm._s(dish.ration) +
-                                    "] " +
-                                    _vm._s(dish.i_name)
-                                )
+                                _c(
+                                  "span",
+                                  { staticClass: "font-weight-bold" },
+                                  [_vm._v("[" + _vm._s(dish.ration) + "]")]
+                                ),
+                                _vm._v(" " + _vm._s(dish.i_name))
                               ])
                             ],
                             1
