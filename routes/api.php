@@ -43,7 +43,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/promocodes/{id}', [PromocodeController::class, 'destroy']);
 });
 
-Route::post('/promocode/{promocode}', [PromocodeController::class, 'check']);
+Route::get('/promocode/{promocode}', [PromocodeController::class, 'check']);
 
 Route::get('/orders', [OrderController::class, 'index']);
 Route::get('/week/get', [AdminController::class, 'getWeek']);
