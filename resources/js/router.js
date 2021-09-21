@@ -83,6 +83,12 @@ const router = new VueRouter({
             meta: { auth: true },
             component: () => import('./components/Select')
         },
+        {
+            path: '/promocodes',
+            name: 'promocode',
+            meta: { auth: true },
+            component: () => import('./components/Promocodes')
+        },
     ]
 })
 

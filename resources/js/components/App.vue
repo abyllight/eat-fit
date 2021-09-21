@@ -92,6 +92,12 @@
                   </v-list-item-icon>
                   <v-list-item-title>Select</v-list-item-title>
               </v-list-item>
+              <v-list-item to="/promocodes">
+                  <v-list-item-icon>
+                      <v-icon>mdi-folder</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-title>Промокоды</v-list-item-title>
+              </v-list-item>
           </template>
       </v-list>
       <template v-if="user" v-slot:append>
@@ -109,9 +115,9 @@
 
     <v-app-bar
       app
-      color="pink"
+      color="grey darken-4"
     >
-      <v-app-bar-nav-icon @click="drawer=true"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon color="green" @click="drawer=true"></v-app-bar-nav-icon>
       <v-progress-linear
         :active="loading"
         :indeterminate="loading"
@@ -158,7 +164,16 @@ export default {
   },
   methods: {
     logout() {
-      this.$store.dispatch('logout')
+        axios.post('/api/logout')
+            .then(response => {
+                if(response.data.status){
+                    this.$store.dispatch('logout')
+                }else{
+                    this.errors = response.data.errors
+                }
+        }).catch(error => {
+            this.errors = error.response.data.errors
+        })
     }
   }
 }

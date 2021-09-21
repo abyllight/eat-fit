@@ -6,18 +6,13 @@ use App\Http\Controllers\CuisineController;
 use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\OrderController;
-use App\Http\Resources\CourierCollection;
+use App\Http\Controllers\PromocodeController;
 use App\Http\Resources\CuisineCollection;
 use App\Http\Resources\DishCollection;
-use App\Http\Resources\IngredientCollection;
-use App\Models\Courier;
 use App\Models\Cuisine;
 use App\Models\Dish;
-use App\Models\Ingredient;
-use App\Models\Week;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LoginController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,20 +24,26 @@ use App\Http\Controllers\LoginController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::post('/login', [LoginController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout']);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/profile', [AuthController::class, 'profile']);
+
+    Route::get('/couriers', [CourierController::class, 'index']);
+    Route::post('/couriers', [CourierController::class, 'store']);
+    Route::post('/couriers/{id}', [CourierController::class, 'update']);
+    Route::patch('/couriers/{id}', [CourierController::class, 'updatePassword']);
+    Route::delete('/couriers/{id}', [CourierController::class, 'delete']);
+
+    Route::get('/promocodes', [PromocodeController::class, 'index']);
+    Route::post('/promocodes', [PromocodeController::class, 'store']);
+    Route::post('/promocodes/{id}', [PromocodeController::class, 'update']);
+    Route::patch('/promocodes/activate/{id}', [PromocodeController::class, 'activate']);
+    Route::delete('/promocodes/{id}', [PromocodeController::class, 'destroy']);
 });
 
-Route::get('/couriers', function () {
-    return CourierCollection::collection(Courier::all());
-});
-
-Route::post('/couriers', [CourierController::class, 'store']);
-Route::post('/couriers/{id}', [CourierController::class, 'update']);
-Route::patch('/couriers/{id}', [CourierController::class, 'updatePassword']);
-Route::delete('/couriers/{id}', [CourierController::class, 'delete']);
+Route::post('/promocode/{promocode}', [PromocodeController::class, 'check']);
 
 Route::get('/orders', [OrderController::class, 'index']);
 Route::get('/week/get', [AdminController::class, 'getWeek']);

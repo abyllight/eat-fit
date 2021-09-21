@@ -2,14 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CourierCollection;
 use App\Models\Courier;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\Hash;
 
 class CourierController extends Controller
 {
+    public function index(): ResourceCollection
+    {
+        return CourierCollection::collection(Courier::all());
+    }
+
     public function store(Request $request): JsonResponse
     {
         $request->validate([
