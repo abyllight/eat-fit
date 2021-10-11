@@ -37,7 +37,7 @@
             ></v-switch>
         </v-row>
         <v-row>
-            <v-col cols="10" sm="12" lg="10">
+            <v-col cols="9" sm="12" lg="9">
                 <v-card>
                     <v-card-title>
                         <v-text-field

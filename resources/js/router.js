@@ -24,10 +24,46 @@ const router = new VueRouter({
             component: () => import('./components/Dashboard')
         },
         {
-            path: '/couriers',
-            name: 'couriers',
+            path: '/my-orders',
+            name: 'my_orders',
             meta: { auth: true },
-            component: () => import('./components/Couriers')
+            component: () => import('./components/MyOrders')
+        },
+        {
+            path: '/roles',
+            name: 'roles',
+            meta: { auth: true },
+            component: () => import('./components/Roles/Roles')
+        },
+        {
+            path: '/roles/create',
+            name: 'roles_create',
+            meta: { auth: true },
+            component: () => import('./components/Roles/CreateRole')
+        },
+        {
+            path: '/roles/:id/edit',
+            name: 'roles_edit',
+            meta: { auth: true },
+            component: () => import('./components/Roles/EditRole')
+        },
+        {
+            path: '/users',
+            name: 'users',
+            meta: { auth: true },
+            component: () => import('./components/Users/Users')
+        },
+        {
+            path: '/users/create',
+            name: 'users_create',
+            meta: { auth: true },
+            component: () => import('./components/Users/CreateUser')
+        },
+        {
+            path: '/users/:id/edit',
+            name: 'users_edit',
+            meta: { auth: true },
+            component: () => import('./components/Users/EditUser')
         },
         {
             path: '/couriers/:id',
@@ -45,43 +81,43 @@ const router = new VueRouter({
             path: '/map',
             name: 'map',
             meta: { auth: true },
-            component: () => import('./components/Map')
+            component: () => import('./components/Logistics/Map')
         },
         {
             path: '/list',
             name: 'list',
             meta: { auth: true },
-            component: () => import('./components/OrderList')
+            component: () => import('./components/Logistics/OrderList')
         },
         {
-            path: '/report',
+            path: '/reports',
             name: 'report',
             meta: { auth: true },
-            component: () => import('./components/Report')
+            component: () => import('./components/Logistics/Report')
         },
         {
             path: '/cuisine',
             name: 'cuisine',
             meta: { auth: true },
-            component: () => import('./components/Cuisine')
+            component: () => import('./components/Kitchen/Cuisine')
         },
         {
             path: '/custom',
             name: 'custom',
             meta: { auth: true },
-            component: () => import('./components/CustomDishes')
+            component: () => import('./components/Kitchen/CustomDishes')
         },
         {
             path: '/ingredients',
             name: 'ingredients',
             meta: { auth: true },
-            component: () => import('./components/Ingredients')
+            component: () => import('./components/Kitchen/Ingredients')
         },
         {
             path: '/select',
             name: 'select',
             meta: { auth: true },
-            component: () => import('./components/Select')
+            component: () => import('./components/Kitchen/Select')
         },
         {
             path: '/promocodes',

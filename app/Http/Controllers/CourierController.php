@@ -2,120 +2,161 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\CourierCollection;
-use App\Models\Courier;
+use AmoCRM\Client;
+use App\Http\Resources\OrderCollection;
+use App\Models\Order;
+use App\Models\Report;
 use App\Models\User;
+use App\Models\Week;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class CourierController extends Controller
 {
-    public function index(): ResourceCollection
+    public function index()
     {
-        return CourierCollection::collection(Courier::all());
+        $is_weekend = Week::isWeekend();
+        $courier = $is_weekend ? 'courier2_id' : 'courier1_id';
+
+        $orders = Order::where($courier, Auth::id())->where('is_active', true)->orderBy('position')->get();
+
+        return response()->json([
+            'status' => true,
+            'data' => OrderCollection::collection($orders)
+        ]);
     }
 
-    public function store(Request $request): JsonResponse
+    public function notify(Request $request): JsonResponse
     {
-        $request->validate([
-            'name' => 'required',
-            'phone' => 'required|unique:couriers,phone|min:11',
-            'password' => 'required',
-        ]);
+        $order = Order::find($request->order_id);
+        $user = Auth::user();
+        $phone = $user->phone;
+        $phone = User::beautifyMobile($phone);
 
-        $name = $request->name;
-        $phone = $request->phone;
-        $car = $request->car;
-        $password = Hash::make($request->password);
+        if ($order){
+            try {
+                //$amo = new Client(env('AMO_SUBDOMAIN'), env('AMO_LOGIN'), env('AMO_HASH'));
 
-        $user = User::where('phone', $phone)->first();
+                /*$lead = $amo->lead;
+                $lead['status_id'] = 27248140;
+                $lead->addCustomField(489499,
+                    phone
+                );
+                $lead->addCustomField(489497,
+                    $user->name
+                );
+                $lead->apiUpdate($order->amo_id, 'now');*/
 
-        if ($user) {
-            $password = $user->password;
-        }else {
-            $user = new User();
-            $user->name = $name;
-            $user->phone = $phone;
-            $user->password = $password;
-            $user->save();
+                $now = Carbon::now();
+                $founded_report = Report::where('order_id', $order->id)
+                                ->where('courier_id', $user->id)
+                                ->whereDate('created_at', $now->toDateString())
+                                ->first();
+
+                if ($founded_report){
+                    if($founded_report->notified_at === null){
+                        $founded_report->notified_at = $now;
+                        $founded_report->notification_status = $this->getStatus($founded_report->order->getTime(), $now);
+                        $founded_report->save();
+                    }
+                }else{
+                    $report = new Report();
+                    $report->order_id = $order->id;
+                    $report->courier_id = $user->id;
+                    $report->notified_at = $now;
+                    $report->notification_status = $this->getStatus($report->order->getTime(), $now);
+                    $report->save();
+                }
+
+                return response()->json([
+                    'status' => true,
+                    'msg' => 'Клиент уведомлен'
+                ]);
+            }catch(\AmoCRM\Exception $e){
+                return response()->json([
+                    'status' => false,
+                    'msg' => $e->getMessage()
+                ]);
+            }
         }
 
-        $user->courier()->create([
-            'name' => $name,
-            'phone' => $phone,
-            'car' => $car,
-            'password' => $password
-        ]);
-
         return response()->json([
-            'status' => true,
-            'message' => 'Курьер успешно создан'
+            'status' => false,
+            'msg' => 'Заказ не найден'
         ]);
     }
 
-    public function update(Request $request, $id): JsonResponse
+    public function report(Request $request): JsonResponse
     {
-        $request->validate([
-            'name' => 'required',
-            'phone' => 'required|min:11|unique:couriers,phone,' . $id,
-            'password' => 'required',
-        ]);
+        $order = Order::find($request->order_id);
+        $now = Carbon::now();
 
-        $name = $request->name;
-        $phone = $request->phone;
+        if ($order) {
+            $founded_report = Report::where('order_id', $order->id)
+                ->where('courier_id', Auth::user()->id)
+                ->whereDate('created_at', $now->toDateString())
+                ->first();
 
-        $courier = Courier::find($id);
-        $courier->name = $name;
-        $courier->phone = $phone;
-        $courier->car = $request->car;
-        $courier->save();
+            if($founded_report){
+                $founded_report->report_status = $request->status;
+                $founded_report->comment = $request->comment;
+                $founded_report->amount = $request->amount;
+                $founded_report->payment_type = $request->payment_type;
 
-        $user = User::find($courier->user_id);
-        $user->name = $name;
-        $user->phone = $phone;
-        $user->save();
+                if($founded_report->reported_at === null){
+                    $founded_report->reported_at = $now;
+                }
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Курьер успешно обновлен'
-        ]);
-    }
+                $founded_report->save();
 
-    public function updatePassword(Request $request, $id): JsonResponse
-    {
-        $courier = Courier::find($id);
+            }else{
+                $new = new Report;
+                $new->order_id = $request->order_id;
+                $new->courier_id = Auth::user()->id;
+                $new->report_status = $request->status;
+                $new->comment = $request->comment;
+                $new->reported_at = $now;
+                $new->payment_type = $request->payment_type;
+                $new->amount = $request->amount;
 
-        if (!$courier) {
+                $new->save();
+            }
+
             return response()->json([
-                'status' => false,
-                'message' => 'Курьер не найден'
+                'status' => true,
+                'msg' => 'Отчет отправлен'
             ]);
         }
 
-        $password = Hash::make($request->password);
-
-        $courier->password = $password;
-        $courier->save();
-
-        $user = User::find($courier->user_id);
-        $user->password = $password;
-        $user->save();
-
         return response()->json([
-            'status' => true,
-            'message' => 'Пароль успешно сменен'
+            'status' => false,
+            'msg' => 'Заказ не найден'
         ]);
     }
 
-    public function delete($id): JsonResponse
+    public function getStatus(string $interval, Carbon $now): string
     {
-        Courier::destroy($id);
+        $explode = explode('-', $interval);
+        $start = (float)$explode[0] * 100;
+        $end = (float)$explode[1] * 100;
+        $time = (float)$now->format('H.i') * 100;
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Курьер удален'
-        ]);
+        switch(true){
+            case $time >= $start && $time <= $end:
+                $status = 'вовремя';
+                break;
+            case $time < $start:
+                $status = 'рано';
+                break;
+            case $time > $end:
+                $status = 'поздно';
+                break;
+            default:
+                $status = 'незвестно';
+        }
+
+        return $status;
     }
 }

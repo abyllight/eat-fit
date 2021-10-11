@@ -1,7 +1,10 @@
 <template>
     <div>
         <v-row>
-            <v-col cols="11" style="margin-bottom: -40px">
+            <v-col
+                sm="12"
+                lg="8"
+                style="margin-bottom: -40px">
                 <v-select
                     v-model="intervals"
                     :items="items"
@@ -33,34 +36,29 @@
                     </template>
                 </v-select>
             </v-col>
-            <v-col cols="1">
+            <v-col sm="12" lg="3">
+                <v-select
+                    v-model="user_id"
+                    :items="couriers"
+                    dense
+                    item-text="name"
+                    item-value="id"
+                    label="Курьеры"
+                    outlined
+                    @change="filter"
+                >
+                </v-select>
+            </v-col>
+            <v-col sm="12" lg="1">
                 <h3>{{total}}</h3>
             </v-col>
-<!--            <v-col cols="12" lg="4">
-                <v-btn
-                    :loading="loading"
-                    :disabled="loading"
-                    color="primary"
-                    @click="geocode"
-                >
-                    Геокодировать
-                </v-btn>
-                <v-btn
-                    :loading="loading"
-                    :disabled="loading"
-                    color="primary"
-                    @click="setInterval"
-                >
-                    Интервал
-                </v-btn>
-            </v-col>-->
         </v-row>
         <v-row>
-            <v-col cols="8">
+            <v-col sm="12" lg="8">
                 <div id="map" style="width: 100%;height:700px">
                 </div>
             </v-col>
-            <v-col cols="4">
+            <v-col sm="12" lg="4">
                 <v-row>
                     <v-col cols="3">
                         Имя
@@ -143,6 +141,7 @@ export default {
         orders: [],
         order: {},
         couriers: [],
+        user_id: [],
         courier_id: 0,
         items: [
             {
@@ -267,7 +266,8 @@ export default {
             this.orders = []
             await axios
                 .post('/api/map/filter', {
-                    intervals: this.intervals
+                    intervals: this.intervals,
+                    user_id: this.user_id
                 })
                 .then(response => {
                     this.total = response.data.length
@@ -361,7 +361,6 @@ export default {
                 .then(response => {
                     this.order.courier = response.data
                     this.filter()
-                    //this.fetchCouriers()
                 })
                 .catch(error => {
                     console.log(error)

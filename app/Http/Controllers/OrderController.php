@@ -6,6 +6,7 @@ use AmoCRM\Client;
 use App\Http\Resources\OrderCollection;
 use App\Models\Courier;
 use App\Models\Order;
+use App\Models\User;
 use App\Models\Week;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -326,10 +327,7 @@ class OrderController extends Controller
     {
         $is_weekend = Week::isWeekend();
         $courier = $is_weekend ? 'courier2_id' : 'courier1_id';
-        $lat = $is_weekend ? 'lat2' : 'lat1';
         $nb_assigned = Order::where('is_active', true)->where($courier, '>', 0)->count();
-        //$no_interval = Order::where('is_active', true)->where('interval', 0)->get();
-        //$no_lat_lng  = Order::where('is_active', true)->where($lat, null)->get();
         $total       = Order::where('is_active', true)->count();
 
         return response()->json([
@@ -369,8 +367,7 @@ class OrderController extends Controller
     public function export()
     {
         $is_weekend = Week::isWeekend();
-        $courier = $is_weekend ? 'courier2_id' : 'courier1_id';
-        $couriers = Courier::all();
+        $couriers = User::couriers();
         $n = 1;
         $color = 'ffffff';
         $xs = $s = $m = $l = $xl = 0;

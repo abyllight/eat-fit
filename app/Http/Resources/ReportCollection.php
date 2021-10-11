@@ -17,13 +17,14 @@ class ReportCollection extends JsonResource
     {
         return [
             'id' => $this->id,
-            'courier' => $this->courier,
-            'order' => $this->order,
+            'courier' => $this->courier->name,
+            'order' => $this->order->name,
             'comment' => $this->comment,
-            'payment' => $this->payment,
-            'payment_method' => $this->payment_method,
+            'amount' => $this->amount,
+            'payment_type' => $this->payment_type,
             'reported_at' => $this->reported_at,
-            'delivered_at' => $this->delivered_at
+            'notified_at' => $this->notified_at,
+            'status' => $this->status
         ];
     }
 }

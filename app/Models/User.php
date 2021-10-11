@@ -2,14 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Http\Resources\UserCollection;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Http\JsonResponse;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -32,17 +30,38 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
-
-    public function courier()
+    public function roles()
     {
-        return $this->hasOne(Courier::class, 'user_id', 'id');
+        return $this->belongsToMany(Role::class, 'roles_users', 'user_id', 'role_id');
+    }
+
+    public function orders()
+    {
+        $is_weekend = Week::isWeekend();
+        $c_id = $is_weekend ? 'courier2_id' : 'courier1_id';
+        return $this->hasMany(Order::class, $c_id, 'id')->where('is_active', true)->orderBy('position');
+    }
+
+    public static function couriers()
+    {
+        $couriers = [];
+
+        foreach (User::all() as $user) {
+            foreach ($user->roles as $role) {
+                if ($role['slug'] === 'courier'){
+                    $couriers[] = $user;
+                }
+            }
+        }
+
+        return UserCollection::collection($couriers);
+    }
+
+    public function reports(){
+        return $this->hasMany(Report::class, 'courier_id', 'id');
+    }
+
+    public static function beautifyMobile(string $v){
+        return sprintf('+%s (%s%s%s) %s%s%s-%s%s-%s%s', $v[0], $v[1], $v[2], $v[3], $v[4], $v[5], $v[6], $v[7], $v[8], $v[9], $v[10]);
     }
 }

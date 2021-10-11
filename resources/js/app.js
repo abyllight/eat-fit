@@ -9,6 +9,17 @@ import App from "./components/App"
 import router from './router'
 import store from './store'
 
+axios.interceptors.response.use(function (response) {
+    return response;
+}, function (error) {
+    if (error.response.status === 401) {
+        localStorage.removeItem('user')
+        localStorage.removeItem('authenticated')
+        location.reload()
+    }
+    return Promise.reject(error);
+});
+
 Vue.use(Vuetify)
 Vue.use(VueMask)
 

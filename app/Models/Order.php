@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -53,7 +54,7 @@ class Order extends Model
     {
         $is_weekend = Week::isWeekend();
         $c_id = $is_weekend ? 'courier2_id' : 'courier1_id';
-        return $this->belongsTo(Courier::class, $c_id,'id');
+        return $this->belongsTo(User::class, $c_id,'id');
     }
 
     public function blacklist()
@@ -63,7 +64,7 @@ class Order extends Model
 
     public function reports()
     {
-        return $this->hasMany('App\Models\Report', 'order_id', 'id');
+        return $this->hasMany(Report::class, 'order_id', 'id');
     }
 
     public const SIZES = ['xs', 's', 'm', 'l', 'xl', 'eat'];
@@ -167,5 +168,13 @@ class Order extends Model
     public function getCourierId(): int
     {
         return self::isWeekend() ? $this->courier2_id : $this->courier1_id;
+    }
+
+    public function isNotified(){
+        return $this->reports()->whereDate('notified_at', Carbon::today()->toDateString())->exists();
+    }
+
+    public function isReported(){
+        return $this->reports()->whereDate('reported_at', Carbon::today()->toDateString())->exists();
     }
 }

@@ -3,7 +3,7 @@
         <v-row class="mb-4">
             <a
                 type="button"
-                href="/api/list/export/"
+                href="/api/list/export"
             >
                 <v-btn
                     color="primary"
@@ -19,7 +19,7 @@
             class="mb-8"
         >
             <div>
-                <h3>{{ courier.name }} - {{ courier.orders.length }}</h3>
+                <h3>{{ courier.name }} - {{ courier.orders ? courier.orders.length : '' }}</h3>
                 <v-simple-table>
                     <template v-slot:default>
                         <thead>

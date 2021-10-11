@@ -19,8 +19,6 @@ class OrderCollection extends JsonResource
             'id' => $this->id,
             'amo_id' => $this->amo_id,
             'name' => $this->name,
-            /*'type' => strtoupper($this->getType($this->type)),
-            'size' => strtoupper($this->getSize($this->size)),*/
             'tag' => $this->getTag($this->type, $this->size),
             'color' => $this->getColor($this->type),
             'phone' => $this->phone,
@@ -43,7 +41,9 @@ class OrderCollection extends JsonResource
             'diet' => $this->diet,
             'diet_old' => $this->diet_old,
             'blacklist' => $this->blacklist,
-            'diet_color' => $this->getDietColor()
+            'diet_color' => $this->getDietColor(),
+            'is_notified' => $this->isNotified(),
+            'is_reported' => $this->isReported()
         ];
     }
 }

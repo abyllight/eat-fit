@@ -27,15 +27,15 @@ class Report extends Model
 
     public function order()
     {
-        return $this->belongsTo('App\Models\Order', 'order_id', 'id');
+        return $this->belongsTo(Order::class, 'order_id', 'id');
     }
 
     public function courier()
     {
-        return $this->belongsTo('App\Models\Courier', 'courier_id', 'id');
+        return $this->belongsTo(User::class, 'courier_id', 'id');
     }
 
-    public function getStatus()
+    public function getStatus(): string
     {
         if (!$this->delivered_at) {
             return '<td><span class="badge badge-danger">не доставлено</span></td>';

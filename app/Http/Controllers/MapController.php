@@ -15,17 +15,25 @@ class MapController extends Controller
     public function filter(Request $request): JsonResponse
     {
         $intervals = $request->intervals;
+        $user_id = $request->user_id;
         $is_weekend = Week::isWeekend();
 
         $lat = $is_weekend ? 'lat2' : 'lat1';
         $lng = $is_weekend ? 'lng2' : 'lng1';
+        $courier = $is_weekend ? 'courier2_id' : 'courier1_id';
 
-        $orders = Order::where('is_active', true)
+        $query = Order::where('is_active', true)
             ->whereNotNull($lat)
             ->whereNotNull($lng)
-            ->whereIn('interval', $intervals)->get();
+            ->whereIn('interval', $intervals);
 
-        $collection = OrderCollection::collection($orders);
+        if ($user_id) {
+            $query = $query->where($courier, $user_id);
+        }
+
+        $query = $query->get();
+
+        $collection = OrderCollection::collection($query);
 
         return response()->json($collection);
     }

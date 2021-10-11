@@ -6,9 +6,6 @@ use App\Http\Resources\UserCollection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use App\Models\User;
-use function Matrix\trace;
 
 class AuthController extends Controller
 {
@@ -26,6 +23,7 @@ class AuthController extends Controller
                 'user' => new UserCollection(Auth::user()),
             ]);
         }
+
         return response()->json([
             'status'  => false,
             'message' => 'Пользователь не найден',
@@ -42,9 +40,9 @@ class AuthController extends Controller
         ]);
     }
 
-    public function logout(Request $request)
+    public function logout(Request $request): JsonResponse
     {
-        Auth::logout();
+        Auth::guard('web')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
