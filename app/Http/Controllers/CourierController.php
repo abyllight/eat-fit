@@ -37,17 +37,17 @@ class CourierController extends Controller
 
         if ($order){
             try {
-                //$amo = new Client(env('AMO_SUBDOMAIN'), env('AMO_LOGIN'), env('AMO_HASH'));
+                $amo = new Client(env('AMO_SUBDOMAIN'), env('AMO_LOGIN'), env('AMO_HASH'));
 
-                /*$lead = $amo->lead;
+                $lead = $amo->lead;
                 $lead['status_id'] = 27248140;
                 $lead->addCustomField(489499,
-                    phone
+                    $phone
                 );
                 $lead->addCustomField(489497,
                     $user->name
                 );
-                $lead->apiUpdate($order->amo_id, 'now');*/
+                $lead->apiUpdate($order->amo_id, 'now');
 
                 $now = Carbon::now();
                 $founded_report = Report::where('order_id', $order->id)

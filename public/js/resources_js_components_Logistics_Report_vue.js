@@ -157,7 +157,6 @@ __webpack_require__.r(__webpack_exports__);
         _this.max = response.data.max;
         _this.date = response.data.max;
         _this.couriers = response.data.reports;
-        console.log(response);
       })["catch"](function (error) {
         console.log(error);
       });

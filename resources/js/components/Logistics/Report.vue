@@ -142,7 +142,6 @@ export default {
                     this.max = response.data.max
                     this.date = response.data.max
                     this.couriers = response.data.reports
-                    console.log(response)
                 })
                 .catch(error => {
                     console.log(error)
