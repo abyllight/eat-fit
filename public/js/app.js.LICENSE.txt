@@ -142,6 +142,8 @@
 
 /*! ../../presets/default */
 
+/*! ../../services/goto */
+
 /*! ../../services/goto/easing-patterns */
 
 /*! ../../styles/components/_selection-controls.sass */
