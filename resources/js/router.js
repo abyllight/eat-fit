@@ -96,7 +96,7 @@ const router = new VueRouter({
             component: () => import('./components/Logistics/Report')
         },
         {
-            path: '/cuisine',
+            path: '/cuisines',
             name: 'cuisine',
             meta: { auth: true },
             component: () => import('./components/Kitchen/Cuisine')

@@ -196,14 +196,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Cuisine',
   data: function data() {
@@ -219,7 +211,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       errors: []
     };
   },
-  mounted: function mounted() {
+  created: function created() {
     this.getCuisines();
   },
   methods: {
@@ -228,15 +220,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       axios.get('/api/cuisines').then(function (response) {
         _this.cuisines = response.data.data;
-
-        if (Object.keys(_this.cuisine).length === 0) {
-          _this.cuisine = _this.cuisines[0];
-        } else {
-          _this.cuisine = _this.cuisines.find(function (x) {
-            return x.id === _this.cuisine.id;
-          });
-        }
-
+        _this.cuisine = _this.cuisines[0];
         _this.dish = _this.cuisine.dishes[0];
       })["catch"](function (error) {
         console.log(error);
@@ -543,7 +527,7 @@ var render = function() {
               },
               on: { click: _vm.fetchCuisines }
             },
-            [_vm._v("\n            Получить Кухни\n        ")]
+            [_vm._v("\n                Получить Кухни\n            ")]
           ),
           _vm._v(" "),
           _c(
@@ -557,7 +541,7 @@ var render = function() {
               },
               on: { click: _vm.fetchDishes }
             },
-            [_vm._v("\n            Получить Блюда\n        ")]
+            [_vm._v("\n                Получить Блюда\n            ")]
           )
         ],
         1
@@ -568,62 +552,50 @@ var render = function() {
         [
           _c(
             "v-col",
-            { attrs: { sm: "12", md: "2" } },
+            { attrs: { sm: "12", md: "2", lg: "2" } },
             [
-              _c("v-simple-table", {
-                attrs: { dense: "" },
-                scopedSlots: _vm._u([
-                  {
-                    key: "default",
-                    fn: function() {
-                      return [
-                        _c("thead", [
-                          _c("tr", [
-                            _c("th", { staticClass: "text-left" }, [
-                              _vm._v(
-                                "\n                                #\n                            "
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("th", { staticClass: "text-left" }, [
-                              _vm._v(
-                                "\n                                Name\n                            "
-                              )
-                            ])
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c(
-                          "tbody",
-                          _vm._l(_vm.cuisines, function(cuisine, index) {
-                            return _c(
-                              "tr",
-                              {
-                                key: cuisine.id,
-                                class: cuisine.active
-                                  ? "light-green lighten-3"
-                                  : "",
-                                on: {
-                                  click: function($event) {
-                                    return _vm.showDetails(cuisine)
-                                  }
-                                }
-                              },
-                              [
-                                _c("td", [_vm._v(_vm._s(index + 1))]),
-                                _vm._v(" "),
-                                _c("td", [_vm._v(_vm._s(cuisine.name))])
-                              ]
-                            )
-                          }),
-                          0
-                        )
-                      ]
-                    },
-                    proxy: true
-                  }
-                ])
-              })
+              _c(
+                "v-list",
+                { attrs: { dense: "" } },
+                [
+                  _c("v-subheader", [_vm._v("Кухни мира")]),
+                  _vm._v(" "),
+                  _c(
+                    "v-list-item-group",
+                    { attrs: { color: "primary" } },
+                    _vm._l(_vm.cuisines, function(cuisine, i) {
+                      return _c(
+                        "v-list-item",
+                        {
+                          key: i,
+                          class: cuisine.active ? "light-green lighten-3" : "",
+                          on: {
+                            click: function($event) {
+                              return _vm.showDetails(cuisine)
+                            }
+                          }
+                        },
+                        [
+                          _c(
+                            "v-list-item-content",
+                            [
+                              _c("v-list-item-title", [
+                                _vm._v(
+                                  _vm._s(i + 1) + ". " + _vm._s(cuisine.name)
+                                )
+                              ])
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    }),
+                    1
+                  )
+                ],
+                1
+              )
             ],
             1
           ),
@@ -662,11 +634,11 @@ var render = function() {
                         [
                           _c("v-icon", { attrs: { dark: "", left: "" } }, [
                             _vm._v(
-                              "\n                            mdi-silverware\n                        "
+                              "\n                                mdi-silverware\n                            "
                             )
                           ]),
                           _vm._v(
-                            "\n                        Получить Ингредиенты\n                    "
+                            "\n                            Получить Ингредиенты\n                        "
                           )
                         ],
                         1
@@ -685,11 +657,11 @@ var render = function() {
                         [
                           _c("v-icon", { attrs: { dark: "", left: "" } }, [
                             _vm._v(
-                              "\n                            mdi-checkbox-marked-circle\n                        "
+                              "\n                                mdi-checkbox-marked-circle\n                            "
                             )
                           ]),
                           _vm._v(
-                            "\n                        Назначить\n                    "
+                            "\n                            Назначить\n                        "
                           )
                         ],
                         1
@@ -821,116 +793,6 @@ var render = function() {
                         1
                       )
                     }),
-                    1
-                  )
-                ],
-                1
-              )
-            ],
-            1
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "v-row",
-        { attrs: { justify: "center" } },
-        [
-          _c(
-            "v-dialog",
-            {
-              attrs: { persistent: "", "max-width": "600px" },
-              model: {
-                value: _vm.dialog,
-                callback: function($$v) {
-                  _vm.dialog = $$v
-                },
-                expression: "dialog"
-              }
-            },
-            [
-              _c(
-                "v-card",
-                [
-                  _c("v-card-title", [
-                    _c("span", { staticClass: "text-h5" }, [
-                      _vm._v("Редактировать")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "v-card-text",
-                    [
-                      _c(
-                        "v-container",
-                        [
-                          _c(
-                            "v-row",
-                            [
-                              _c(
-                                "v-col",
-                                { attrs: { cols: "12" } },
-                                [
-                                  _c("v-text-field", {
-                                    attrs: {
-                                      label: "Название",
-                                      required: "",
-                                      clearable: "",
-                                      "error-messages": _vm.errors.name
-                                    },
-                                    model: {
-                                      value: _vm.name,
-                                      callback: function($$v) {
-                                        _vm.name = $$v
-                                      },
-                                      expression: "name"
-                                    }
-                                  })
-                                ],
-                                1
-                              )
-                            ],
-                            1
-                          )
-                        ],
-                        1
-                      )
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "v-card-actions",
-                    [
-                      _c("v-spacer"),
-                      _vm._v(" "),
-                      _c(
-                        "v-btn",
-                        {
-                          attrs: { color: "blue darken-1", text: "" },
-                          on: { click: _vm.close }
-                        },
-                        [
-                          _vm._v(
-                            "\n                        Закрыть\n                    "
-                          )
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "v-btn",
-                        {
-                          attrs: { color: "blue darken-1", text: "" },
-                          on: { click: _vm.saveDish }
-                        },
-                        [
-                          _vm._v(
-                            "\n                        Сохранить\n                    "
-                          )
-                        ]
-                      )
-                    ],
                     1
                   )
                 ],

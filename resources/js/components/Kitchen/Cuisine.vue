@@ -22,32 +22,24 @@
             </v-btn>
         </v-row>
         <v-row>
-            <v-col sm="12" md="2">
-                <v-simple-table dense>
-                    <template v-slot:default>
-                        <thead>
-                            <tr>
-                                <th class="text-left">
-                                    #
-                                </th>
-                                <th class="text-left">
-                                    Name
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr
-                                v-for="(cuisine, index) in cuisines"
-                                :key="cuisine.id"
-                                :class="cuisine.active ? 'light-green lighten-3': ''"
-                                @click="showDetails(cuisine)"
-                            >
-                                <td>{{ index + 1 }}</td>
-                                <td>{{ cuisine.name }}</td>
-                            </tr>
-                        </tbody>
-                    </template>
-                </v-simple-table>
+            <v-col sm="12" md="2" lg="2">
+                <v-list dense>
+                    <v-subheader>Кухни мира</v-subheader>
+                    <v-list-item-group
+                        color="primary"
+                    >
+                        <v-list-item
+                            v-for="(cuisine, i) in cuisines"
+                            :key="i"
+                            :class="cuisine.active ? 'light-green lighten-3': ''"
+                            @click="showDetails(cuisine)"
+                        >
+                            <v-list-item-content>
+                                <v-list-item-title>{{i+1}}. {{cuisine.name}}</v-list-item-title>
+                            </v-list-item-content>
+                        </v-list-item>
+                    </v-list-item-group>
+                </v-list>
             </v-col>
             <v-col sm="12" md="10" lg="6">
                 <v-card
@@ -134,7 +126,7 @@
                 </v-card>
             </v-col>
         </v-row>
-        <v-row justify="center">
+<!--        <v-row justify="center">
             <v-dialog
                 v-model="dialog"
                 persistent
@@ -180,7 +172,7 @@
                     </v-card-actions>
                 </v-card>
             </v-dialog>
-        </v-row>
+        </v-row>-->
     </div>
 </template>
 <script>
@@ -197,7 +189,7 @@
             name: '',
             errors: []
         }),
-        mounted() {
+        created() {
             this.getCuisines()
         },
         methods: {
@@ -206,15 +198,8 @@
                     .get('/api/cuisines')
                     .then(response => {
                         this.cuisines = response.data.data
-
-                        if (Object.keys(this.cuisine).length === 0) {
-                            this.cuisine = this.cuisines[0]
-                        }else {
-                            this.cuisine = this.cuisines.find(x => x.id === this.cuisine.id)
-                        }
-
+                        this.cuisine = this.cuisines[0]
                         this.dish = this.cuisine.dishes[0]
-
                     })
                     .catch(error => {
                         console.log(error)

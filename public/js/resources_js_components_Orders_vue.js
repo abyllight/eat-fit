@@ -356,7 +356,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       go: 0,
       week: '',
       is_weekend: false,
-      itemsPerPage: 200,
+      itemsPerPage: 300,
       search: '',
       headers: [{
         text: '#',
@@ -373,6 +373,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }, {
         text: 'Yandex',
         value: 'yaddress'
+      }, {
+        text: 'Курьер',
+        value: 'courier_name'
       }, {
         text: 'Geo',
         value: 'geo'
@@ -412,6 +415,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this.select = response.data.select;
                   _this.detox = response.data.detox;
                   _this.go = response.data.go;
+                  console.log(_this.orders);
                 })["catch"](function (error) {
                   _this.loading = false;
 

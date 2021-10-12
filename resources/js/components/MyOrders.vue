@@ -125,12 +125,12 @@
                     >
                         <v-radio
                             label="Доставлено"
-                            value="Доставлено"
+                            value="0"
                             class="mb-1"
                         ></v-radio>
                         <v-radio
                             label="Не доставлено"
-                            value="Не доставлено"
+                            value="1"
                         ></v-radio>
                     </v-radio-group>
                     <v-textarea
@@ -139,7 +139,7 @@
                         label="Комментарий"
                     ></v-textarea>
                     <v-radio-group
-                        v-if="delivered==='Доставлено'"
+                        v-if="delivered === '0'"
                         v-model="payment_type"
                         row
                     >
@@ -163,7 +163,7 @@
                     <v-btn
                         color="blue darken-1"
                         text
-                        @click="dialog = false"
+                        @click="closeDialog"
                     >
                         Закрыть
                     </v-btn>
@@ -187,7 +187,7 @@ export default {
         orders: [],
         dialog: false,
         lead: {},
-        delivered: 'Доставлено',
+        delivered: '0',
         comment: '',
         amount: null,
         payment_type: 'Без оплаты',
@@ -266,7 +266,7 @@ export default {
                     payment_type: this.payment_type,
                 })
                 .then(response => {
-                    this.delivered = 'Доставлено'
+                    this.delivered = '0'
                     this.comment = ''
                     this.amount = null
                     this.payment_type = 'Без оплаты'
@@ -282,6 +282,13 @@ export default {
                 .catch(error => {
                     console.log(error)
                 })
+        },
+        closeDialog(){
+            this.dialog = false
+            this.delivered = '0'
+            this.comment = ''
+            this.amount = null
+            this.payment_type = 'Без оплаты'
         }
     }
 }

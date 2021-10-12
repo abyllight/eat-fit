@@ -200,7 +200,7 @@ __webpack_require__.r(__webpack_exports__);
       orders: [],
       dialog: false,
       lead: {},
-      delivered: 'Доставлено',
+      delivered: '0',
       comment: '',
       amount: null,
       payment_type: 'Без оплаты',
@@ -272,7 +272,7 @@ __webpack_require__.r(__webpack_exports__);
         amount: this.amount,
         payment_type: this.payment_type
       }).then(function (response) {
-        _this3.delivered = 'Доставлено';
+        _this3.delivered = '0';
         _this3.comment = '';
         _this3.amount = null;
         _this3.payment_type = 'Без оплаты';
@@ -289,6 +289,13 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         console.log(error);
       });
+    },
+    closeDialog: function closeDialog() {
+      this.dialog = false;
+      this.delivered = '0';
+      this.comment = '';
+      this.amount = null;
+      this.payment_type = 'Без оплаты';
     }
   }
 });
@@ -666,14 +673,11 @@ var render = function() {
                     [
                       _c("v-radio", {
                         staticClass: "mb-1",
-                        attrs: { label: "Доставлено", value: "Доставлено" }
+                        attrs: { label: "Доставлено", value: "0" }
                       }),
                       _vm._v(" "),
                       _c("v-radio", {
-                        attrs: {
-                          label: "Не доставлено",
-                          value: "Не доставлено"
-                        }
+                        attrs: { label: "Не доставлено", value: "1" }
                       })
                     ],
                     1
@@ -690,7 +694,7 @@ var render = function() {
                     }
                   }),
                   _vm._v(" "),
-                  _vm.delivered === "Доставлено"
+                  _vm.delivered === "0"
                     ? _c(
                         "v-radio-group",
                         {
@@ -739,11 +743,7 @@ var render = function() {
                     "v-btn",
                     {
                       attrs: { color: "blue darken-1", text: "" },
-                      on: {
-                        click: function($event) {
-                          _vm.dialog = false
-                        }
-                      }
+                      on: { click: _vm.closeDialog }
                     },
                     [_vm._v("\n                    Закрыть\n                ")]
                   ),

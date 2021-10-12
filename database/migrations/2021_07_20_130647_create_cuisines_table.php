@@ -18,6 +18,7 @@ class CreateCuisinesTable extends Migration
             $table->string('i_id');
             $table->string('i_name');
             $table->string('name')->nullable();
+            $table->boolean('is_on_duty')->default(false);
             $table->timestamps();
         });
     }

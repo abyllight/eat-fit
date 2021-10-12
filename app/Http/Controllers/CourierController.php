@@ -100,7 +100,7 @@ class CourierController extends Controller
                 ->first();
 
             if($founded_report){
-                $founded_report->report_status = $request->status;
+                $founded_report->report_status = (int)$request->status;
                 $founded_report->comment = $request->comment;
                 $founded_report->amount = $request->amount;
                 $founded_report->payment_type = $request->payment_type;
@@ -145,16 +145,16 @@ class CourierController extends Controller
 
         switch(true){
             case $time >= $start && $time <= $end:
-                $status = 'вовремя';
+                $status = 0;
                 break;
             case $time < $start:
-                $status = 'рано';
+                $status = 1;
                 break;
             case $time > $end:
-                $status = 'поздно';
+                $status = 2;
                 break;
             default:
-                $status = 'незвестно';
+                $status = 3;
         }
 
         return $status;

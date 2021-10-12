@@ -37,6 +37,7 @@ class OrderCollection extends JsonResource
             'yaddress_old' => $this->getYaddressOld(),
             'address' => $this->getAddress(),
             'courier' => $this->courier,
+            'courier_name' => $this->courier ? $this->courier->name : '-',
             'courier_id' => $this->getCourierId(),
             'diet' => $this->diet,
             'diet_old' => $this->diet_old,

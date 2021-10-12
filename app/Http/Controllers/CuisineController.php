@@ -24,7 +24,8 @@ class CuisineController extends Controller
             'e94384fa-07d1-4690-a7de-7219f6261c8e',
             'b3835a97-aa97-4921-9ac4-e827864a0ef5',
             'bce1cdd3-a155-4328-a8a9-e879501d91b0',
-            'fb41dbf4-4b29-4ac2-9899-4d0074d43046'
+            'fb41dbf4-4b29-4ac2-9899-4d0074d43046',
+            '36fd39fe-a1c5-444e-8685-dba3b85354cd'
         ];
 
         if (is_array($cuisines)) {
@@ -32,7 +33,10 @@ class CuisineController extends Controller
                 if (substr($cuisine['name'], 0, 2) === '! ' && !in_array($cuisine['id'], $blacklist)) {
                     Cuisine::updateOrCreate(
                         ['i_id' => $cuisine['id']],
-                        ['i_name' => substr($cuisine['name'], 2)]
+                        [
+                            'i_name' => substr($cuisine['name'], 2),
+                            'name' => substr($cuisine['name'], 2)
+                        ]
                     );
                 }
             }
@@ -69,7 +73,13 @@ class CuisineController extends Controller
                     if (!in_array($first, $array) && is_numeric($first)) {
                         Dish::updateOrCreate(
                             ['i_id' => $dish['id']],
-                            ['i_name' => substr($dish['name'], 4), 'name' => substr($dish['name'], 4), 'time' => (int) $first, 'cuisine_id' => $cuisine->id]
+                            [
+                                'i_name' => substr($dish['name'], 4),
+                                'name' => substr($dish['name'], 4),
+                                'time' => (int) $first,
+                                'cuisine_id' => $cuisine->id,
+                                'is_custom' => false
+                            ]
                         );
                     }
                     array_push($array, $first);
@@ -96,7 +106,7 @@ class CuisineController extends Controller
         $dishes = Dish::where('cuisine_id', $request->id)->get();
 
         foreach ($dishes as $dish){
-            $link = '/resto/api/v2/assemblyCharts/getPrepared?date=2021-08-01&productId=' . $dish->i_id . '&key=';
+            $link = '/resto/api/v2/assemblyCharts/getPrepared?date=2021-10-12&productId=' . $dish->i_id . '&key=';
             $ingredients = $iiko->doRequest($token, $link);
 
             if (is_array($ingredients)) {

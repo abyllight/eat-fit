@@ -53,10 +53,12 @@ class ReportController extends Controller
                 'amount' => $item->amount ?? '-',
                 'type' => $item->payment_type,
                 'comment' => $item->comment,
-                'report_status' => $item->report_status,
-                'notification_status' => $item->notification_status,
-                'notified_at' => $item->notified_at ?? '-',
-                'reported_at' => $item->reported_at ? $item->reported_at->toDateTimeString() : '-'
+                'report_status' => $item->getReportStatus(),
+                'report_color' => $item->getReportColor(),
+                'notification_status' => $item->getNotificationStatus(),
+                'notification_color' => $item->getNotificationColor(),
+                'notified_at' => $item->getNotifiedAt(),
+                'reported_at' => $item->getReportedAt()
             ];
         }
 

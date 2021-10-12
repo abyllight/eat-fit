@@ -103,9 +103,25 @@
                                 <td>{{ item.address }}</td>
                                 <td>{{ item.type }}</td>
                                 <td>{{ item.amount }}</td>
-                                <td>{{ item.report_status }}</td>
+                                <td>
+                                    <v-chip
+                                        label
+                                        small
+                                        :color="item.report_color"
+                                    >
+                                        {{ item.report_status }}
+                                    </v-chip>
+                                </td>
                                 <td>{{ item.reported_at }}</td>
-                                <td>{{ item.notification_status }}</td>
+                                <td>
+                                    <v-chip
+                                        label
+                                        small
+                                        :color="item.notification_color"
+                                    >
+                                        {{ item.notification_status }}
+                                    </v-chip>
+                                </td>
                                 <td>{{ item.notified_at }}</td>
                             </tr>
                             <tr class="grey lighten-3">

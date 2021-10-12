@@ -335,7 +335,7 @@
             go: 0,
             week: '',
             is_weekend: false,
-            itemsPerPage: 200,
+            itemsPerPage: 300,
             search: '',
             headers: [
                 { text: '#', value: 'index' },
@@ -343,6 +343,7 @@
                 { text: 'Тэг', value: 'tag' },
                 { text: 'Время', value: 'time' },
                 { text: 'Yandex', value: 'yaddress' },
+                { text: 'Курьер', value: 'courier_name' },
                 { text: 'Geo', value: 'geo' },
                 { text: 'Int', value: 'int' },
             ],
@@ -371,6 +372,7 @@
                         this.select = response.data.select
                         this.detox = response.data.detox
                         this.go = response.data.go
+                        console.log(this.orders)
                     })
                     .catch(error => {
                         this.loading = false

@@ -35,47 +35,81 @@ class Report extends Model
         return $this->belongsTo(User::class, 'courier_id', 'id');
     }
 
-    public function getStatus(): string
-    {
-        if (!$this->delivered_at) {
-            return '<td><span class="badge badge-danger">не доставлено</span></td>';
-        }
-
-        $is_weekend = Week::isWeekend();
-        $time = $is_weekend ? $this->order->time2 : $this->order->time1;
-
-        $time = explode('-', $time);
-        $from = (float) $time[0] * 100;
-        $to   = (float) $time[1] * 100;
-
-        $delivered_at = (float) $this->delivered_at->format('H:i') * 100;
-        $delivered_at = (int) $delivered_at;
-
-        switch (true) {
-            case $delivered_at >= $from && $delivered_at <= $to:
-                $status = '<td><span class="badge badge-success">вовремя</span></td>';
+    public function getReportStatus(){
+        switch ($this->report_status){
+            case 0:
+                $status = 'Доставлено';
                 break;
-            case $delivered_at < $from:
-                $status = '<td><span class="badge badge-primary">рано</span></td>';
-                break;
-            case $delivered_at > $from:
-                $status = '<td><span class="badge badge-warning">не вовремя</span></td>';
+            case 1:
+                $status = 'Не доставлено';
                 break;
             default:
-                $status = '<td><span class="badge badge-secondary">незвестно</span></td>';
-                break;
+                $status = '-';
         }
 
         return $status;
     }
 
-    public function getDeliveredAt()
+    public function getReportColor(){
+        switch ($this->report_status){
+            case 0:
+                $color = 'green';
+                break;
+            case 1:
+                $color = 'red';
+                break;
+            default:
+                $color = 'grey';
+        }
+
+        return $color;
+    }
+
+    public function getNotificationStatus(): string
     {
-        return $this->delivered_at ? $this->delivered_at->format('Y-m-d H:i:s') : '';
+        switch ($this->notification_status){
+            case '0':
+                $status = 'вовремя';
+                break;
+            case 1:
+                $status = 'рано';
+                break;
+            case 2:
+                $status = 'поздно';
+                break;
+            default:
+                $status = 'неизвестно';
+        }
+
+        return $status;
+    }
+
+    public function getNotificationColor(): string
+    {
+        switch ($this->notification_status){
+            case '0':
+                $color = 'green';
+                break;
+            case 1:
+                $color = 'yellow';
+                break;
+            case 2:
+                $color = 'red';
+                break;
+            default:
+                $color = 'grey';
+        }
+
+        return $color;
+    }
+
+    public function getNotifiedAt()
+    {
+        return $this->notified_at ? $this->notified_at->format('Y-m-d H:i:s') : '-';
     }
 
     public function getReportedAt()
     {
-        return $this->reported_at ? $this->reported_at->format('Y-m-d H:i:s') : '';
+        return $this->reported_at ? $this->reported_at->format('Y-m-d H:i:s') : '-';
     }
 }

@@ -135,6 +135,22 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Report',
@@ -943,17 +959,59 @@ var render = function() {
                                       _vm._v(" "),
                                       _c("td", [_vm._v(_vm._s(item.amount))]),
                                       _vm._v(" "),
-                                      _c("td", [
-                                        _vm._v(_vm._s(item.report_status))
-                                      ]),
+                                      _c(
+                                        "td",
+                                        [
+                                          _c(
+                                            "v-chip",
+                                            {
+                                              attrs: {
+                                                label: "",
+                                                small: "",
+                                                color: item.report_color
+                                              }
+                                            },
+                                            [
+                                              _vm._v(
+                                                "\n                                     " +
+                                                  _vm._s(item.report_status) +
+                                                  "\n                                 "
+                                              )
+                                            ]
+                                          )
+                                        ],
+                                        1
+                                      ),
                                       _vm._v(" "),
                                       _c("td", [
                                         _vm._v(_vm._s(item.reported_at))
                                       ]),
                                       _vm._v(" "),
-                                      _c("td", [
-                                        _vm._v(_vm._s(item.notification_status))
-                                      ]),
+                                      _c(
+                                        "td",
+                                        [
+                                          _c(
+                                            "v-chip",
+                                            {
+                                              attrs: {
+                                                label: "",
+                                                small: "",
+                                                color: item.notification_color
+                                              }
+                                            },
+                                            [
+                                              _vm._v(
+                                                "\n                                     " +
+                                                  _vm._s(
+                                                    item.notification_status
+                                                  ) +
+                                                  "\n                                 "
+                                              )
+                                            ]
+                                          )
+                                        ],
+                                        1
+                                      ),
                                       _vm._v(" "),
                                       _c("td", [
                                         _vm._v(_vm._s(item.notified_at))
