@@ -345,6 +345,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Client',
   data: function data() {
@@ -771,6 +772,7 @@ var render = function() {
           ),
           _vm._v(" "),
           _c("v-switch", {
+            staticClass: "ma-3",
             attrs: { color: "primary", label: _vm.week },
             on: { change: _vm.setWeek },
             model: {
@@ -790,7 +792,7 @@ var render = function() {
         [
           _c(
             "v-col",
-            { attrs: { cols: "9", sm: "12", lg: "9" } },
+            { attrs: { cols: "12", sm: "12", lg: "9" } },
             [
               _c(
                 "v-card",

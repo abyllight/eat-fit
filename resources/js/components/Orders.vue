@@ -30,6 +30,7 @@
             </v-btn>
 
             <v-switch
+                class="ma-3"
                 color="primary"
                 v-model="is_weekend"
                 :label="week"
@@ -37,7 +38,7 @@
             ></v-switch>
         </v-row>
         <v-row>
-            <v-col cols="9" sm="12" lg="9">
+            <v-col cols="12" sm="12" lg="9">
                 <v-card>
                     <v-card-title>
                         <v-text-field

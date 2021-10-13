@@ -712,7 +712,7 @@ var render = function() {
         [
           _c(
             "v-col",
-            { attrs: { cols: "3" } },
+            { attrs: { cols: "12", sm: "12", lg: "3" } },
             [
               _c(
                 "v-menu",
@@ -833,7 +833,7 @@ var render = function() {
             1
           ),
           _vm._v(" "),
-          _c("v-col", [
+          _c("v-col", { attrs: { sm: "12", lg: "3" } }, [
             _c(
               "a",
               {

@@ -1,7 +1,7 @@
 <template>
    <div>
        <v-row>
-           <v-col cols="3">
+           <v-col cols="12" sm="12" lg="3">
                <v-menu
                    ref="menu"
                    v-model="menu"
@@ -45,7 +45,7 @@
                    </v-date-picker>
                </v-menu>
            </v-col>
-           <v-col>
+           <v-col sm="12" lg="3">
                <a
                    type="button"
                    :href="`/api/reports/export/${date}`"
