@@ -37,7 +37,7 @@ class Report extends Model
 
     public function getReportStatus(){
         switch ($this->report_status){
-            case 0:
+            case '0':
                 $status = 'Доставлено';
                 break;
             case 1:
@@ -52,7 +52,7 @@ class Report extends Model
 
     public function getReportColor(){
         switch ($this->report_status){
-            case 0:
+            case '0':
                 $color = 'green';
                 break;
             case 1:
