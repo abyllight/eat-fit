@@ -105,7 +105,7 @@ class Report extends Model
 
     public function getNotifiedAt()
     {
-        return $this->notified_at ? $this->notified_at->format('Y-m-d H:i:s') : '-';
+        return $this->notified_at ?? '-';
     }
 
     public function getReportedAt()
