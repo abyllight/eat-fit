@@ -59,7 +59,7 @@
                                 <td :class="order.color">{{ order.tag }}</td>
                                 <td>{{ order.phone }}</td>
                                 <td>{{ order.time }}</td>
-                                <td>{{ order.yaddress }}</td>
+                                <td>{{ order.address }}</td>
                                 <td>{{ order.logistic }}</td>
                             </tr>
                         </draggable>

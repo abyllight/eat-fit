@@ -4119,7 +4119,7 @@ var render = function() {
                                   _vm._v(" "),
                                   _c("td", [_vm._v(_vm._s(order.time))]),
                                   _vm._v(" "),
-                                  _c("td", [_vm._v(_vm._s(order.yaddress))]),
+                                  _c("td", [_vm._v(_vm._s(order.address))]),
                                   _vm._v(" "),
                                   _c("td", [_vm._v(_vm._s(order.logistic))])
                                 ]

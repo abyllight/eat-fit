@@ -376,7 +376,7 @@ class OrderController extends Controller
         $sheet = $spreadsheet->getActiveSheet();
 
         //Row height
-        $sheet->getDefaultRowDimension()->setRowHeight(30);
+        $sheet->getDefaultRowDimension()->setRowHeight(10);
 
         //Borders style
         $borderStyleArray = array(
@@ -399,7 +399,7 @@ class OrderController extends Controller
         foreach ($couriers as $courier) {
 
             foreach ($courier->orders as $c) {
-                if($c->type === 1) {
+                if($c->type === 0) {
 
                     switch ($c->size) {
                         case 0:
@@ -432,13 +432,13 @@ class OrderController extends Controller
             $sheet->setCellValue(
                 'A' . $n,
                 $courier->name . ' - ' . count($courier->orders) .
-                ' | Select '. $xs . $s . $m . $l . $xl
+                ' | Lite '. $xs . $s . $m . $l . $xl
             );
 
             $xs = $s = $m = $l = $xl = 0;
 
             //Courier name size
-            $sheet->getStyle('A' . $n)->getFont()->setSize(20);
+            $sheet->getStyle('A' . $n)->getFont()->setSize(16);
             $sheet->getStyle('A' . $n)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
 
             $n = $n + 1;
