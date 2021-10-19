@@ -476,10 +476,10 @@ class OrderController extends Controller
                 $sheet->mergeCells('A' . $count . ':A' . ($count + 1));
 
                 $time = $is_weekend ? $value->time2 : $value->time1;
-                $yaddress = $is_weekend ? $value->yaddress2 : $value->yaddress1;
+                $address = $is_weekend ? $value->address2 : $value->address1;
 
                 $arrayData = [
-                    [$v + 1, $value->name, $value->getTag($value->type, $value->size), $time, $value->phone, $yaddress]
+                    [$v + 1, $value->name, $value->getTag($value->type, $value->size), $time, $value->phone, $address]
                 ];
 
                 $sheet->fromArray($arrayData, NULL, 'A' . $count);
