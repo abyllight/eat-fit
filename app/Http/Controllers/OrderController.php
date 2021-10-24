@@ -376,7 +376,7 @@ class OrderController extends Controller
         $sheet = $spreadsheet->getActiveSheet();
 
         //Row height
-        $sheet->getDefaultRowDimension()->setRowHeight(10);
+        $sheet->getDefaultRowDimension()->setRowHeight(16);
 
         //Borders style
         $borderStyleArray = array(
