@@ -463,8 +463,11 @@ class OrderController extends Controller
                     case 0:
                         $color = 'fff59d';
                         break;
+                    case 2:
+                        $color = '80CBC4';
+                        break;
                     case 3:
-                        $color = '90caf9';
+                        $color = 'EF9A9A';
                         break;
                 }
 

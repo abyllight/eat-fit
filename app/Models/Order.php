@@ -110,8 +110,11 @@ class Order extends Model
             case 1:
                 $color = 'green';
                 break;
-            case '3':
-                $color = 'blue';
+            case 2:
+                $color = 'teal';
+                break;
+            case 3:
+                $color = 'red';
                 break;
         }
 
