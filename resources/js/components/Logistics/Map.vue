@@ -121,6 +121,7 @@ export default {
     data: () => ({
         loading: false,
         settings: {
+            apiKey: '3ccab634-2c6f-4506-9294-dc6811844c51',
             lang: 'ru_RU',
             version: '2.1'
         },
@@ -289,7 +290,6 @@ export default {
             await axios
                 .get('/api/map/geocode')
                 .then(response => {
-                    console.log(response)
                     this.$store.dispatch('showAlert', {
                         'isVisible': true,
                         'msg': response.data.message,

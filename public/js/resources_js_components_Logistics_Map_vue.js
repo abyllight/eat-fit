@@ -147,6 +147,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     return {
       loading: false,
       settings: {
+        apiKey: '3ccab634-2c6f-4506-9294-dc6811844c51',
         lang: 'ru_RU',
         version: '2.1'
       },
@@ -343,8 +344,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _this4.loading = true;
                 _context3.next = 3;
                 return axios.get('/api/map/geocode').then(function (response) {
-                  console.log(response);
-
                   _this4.$store.dispatch('showAlert', {
                     'isVisible': true,
                     'msg': response.data.message,
