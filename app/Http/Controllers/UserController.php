@@ -136,8 +136,13 @@ class UserController extends Controller
         $user = User::find($id);
 
         if ($user) {
-            $user->roles()->detach();
-            $user->reports()->detach();
+            if ($user->roles){
+                $user->roles()->detach();
+            }
+
+            if ($user->reports){
+                $user->reports()->detach();
+            }
 
             $orders1 = Order::where('courier1_id', $user->id)->get();
             $orders2 = Order::where('courier2_id', $user->id)->get();
