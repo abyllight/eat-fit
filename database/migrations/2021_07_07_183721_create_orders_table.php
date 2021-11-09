@@ -24,6 +24,7 @@ class CreateOrdersTable extends Migration
             $table->integer('day')->nullable();
             $table->integer('day_old')->nullable();
             $table->integer('course')->nullable();
+            $table->boolean('has_bag')->default(false);
             $table->integer('interval')->default(0);
             $table->integer('position')->nullable();
             $table->longText('logistic')->nullable();

@@ -1,5 +1,5 @@
 <template>
-    <v-container>
+    <v-container fluid>
         <v-row class="mb-4">
             <a
                 type="button"
@@ -34,6 +34,9 @@
                                 Тэг
                             </th>
                             <th class="text-left">
+                                Ланчбэг
+                            </th>
+                            <th class="text-left">
                                 Телефон
                             </th>
                             <th class="text-left">
@@ -57,6 +60,7 @@
                                 <td>{{ index + 1 }}</td>
                                 <td :class="order.color">{{ order.name }}</td>
                                 <td :class="order.color">{{ order.tag }}</td>
+                                <td :class="order.has_bag === 'Да' ? 'red' : ''">{{ order.has_bag }}</td>
                                 <td>{{ order.phone }}</td>
                                 <td>{{ order.time }}</td>
                                 <td>{{ order.address }}</td>

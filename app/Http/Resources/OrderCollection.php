@@ -26,6 +26,7 @@ class OrderCollection extends JsonResource
             'day' => $this->day,
             'day_old' => $this->day_old,
             'course' => $this->course,
+            'has_bag' => $this->has_bag ? 'Да' : '-',
             'interval' => $this->interval,
             'position' => $this->position,
             'logistic' => $this->logistic,

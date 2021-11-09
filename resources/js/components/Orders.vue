@@ -373,7 +373,6 @@
                         this.select = response.data.select
                         this.detox = response.data.detox
                         this.go = response.data.go
-                        console.log(this.orders)
                     })
                     .catch(error => {
                         this.loading = false

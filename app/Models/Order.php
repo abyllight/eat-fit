@@ -25,6 +25,7 @@ class Order extends Model
         'day',
         'day_old',
         'course',
+        'has_bag',
         'interval',
         'position',
         'logistic',

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use AmoCRM\Client;
 use App\Http\Resources\OrderCollection;
-use App\Models\Courier;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\Week;
@@ -210,6 +209,8 @@ class OrderController extends Controller
                     break;
             }
 
+            $fields['has_bag'] = strpos($fields['logistic'], 'ланчбэг') !== false;
+
             $existing_order = Order::where('amo_id', $id)->orWhere('name', $name)->first();
 
             if ($existing_order) {
@@ -222,6 +223,7 @@ class OrderController extends Controller
                     'size'      => $fields['size'],
                     'day'       => $fields['day'],
                     'course'    => $fields['course'],
+                    'has_bag'   => $fields['has_bag'],
                     'phone'     => $fields['phone'],
                     'whatsapp'  => $fields['whatsapp'],
                     'time1'     => $fields['t1'],
@@ -259,6 +261,7 @@ class OrderController extends Controller
         $order->phone    = $fields['phone'];
         $order->whatsapp = $fields['whatsapp'];
         $order->course   = $fields['course'];
+        $order->has_bag  = $fields['has_bag'];
         $order->address1 = $fields['a1'];
         $order->address2 = $fields['a2'];
         $order->logistic = $fields['logistic'];
@@ -370,6 +373,7 @@ class OrderController extends Controller
         $couriers = User::couriers();
         $n = 1;
         $color = 'ffffff';
+        $bag_color = 'ffffff';
         $xs = $s = $m = $l = $xl = 0;
 
         $spreadsheet = new Spreadsheet();
@@ -445,13 +449,14 @@ class OrderController extends Controller
             $count = $n;
 
             $arrayHeader = [
-                ['#', 'Имя', 'Тег', 'Время', 'Телефон', 'Адрес']
+                ['#', 'Имя', 'Тег', 'Ланчбэг', 'Время', 'Телефон', 'Адрес']
             ];
 
             //Alignment and size of header
             $sheet->fromArray($arrayHeader, NULL, 'A' . $n);
             $sheet->getStyle('A' . $n . ':F' . $n)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
             $sheet->getStyle('A' . $n . ':F' . $n)->getFont()->setBold(true)->setSize(13);
+
 
             foreach ($courier->orders as $v => $value) {
                 $count = $count + 1;
@@ -471,6 +476,7 @@ class OrderController extends Controller
                         break;
                 }
 
+                $bag_color = $value->has_bag ? 'F44336' : 'ffffff';
                 //Alignment of # and A:F row
                 $sheet->getStyle('A' . $count)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
                 $sheet->getStyle('A' . $count . ':F' . $count)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
@@ -482,7 +488,7 @@ class OrderController extends Controller
                 $address = $is_weekend ? $value->address2 : $value->address1;
 
                 $arrayData = [
-                    [$v + 1, $value->name, $value->getTag($value->type, $value->size), $time, $value->phone, $address]
+                    [$v + 1, $value->name, $value->getTag($value->type, $value->size), $value->has_bag ? 'Да' : '-', $time, $value->phone, $address]
                 ];
 
                 $sheet->fromArray($arrayData, NULL, 'A' . $count);
@@ -502,6 +508,13 @@ class OrderController extends Controller
                 $sheet->getStyle('B' . ($count + 1))->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
                 $sheet->getStyle('B' . ($count + 1))->getAlignment()->setWrapText(true);
                 //$sheet->getRowDimension('B')->setRowHeight(-1);
+
+                //Bag color
+                $sheet->getStyle('D' . $count)
+                    ->getFill()
+                    ->setFillType(Fill::FILL_SOLID)
+                    ->getStartColor()
+                    ->setRGB($bag_color);
 
                 $count = $count + 1;
             }

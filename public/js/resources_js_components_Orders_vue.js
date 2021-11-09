@@ -416,7 +416,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this.select = response.data.select;
                   _this.detox = response.data.detox;
                   _this.go = response.data.go;
-                  console.log(_this.orders);
                 })["catch"](function (error) {
                   _this.loading = false;
 

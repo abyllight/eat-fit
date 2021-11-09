@@ -114,12 +114,6 @@ export default {
             roles: [7]
         },
         {
-            id: 3,
-            title: 'Промокоды',
-            link: '/promocodes',
-            roles: [7]
-        },
-        {
             id: 4,
             title: 'Заказы',
             link: '/orders',
@@ -160,7 +154,13 @@ export default {
             title: 'Ингредиенты',
             link: '/ingredients',
             roles: [11]
-        }
+        },
+        {
+            id: 3,
+            title: 'Промокоды',
+            link: '/promocodes',
+            roles: [7]
+        },
     ]
   }),
   computed: {

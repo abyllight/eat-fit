@@ -93,6 +93,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'OrderList',
@@ -3996,6 +4000,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "v-container",
+    { attrs: { fluid: "" } },
     [
       _c("v-row", { staticClass: "mb-4" }, [
         _c(
@@ -4062,6 +4067,12 @@ var render = function() {
                               _vm._v(" "),
                               _c("th", { staticClass: "text-left" }, [
                                 _vm._v(
+                                  "\n                            Ланчбэг\n                        "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("th", { staticClass: "text-left" }, [
+                                _vm._v(
                                   "\n                            Телефон\n                        "
                                 )
                               ]),
@@ -4114,6 +4125,14 @@ var render = function() {
                                   _c("td", { class: order.color }, [
                                     _vm._v(_vm._s(order.tag))
                                   ]),
+                                  _vm._v(" "),
+                                  _c(
+                                    "td",
+                                    {
+                                      class: order.has_bag === "Да" ? "red" : ""
+                                    },
+                                    [_vm._v(_vm._s(order.has_bag))]
+                                  ),
                                   _vm._v(" "),
                                   _c("td", [_vm._v(_vm._s(order.phone))]),
                                   _vm._v(" "),
