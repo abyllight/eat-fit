@@ -60,7 +60,7 @@
                                 <td>{{ index + 1 }}</td>
                                 <td :class="order.color">{{ order.name }}</td>
                                 <td :class="order.color">{{ order.tag }}</td>
-                                <td :class="order.has_bag === 'Да' ? 'red' : ''">{{ order.has_bag }}</td>
+                                <td :class="order.has_bag === 'Ланчбэг' ? 'red' : ''">{{ order.has_bag }}</td>
                                 <td>{{ order.phone }}</td>
                                 <td>{{ order.time }}</td>
                                 <td>{{ order.address }}</td>

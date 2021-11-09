@@ -488,7 +488,7 @@ class OrderController extends Controller
                 $address = $is_weekend ? $value->address2 : $value->address1;
 
                 $arrayData = [
-                    [$v + 1, $value->name, $value->getTag($value->type, $value->size), $value->has_bag ? 'Да' : '-', $time, $value->phone, $address]
+                    [$v + 1, $value->name, $value->getTag($value->type, $value->size), $value->has_bag ? 'Ланчбэг' : '-', $time, $value->phone, $address]
                 ];
 
                 $sheet->fromArray($arrayData, NULL, 'A' . $count);

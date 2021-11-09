@@ -4129,7 +4129,8 @@ var render = function() {
                                   _c(
                                     "td",
                                     {
-                                      class: order.has_bag === "Да" ? "red" : ""
+                                      class:
+                                        order.has_bag === "Ланчбэг" ? "red" : ""
                                     },
                                     [_vm._v(_vm._s(order.has_bag))]
                                   ),
