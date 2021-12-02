@@ -406,6 +406,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'KitchenOrders',
@@ -1815,179 +1817,210 @@ var render = function() {
                                                             1
                                                           ),
                                                           _vm._v(" "),
-                                                          _c(
-                                                            "v-col",
-                                                            [
-                                                              _c(
-                                                                "v-btn",
-                                                                {
-                                                                  attrs: {
-                                                                    color:
-                                                                      "primary",
-                                                                    small: "",
-                                                                    disabled:
-                                                                      _vm.result
-                                                                        .dish &&
-                                                                      _vm.dish
-                                                                        .id ===
-                                                                        _vm
-                                                                          .result
-                                                                          .dish
-                                                                          .id
-                                                                  },
-                                                                  on: {
-                                                                    click:
-                                                                      _vm.setDish
-                                                                  }
-                                                                },
+                                                          _vm.result
+                                                            ? _c(
+                                                                "v-col",
                                                                 [
-                                                                  _vm._v(
-                                                                    "\n                                                            Выбрать\n                                                        "
+                                                                  _c(
+                                                                    "v-btn",
+                                                                    {
+                                                                      attrs: {
+                                                                        color:
+                                                                          "primary",
+                                                                        small:
+                                                                          "",
+                                                                        disabled:
+                                                                          _vm
+                                                                            .result
+                                                                            .dish &&
+                                                                          _vm
+                                                                            .dish
+                                                                            .id ===
+                                                                            _vm
+                                                                              .result
+                                                                              .dish
+                                                                              .id
+                                                                      },
+                                                                      on: {
+                                                                        click:
+                                                                          _vm.setDish
+                                                                      }
+                                                                    },
+                                                                    [
+                                                                      _vm._v(
+                                                                        "\n                                                            Выбрать\n                                                        "
+                                                                      )
+                                                                    ]
                                                                   )
-                                                                ]
+                                                                ],
+                                                                1
                                                               )
-                                                            ],
-                                                            1
-                                                          )
+                                                            : _vm._e()
                                                         ],
                                                         1
                                                       ),
                                                       _vm._v(" "),
-                                                      _vm._l(
-                                                        _vm.dish.ingredients,
-                                                        function(ing, key) {
-                                                          return _c(
-                                                            "v-sheet",
-                                                            {
-                                                              key: ing.id,
-                                                              staticClass:
-                                                                "pa-3 mb-3 flex justify-center",
-                                                              attrs: {
-                                                                elevation: "1",
-                                                                color: _vm.mix.includes(
-                                                                  ing.id
-                                                                )
-                                                                  ? "red lighten-3"
-                                                                  : ""
-                                                              }
-                                                            },
-                                                            [
-                                                              _c(
-                                                                "p",
-                                                                {
-                                                                  class: !_vm.result.ingredient_ids.includes(
-                                                                    ing.id
-                                                                  )
-                                                                    ? "text-decoration-line-through"
-                                                                    : ""
-                                                                },
-                                                                [
-                                                                  _vm._v(
-                                                                    "\n                                                        " +
-                                                                      _vm._s(
-                                                                        key + 1
-                                                                      ) +
-                                                                      ". " +
-                                                                      _vm._s(
-                                                                        ing.name
-                                                                      ) +
-                                                                      "\n                                                    "
-                                                                  )
-                                                                ]
-                                                              ),
-                                                              _vm._v(" "),
-                                                              _c(
-                                                                "div",
-                                                                {
-                                                                  staticClass:
-                                                                    "mt-2"
-                                                                },
-                                                                [
-                                                                  _vm.dish
-                                                                    .id ===
-                                                                  _vm.result
-                                                                    .dish.id
-                                                                    ? _c(
-                                                                        "v-btn",
-                                                                        {
-                                                                          class: _vm.result.ingredient_ids.includes(
-                                                                            ing.id
-                                                                          )
-                                                                            ? "red"
-                                                                            : "green",
-                                                                          attrs: {
-                                                                            "x-small":
-                                                                              ""
-                                                                          },
-                                                                          on: {
-                                                                            click: function(
-                                                                              $event
-                                                                            ) {
-                                                                              _vm.result.ingredient_ids.includes(
-                                                                                ing.id
-                                                                              )
-                                                                                ? _vm.removeIngredient(
-                                                                                    ing.id
-                                                                                  )
-                                                                                : _vm.addIngredient(
-                                                                                    ing.id
-                                                                                  )
-                                                                            }
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _vm._v(
-                                                                            "\n                                                            " +
-                                                                              _vm._s(
-                                                                                _vm.result.ingredient_ids.includes(
+                                                      _vm.result
+                                                        ? _c(
+                                                            "div",
+                                                            _vm._l(
+                                                              _vm.dish
+                                                                .ingredients,
+                                                              function(
+                                                                ing,
+                                                                key
+                                                              ) {
+                                                                return _c(
+                                                                  "v-sheet",
+                                                                  {
+                                                                    key: ing.id,
+                                                                    staticClass:
+                                                                      "pa-3 mb-3 flex justify-center",
+                                                                    attrs: {
+                                                                      elevation:
+                                                                        "1",
+                                                                      color: _vm.mix.includes(
+                                                                        ing.id
+                                                                      )
+                                                                        ? "red lighten-3"
+                                                                        : ""
+                                                                    }
+                                                                  },
+                                                                  [
+                                                                    _c(
+                                                                      "p",
+                                                                      {
+                                                                        class: !_vm.result.ingredient_ids.includes(
+                                                                          ing.id
+                                                                        )
+                                                                          ? "text-decoration-line-through"
+                                                                          : ""
+                                                                      },
+                                                                      [
+                                                                        _vm._v(
+                                                                          "\n                                                            " +
+                                                                            _vm._s(
+                                                                              key +
+                                                                                1
+                                                                            ) +
+                                                                            ". " +
+                                                                            _vm._s(
+                                                                              ing.name
+                                                                            ) +
+                                                                            "\n                                                        "
+                                                                        )
+                                                                      ]
+                                                                    ),
+                                                                    _vm._v(" "),
+                                                                    _c(
+                                                                      "div",
+                                                                      {
+                                                                        staticClass:
+                                                                          "mt-2"
+                                                                      },
+                                                                      [
+                                                                        _vm.result &&
+                                                                        _vm
+                                                                          .result
+                                                                          .dish &&
+                                                                        _vm.dish
+                                                                          .id ===
+                                                                          _vm
+                                                                            .result
+                                                                            .dish
+                                                                            .id
+                                                                          ? _c(
+                                                                              "v-btn",
+                                                                              {
+                                                                                class: _vm.result.ingredient_ids.includes(
                                                                                   ing.id
                                                                                 )
-                                                                                  ? "Убрать"
-                                                                                  : "Вернуть"
-                                                                              ) +
-                                                                              "\n                                                        "
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    : _vm._e(),
-                                                                  _vm._v(" "),
-                                                                  _vm.dish
-                                                                    .id ===
-                                                                  _vm.result
-                                                                    .dish.id
-                                                                    ? _c(
-                                                                        "v-btn",
-                                                                        {
-                                                                          attrs: {
-                                                                            "x-small":
-                                                                              ""
-                                                                          },
-                                                                          on: {
-                                                                            click: function(
-                                                                              $event
-                                                                            ) {
-                                                                              return _vm.replace(
-                                                                                ing
-                                                                              )
-                                                                            }
-                                                                          }
-                                                                        },
-                                                                        [
-                                                                          _vm._v(
-                                                                            "\n                                                            Замена\n                                                        "
-                                                                          )
-                                                                        ]
-                                                                      )
-                                                                    : _vm._e()
-                                                                ],
-                                                                1
-                                                              )
-                                                            ]
+                                                                                  ? "red"
+                                                                                  : "green",
+                                                                                attrs: {
+                                                                                  "x-small":
+                                                                                    ""
+                                                                                },
+                                                                                on: {
+                                                                                  click: function(
+                                                                                    $event
+                                                                                  ) {
+                                                                                    _vm.result.ingredient_ids.includes(
+                                                                                      ing.id
+                                                                                    )
+                                                                                      ? _vm.removeIngredient(
+                                                                                          ing.id
+                                                                                        )
+                                                                                      : _vm.addIngredient(
+                                                                                          ing.id
+                                                                                        )
+                                                                                  }
+                                                                                }
+                                                                              },
+                                                                              [
+                                                                                _vm._v(
+                                                                                  "\n                                                                " +
+                                                                                    _vm._s(
+                                                                                      _vm.result.ingredient_ids.includes(
+                                                                                        ing.id
+                                                                                      )
+                                                                                        ? "Убрать"
+                                                                                        : "Вернуть"
+                                                                                    ) +
+                                                                                    "\n                                                            "
+                                                                                )
+                                                                              ]
+                                                                            )
+                                                                          : _vm._e(),
+                                                                        _vm._v(
+                                                                          " "
+                                                                        ),
+                                                                        _vm.result &&
+                                                                        _vm
+                                                                          .result
+                                                                          .dish &&
+                                                                        _vm.dish
+                                                                          .id ===
+                                                                          _vm
+                                                                            .result
+                                                                            .dish
+                                                                            .id
+                                                                          ? _c(
+                                                                              "v-btn",
+                                                                              {
+                                                                                attrs: {
+                                                                                  "x-small":
+                                                                                    ""
+                                                                                },
+                                                                                on: {
+                                                                                  click: function(
+                                                                                    $event
+                                                                                  ) {
+                                                                                    return _vm.replace(
+                                                                                      ing
+                                                                                    )
+                                                                                  }
+                                                                                }
+                                                                              },
+                                                                              [
+                                                                                _vm._v(
+                                                                                  "\n                                                                Замена\n                                                            "
+                                                                                )
+                                                                              ]
+                                                                            )
+                                                                          : _vm._e()
+                                                                      ],
+                                                                      1
+                                                                    )
+                                                                  ]
+                                                                )
+                                                              }
+                                                            ),
+                                                            1
                                                           )
-                                                        }
-                                                      )
+                                                        : _vm._e()
                                                     ],
-                                                    2
+                                                    1
                                                   ),
                                                   _vm._v(" "),
                                                   _vm.result

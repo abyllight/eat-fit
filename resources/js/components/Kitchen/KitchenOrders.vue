@@ -303,7 +303,7 @@
                                                                 label="Блюда"
                                                             ></v-select>
                                                         </v-col>
-                                                        <v-col>
+                                                        <v-col v-if="result">
                                                             <v-btn
                                                                 color="primary"
                                                                 small
@@ -314,36 +314,38 @@
                                                             </v-btn>
                                                         </v-col>
                                                     </v-row>
-                                                    <v-sheet
-                                                        v-for="(ing, key) in dish.ingredients"
-                                                        :key="ing.id"
-                                                        elevation="1"
-                                                        class="pa-3 mb-3 flex justify-center"
-                                                        :color="mix.includes(ing.id) ? 'red lighten-3' : ''"
-                                                    >
-                                                        <p
-                                                            :class="!result.ingredient_ids.includes(ing.id) ? 'text-decoration-line-through' : ''"
+                                                    <div v-if="result">
+                                                        <v-sheet
+                                                            v-for="(ing, key) in dish.ingredients"
+                                                            :key="ing.id"
+                                                            elevation="1"
+                                                            class="pa-3 mb-3 flex justify-center"
+                                                            :color="mix.includes(ing.id) ? 'red lighten-3' : ''"
                                                         >
-                                                            {{key+1}}. {{ing.name}}
-                                                        </p>
-                                                        <div class="mt-2">
-                                                            <v-btn
-                                                                v-if="dish.id === result.dish.id"
-                                                                x-small
-                                                                @click="result.ingredient_ids.includes(ing.id) ? removeIngredient(ing.id) : addIngredient(ing.id)"
-                                                                :class="result.ingredient_ids.includes(ing.id) ? 'red' : 'green'"
+                                                            <p
+                                                                :class="!result.ingredient_ids.includes(ing.id) ? 'text-decoration-line-through' : ''"
                                                             >
-                                                                {{result.ingredient_ids.includes(ing.id) ? 'Убрать' : 'Вернуть'}}
-                                                            </v-btn>
-                                                            <v-btn
-                                                                v-if="dish.id === result.dish.id"
-                                                                x-small
-                                                                @click="replace(ing)"
-                                                            >
-                                                                Замена
-                                                            </v-btn>
-                                                        </div>
-                                                    </v-sheet>
+                                                                {{key+1}}. {{ing.name}}
+                                                            </p>
+                                                            <div class="mt-2">
+                                                                <v-btn
+                                                                    v-if="result && result.dish && dish.id === result.dish.id"
+                                                                    x-small
+                                                                    @click="result.ingredient_ids.includes(ing.id) ? removeIngredient(ing.id) : addIngredient(ing.id)"
+                                                                    :class="result.ingredient_ids.includes(ing.id) ? 'red' : 'green'"
+                                                                >
+                                                                    {{result.ingredient_ids.includes(ing.id) ? 'Убрать' : 'Вернуть'}}
+                                                                </v-btn>
+                                                                <v-btn
+                                                                    v-if="result && result.dish && dish.id === result.dish.id"
+                                                                    x-small
+                                                                    @click="replace(ing)"
+                                                                >
+                                                                    Замена
+                                                                </v-btn>
+                                                            </div>
+                                                        </v-sheet>
+                                                    </div>
                                                 </v-col>
                                                 <v-col v-if="result">
                                                     <h4>Итог</h4>
