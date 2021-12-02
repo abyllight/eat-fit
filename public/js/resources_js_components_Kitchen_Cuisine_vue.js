@@ -1103,157 +1103,167 @@ var render = function() {
                         "v-container",
                         { attrs: { fluid: "" } },
                         [
-                          _c(
-                            "v-row",
-                            [
-                              _vm.dish.i_name
-                                ? _c(
-                                    "v-col",
-                                    { attrs: { sm: "12", lg: "4" } },
-                                    [
-                                      _c("h3", [
-                                        _vm._v(_vm._s(_vm.dish.i_name))
-                                      ]),
-                                      _vm._v(" "),
-                                      _vm._l(_vm.dish.i_ingredients, function(
-                                        item
-                                      ) {
-                                        return _c(
-                                          "v-list-item",
-                                          {
-                                            key: item.id,
-                                            attrs: { dense: "" }
-                                          },
-                                          [
-                                            _c(
-                                              "v-list-item-content",
-                                              [
-                                                _c("v-list-item-title", [
-                                                  _vm._v(_vm._s(item.name))
-                                                ])
-                                              ],
-                                              1
-                                            )
-                                          ],
-                                          1
-                                        )
-                                      })
-                                    ],
-                                    2
-                                  )
-                                : _vm._e(),
-                              _vm._v(" "),
-                              _c(
-                                "v-col",
-                                { attrs: { sm: "12", lg: "8" } },
+                          _vm.dish
+                            ? _c(
+                                "v-row",
                                 [
-                                  _c("h2", { staticClass: "mb-5" }, [
-                                    _vm._v(
-                                      _vm._s(
-                                        _vm.dish.ration
-                                          ? _vm.dish.ration.name
-                                          : ""
+                                  _vm.dish.i_name
+                                    ? _c(
+                                        "v-col",
+                                        { attrs: { sm: "12", lg: "4" } },
+                                        [
+                                          _c("h3", [
+                                            _vm._v(_vm._s(_vm.dish.i_name))
+                                          ]),
+                                          _vm._v(" "),
+                                          _vm._l(
+                                            _vm.dish.i_ingredients,
+                                            function(item) {
+                                              return _c(
+                                                "v-list-item",
+                                                {
+                                                  key: item.id,
+                                                  attrs: { dense: "" }
+                                                },
+                                                [
+                                                  _c(
+                                                    "v-list-item-content",
+                                                    [
+                                                      _c("v-list-item-title", [
+                                                        _vm._v(
+                                                          _vm._s(item.name)
+                                                        )
+                                                      ])
+                                                    ],
+                                                    1
+                                                  )
+                                                ],
+                                                1
+                                              )
+                                            }
+                                          )
+                                        ],
+                                        2
                                       )
-                                    )
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("v-text-field", {
-                                    attrs: {
-                                      label: "Название",
-                                      "error-messages": _vm.errors.name,
-                                      outlined: "",
-                                      dense: "",
-                                      clearable: ""
-                                    },
-                                    model: {
-                                      value: _vm.dish.name,
-                                      callback: function($$v) {
-                                        _vm.$set(_vm.dish, "name", $$v)
-                                      },
-                                      expression: "dish.name"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("v-text-field", {
-                                    attrs: {
-                                      label: "Код",
-                                      "error-messages": _vm.errors.code,
-                                      outlined: "",
-                                      dense: "",
-                                      clearable: ""
-                                    },
-                                    model: {
-                                      value: _vm.dish.code,
-                                      callback: function($$v) {
-                                        _vm.$set(_vm.dish, "code", $$v)
-                                      },
-                                      expression: "dish.code"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("v-autocomplete", {
-                                    attrs: {
-                                      items: _vm.departments,
-                                      "item-text": "name",
-                                      "item-value": "id",
-                                      clearable: "",
-                                      outlined: "",
-                                      label: "Цех",
-                                      "error-messages": _vm.errors.department_id
-                                    },
-                                    model: {
-                                      value: _vm.dish.department_id,
-                                      callback: function($$v) {
-                                        _vm.$set(_vm.dish, "department_id", $$v)
-                                      },
-                                      expression: "dish.department_id"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("v-autocomplete", {
-                                    attrs: {
-                                      items: _vm.ingredients,
-                                      "item-text": "name",
-                                      "item-value": "id",
-                                      clearable: "",
-                                      outlined: "",
-                                      "small-chips": "",
-                                      label: "Ингредиенты",
-                                      "error-messages":
-                                        _vm.errors.ingredient_ids,
-                                      multiple: ""
-                                    },
-                                    model: {
-                                      value: _vm.dish.ingredient_ids,
-                                      callback: function($$v) {
-                                        _vm.$set(
-                                          _vm.dish,
-                                          "ingredient_ids",
-                                          $$v
-                                        )
-                                      },
-                                      expression: "dish.ingredient_ids"
-                                    }
-                                  }),
+                                    : _vm._e(),
                                   _vm._v(" "),
                                   _c(
-                                    "v-btn",
-                                    {
-                                      attrs: { color: "primary" },
-                                      on: { click: _vm.save }
-                                    },
+                                    "v-col",
+                                    { attrs: { sm: "12", lg: "8" } },
                                     [
-                                      _vm._v(
-                                        "\n                                    Сохранить\n                                "
+                                      _c("h2", { staticClass: "mb-5" }, [
+                                        _vm._v(
+                                          _vm._s(
+                                            _vm.dish.ration
+                                              ? _vm.dish.ration.name
+                                              : ""
+                                          )
+                                        )
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("v-text-field", {
+                                        attrs: {
+                                          label: "Название",
+                                          "error-messages": _vm.errors.name,
+                                          outlined: "",
+                                          dense: "",
+                                          clearable: ""
+                                        },
+                                        model: {
+                                          value: _vm.dish.name,
+                                          callback: function($$v) {
+                                            _vm.$set(_vm.dish, "name", $$v)
+                                          },
+                                          expression: "dish.name"
+                                        }
+                                      }),
+                                      _vm._v(" "),
+                                      _c("v-text-field", {
+                                        attrs: {
+                                          label: "Код",
+                                          "error-messages": _vm.errors.code,
+                                          outlined: "",
+                                          dense: "",
+                                          clearable: ""
+                                        },
+                                        model: {
+                                          value: _vm.dish.code,
+                                          callback: function($$v) {
+                                            _vm.$set(_vm.dish, "code", $$v)
+                                          },
+                                          expression: "dish.code"
+                                        }
+                                      }),
+                                      _vm._v(" "),
+                                      _c("v-autocomplete", {
+                                        attrs: {
+                                          items: _vm.departments,
+                                          "item-text": "name",
+                                          "item-value": "id",
+                                          clearable: "",
+                                          outlined: "",
+                                          label: "Цех",
+                                          "error-messages":
+                                            _vm.errors.department_id
+                                        },
+                                        model: {
+                                          value: _vm.dish.department_id,
+                                          callback: function($$v) {
+                                            _vm.$set(
+                                              _vm.dish,
+                                              "department_id",
+                                              $$v
+                                            )
+                                          },
+                                          expression: "dish.department_id"
+                                        }
+                                      }),
+                                      _vm._v(" "),
+                                      _c("v-autocomplete", {
+                                        attrs: {
+                                          items: _vm.ingredients,
+                                          "item-text": "name",
+                                          "item-value": "id",
+                                          clearable: "",
+                                          outlined: "",
+                                          "small-chips": "",
+                                          label: "Ингредиенты",
+                                          "error-messages":
+                                            _vm.errors.ingredient_ids,
+                                          multiple: ""
+                                        },
+                                        model: {
+                                          value: _vm.dish.ingredient_ids,
+                                          callback: function($$v) {
+                                            _vm.$set(
+                                              _vm.dish,
+                                              "ingredient_ids",
+                                              $$v
+                                            )
+                                          },
+                                          expression: "dish.ingredient_ids"
+                                        }
+                                      }),
+                                      _vm._v(" "),
+                                      _c(
+                                        "v-btn",
+                                        {
+                                          attrs: { color: "primary" },
+                                          on: { click: _vm.save }
+                                        },
+                                        [
+                                          _vm._v(
+                                            "\n                                    Сохранить\n                                "
+                                          )
+                                        ]
                                       )
-                                    ]
+                                    ],
+                                    1
                                   )
                                 ],
                                 1
                               )
-                            ],
-                            1
-                          )
+                            : _vm._e()
                         ],
                         1
                       )

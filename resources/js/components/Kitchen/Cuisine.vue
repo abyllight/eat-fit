@@ -167,7 +167,7 @@
                     </v-toolbar>
                     <v-card-text>
                         <v-container fluid>
-                            <v-row>
+                            <v-row v-if="dish">
                                 <v-col
                                     v-if="dish.i_name"
                                     sm="12"
