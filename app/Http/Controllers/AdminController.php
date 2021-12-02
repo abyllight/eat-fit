@@ -49,8 +49,7 @@ class AdminController extends Controller
         $week = Week::find(1);
 
         return response()->json([
-            'is_weekend' => $week->is_weekend,
-            'duty' => new CuisineCollection($week->cuisine)
+            'is_weekend' => $week->is_weekend
         ]);
     }
 

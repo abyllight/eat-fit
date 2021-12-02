@@ -10,23 +10,48 @@ class Dish extends Model
     use HasFactory;
 
     protected $fillable = [
-        'i_id', 'i_name', 'name', 'time', 'cuisine_id', 'is_custom'
+        'iiko_id', 'iiko_name', 'code', 'name', 'ration_id', 'department_id', 'cuisine_id', 'description', 'is_custom'
     ];
-
-    public const RATIONS = ['Завтрак 1', 'Завтрак 2', 'Обед суп', 'Обед основной', 'Обед салат', 'Полдник', 'Ужин основной', 'Обед гарнир', 'Ужин овощи'];
 
     public function cuisine()
     {
         return $this->belongsTo(Cuisine::class, 'cuisine_id', 'id');
     }
 
-    public function ingredients()
+    public function iiko_ingredients()
     {
         return $this->belongsToMany(Ingredient::class, 'dish_ingredients', 'dish_id', 'ingredient_id');
     }
 
-    public function getRation(int $time): string
+    public function custom_ingredients()
     {
-        return self::RATIONS[$time - 1];
+        return $this->belongsToMany(Ingredient::class, 'custom_dish_ingredients', 'dish_id', 'ingredient_id');
+    }
+
+    public function ingredients()
+    {
+        return $this->custom_ingredients()->count() > 0 ? $this->custom_ingredients() : $this->iiko_ingredients();
+    }
+
+    public function getIngredientIds()
+    {
+        return array_map(function ($item){
+            return $item['id'];
+        }, $this->ingredients()->get()->toArray());
+    }
+
+    public function ration()
+    {
+        return $this->belongsTo(Ration::class, 'ration_id', 'id');
+    }
+
+    public function selects()
+    {
+        return $this->hasMany(Select::class, 'dish_id', 'id');
+    }
+
+    public function getDepartment()
+    {
+        return Department::DEPARTMENTS[$this->department_id];
     }
 }

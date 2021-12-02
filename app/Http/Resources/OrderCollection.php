@@ -15,6 +15,14 @@ class OrderCollection extends JsonResource
      */
     public function toArray($request): array
     {
+        $wishes = array_map(function ($item){
+            return $item['wish'];
+        }, $this->wishlist()->get()->toArray());
+
+        $black = array_map(function ($item){
+            return $item['id'];
+        }, $this->blacklist()->get()->toArray());
+
         return [
             'id' => $this->id,
             'amo_id' => $this->amo_id,
@@ -42,7 +50,8 @@ class OrderCollection extends JsonResource
             'courier_id' => $this->getCourierId(),
             'diet' => $this->diet,
             'diet_old' => $this->diet_old,
-            'blacklist' => $this->blacklist,
+            'blacklist' => $black,
+            'wishlist' => $wishes,
             'diet_color' => $this->getDietColor(),
             'is_notified' => $this->isNotified(),
             'is_reported' => $this->isReported()

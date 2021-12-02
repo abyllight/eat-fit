@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\IngredientCollection;
+use App\Models\Dish;
 use App\Models\Ingredient;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -10,9 +11,50 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class IngredientController extends Controller
 {
-    public function index(): ResourceCollection
+    public function index(): JsonResponse
     {
-        return IngredientCollection::collection(Ingredient::orderBy('name')->get());
+        return response()->json(IngredientCollection::collection(Ingredient::orderBy('name')->get()));
+    }
+
+    public function fetchIngredients($id): JsonResponse
+    {
+        $iiko = new IikoController();
+        $token = $iiko->getAuthToken();
+
+        $dishes = Dish::where('cuisine_id', $id)->get();
+
+        foreach ($dishes as $dish){
+            $link = '/resto/api/v2/assemblyCharts/getPrepared?date=2021-10-12&productId=' . $dish->iiko_id . '&key=';
+            $ingredients = $iiko->doRequest($token, $link);
+
+            if (is_array($ingredients)) {
+                $ingredients = $ingredients['preparedCharts'][0]['items'];
+
+                foreach ($ingredients as $ingredient) {
+                    $link2 = '/resto/api/v2/entities/products/list?types=GOODS&ids=' . $ingredient['productId'] . '&key=';
+                    $goods = $iiko->doRequest($token, $link2);
+
+                    if ($goods) {
+                        $i = Ingredient::updateOrCreate(
+                            ['iiko_id' => $goods[0]['id']],
+                            ['iiko_name' => $goods[0]['name'], 'name' => $goods[0]['name']]
+                        );
+
+                        $dish->ingredients()->syncWithoutDetaching($i, false);
+                    }
+                }
+            }else {
+                return response()->json([
+                    'status' => false,
+                    'msg' => $ingredients
+                ]);
+            }
+        }
+
+        return response()->json([
+            'status' => true,
+            'msg' => 'Ингредиенты получены'
+        ]);
     }
 
     public function store(Request $request): JsonResponse
@@ -23,7 +65,10 @@ class IngredientController extends Controller
 
         $ingredient = new Ingredient();
         $ingredient->name = $request->name;
+        $ingredient->description = $request->description;
         $ingredient->save();
+
+        $ingredient->categories()->sync($request->category_ids);
 
         return response()->json([
             'status' => true,
@@ -47,7 +92,10 @@ class IngredientController extends Controller
         }
 
         $ingredient->name = $request->name;
+        $ingredient->description = $request->description;
         $ingredient->save();
+
+        $ingredient->categories()->sync($request->category_ids);
 
         return response()->json([
             'status' => true,
@@ -55,7 +103,7 @@ class IngredientController extends Controller
         ]);
     }
 
-    public function delete($id): JsonResponse
+    public function destroy($id): JsonResponse
     {
         $ingredient = Ingredient::find($id);
 
@@ -65,6 +113,13 @@ class IngredientController extends Controller
                 'msg' => 'Ingredient not found'
             ]);
         }
+
+        $ingredient->categories()->detach();
+        $ingredient->dishes()->detach();
+        $ingredient->custom_dishes()->detach();
+        $ingredient->categories()->detach();
+        $ingredient->blacklist()->detach();
+        $ingredient->selects()->detach();
 
         $ingredient->delete();
 

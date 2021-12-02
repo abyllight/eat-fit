@@ -217,135 +217,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Client',
   data: function data() {
@@ -385,19 +256,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         value: 'int'
       }],
       amo_loading: false,
-      loading: true,
-      dialog: false,
-      ingredients: [],
-      blacklist: [],
-      order: {},
-      duty: {},
-      t: []
+      loading: true
     };
   },
   mounted: function mounted() {
     this.getWeek();
     this.getLeads();
-    this.getIngredients();
+    this.getLite();
+    this.getSelect();
+    this.getDetox();
+    this.getGo();
   },
   methods: {
     getLeads: function getLeads() {
@@ -411,11 +279,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _this.loading = true;
                 _context.next = 3;
                 return axios.get('/api/orders').then(function (response) {
-                  _this.orders = response.data.orders;
-                  _this.lite = response.data.lite;
-                  _this.select = response.data.select;
-                  _this.detox = response.data.detox;
-                  _this.go = response.data.go;
+                  _this.orders = response.data;
                 })["catch"](function (error) {
                   _this.loading = false;
 
@@ -437,7 +301,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee);
       }))();
     },
-    fetchLeads: function fetchLeads() {
+    getLite: function getLite() {
       var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
@@ -445,22 +309,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _this2.amo_loading = true;
-                _context2.next = 3;
-                return axios.get('/api/amo/leads').then(function () {
-                  _this2.getLeads();
+                _context2.next = 2;
+                return axios.get('/api/orders/lite').then(function (response) {
+                  console.log(response);
+                  _this2.lite = response.data;
                 })["catch"](function (error) {
-                  _this2.$store.dispatch('showAlert', {
-                    'isVisible': true,
-                    'msg': error.message,
-                    'color': 'error',
-                    'type': 'error'
-                  });
-                })["finally"](function () {
-                  return _this2.amo_loading = false;
+                  console.log(error);
                 });
 
-              case 3:
+              case 2:
               case "end":
                 return _context2.stop();
             }
@@ -468,14 +325,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee2);
       }))();
     },
-    showDetails: function showDetails(index) {
-      this.order = index;
-      this.blacklist = index.blacklist.map(function (a) {
-        return a.id;
-      });
-      this.dialog = true;
-    },
-    geocode: function geocode() {
+    getSelect: function getSelect() {
       var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
@@ -483,29 +333,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _this3.amo_loading = true;
-                _context3.next = 3;
-                return axios.get('/api/map/geocode').then(function (response) {
-                  _this3.getLeads();
-
-                  _this3.$store.dispatch('showAlert', {
-                    'isVisible': true,
-                    'msg': response.data.message,
-                    'color': response.status ? 'green' : 'error',
-                    'type': response.status ? 'success' : 'error'
-                  });
+                _context3.next = 2;
+                return axios.get('/api/orders/select').then(function (response) {
+                  _this3.select = response.data;
                 })["catch"](function (error) {
-                  _this3.$store.dispatch('showAlert', {
-                    'isVisible': true,
-                    'msg': error.message,
-                    'color': 'error',
-                    'type': 'error'
-                  });
-                })["finally"](function () {
-                  return _this3.amo_loading = false;
+                  console.log(error);
                 });
 
-              case 3:
+              case 2:
               case "end":
                 return _context3.stop();
             }
@@ -513,7 +348,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee3);
       }))();
     },
-    setInterval: function setInterval() {
+    getDetox: function getDetox() {
       var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
@@ -521,29 +356,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                _this4.amo_loading = true;
-                _context4.next = 3;
-                return axios.get('/api/map/interval').then(function (response) {
-                  _this4.getLeads();
-
-                  _this4.$store.dispatch('showAlert', {
-                    'isVisible': true,
-                    'msg': response.data.message,
-                    'color': response.status ? 'green' : 'error',
-                    'type': response.status ? 'success' : 'error'
-                  });
+                _context4.next = 2;
+                return axios.get('/api/orders/detox').then(function (response) {
+                  _this4.detox = response.data;
                 })["catch"](function (error) {
-                  _this4.$store.dispatch('showAlert', {
-                    'isVisible': true,
-                    'msg': error.message,
-                    'color': 'error',
-                    'type': 'error'
-                  });
-                })["finally"](function () {
-                  return _this4.amo_loading = false;
+                  console.log(error);
                 });
 
-              case 3:
+              case 2:
               case "end":
                 return _context4.stop();
             }
@@ -551,40 +371,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee4);
       }))();
     },
-    getWeek: function getWeek() {
+    getGo: function getGo() {
       var _this5 = this;
-
-      axios.get('/api/week/get').then(function (response) {
-        _this5.is_weekend = response.data.is_weekend;
-        _this5.week = _this5.is_weekend ? 'Выходные' : 'Будни';
-        _this5.duty = response.data.duty;
-      })["catch"](function (error) {
-        _this5.$store.dispatch('showAlert', {
-          'isVisible': true,
-          'msg': error.message,
-          'color': 'error',
-          'type': 'error'
-        });
-      });
-    },
-    setWeek: function setWeek() {
-      var _this6 = this;
-
-      axios.post('/api/week/set').then(function () {
-        _this6.getWeek();
-
-        _this6.getLeads();
-      })["catch"](function (error) {
-        _this6.$store.dispatch('showAlert', {
-          'isVisible': true,
-          'msg': error.message,
-          'color': 'error',
-          'type': 'error'
-        });
-      });
-    },
-    getIngredients: function getIngredients() {
-      var _this7 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
@@ -592,8 +380,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context5.prev = _context5.next) {
               case 0:
                 _context5.next = 2;
-                return axios.get('/api/ingredients').then(function (response) {
-                  _this7.ingredients = response.data.data;
+                return axios.get('/api/orders/go').then(function (response) {
+                  _this5.go = response.data;
                 })["catch"](function (error) {
                   console.log(error);
                 });
@@ -606,31 +394,142 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee5);
       }))();
     },
-    close: function close() {
-      this.order = {};
-      this.blacklist = [];
-      this.dialog = false;
+    fetchLeads: function fetchLeads() {
+      var _this6 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee6() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                _this6.amo_loading = true;
+                _context6.next = 3;
+                return axios.get('/api/amo/leads').then(function () {
+                  _this6.getLeads();
+                })["catch"](function (error) {
+                  _this6.$store.dispatch('showAlert', {
+                    'isVisible': true,
+                    'msg': error.message,
+                    'color': 'error',
+                    'type': 'error'
+                  });
+                })["finally"](function () {
+                  return _this6.amo_loading = false;
+                });
+
+              case 3:
+              case "end":
+                return _context6.stop();
+            }
+          }
+        }, _callee6);
+      }))();
     },
-    save: function save() {
+    geocode: function geocode() {
+      var _this7 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee7() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee7$(_context7) {
+          while (1) {
+            switch (_context7.prev = _context7.next) {
+              case 0:
+                _this7.amo_loading = true;
+                _context7.next = 3;
+                return axios.get('/api/map/geocode').then(function (response) {
+                  _this7.getLeads();
+
+                  _this7.$store.dispatch('showAlert', {
+                    'isVisible': true,
+                    'msg': response.data.message,
+                    'color': response.status ? 'green' : 'error',
+                    'type': response.status ? 'success' : 'error'
+                  });
+                })["catch"](function (error) {
+                  _this7.$store.dispatch('showAlert', {
+                    'isVisible': true,
+                    'msg': error.message,
+                    'color': 'error',
+                    'type': 'error'
+                  });
+                })["finally"](function () {
+                  return _this7.amo_loading = false;
+                });
+
+              case 3:
+              case "end":
+                return _context7.stop();
+            }
+          }
+        }, _callee7);
+      }))();
+    },
+    setInterval: function setInterval() {
       var _this8 = this;
 
-      axios.post('/api/blacklist', {
-        id: this.order.id,
-        blacklist: this.blacklist
-      }).then(function (response) {
-        _this8.close();
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee8() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee8$(_context8) {
+          while (1) {
+            switch (_context8.prev = _context8.next) {
+              case 0:
+                _this8.amo_loading = true;
+                _context8.next = 3;
+                return axios.get('/api/map/interval').then(function (response) {
+                  _this8.getLeads();
 
-        _this8.$store.dispatch('showAlert', {
-          'isVisible': true,
-          'msg': response.data.msg,
-          'color': 'green',
-          'type': 'success'
-        });
+                  _this8.$store.dispatch('showAlert', {
+                    'isVisible': true,
+                    'msg': response.data.message,
+                    'color': response.status ? 'green' : 'error',
+                    'type': response.status ? 'success' : 'error'
+                  });
+                })["catch"](function (error) {
+                  _this8.$store.dispatch('showAlert', {
+                    'isVisible': true,
+                    'msg': error.message,
+                    'color': 'error',
+                    'type': 'error'
+                  });
+                })["finally"](function () {
+                  return _this8.amo_loading = false;
+                });
 
-        _this8.getLeads();
+              case 3:
+              case "end":
+                return _context8.stop();
+            }
+          }
+        }, _callee8);
+      }))();
+    },
+    getWeek: function getWeek() {
+      var _this9 = this;
+
+      axios.get('/api/week/get').then(function (response) {
+        _this9.is_weekend = response.data.is_weekend;
+        _this9.week = _this9.is_weekend ? 'Выходные' : 'Будни';
       })["catch"](function (error) {
-        console.log(error);
-        _this8.errors = error.response.data.errors;
+        _this9.$store.dispatch('showAlert', {
+          'isVisible': true,
+          'msg': error.message,
+          'color': 'error',
+          'type': 'error'
+        });
+      });
+    },
+    setWeek: function setWeek() {
+      var _this10 = this;
+
+      axios.post('/api/week/set').then(function () {
+        _this10.getWeek();
+
+        _this10.getLeads();
+      })["catch"](function (error) {
+        _this10.$store.dispatch('showAlert', {
+          'isVisible': true,
+          'msg': error.message,
+          'color': 'error',
+          'type': 'error'
+        });
       });
     }
   }
@@ -829,7 +728,6 @@ var render = function() {
                       search: _vm.search,
                       "hide-default-footer": ""
                     },
-                    on: { "click:row": _vm.showDetails },
                     scopedSlots: _vm._u([
                       {
                         key: "item.index",
@@ -841,17 +739,6 @@ var render = function() {
                                 _vm._s(index + 1) +
                                 "\n                    "
                             )
-                          ]
-                        }
-                      },
-                      {
-                        key: "item.tag",
-                        fn: function(ref) {
-                          var item = ref.item
-                          return [
-                            _c("span", { class: item.diet_color }, [
-                              _vm._v(_vm._s(item.tag))
-                            ])
                           ]
                         }
                       },
@@ -1157,366 +1044,6 @@ var render = function() {
                         "\n                "
                     )
                   ])
-                ],
-                1
-              )
-            ],
-            1
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "v-row",
-        { attrs: { justify: "center" } },
-        [
-          _c(
-            "v-dialog",
-            {
-              attrs: {
-                fullscreen: "",
-                "hide-overlay": "",
-                transition: "dialog-bottom-transition"
-              },
-              model: {
-                value: _vm.dialog,
-                callback: function($$v) {
-                  _vm.dialog = $$v
-                },
-                expression: "dialog"
-              }
-            },
-            [
-              _c(
-                "v-card",
-                [
-                  _c(
-                    "v-toolbar",
-                    { attrs: { dark: "", color: "primary" } },
-                    [
-                      _c(
-                        "v-btn",
-                        {
-                          attrs: { icon: "", dark: "" },
-                          on: { click: _vm.close }
-                        },
-                        [_c("v-icon", [_vm._v("mdi-close")])],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c("v-toolbar-title", [_vm._v("Анкета")]),
-                      _vm._v(" "),
-                      _c("v-spacer"),
-                      _vm._v(" "),
-                      _c(
-                        "v-toolbar-items",
-                        [
-                          _c(
-                            "v-btn",
-                            {
-                              attrs: { dark: "", text: "" },
-                              on: { click: _vm.save }
-                            },
-                            [
-                              _vm._v(
-                                "\n                            Сохранить\n                        "
-                              )
-                            ]
-                          )
-                        ],
-                        1
-                      )
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c("v-card-title", [
-                    _c("span", { staticClass: "text-h5" }, [
-                      _vm._v(
-                        " " +
-                          _vm._s(_vm.order.name) +
-                          " " +
-                          _vm._s(_vm.order.tag)
-                      )
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "v-card-text",
-                    [
-                      _c(
-                        "v-container",
-                        { attrs: { fluid: "" } },
-                        [
-                          _c(
-                            "v-row",
-                            [
-                              _c(
-                                "v-col",
-                                { attrs: { sm: "12", lg: "6" } },
-                                [
-                                  _vm.order.diet
-                                    ? _c(
-                                        "v-card",
-                                        { attrs: { color: "lime lighten-4" } },
-                                        [
-                                          _c("v-card-text", [
-                                            _vm._v(
-                                              "\n                                        " +
-                                                _vm._s(_vm.order.diet) +
-                                                "\n                                    "
-                                            )
-                                          ])
-                                        ],
-                                        1
-                                      )
-                                    : _vm._e()
-                                ],
-                                1
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "v-col",
-                                [
-                                  _vm.order.diet_old
-                                    ? _c(
-                                        "v-card",
-                                        {
-                                          staticClass: "mt-4",
-                                          attrs: { color: "red lighten-4" }
-                                        },
-                                        [
-                                          _c("v-card-text", [
-                                            _vm._v(
-                                              "\n                                        " +
-                                                _vm._s(_vm.order.diet_old) +
-                                                "\n                                    "
-                                            )
-                                          ])
-                                        ],
-                                        1
-                                      )
-                                    : _vm._e()
-                                ],
-                                1
-                              )
-                            ],
-                            1
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "v-row",
-                            { staticClass: "mb-4" },
-                            [
-                              _c(
-                                "v-col",
-                                { attrs: { cols: "12" } },
-                                [
-                                  _c("h3", { staticClass: "mb-4" }, [
-                                    _vm._v("Черный список")
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("v-autocomplete", {
-                                    attrs: {
-                                      items: _vm.ingredients,
-                                      "item-text": "name",
-                                      "item-value": "id",
-                                      clearable: "",
-                                      outlined: "",
-                                      "small-chips": "",
-                                      label: "Ингредиенты",
-                                      multiple: ""
-                                    },
-                                    model: {
-                                      value: _vm.blacklist,
-                                      callback: function($$v) {
-                                        _vm.blacklist = $$v
-                                      },
-                                      expression: "blacklist"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c(
-                                    "v-btn",
-                                    {
-                                      attrs: { dark: "" },
-                                      on: { click: _vm.save }
-                                    },
-                                    [
-                                      _vm._v(
-                                        "\n                                    Сохранить\n                                "
-                                      )
-                                    ]
-                                  )
-                                ],
-                                1
-                              )
-                            ],
-                            1
-                          ),
-                          _vm._v(" "),
-                          _c("v-divider", { staticClass: "my-6" }),
-                          _vm._v(" "),
-                          _c("h2", { staticClass: "mb-3" }, [
-                            _vm._v(_vm._s(_vm.duty.name))
-                          ]),
-                          _vm._v(" "),
-                          Object.keys(_vm.duty).length > 0
-                            ? _c(
-                                "v-row",
-                                { staticClass: "py-3" },
-                                [
-                                  _c(
-                                    "v-expansion-panels",
-                                    [
-                                      _c(
-                                        "v-expansion-panel",
-                                        [
-                                          _c("v-expansion-panel-header", [
-                                            _vm._v(
-                                              "\n                                        Завтрак 1\n                                    "
-                                            )
-                                          ]),
-                                          _vm._v(" "),
-                                          _c(
-                                            "v-expansion-panel-content",
-                                            [
-                                              _c(
-                                                "v-row",
-                                                [
-                                                  _c("v-col"),
-                                                  _vm._v(" "),
-                                                  _c(
-                                                    "v-col",
-                                                    [
-                                                      _c(
-                                                        "v-list",
-                                                        {
-                                                          attrs: { dense: "" }
-                                                        },
-                                                        [
-                                                          _c(
-                                                            "v-list-item-group",
-                                                            {
-                                                              attrs: {
-                                                                multiple: ""
-                                                              },
-                                                              model: {
-                                                                value: _vm.t,
-                                                                callback: function(
-                                                                  $$v
-                                                                ) {
-                                                                  _vm.t = $$v
-                                                                },
-                                                                expression: "t"
-                                                              }
-                                                            },
-                                                            _vm._l(
-                                                              _vm.duty.dishes[0]
-                                                                .ingredients,
-                                                              function(
-                                                                ing,
-                                                                index
-                                                              ) {
-                                                                return _c(
-                                                                  "v-list-item",
-                                                                  {
-                                                                    key: ing.id,
-                                                                    class: _vm.blacklist.includes(
-                                                                      ing.id
-                                                                    )
-                                                                      ? "red lighten-3"
-                                                                      : "",
-                                                                    attrs: {
-                                                                      dense: ""
-                                                                    },
-                                                                    scopedSlots: _vm._u(
-                                                                      [
-                                                                        {
-                                                                          key:
-                                                                            "default",
-                                                                          fn: function(
-                                                                            ref
-                                                                          ) {
-                                                                            var active =
-                                                                              ref.active
-                                                                            return [
-                                                                              _c(
-                                                                                "v-list-item-action",
-                                                                                [
-                                                                                  _c(
-                                                                                    "v-checkbox",
-                                                                                    {
-                                                                                      attrs: {
-                                                                                        "input-value": active
-                                                                                      }
-                                                                                    }
-                                                                                  )
-                                                                                ],
-                                                                                1
-                                                                              ),
-                                                                              _vm._v(
-                                                                                " "
-                                                                              ),
-                                                                              _c(
-                                                                                "v-list-item-title",
-                                                                                [
-                                                                                  _vm._v(
-                                                                                    _vm._s(
-                                                                                      index +
-                                                                                        1
-                                                                                    ) +
-                                                                                      ". " +
-                                                                                      _vm._s(
-                                                                                        ing.name
-                                                                                      )
-                                                                                  )
-                                                                                ]
-                                                                              )
-                                                                            ]
-                                                                          }
-                                                                        }
-                                                                      ],
-                                                                      null,
-                                                                      true
-                                                                    )
-                                                                  }
-                                                                )
-                                                              }
-                                                            ),
-                                                            1
-                                                          )
-                                                        ],
-                                                        1
-                                                      )
-                                                    ],
-                                                    1
-                                                  ),
-                                                  _vm._v(" "),
-                                                  _c("v-col")
-                                                ],
-                                                1
-                                              )
-                                            ],
-                                            1
-                                          )
-                                        ],
-                                        1
-                                      )
-                                    ],
-                                    1
-                                  )
-                                ],
-                                1
-                              )
-                            : _vm._e()
-                        ],
-                        1
-                      )
-                    ],
-                    1
-                  )
                 ],
                 1
               )

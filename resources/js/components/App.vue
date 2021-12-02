@@ -138,6 +138,24 @@ export default {
             roles: [7]
         },
         {
+            id: 3,
+            title: 'Промокоды',
+            link: '/promocodes',
+            roles: [7]
+        },
+        {
+            id: 12,
+            title: 'Заказы для Кухни',
+            link: '/kitchen-orders',
+            roles: [11]
+        },
+        {
+            id: 15,
+            title: 'Рационы',
+            link: '/rations',
+            roles: [11]
+        },
+        {
             id: 8,
             title: 'Кухни мира',
             link: '/cuisines',
@@ -146,7 +164,13 @@ export default {
         {
             id: 9,
             title: 'Блюда',
-            link: '/custom',
+            link: '/dishes',
+            roles: [11]
+        },
+        {
+            id: 13,
+            title: 'Категория ингредиентов',
+            link: '/category',
             roles: [11]
         },
         {
@@ -156,10 +180,10 @@ export default {
             roles: [11]
         },
         {
-            id: 3,
-            title: 'Промокоды',
-            link: '/promocodes',
-            roles: [7]
+            id: 14,
+            title: 'Select',
+            link: '/select',
+            roles: [11]
         },
     ]
   }),

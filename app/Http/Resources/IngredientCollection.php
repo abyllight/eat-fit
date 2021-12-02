@@ -17,10 +17,11 @@ class IngredientCollection extends JsonResource
     {
         return [
             'id'   => $this->id,
-            'i_id' => $this->i_id,
-            'i_name' => $this->i_name,
             'name' => $this->name,
-            'description' => $this->description
+            'description' => $this->description,
+            'is_custom' => $this->is_custom(),
+            'category_ids' => $this->getCategoryIds(),
+            'categories' => $this->categories
         ];
     }
 }

@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use AmoCRM\Client;
 use App\Http\Resources\OrderCollection;
+use App\Http\Resources\OrderSelectCollection;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\Week;
+use App\Models\Wishlist;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -21,7 +23,16 @@ class OrderController extends Controller
     public function index(): JsonResponse
     {
         $orders = OrderCollection::collection(Order::where('is_active', true)->orderBy('name')->get());
+        return response()->json($orders);
+    }
 
+    public function getSelect(){
+        $orders = Order::where('type', 1)->where('is_active', true)->orderBy('size')->take(3)->get();
+        return response()->json(OrderSelectCollection::collection($orders));
+    }
+
+    public function getNbLite(): JsonResponse
+    {
         $lite = [
             'total' => Order::getNbType(0),
             'xs'    => Order::getNbTypeAndSize(0, 0),
@@ -31,6 +42,11 @@ class OrderController extends Controller
             'xl'    => Order::getNbTypeAndSize(0, 4)
         ];
 
+        return response()->json($lite);
+    }
+
+    public function getNbSelect(): JsonResponse
+    {
         $select = [
             'total' => Order::getNbType(1),
             'xs'    => Order::getNbTypeAndSize(1, 0),
@@ -40,19 +56,17 @@ class OrderController extends Controller
             'xl'    => Order::getNbTypeAndSize(1, 4)
         ];
 
-        $detox = Order::getNbType(2);
+        return response()->json($select);
+    }
 
-        $go = Order::getNbType(3);
+    public function getNbDetox(): JsonResponse
+    {
+        return response()->json(Order::getNbType(2));
+    }
 
-        $content = [
-            'orders' => $orders,
-            'lite' => $lite,
-            'select' => $select,
-            'detox' => $detox,
-            'go' => $go
-        ];
-
-        return response()->json($content);
+    public function getNbGo(): JsonResponse
+    {
+        return response()->json(Order::getNbType(3));
     }
 
     public function fetch(): array
@@ -538,7 +552,43 @@ class OrderController extends Controller
         $writer->save('php://output');
     }
 
-    public function setBlacklist(Request $request): JsonResponse
+    public function getBlacklist($id){
+        $order = Order::find($id);
+
+        if (!$order) {
+            return response()->json([
+                'status' => false,
+                'msg' => 'Order not found'
+            ]);
+        }
+
+        return response()->json([
+            'status' => true,
+            'data' => $order->blacklist
+        ]);
+    }
+
+    public function getWishlist($id){
+        $order = Order::find($id);
+
+        if (!$order) {
+            return response()->json([
+                'status' => false,
+                'msg' => 'Order not found'
+            ]);
+        }
+
+        $wishes = array_map(function ($item){
+            return $item['wish'];
+        }, $order->wishlist()->get()->toArray());
+
+        return response()->json([
+            'status' => true,
+            'data' => $wishes
+        ]);
+    }
+
+    public function addToBlacklist(Request $request): JsonResponse
     {
         $order = Order::find($request->id);
 
@@ -555,6 +605,52 @@ class OrderController extends Controller
         return response()->json([
             'status' => false,
             'msg' => 'Order not found'
+        ]);
+    }
+
+    public function addToWishlist(Request $request): JsonResponse
+    {
+        $request->validate([
+            'tag' => 'required'
+        ]);
+        $order = Order::find($request->id);
+
+        if ($order){
+            $wish = new Wishlist();
+            $wish->order_id = $order->id;
+            $wish->wish = $request->tag;
+            $wish->save();
+
+            return response()->json([
+                'status' => true,
+                'msg' => 'Тэг добавлен в зеленый список'
+            ]);
+        }
+
+        return response()->json([
+            'status' => false,
+            'msg' => 'Order not found'
+        ]);
+    }
+
+    public function removeTag(Request $request): JsonResponse
+    {
+        $wishes = Wishlist::where('order_id', $request->id)->where('wish', $request->tag)->get();
+
+        if ($wishes){
+            foreach ($wishes as $wish) {
+                $wish->delete();
+            }
+
+            return response()->json([
+                'status' => true,
+                'msg' => 'Тэг удален'
+            ]);
+        }
+
+        return response()->json([
+            'status' => false,
+            'msg' => 'Tag not found'
         ]);
     }
 }

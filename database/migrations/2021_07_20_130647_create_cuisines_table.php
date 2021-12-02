@@ -15,8 +15,8 @@ class CreateCuisinesTable extends Migration
     {
         Schema::create('cuisines', function (Blueprint $table) {
             $table->id();
-            $table->string('i_id');
-            $table->string('i_name');
+            $table->string('iiko_id');
+            $table->string('iiko_name');
             $table->string('name')->nullable();
             $table->boolean('is_on_duty')->default(false);
             $table->timestamps();

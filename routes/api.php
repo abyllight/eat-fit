@@ -1,14 +1,19 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CourierController;
 use App\Http\Controllers\CuisineController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\DishController;
 use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PromocodeController;
+use App\Http\Controllers\RationController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SelectController;
 use App\Http\Controllers\UserController;
 use App\Http\Resources\CuisineCollection;
 use App\Http\Resources\DishCollection;
@@ -42,11 +47,20 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/couriers', [UserController::class, 'getCouriers']);
 
     Route::get('/orders', [OrderController::class, 'index']);
+    Route::get('/orders/select-orders', [OrderController::class, 'getSelect']);
+    Route::get('/orders/select', [OrderController::class, 'getNbSelect']);
+    Route::get('/orders/lite', [OrderController::class, 'getNbLite']);
+    Route::get('/orders/detox', [OrderController::class, 'getNbDetox']);
+    Route::get('/orders/go', [OrderController::class, 'getNbGo']);
+    Route::get('/order/blacklist/{id}', [OrderController::class, 'getBlacklist']);
+    Route::get('/order/wishlist/{id}', [OrderController::class, 'getWishlist']);
     Route::get('/amo/leads', [OrderController::class, 'getOrders']);
     Route::post('/list', [OrderController::class, 'orderList']);
     Route::get('/list/data', [OrderController::class, 'listData']);
     Route::get('/list/export', [OrderController::class, 'export']);
-    Route::post('/blacklist', [OrderController::class, 'setBlacklist']);
+    Route::post('/blacklist', [OrderController::class, 'addToBlacklist']);
+    Route::post('/wishlist', [OrderController::class, 'addToWishlist']);
+    Route::post('/wishlist/remove', [OrderController::class, 'removeTag']);
 
     Route::get('/week/get', [AdminController::class, 'getWeek']);
     Route::post('/week/set', [AdminController::class, 'setWeek']);
@@ -60,25 +74,28 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/reports/filter', [ReportController::class, 'filter']);
     Route::get('/reports/export/{date}', [ReportController::class, 'export']);
 
-    Route::get('/cuisines', function () {
-        return CuisineCollection::collection(Cuisine::orderBy('name')->get());
-    });
-    Route::post('/cuisine/set', [CuisineController::class, 'setCuisine']);
-    Route::get('/iiko/cuisines', [CuisineController::class, 'fetchCuisines']);
-    Route::get('/iiko/dishes', [CuisineController::class, 'fetchDishes']);
-    Route::post('/iiko/ingredients', [CuisineController::class, 'fetchIngredients']);
+    Route::get('/cuisines', [CuisineController::class, 'index']);
+    Route::get('/cuisine/duty', [CuisineController::class, 'getDutyCuisine']);
+    Route::post('/cuisine/duty', [CuisineController::class, 'setCuisine']);
+    Route::get('/cuisines/iiko', [CuisineController::class, 'fetchCuisines']);
 
-    Route::get('/custom_dishes', function () {
-        return DishCollection::collection(Dish::where('is_custom', true)->orderBy('name')->get());
-    });
-    Route::post('/dish/update', [CuisineController::class, 'updateDish']);
-    Route::post('/dish/create', [CuisineController::class, 'createDish']);
-    Route::post('/dish/delete', [CuisineController::class, 'deleteDish']);
+    Route::resource('dishes', DishController::class)->except(['create', 'show', 'edit']);
+    Route::get('dishes/ration/{id}', [DishController::class, 'getDishByRation']);
+    Route::get('dishes/iiko', [DishController::class, 'fetchDishes']);
 
-    Route::get('/ingredients', [IngredientController::class, 'index']);
-    Route::patch('/ingredient', [IngredientController::class, 'update']);
-    Route::post('/ingredient', [CuisineController::class, 'create']);
-    Route::delete('/ingredient', [CuisineController::class, 'delete']);
+    Route::get('departments', [DepartmentController::class, 'index']);
+
+    Route::post('select/{select}/dish/{dish}', [SelectController::class, 'setDishToSelect']);
+    Route::post('select/{select}/remove/ingredient/{id}', [SelectController::class, 'removeIngredientFromSelect']);
+    Route::post('select/{select}/add/ingredient/{id}', [SelectController::class, 'addIngredientFromSelect']);
+
+    Route::resource('/categories', CategoryController::class)->except(['create', 'show', 'edit']);
+
+    Route::resource('/ingredients', IngredientController::class)->except(['create', 'show', 'edit']);
+    Route::get('/ingredients/iiko/{id}', [IngredientController::class, 'fetchIngredients']);
+
+    Route::resource('rations', RationController::class)->except(['create', 'show', 'edit']);
+    Route::get('/rations/required/{id}', [RationController::class, 'getRequired']);
 
     Route::get('/promocodes', [PromocodeController::class, 'index']);
     Route::post('/promocodes', [PromocodeController::class, 'store']);

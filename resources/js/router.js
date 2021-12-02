@@ -96,16 +96,34 @@ const router = new VueRouter({
             component: () => import('./components/Logistics/Report')
         },
         {
+            path: '/kitchen-orders',
+            name: 'kitchen_orders',
+            meta: { auth: true },
+            component: () => import('./components/Kitchen/KitchenOrders')
+        },
+        {
+            path: '/rations',
+            name: 'rations',
+            meta: { auth: true },
+            component: () => import('./components/Kitchen/Rations')
+        },
+        {
             path: '/cuisines',
             name: 'cuisine',
             meta: { auth: true },
             component: () => import('./components/Kitchen/Cuisine')
         },
         {
-            path: '/custom',
-            name: 'custom',
+            path: '/dishes',
+            name: 'dishes',
             meta: { auth: true },
-            component: () => import('./components/Kitchen/CustomDishes')
+            component: () => import('./components/Kitchen/Dishes')
+        },
+        {
+            path: '/category',
+            name: 'category',
+            meta: { auth: true },
+            component: () => import('./components/Kitchen/Category')
         },
         {
             path: '/ingredients',

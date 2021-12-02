@@ -3,7 +3,7 @@
 
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Kitchen/CustomDishes.vue?vue&type=script&lang=js&":
 /*!***************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Kitchen/CustomDishes.vue?vue&type=script&lang=js& ***!
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Kitchen/Dishes.vue?vue&type=script&lang=js& ***!
   \***************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -183,6 +183,33 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "CustomDishes",
   data: function data() {
@@ -192,9 +219,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         name: '',
         time: 0,
         description: '',
+        department: null,
+        code: '',
         ingredients: []
       },
       ingredients: [],
+      departments: [{
+        id: 0,
+        name: 'ceh1'
+      }],
       rations: [{
         id: 1,
         name: 'Завтрак 1'
@@ -244,7 +277,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return axios.get('/api/custom_dishes').then(function (response) {
+                return axios.get('/api/dishes').then(function (response) {
                   _this.dishes = response.data.data;
                 })["catch"](function (error) {
                   console.log(error);
@@ -309,6 +342,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     close: function close() {
       this.dialog = false;
       this.dialogDelete = false;
+      this.edit = -1;
       this.dish = {
         name: '',
         time: 0,
@@ -359,7 +393,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /***/ "./resources/js/components/Kitchen/CustomDishes.vue":
 /*!**********************************************************!*\
-  !*** ./resources/js/components/Kitchen/CustomDishes.vue ***!
+  !*** ./resources/js/components/Kitchen/Dishes.vue ***!
   \**********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -367,8 +401,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _CustomDishes_vue_vue_type_template_id_fd983ba2___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CustomDishes.vue?vue&type=template&id=fd983ba2& */ "./resources/js/components/Kitchen/CustomDishes.vue?vue&type=template&id=fd983ba2&");
-/* harmony import */ var _CustomDishes_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CustomDishes.vue?vue&type=script&lang=js& */ "./resources/js/components/Kitchen/CustomDishes.vue?vue&type=script&lang=js&");
+/* harmony import */ var _CustomDishes_vue_vue_type_template_id_fd983ba2___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Dishes.vue?vue&type=template&id=fd983ba2& */ "./resources/js/components/Kitchen/CustomDishes.vue?vue&type=template&id=fd983ba2&");
+/* harmony import */ var _CustomDishes_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Dishes.vue?vue&type=script&lang=js& */ "./resources/js/components/Kitchen/CustomDishes.vue?vue&type=script&lang=js&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -385,19 +419,19 @@ var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__
   null,
   null,
   null
-  
+
 )
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/js/components/Kitchen/CustomDishes.vue"
+component.options.__file = "resources/js/components/Kitchen/Dishes.vue"
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
 
 /***/ }),
 
 /***/ "./resources/js/components/Kitchen/CustomDishes.vue?vue&type=script&lang=js&":
 /*!***********************************************************************************!*\
-  !*** ./resources/js/components/Kitchen/CustomDishes.vue?vue&type=script&lang=js& ***!
+  !*** ./resources/js/components/Kitchen/Dishes.vue?vue&type=script&lang=js& ***!
   \***********************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -405,14 +439,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CustomDishes_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./CustomDishes.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Kitchen/CustomDishes.vue?vue&type=script&lang=js&");
- /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CustomDishes_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CustomDishes_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Dishes.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Kitchen/CustomDishes.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CustomDishes_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]);
 
 /***/ }),
 
 /***/ "./resources/js/components/Kitchen/CustomDishes.vue?vue&type=template&id=fd983ba2&":
 /*!*****************************************************************************************!*\
-  !*** ./resources/js/components/Kitchen/CustomDishes.vue?vue&type=template&id=fd983ba2& ***!
+  !*** ./resources/js/components/Kitchen/Dishes.vue?vue&type=template&id=fd983ba2& ***!
   \*****************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -421,14 +455,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CustomDishes_vue_vue_type_template_id_fd983ba2___WEBPACK_IMPORTED_MODULE_0__.render),
 /* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CustomDishes_vue_vue_type_template_id_fd983ba2___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CustomDishes_vue_vue_type_template_id_fd983ba2___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./CustomDishes.vue?vue&type=template&id=fd983ba2& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Kitchen/CustomDishes.vue?vue&type=template&id=fd983ba2&");
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CustomDishes_vue_vue_type_template_id_fd983ba2___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Dishes.vue?vue&type=template&id=fd983ba2& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Kitchen/CustomDishes.vue?vue&type=template&id=fd983ba2&");
 
 
 /***/ }),
 
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Kitchen/CustomDishes.vue?vue&type=template&id=fd983ba2&":
 /*!********************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Kitchen/CustomDishes.vue?vue&type=template&id=fd983ba2& ***!
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Kitchen/Dishes.vue?vue&type=template&id=fd983ba2& ***!
   \********************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -505,6 +539,18 @@ var render = function() {
                             _vm._v(" "),
                             _c("th", { staticClass: "text-left" }, [
                               _vm._v(
+                                "\n                            Код\n                        "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("th", { staticClass: "text-left" }, [
+                              _vm._v(
+                                "\n                            Цех\n                        "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("th", { staticClass: "text-left" }, [
+                              _vm._v(
                                 "\n                            Ингредиенты\n                        "
                               )
                             ]),
@@ -526,6 +572,10 @@ var render = function() {
                               _c("td", [_vm._v(_vm._s(dish.name))]),
                               _vm._v(" "),
                               _c("td", [_vm._v(_vm._s(dish.ration))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(dish.code))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(dish.department_id))]),
                               _vm._v(" "),
                               _c("td", [
                                 _vm._v(_vm._s(dish.ingredients.length))
@@ -684,7 +734,7 @@ var render = function() {
                         1
                       ),
                       _vm._v(" "),
-                      _c("v-toolbar-title", [_vm._v("Settings")]),
+                      _c("v-toolbar-title", [_vm._v("Блюдо")]),
                       _vm._v(" "),
                       _c("v-spacer"),
                       _vm._v(" "),
@@ -769,6 +819,43 @@ var render = function() {
                                         _vm.$set(_vm.dish, "time", $$v)
                                       },
                                       expression: "dish.time"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("v-text-field", {
+                                    attrs: {
+                                      label: "Code",
+                                      "error-messages": _vm.errors.code,
+                                      outlined: "",
+                                      dense: "",
+                                      clearable: ""
+                                    },
+                                    model: {
+                                      value: _vm.dish.code,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.dish, "code", $$v)
+                                      },
+                                      expression: "dish.code"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("v-select", {
+                                    attrs: {
+                                      items: _vm.departments,
+                                      "item-text": "name",
+                                      "item-value": "id",
+                                      label: "Цех",
+                                      "error-messages": _vm.errors.department,
+                                      dense: "",
+                                      clearable: "",
+                                      outlined: ""
+                                    },
+                                    model: {
+                                      value: _vm.dish.department,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.dish, "department", $$v)
+                                      },
+                                      expression: "dish.department"
                                     }
                                   }),
                                   _vm._v(" "),

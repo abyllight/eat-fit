@@ -12,9 +12,4 @@ class Week extends Model
     public static function isWeekend():bool {
         return Week::find(1)->is_weekend;
     }
-
-    public function cuisine()
-    {
-        return $this->belongsTo(Cuisine::class, 'cuisine_id', 'id');
-    }
 }

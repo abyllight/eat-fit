@@ -16,14 +16,19 @@ class DishCollection extends JsonResource
     public function toArray($request): array
     {
         return [
-            'id'   => $this->id,
-            'i_id' => $this->i_id,
-            'i_name' => $this->i_name,
+            'id' => $this->id,
+            'i_name' => $this->iiko_name,
+            'cuisine_id' => $this->cuisine_id,
             'name' => $this->name,
-            'time' => $this->time,
-            'ration' => $this->getRation($this->time),
+            'code' => $this->code,
+            'department_id' => $this->department_id,
+            'department' => $this->getDepartment(),
+            'ration' => $this->ration,
+            'ration_id' => $this->ration_id,
             'is_custom' => $this->is_custom,
-            'ingredients' => $this->ingredients,
+            'ingredient_ids' => $this->getIngredientIds(),
+            'ingredients' => IngredientCollection::collection($this->ingredients->sortBy('name')),
+            'i_ingredients' => IngredientCollection::collection($this->iiko_ingredients->sortBy('name')),
             'description' => $this->description
         ];
     }

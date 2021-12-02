@@ -15,12 +15,14 @@ class CreateDishesTable extends Migration
     {
         Schema::create('dishes', function (Blueprint $table) {
             $table->id();
-            $table->string('i_id');
-            $table->string('i_name');
+            $table->string('iiko_id')->nullable();
+            $table->string('iiko_name')->nullable();
+            $table->string('code')->nullable();
             $table->string('name')->nullable();
             $table->integer('time')->default(0);
+            $table->integer('ration_id')->default(0);
+            $table->integer('department_id')->default(0);
             $table->integer('cuisine_id')->default(0);
-            $table->integer('tableware_id')->nullable();
             $table->longText('description')->nullable();
             $table->boolean('is_custom')->default(false);
             $table->timestamps();

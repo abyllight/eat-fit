@@ -17,11 +17,11 @@ class CuisineCollection extends JsonResource
     {
         return [
             'id'   => $this->id,
-            'i_id' => $this->i_id,
-            'i_name' => $this->i_name,
+            'i_id' => $this->iiko_id,
+            'i_name' => $this->iiko_name,
             'name' => $this->name,
-            'active' => $this->active,
-            'dishes' => DishCollection::collection($this->dishes->sortBy('time'))
+            'duty' => $this->is_on_duty,
+            'dishes' => DishCollection::collection($this->dishes->sortBy('ration_id'))
         ];
     }
 }

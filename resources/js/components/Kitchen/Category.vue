@@ -6,13 +6,13 @@
                     color="primary"
                     @click="dialog=true"
                 >
-                    Добавить блюдо
+                    Добавить категорию
                 </v-btn>
             </v-col>
         </v-row>
         <v-row>
-            <v-col cols="12">
-                <v-simple-table dense>
+            <v-col cols="12" md="8">
+                <v-simple-table>
                     <template v-slot:default>
                         <thead>
                         <tr>
@@ -23,36 +23,32 @@
                                 Название
                             </th>
                             <th class="text-left">
-                                Рацион
-                            </th>
-                            <th class="text-left">
                                 Ингредиенты
                             </th>
                             <th class="text-left">
-                                Actions
+                                Действие
                             </th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr
-                            v-for="(dish, index) in dishes"
-                            :key="dish.id"
+                            v-for="(item, index) in categories"
+                            :key="item.id"
                         >
                             <td>{{ index + 1 }}</td>
-                            <td>{{ dish.name }}</td>
-                            <td>{{ dish.ration }}</td>
-                            <td>{{ dish.ingredients.length }}</td>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.ingredients.length }}</td>
                             <td>
                                 <v-icon
                                     small
                                     class="mr-2"
-                                    @click="editItem(dish)"
+                                    @click="editItem(item)"
                                 >
                                     mdi-pencil
                                 </v-icon>
                                 <v-icon
                                     small
-                                    @click="deleteDish(dish)"
+                                    @click="deleteItem(item)"
                                 >
                                     mdi-delete
                                 </v-icon></td>
@@ -92,20 +88,10 @@
                         >
                             <v-icon>mdi-close</v-icon>
                         </v-btn>
-                        <v-toolbar-title>Settings</v-toolbar-title>
-                        <v-spacer></v-spacer>
-                        <v-toolbar-items>
-                            <v-btn
-                                dark
-                                text
-                                @click="addDish"
-                            >
-                                Сохранить
-                            </v-btn>
-                        </v-toolbar-items>
+                        <v-toolbar-title>Категория</v-toolbar-title>
                     </v-toolbar>
                     <v-card-title>
-                        <span class="text-h5"> {{ edit === 1 ? 'Редактировать' : 'Добавить блюдо' }}</span>
+                        <span class="text-h5"> {{ edit === 1 ? 'Редактировать' : 'Добавить' }}</span>
                     </v-card-title>
                     <v-card-text>
                         <v-container fluid>
@@ -115,26 +101,15 @@
                                     lg="4"
                                 >
                                     <v-text-field
-                                        v-model="dish.name"
+                                        v-model="category.name"
                                         label="Название"
                                         :error-messages="errors.name"
                                         outlined
                                         dense
                                         clearable
                                     ></v-text-field>
-                                    <v-select
-                                        :items="rations"
-                                        v-model="dish.time"
-                                        item-text="name"
-                                        item-value="id"
-                                        label="Рацион"
-                                        :error-messages="errors.time"
-                                        dense
-                                        clearable
-                                        outlined
-                                    ></v-select>
                                     <v-textarea
-                                        v-model="dish.description"
+                                        v-model="category.description"
                                         outlined
                                         clearable
                                         label="Доп. инфо"
@@ -142,7 +117,7 @@
                                 </v-col>
                                 <v-col sm="12" lg="8">
                                     <v-autocomplete
-                                        v-model="dish_ings"
+                                        v-model="category.ingredient_ids"
                                         :items="ingredients"
                                         item-text="name"
                                         item-value="id"
@@ -150,8 +125,15 @@
                                         outlined
                                         small-chips
                                         label="Ингредиенты"
+                                        :error-messages="errors.ingredient_ids"
                                         multiple
                                     ></v-autocomplete>
+                                    <v-btn
+                                        color="primary"
+                                        @click="action"
+                                    >
+                                        Сохранить
+                                    </v-btn>
                                 </v-col>
                             </v-row>
                         </v-container>
@@ -164,70 +146,30 @@
 
 <script>
 export default {
-    name: "CustomDishes",
+    name: "Category",
     data: () => ({
-        dishes: [],
-        dish: {
-            name: '',
-            time: 0,
-            description: '',
-            ingredients: []
-        },
+        categories: [],
         ingredients: [],
-        rations: [
-            {
-                id: 1,
-                name: 'Завтрак 1'
-            },
-            {
-                id: 2,
-                name: 'Завтрак 2'
-            },
-            {
-                id: 3,
-                name: 'Обед суп'
-            },
-            {
-                id: 4,
-                name: 'Обед основной'
-            },
-            {
-                id: 8,
-                name: 'Обед гарнир'
-            },
-            {
-                id: 5,
-                name: 'Обед салат'
-            },
-            {
-                id: 6,
-                name: 'Полдник'
-            },
-            {
-                id: 7,
-                name: 'Ужин основной'
-            },
-            {
-                id: 9,
-                name: 'Ужин овощи'
-            },
-        ],
-        dish_ings: [],
+        category: {
+            name: '',
+            description: '',
+            ingredient_ids: []
+        },
         errors: [],
         edit: -1,
         dialog: false,
         dialogDelete: false,
     }),
     mounted() {
-        this.getDishes()
+        this.getCategories()
         this.getIngredients()
     },
     methods: {
-        async getDishes(){
+        async getCategories(){
             await axios
-                .get('/api/custom_dishes')
+                .get('/api/categories')
                 .then(response => {
-                    this.dishes = response.data.data
+                    this.categories = response.data
                 })
                 .catch(error => {
                     console.log(error)
@@ -237,31 +179,57 @@ export default {
             await axios
                 .get('/api/ingredients')
                 .then(response => {
-                    this.ingredients = response.data.data
+                    this.ingredients = response.data
                 })
                 .catch(error => {
                     console.log(error)
                 })
         },
-        addDish(){
-            let link = this.edit === 1 ? '/api/dish/update' : '/api/dish/create'
-            this.dish.ingredients = this.dish_ings
+        action(){
+            if (this.edit === 1){
+                this.update()
+            }else{
+                this.store()
+            }
+        },
+        store(){
             axios
-                .post(link, this.dish)
+                .post('/api/categories', this.category)
                 .then(response => {
                     if(response.data.status){
+                        this.$store.dispatch('showAlert', {
+                            'isVisible': true,
+                            'msg': response.data.msg,
+                            'color': 'green',
+                            'type': 'success'
+                        })
                         this.close()
-                        this.getDishes()
+                        this.getCategories()
                     }else{
                         this.errors = response.data.errors
                     }
-
-                    this.$store.dispatch('showAlert', {
-                        'isVisible': true,
-                        'msg': response.data.msg,
-                        'color': 'green',
-                        'type': 'success'
-                    })
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.errors = error.response.data.errors
+                })
+        },
+        update(){
+            axios
+                .patch('/api/categories/'+this.category.id, this.category)
+                .then(response => {
+                    if(response.data.status){
+                        this.$store.dispatch('showAlert', {
+                            'isVisible': true,
+                            'msg': response.data.msg,
+                            'color': 'green',
+                            'type': 'success'
+                        })
+                        this.close()
+                        this.getCategories()
+                    }else{
+                        this.errors = response.data.errors
+                    }
                 })
                 .catch(error => {
                     console.log(error)
@@ -271,43 +239,38 @@ export default {
         close(){
             this.dialog = false
             this.dialogDelete = false
-            this.dish = {
+            this.edit = -1
+            this.category = {
                 name: '',
-                time: 0,
                 description: '',
-                ingredients: []
+                ingredient_ids: []
             }
-            this.dish_ings = []
         },
-        editItem(dish){
+        editItem(category){
             this.edit = 1
-            this.dish = dish
+            this.category = category
             this.dialog = true
-            this.dish_ings = dish.ingredients
         },
-        deleteDish(dish){
-            this.dish = dish
+        deleteItem(category){
+            this.category = category
             this.dialogDelete = true
         },
         deleteConfirm(){
             axios
-                .post('/api/dish/delete', {
-                    id: this.dish.id
-                })
+                .delete('/api/categories/'+this.category.id)
                 .then(response => {
                     if(response.data.status){
+                        this.$store.dispatch('showAlert', {
+                            'isVisible': true,
+                            'msg': response.data.msg,
+                            'color': 'green',
+                            'type': 'success'
+                        })
                         this.close()
-                        this.getDishes()
+                        this.getCategories()
                     }else{
                         this.errors = response.data.errors
                     }
-
-                    this.$store.dispatch('showAlert', {
-                        'isVisible': true,
-                        'msg': response.data.msg,
-                        'color': 'green',
-                        'type': 'success'
-                    })
                 })
                 .catch(error => {
                     console.log(error)

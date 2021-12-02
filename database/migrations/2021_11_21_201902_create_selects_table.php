@@ -17,6 +17,10 @@ class CreateSelectsTable extends Migration
             $table->id();
             $table->integer('order_id');
             $table->integer('cuisine_id');
+            $table->integer('ration_id');
+            $table->integer('dish_id')->nullable();
+            $table->integer('status')->default(0);
+            $table->longText('description')->nullable();
             $table->timestamps();
         });
     }

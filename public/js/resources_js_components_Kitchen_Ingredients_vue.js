@@ -89,12 +89,90 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Ingredients",
   data: function data() {
     return {
       ingredients: [],
-      ingredient: {},
+      categories: [],
+      ingredient: {
+        name: '',
+        description: '',
+        category_ids: []
+      },
       errors: [],
       edit: -1,
       dialog: false,
@@ -103,6 +181,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   mounted: function mounted() {
     this.getIngredients();
+    this.getCategories();
   },
   methods: {
     getIngredients: function getIngredients() {
@@ -115,7 +194,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _context.next = 2;
                 return axios.get('/api/ingredients').then(function (response) {
-                  _this.ingredients = response.data.data;
+                  _this.ingredients = response.data;
                 })["catch"](function (error) {
                   console.log(error);
                 });
@@ -128,9 +207,123 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee);
       }))();
     },
-    deleteConfirm: function deleteConfirm() {},
-    editIng: function editIng() {},
-    deleteIng: function deleteIng() {}
+    getCategories: function getCategories() {
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return axios.get('/api/categories').then(function (response) {
+                  _this2.categories = response.data;
+                })["catch"](function (error) {
+                  console.log(error);
+                });
+
+              case 2:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    },
+    action: function action() {
+      if (this.edit === 1) {
+        this.update();
+      } else {
+        this.store();
+      }
+    },
+    store: function store() {
+      var _this3 = this;
+
+      axios.post('/api/ingredients', this.ingredient).then(function (response) {
+        if (response.data.status) {
+          _this3.$store.dispatch('showAlert', {
+            'isVisible': true,
+            'msg': response.data.msg,
+            'color': 'green',
+            'type': 'success'
+          });
+
+          _this3.close();
+
+          _this3.getIngredients();
+        } else {
+          _this3.errors = response.data.errors;
+        }
+      })["catch"](function (error) {
+        console.log(error);
+        _this3.errors = error.response.data.errors;
+      });
+    },
+    update: function update() {
+      var _this4 = this;
+
+      axios.patch('/api/ingredients/' + this.ingredient.id, this.ingredient).then(function (response) {
+        if (response.data.status) {
+          _this4.$store.dispatch('showAlert', {
+            'isVisible': true,
+            'msg': response.data.msg,
+            'color': 'green',
+            'type': 'success'
+          });
+
+          _this4.close();
+
+          _this4.getIngredients();
+        } else {
+          _this4.errors = response.data.errors;
+        }
+      })["catch"](function (error) {
+        console.log(error);
+        _this4.errors = error.response.data.errors;
+      });
+    },
+    close: function close() {
+      this.dialog = false;
+      this.dialogDelete = false;
+      this.edit = -1;
+      this.ingredient = {
+        name: '',
+        description: ''
+      };
+    },
+    editItem: function editItem(ingredient) {
+      this.edit = 1;
+      this.ingredient = ingredient;
+      this.dialog = true;
+    },
+    deleteIngredient: function deleteIngredient(ingredient) {
+      this.ingredient = ingredient;
+      this.dialogDelete = true;
+    },
+    deleteConfirm: function deleteConfirm() {
+      var _this5 = this;
+
+      axios["delete"]('/api/ingredients/' + this.ingredient.id).then(function (response) {
+        if (response.data.status) {
+          _this5.$store.dispatch('showAlert', {
+            'isVisible': true,
+            'msg': response.data.msg,
+            'color': 'green',
+            'type': 'success'
+          });
+
+          _this5.close();
+
+          _this5.getIngredients();
+        } else {
+          _this5.errors = response.data.errors;
+        }
+      })["catch"](function (error) {
+        console.log(error);
+        _this5.errors = error.response.data.errors;
+      });
+    }
   }
 });
 
@@ -278,6 +471,12 @@ var render = function() {
                             _vm._v(" "),
                             _c("th", { staticClass: "text-left" }, [
                               _vm._v(
+                                "\n                            Категории\n                        "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("th", { staticClass: "text-left" }, [
+                              _vm._v(
                                 "\n                            Actions\n                        "
                               )
                             ])
@@ -292,6 +491,8 @@ var render = function() {
                               _vm._v(" "),
                               _c("td", [_vm._v(_vm._s(ing.name))]),
                               _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(ing.categories.length))]),
+                              _vm._v(" "),
                               _c(
                                 "td",
                                 [
@@ -302,7 +503,7 @@ var render = function() {
                                       attrs: { small: "" },
                                       on: {
                                         click: function($event) {
-                                          return _vm.editIng(ing)
+                                          return _vm.editItem(ing)
                                         }
                                       }
                                     },
@@ -313,22 +514,24 @@ var render = function() {
                                     ]
                                   ),
                                   _vm._v(" "),
-                                  _c(
-                                    "v-icon",
-                                    {
-                                      attrs: { small: "" },
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.deleteIng(ing)
-                                        }
-                                      }
-                                    },
-                                    [
-                                      _vm._v(
-                                        "\n                                mdi-delete\n                            "
+                                  ing.is_custom
+                                    ? _c(
+                                        "v-icon",
+                                        {
+                                          attrs: { small: "" },
+                                          on: {
+                                            click: function($event) {
+                                              return _vm.deleteIngredient(ing)
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _vm._v(
+                                            "\n                                mdi-delete\n                            "
+                                          )
+                                        ]
                                       )
-                                    ]
-                                  )
+                                    : _vm._e()
                                 ],
                                 1
                               )
@@ -391,6 +594,164 @@ var render = function() {
                           ),
                           _vm._v(" "),
                           _c("v-spacer")
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-row",
+        { attrs: { justify: "center" } },
+        [
+          _c(
+            "v-dialog",
+            {
+              attrs: {
+                fullscreen: "",
+                "hide-overlay": "",
+                transition: "dialog-bottom-transition"
+              },
+              model: {
+                value: _vm.dialog,
+                callback: function($$v) {
+                  _vm.dialog = $$v
+                },
+                expression: "dialog"
+              }
+            },
+            [
+              _c(
+                "v-card",
+                [
+                  _c(
+                    "v-toolbar",
+                    { attrs: { dark: "", color: "primary" } },
+                    [
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { icon: "", dark: "" },
+                          on: { click: _vm.close }
+                        },
+                        [_c("v-icon", [_vm._v("mdi-close")])],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c("v-toolbar-title", [_vm._v("Ингредиент")])
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c("v-card-title", [
+                    _c("span", { staticClass: "text-h5" }, [
+                      _vm._v(
+                        " " +
+                          _vm._s(_vm.edit === 1 ? "Редактировать" : "Добавить")
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "v-card-text",
+                    [
+                      _c(
+                        "v-container",
+                        { attrs: { fluid: "" } },
+                        [
+                          _c(
+                            "v-row",
+                            [
+                              _c(
+                                "v-col",
+                                { attrs: { sm: "12", lg: "4" } },
+                                [
+                                  _c("v-text-field", {
+                                    attrs: {
+                                      label: "Название",
+                                      "error-messages": _vm.errors.name,
+                                      outlined: "",
+                                      clearable: ""
+                                    },
+                                    model: {
+                                      value: _vm.ingredient.name,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.ingredient, "name", $$v)
+                                      },
+                                      expression: "ingredient.name"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("v-autocomplete", {
+                                    attrs: {
+                                      items: _vm.categories,
+                                      "item-text": "name",
+                                      "item-value": "id",
+                                      clearable: "",
+                                      outlined: "",
+                                      label: "Категории",
+                                      multiple: ""
+                                    },
+                                    model: {
+                                      value: _vm.ingredient.category_ids,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.ingredient,
+                                          "category_ids",
+                                          $$v
+                                        )
+                                      },
+                                      expression: "ingredient.category_ids"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("v-textarea", {
+                                    attrs: {
+                                      outlined: "",
+                                      clearable: "",
+                                      label: "Доп. инфо"
+                                    },
+                                    model: {
+                                      value: _vm.ingredient.description,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.ingredient,
+                                          "description",
+                                          $$v
+                                        )
+                                      },
+                                      expression: "ingredient.description"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c(
+                                    "v-btn",
+                                    {
+                                      attrs: { color: "primary" },
+                                      on: { click: _vm.action }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                                    Сохранить\n                                "
+                                      )
+                                    ]
+                                  )
+                                ],
+                                1
+                              )
+                            ],
+                            1
+                          )
                         ],
                         1
                       )

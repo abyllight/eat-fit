@@ -63,9 +63,51 @@ class Order extends Model
         return $this->belongsToMany(Ingredient::class, 'blacklists', 'order_id', 'ingredient_id');
     }
 
+    public function wishlist()
+    {
+        return $this->hasMany(Wishlist::class, 'order_id', 'id');
+    }
+
     public function reports()
     {
         return $this->hasMany(Report::class, 'order_id', 'id');
+    }
+
+    public function select()
+    {
+        return $this->hasMany(Select::class, 'order_id', 'id');
+    }
+
+    public function order_select()
+    {
+        $select = $this->select()->whereDate('created_at', Carbon::today())->get();
+
+        if ($select->count() === 0) {
+            $ration = Ration::where('is_required', true)->get();
+            $cuisine = Cuisine::where('is_on_duty', true)->first();
+
+            foreach ($ration as $item) {
+                $dish = Dish::where('cuisine_id', $cuisine->id)->where('ration_id', $item->id)->first();
+                $s = new Select();
+                $s->order_id = $this->id;
+                $s->cuisine_id = $cuisine->id;
+                $s->ration_id = $item->id;
+                if ($dish){
+                    $s->dish_id = $dish->id;
+                }
+                $s->status = 5;
+                $s->save();
+
+                if ($dish){
+                    $s->ingredients()->sync($dish->getIngredientIds());
+                }
+            }
+        }
+    }
+
+    public function old()
+    {
+        return $this->hasOne(OrderHistory::class, 'order_id', 'id');
     }
 
     public const SIZES = ['xs', 's', 'm', 'l', 'xl', 'eat'];
@@ -83,7 +125,7 @@ class Order extends Model
 
     public static function getSize(int $size): string
     {
-        return self::SIZES[$size];
+        return strtoupper(self::SIZES[$size]);
     }
 
     public static function getNbType(int $type): int
