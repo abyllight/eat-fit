@@ -27,7 +27,7 @@ class OrderController extends Controller
     }
 
     public function getSelect(){
-        $orders = Order::where('type', 1)->where('is_active', true)->orderBy('size')->take(3)->get();
+        $orders = Order::where('type', 1)->where('is_active', true)->orderBy('size')->get();
         return response()->json(OrderSelectCollection::collection($orders));
     }
 
