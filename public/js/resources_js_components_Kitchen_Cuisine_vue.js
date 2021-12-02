@@ -497,7 +497,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context7.prev = _context7.next) {
               case 0:
                 _context7.next = 2;
-                return axios.post('/api/cuisine/duty/', {
+                return axios.post('/api/cuisine/duty/set', {
                   id: id
                 }).then(function (response) {
                   _this8.cuisine = response.data;

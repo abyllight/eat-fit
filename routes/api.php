@@ -76,7 +76,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/cuisines', [CuisineController::class, 'index']);
     Route::get('/cuisine/duty', [CuisineController::class, 'getDutyCuisine']);
-    Route::post('/cuisine/duty', [CuisineController::class, 'setCuisine']);
+    Route::post('/cuisine/duty/set', [CuisineController::class, 'setCuisine']);
     Route::get('/cuisines/iiko', [CuisineController::class, 'fetchCuisines']);
 
     Route::resource('dishes', DishController::class)->except(['create', 'show', 'edit']);

@@ -391,7 +391,7 @@
             },
             async setCuisine(id){
                 await axios
-                    .post('/api/cuisine/duty/', {
+                    .post('/api/cuisine/duty/set', {
                         id: id
                     })
                     .then(response => {
