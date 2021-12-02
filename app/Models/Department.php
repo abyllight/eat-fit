@@ -12,15 +12,15 @@ class Department extends Model
     public const DEPARTMENTS = [
         [
             'id' => 0,
-            'name' => 'Dep1'
+            'name' => 'Горячий цех'
         ],
         [
             'id' => 1,
-            'name' => 'Dep2'
+            'name' => 'Холодный цех'
         ],
         [
-            'id' => 2,
-            'name' => 'Dep3'
+            'id' => 3,
+            'name' => 'Кондитерский'
         ]
     ];
 }

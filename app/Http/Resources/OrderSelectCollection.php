@@ -24,7 +24,7 @@ class OrderSelectCollection extends JsonResource
             return $item['id'];
         }, $this->blacklist()->get()->toArray());
 
-        //$this->order_select();
+        $this->order_select();
 
         $yesterday = $this->select()->whereDate('created_at', Carbon::yesterday())->get();
         $today = $this->select()->whereDate('created_at', Carbon::today())->get();
