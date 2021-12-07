@@ -51,6 +51,10 @@ class Order extends Model
         'has_water'
     ];
 
+    public const SIZES = ['xs', 's', 'm', 'l', 'xl', 'eat'];
+
+    public const TYPES = ['lite', 'select', 'detox', 'fit_go'];
+
     public function courier()
     {
         $is_weekend = Week::isWeekend();
@@ -68,6 +72,18 @@ class Order extends Model
         return $this->hasMany(Wishlist::class, 'order_id', 'id');
     }
 
+    public function getBlacklistIds(){
+        return array_map(function ($item){
+            return $item['id'];
+        }, $this->blacklist()->get()->toArray());
+    }
+
+    public function getWishes(){
+        return array_map(function ($item){
+            return $item['wish'];
+        }, $this->wishlist()->get()->toArray());
+    }
+
     public function reports()
     {
         return $this->hasMany(Report::class, 'order_id', 'id');
@@ -78,41 +94,10 @@ class Order extends Model
         return $this->hasMany(Select::class, 'order_id', 'id');
     }
 
-    public function order_select()
-    {
-        $select = $this->select()->whereDate('created_at', Carbon::today())->get();
-
-        if ($select->count() === 0) {
-            $ration = Ration::where('is_required', true)->get();
-            $cuisine = Cuisine::where('is_on_duty', true)->first();
-
-            foreach ($ration as $item) {
-                $dish = Dish::where('cuisine_id', $cuisine->id)->where('ration_id', $item->id)->first();
-                $s = new Select();
-                $s->order_id = $this->id;
-                $s->cuisine_id = $cuisine->id;
-                $s->ration_id = $item->id;
-                if ($dish){
-                    $s->dish_id = $dish->id;
-                }
-                $s->status = 5;
-                $s->save();
-
-                if ($dish){
-                    $s->ingredients()->sync($dish->getIngredientIds());
-                }
-            }
-        }
-    }
-
     public function old()
     {
         return $this->hasOne(OrderHistory::class, 'order_id', 'id');
     }
-
-    public const SIZES = ['xs', 's', 'm', 'l', 'xl', 'eat'];
-
-    public const TYPES = ['lite', 'select', 'detox', 'fit_go'];
 
     public static function isWeekend(): bool {
         return Week::isWeekend();
@@ -143,7 +128,7 @@ class Order extends Model
         return strtoupper(self::TYPES[$type] . ' ' . self::SIZES[$size]);
     }
 
-    public function getColor(int $type) {
+    public function getTagColor(int $type) {
         $color = '';
 
         switch ($type) {

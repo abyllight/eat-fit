@@ -128,4 +128,24 @@ class IngredientController extends Controller
             'msg' => 'Ингредиент удален'
         ]);
     }
+
+    public function setAnalog(Request $request){
+        $analog = Ingredient::find($request->analog_id);
+        $ingredient = Ingredient::find($request->id);
+
+        if (!$analog || !$ingredient){
+            return response()->json([
+                'status' => false,
+                'msg' => 'Ingredient not found'
+            ]);
+        }
+
+        $ingredient->analog_id = $request->analog_id;
+        $ingredient->save();
+
+        return response()->json([
+            'status' => true,
+            'msg' => 'Analog added!'
+        ]);
+    }
 }

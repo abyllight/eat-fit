@@ -16,19 +16,6 @@ class OrderSelectCollection extends JsonResource
      */
     public function toArray($request): array
     {
-        $wishes = array_map(function ($item){
-            return $item['wish'];
-        }, $this->wishlist()->get()->toArray());
-
-        $black = array_map(function ($item){
-            return $item['id'];
-        }, $this->blacklist()->get()->toArray());
-
-        $this->order_select();
-
-        $yesterday = $this->select()->whereDate('created_at', Carbon::yesterday())->get();
-        $today = $this->select()->whereDate('created_at', Carbon::today())->get();
-
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -36,10 +23,10 @@ class OrderSelectCollection extends JsonResource
             'size' => $this->getSize($this->size),
             'diet' => $this->diet,
             'diet_old' => $this->diet_old,
-            'blacklist' => $black,
-            'wishlist' => $wishes,
-            'yesterday' => SelectCollection::collection($yesterday->sortBy('ration_id')),
-            'today' => SelectCollection::collection($today->sortBy('ration_id'))
+            'blacklist' => $this->getBlacklistIds(),
+            'wishlist' => $this->getWishes(),
+            //'yesterday' => SelectCollection::collection($this->getSelectYesterday()),
+            //'today' => SelectCollection::collection($this->getSelectToday())
         ];
     }
 }

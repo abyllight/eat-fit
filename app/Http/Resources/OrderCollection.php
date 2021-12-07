@@ -28,7 +28,7 @@ class OrderCollection extends JsonResource
             'amo_id' => $this->amo_id,
             'name' => $this->name,
             'tag' => $this->getTag($this->type, $this->size),
-            'color' => $this->getColor($this->type),
+            'color' => $this->getTagColor($this->type),
             'phone' => $this->phone,
             'whatsapp' => $this->whatsapp,
             'day' => $this->day,

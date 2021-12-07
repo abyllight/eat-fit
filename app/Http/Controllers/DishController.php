@@ -152,4 +152,20 @@ class DishController extends Controller
         }
         return response()->json(DishCollection::collection($dishes));
     }
+
+    public function getDishesByCuisine($id)
+    {
+        $cuisine = Cuisine::find($id);
+
+        if (!$cuisine){
+            return response()->json([
+                'status' => false,
+                'msg' => 'Cuisine not found'
+            ]);
+        }
+
+        $dishes = DishCollection::collection($cuisine->dishes->sortBy('ration_id'));
+
+        return response()->json($dishes);
+    }
 }

@@ -18,10 +18,11 @@ class SelectCollection extends JsonResource
         return [
             'id'   => $this->id,
             'cuisine' => $this->cuisine->name,
-            'dish' => new DishCollection($this->dish),
+            'dish_id' => $this->dish->id,
             'ingredients' => IngredientCollection::collection($this->ingredients->sortBy('name')),
             'ingredient_ids' => $this->getIngredientIds(),
-            'ration_id' => $this->ration_id
+            'ration_id' => $this->ration_id,
+            'created_at' => $this->created_at->format('Y-m-d')
         ];
     }
 }

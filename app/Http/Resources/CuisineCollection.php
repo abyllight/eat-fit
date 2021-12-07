@@ -21,7 +21,7 @@ class CuisineCollection extends JsonResource
             'i_name' => $this->iiko_name,
             'name' => $this->name,
             'duty' => $this->is_on_duty,
-            'dishes' => DishCollection::collection($this->dishes->sortBy('ration_id'))
+            //'dishes' => DishCollection::collection($this->dishes->sortBy('ration_id'))
         ];
     }
 }

@@ -23,7 +23,7 @@
         </v-row>
         <v-row>
             <v-col sm="12" md="2" lg="2">
-                <v-list v-if="cuisines" dense>
+                <v-list dense>
                     <v-subheader>Кухни мира</v-subheader>
                     <v-list-item-group
                         color="primary"
@@ -83,7 +83,7 @@
                 >
                     <v-list v-if="cuisine">
                         <v-list-item
-                            v-for="(dish, index) in cuisine.dishes"
+                            v-for="(dish, index) in dishes"
                             :key="dish.id"
                             @click="setDish(dish)"
                         >
@@ -175,12 +175,12 @@
                                 >
                                     <h3>{{dish.i_name}}</h3>
                                     <v-list-item
-                                        v-for="item in dish.i_ingredients"
+                                        v-for="(item, key) in dish.i_ingredients"
                                         :key="item.id"
                                         dense
                                     >
                                         <v-list-item-content>
-                                            <v-list-item-title>{{item.name}}</v-list-item-title>
+                                            <v-list-item-title>{{key+1}}. {{item.name}}</v-list-item-title>
                                         </v-list-item-content>
                                     </v-list-item>
                                 </v-col>
@@ -260,6 +260,7 @@
                 ingredients: [],
                 is_custom: false
             },
+            dishes: [],
             btn_loading: false,
             loading: false,
             disabled: false,
@@ -280,8 +281,7 @@
                         this.cuisine = this.cuisines.find(obj => {
                             return obj.duty === 1
                         })
-                        let dishes = this.cuisine.dishes
-                        this.dish = dishes ? dishes[0] : []
+                        this.getDishesByCuisine(this.cuisine.id)
                         this.getRations()
                     })
                     .catch(error => {
@@ -383,10 +383,21 @@
                         this.loading = false
                     })
             },
+            async getDishesByCuisine(id){
+                await axios
+                    .get('/api/dishes/cuisine/'+id)
+                    .then(response => {
+                        this.dishes = response.data
+                        this.dish = this.dishes[0]
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+            },
             showDetails(cuisine) {
                 if (this.disabled) return
                 this.cuisine = cuisine
-                this.dish = cuisine.dishes[0]
+                this.getDishesByCuisine(cuisine.id)
                 this.getRations()
             },
             async setCuisine(id){

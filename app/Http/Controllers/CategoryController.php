@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\CategoryCollection;
 use App\Models\Category;
+use App\Models\Ingredient;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -78,5 +79,18 @@ class CategoryController extends Controller
             'status' => false,
             'msg' => 'Category not found'
         ]);
+    }
+
+    public function getCategoriesByIngredient($id){
+        $ingredient = Ingredient::find($id);
+
+        if (!$ingredient){
+            return response()->json([
+                'status' => false,
+                'msg' => 'Ingredient not found'
+            ]);
+        }
+
+        return response()->json(CategoryCollection::collection($ingredient->categories));
     }
 }

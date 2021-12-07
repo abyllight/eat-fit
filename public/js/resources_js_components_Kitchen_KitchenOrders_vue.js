@@ -408,6 +408,68 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'KitchenOrders',
@@ -433,13 +495,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       amo_loading: false,
       loading: true,
       dialog: false,
+      dialog2: false,
       ingredients: [],
       categories: [],
       applied_categories: [],
+      ingredient_categories: [],
+      chosen_category: {},
+      chosen_ingredient: {},
+      target_ingredient: null,
       dishes: [],
       dish: {},
-      yesterday: [],
-      today: [],
+      previous: [],
       result: [],
       order: {},
       cuisine: {},
@@ -450,7 +516,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       rations: []
     };
   },
-  mounted: function mounted() {
+  created: function created() {
     this.getLeads();
     this.getLite();
     this.getSelect();
@@ -695,7 +761,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee9);
       }))();
     },
-    getRations: function getRations() {
+    getCategoriesByIngredient: function getCategoriesByIngredient(id) {
       var _this10 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee10() {
@@ -704,8 +770,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context10.prev = _context10.next) {
               case 0:
                 _context10.next = 2;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/rations').then(function (response) {
-                  _this10.rations = response.data;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/categories/ingredient/' + id).then(function (response) {
+                  _this10.ingredient_categories = response.data;
                 })["catch"](function (error) {
                   console.log(error);
                 });
@@ -718,7 +784,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee10);
       }))();
     },
-    getDishes: function getDishes(id) {
+    getRations: function getRations() {
       var _this11 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee11() {
@@ -727,14 +793,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context11.prev = _context11.next) {
               case 0:
                 _context11.next = 2;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/dishes/ration/' + id).then(function (response) {
-                  _this11.dishes = response.data;
-
-                  if (_this11.dishes.length > 0) {
-                    _this11.dish = _this11.dishes[0];
-                  } else {
-                    _this11.dish.ingredients = [];
-                  }
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/rations').then(function (response) {
+                  _this11.rations = response.data;
                 })["catch"](function (error) {
                   console.log(error);
                 });
@@ -747,28 +807,121 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee11);
       }))();
     },
-    getCuisine: function getCuisine() {
+    getDishes: function getDishes(id) {
       var _this12 = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/cuisine/duty').then(function (response) {
-        _this12.cuisine = response.data;
-      })["catch"](function (error) {
-        _this12.loading = false;
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee12() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee12$(_context12) {
+          while (1) {
+            switch (_context12.prev = _context12.next) {
+              case 0:
+                _context12.next = 2;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/dishes/ration/' + id).then(function (response) {
+                  _this12.dishes = response.data;
 
-        _this12.$store.dispatch('showAlert', {
-          'isVisible': true,
-          'msg': error.message,
-          'color': 'error',
-          'type': 'error'
-        });
-      });
+                  if (_this12.dishes.length > 0) {
+                    _this12.dish = _this12.dishes.find(function (obj) {
+                      return obj.id === _this12.result.dish_id;
+                    });
+
+                    if (!_this12.dish) {
+                      _this12.dish = _this12.dishes[0];
+                    }
+                  } else {
+                    _this12.dish.ingredients = [];
+                  }
+                })["catch"](function (error) {
+                  console.log(error);
+                });
+
+              case 2:
+              case "end":
+                return _context12.stop();
+            }
+          }
+        }, _callee12);
+      }))();
+    },
+    getCuisine: function getCuisine() {
+      var _this13 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee13() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee13$(_context13) {
+          while (1) {
+            switch (_context13.prev = _context13.next) {
+              case 0:
+                _context13.next = 2;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/cuisine/duty').then(function (response) {
+                  _this13.cuisine = response.data;
+                })["catch"](function (error) {
+                  _this13.loading = false;
+
+                  _this13.$store.dispatch('showAlert', {
+                    'isVisible': true,
+                    'msg': error.message,
+                    'color': 'error',
+                    'type': 'error'
+                  });
+                });
+
+              case 2:
+              case "end":
+                return _context13.stop();
+            }
+          }
+        }, _callee13);
+      }))();
+    },
+    getPreviousOrderSelectByRationId: function getPreviousOrderSelectByRationId(id) {
+      var _this14 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee14() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee14$(_context14) {
+          while (1) {
+            switch (_context14.prev = _context14.next) {
+              case 0:
+                _context14.next = 2;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/orders/' + _this14.order.id + '/previous/select/ration/' + id).then(function (response) {
+                  _this14.previous = response.data;
+                })["catch"](function (error) {
+                  console.log(error);
+                });
+
+              case 2:
+              case "end":
+                return _context14.stop();
+            }
+          }
+        }, _callee14);
+      }))();
+    },
+    getOrderSelectByRationId: function getOrderSelectByRationId(id) {
+      var _this15 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee15() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee15$(_context15) {
+          while (1) {
+            switch (_context15.prev = _context15.next) {
+              case 0:
+                _context15.next = 2;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/orders/' + _this15.order.id + '/today/select/ration/' + id).then(function (response) {
+                  _this15.result = response.data;
+                })["catch"](function (error) {
+                  console.log(error);
+                });
+
+              case 2:
+              case "end":
+                return _context15.stop();
+            }
+          }
+        }, _callee15);
+      }))();
     },
     showDetails: function showDetails(index) {
       this.order = index;
       this.mix = index.blacklist;
       this.tags = index.wishlist;
-      this.yesterday = index.yesterday;
-      this.today = index.today;
       this.dialog = true;
     },
     close: function close() {
@@ -777,13 +930,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.dialog = false;
       this.applied_categories = [];
       this.tag = '';
-      this.today = [];
+    },
+    closeDialog2: function closeDialog2() {
+      this.ingredient_categories = [];
+      this.chosen_category = {};
+      this.chosen_ingredient = {};
+      this.target_ingredient = null;
+      this.dialog2 = false;
     },
     applyCategories: function applyCategories() {
-      var _this13 = this;
+      var _this16 = this;
 
       var ings = this.applied_categories.map(function (item) {
-        var category = _this13.categories.find(function (obj) {
+        var category = _this16.categories.find(function (obj) {
           return obj.id === item;
         });
 
@@ -794,10 +953,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.mix = _toConsumableArray(new Set(ings));
     },
     getBlacklist: function getBlacklist() {
-      var _this14 = this;
+      var _this17 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/order/blacklist/' + this.order.id).then(function (response) {})["catch"](function (error) {
-        _this14.$store.dispatch('showAlert', {
+        _this17.$store.dispatch('showAlert', {
           'isVisible': true,
           'msg': error.msg,
           'color': 'error',
@@ -806,15 +965,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
     },
     addToBlacklist: function addToBlacklist() {
-      var _this15 = this;
+      var _this18 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/blacklist', {
         id: this.order.id,
         blacklist: this.mix
       }).then(function (response) {
-        _this15.getBlacklist();
+        _this18.getBlacklist();
 
-        _this15.$store.dispatch('showAlert', {
+        _this18.$store.dispatch('showAlert', {
           'isVisible': true,
           'msg': response.data.msg,
           'color': 'green',
@@ -822,16 +981,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         });
       })["catch"](function (error) {
         console.log(error);
-        _this15.errors = error.response.data.errors;
+        _this18.errors = error.response.data.errors;
       });
     },
     getWishlist: function getWishlist() {
-      var _this16 = this;
+      var _this19 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/order/wishlist/' + this.order.id).then(function (response) {
-        _this16.tags = response.data.data;
+        _this19.tags = response.data.data;
       })["catch"](function (error) {
-        _this16.$store.dispatch('showAlert', {
+        _this19.$store.dispatch('showAlert', {
           'isVisible': true,
           'msg': error.msg,
           'color': 'error',
@@ -840,38 +999,38 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
     },
     addTag: function addTag() {
-      var _this17 = this;
+      var _this20 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/wishlist', {
         id: this.order.id,
         tag: this.tag
       }).then(function (response) {
-        _this17.tag = '';
+        _this20.tag = '';
 
-        _this17.getWishlist();
+        _this20.getWishlist();
 
-        _this17.$store.dispatch('showAlert', {
+        _this20.$store.dispatch('showAlert', {
           'isVisible': true,
           'msg': response.data.msg,
           'color': response.data.status ? 'green' : 'error',
           'type': response.data.status ? 'success' : 'error'
         });
 
-        _this17.errors = [];
+        _this20.errors = [];
       })["catch"](function (error) {
-        _this17.errors = error.response.data.errors;
+        _this20.errors = error.response.data.errors;
       });
     },
     removeTag: function removeTag(tag) {
-      var _this18 = this;
+      var _this21 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/wishlist/remove', {
         id: this.order.id,
         tag: tag
       }).then(function (response) {
-        _this18.getWishlist();
+        _this21.getWishlist();
 
-        _this18.$store.dispatch('showAlert', {
+        _this21.$store.dispatch('showAlert', {
           'isVisible': true,
           'msg': response.data.msg,
           'color': response.data.status ? 'green' : 'error',
@@ -879,19 +1038,26 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         });
       })["catch"](function (error) {
         console.log(error);
-        _this18.errors = error.response.data.errors;
+        _this21.errors = error.response.data.errors;
       });
     },
     openRation: function openRation(id) {
+      this.getOrderSelectByRationId(id);
       this.getDishes(id);
-      this.result = this.today[id - 1];
+      this.getPreviousOrderSelectByRationId(id);
+    },
+    hasResultIncludeIngredient: function hasResultIncludeIngredient(id) {
+      return this.result.ingredient_ids.includes(id);
+    },
+    hasPreviousIncludeIngredient: function hasPreviousIncludeIngredient(id) {
+      return this.dish.ingredient_ids.includes(id);
     },
     setDish: function setDish() {
-      var _this19 = this;
+      var _this22 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/' + this.result.id + '/dish/' + this.dish.id).then(function (response) {
         if (!response.data.status) {
-          _this19.$store.dispatch('showAlert', {
+          _this22.$store.dispatch('showAlert', {
             'isVisible': true,
             'msg': response.data.msg,
             'color': 'error',
@@ -899,16 +1065,25 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           });
         }
 
-        _this19.result = response.data.data;
-      })["catch"]();
+        _this22.result = response.data.data;
+      })["catch"](function (error) {
+        console.log(error);
+      });
     },
-    replace: function replace(ing) {},
+    showAnalogs: function showAnalogs(id) {
+      this.getCategoriesByIngredient(id);
+      this.target_ingredient = id;
+      this.dialog2 = true;
+    },
     addIngredient: function addIngredient(id) {
-      var _this20 = this;
+      var _this23 = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/' + this.result.id + '/add/ingredient/' + id).then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/add/ingredient', {
+        select_id: this.result.id,
+        ingredient_id: id
+      }).then(function (response) {
         if (!response.data.status) {
-          _this20.$store.dispatch('showAlert', {
+          _this23.$store.dispatch('showAlert', {
             'isVisible': true,
             'msg': response.data.msg,
             'color': 'error',
@@ -916,17 +1091,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           });
         }
 
-        _this20.result = response.data.data;
+        _this23.result = response.data.data;
       })["catch"](function (error) {
         console.log(error);
       });
     },
     removeIngredient: function removeIngredient(id) {
-      var _this21 = this;
+      var _this24 = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/' + this.result.id + '/remove/ingredient/' + id).then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/remove/ingredient', {
+        select_id: this.result.id,
+        ingredient_id: id
+      }).then(function (response) {
         if (!response.data.status) {
-          _this21.$store.dispatch('showAlert', {
+          _this24.$store.dispatch('showAlert', {
             'isVisible': true,
             'msg': response.data.msg,
             'color': 'error',
@@ -934,7 +1112,53 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           });
         }
 
-        _this21.result = response.data.data;
+        _this24.result = response.data.data;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    replaceIngredient: function replaceIngredient(id) {
+      var _this25 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/replace/ingredient', {
+        select_id: this.result.id,
+        ingredient_id: this.target_ingredient,
+        analog_id: id
+      }).then(function (response) {
+        if (response.data.status) {
+          _this25.result = response.data.select;
+          var ingredient = response.data.ingredient;
+
+          var index = _this25.dish.ingredients.findIndex(function (obj) {
+            return obj.id === ingredient.id;
+          });
+
+          _this25.dish.ingredients[index] = ingredient;
+
+          _this25.closeDialog2();
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    returnIngredient: function returnIngredient(target_id, analog_id) {
+      var _this26 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/return/ingredient', {
+        select_id: this.result.id,
+        ingredient_id: target_id,
+        analog_id: analog_id
+      }).then(function (response) {
+        if (response.data.status) {
+          _this26.result = response.data.select;
+          var ingredient = response.data.ingredient;
+
+          var index = _this26.dish.ingredients.findIndex(function (obj) {
+            return obj.id === ingredient.id;
+          });
+
+          _this26.dish.ingredients[index] = ingredient;
+        }
       })["catch"](function (error) {
         console.log(error);
       });
@@ -1106,17 +1330,6 @@ var render = function() {
                                 _vm._s(index + 1) +
                                 "\n                    "
                             )
-                          ]
-                        }
-                      },
-                      {
-                        key: "item.tag",
-                        fn: function(ref) {
-                          var item = ref.item
-                          return [
-                            _c("span", { class: item.diet_color }, [
-                              _vm._v(_vm._s(item.tag))
-                            ])
                           ]
                         }
                       }
@@ -1639,7 +1852,7 @@ var render = function() {
                                 [
                                   _c(
                                     "v-expansion-panels",
-                                    _vm._l(_vm.rations, function(ration, key) {
+                                    _vm._l(_vm.rations, function(ration) {
                                       return _c(
                                         "v-expansion-panel",
                                         {
@@ -1665,7 +1878,7 @@ var render = function() {
                                               _c(
                                                 "v-row",
                                                 [
-                                                  _vm.yesterday[key]
+                                                  _vm.previous
                                                     ? _c(
                                                         "v-col",
                                                         {
@@ -1673,20 +1886,24 @@ var render = function() {
                                                         },
                                                         [
                                                           _c("h4", [
-                                                            _vm._v("Вчера")
+                                                            _vm._v(
+                                                              _vm._s(
+                                                                _vm.previous
+                                                                  .created_at
+                                                              )
+                                                            )
                                                           ]),
                                                           _vm._v(" "),
                                                           _c("span", [
                                                             _vm._v(
                                                               _vm._s(
-                                                                _vm.yesterday[
-                                                                  key
-                                                                ].cuisine
+                                                                _vm.previous
+                                                                  .cuisine
                                                               )
                                                             )
                                                           ]),
                                                           _vm._v(" "),
-                                                          _vm.yesterday[key]
+                                                          _vm.dish
                                                             ? _c(
                                                                 "v-list",
                                                                 {
@@ -1695,18 +1912,15 @@ var render = function() {
                                                                   }
                                                                 },
                                                                 [
-                                                                  _vm.yesterday[
-                                                                    key
-                                                                  ].dish
+                                                                  _vm.previous
+                                                                    .dish
                                                                     ? _c(
                                                                         "v-subheader",
                                                                         [
                                                                           _vm._v(
                                                                             _vm._s(
                                                                               _vm
-                                                                                .yesterday[
-                                                                                key
-                                                                              ]
+                                                                                .previous
                                                                                 .dish
                                                                                 .name
                                                                             )
@@ -1716,10 +1930,7 @@ var render = function() {
                                                                     : _vm._e(),
                                                                   _vm._v(" "),
                                                                   _vm._l(
-                                                                    _vm
-                                                                      .yesterday[
-                                                                      key
-                                                                    ]
+                                                                    _vm.previous
                                                                       .ingredients,
                                                                     function(
                                                                       ing,
@@ -1728,7 +1939,12 @@ var render = function() {
                                                                       return _c(
                                                                         "v-list-item",
                                                                         {
-                                                                          key: i
+                                                                          key: i,
+                                                                          class: _vm.hasPreviousIncludeIngredient(
+                                                                            ing.id
+                                                                          )
+                                                                            ? "yellow lighten-3"
+                                                                            : ""
                                                                         },
                                                                         [
                                                                           _c(
@@ -1768,7 +1984,7 @@ var render = function() {
                                                   _vm._v(" "),
                                                   _c(
                                                     "v-col",
-                                                    { attrs: { cols: "4" } },
+                                                    { attrs: { cols: "5" } },
                                                     [
                                                       _c("h4", [
                                                         _vm._v("Сегодня")
@@ -1817,7 +2033,7 @@ var render = function() {
                                                             1
                                                           ),
                                                           _vm._v(" "),
-                                                          _vm.result
+                                                          _vm.dish
                                                             ? _c(
                                                                 "v-col",
                                                                 [
@@ -1831,15 +2047,11 @@ var render = function() {
                                                                           "",
                                                                         disabled:
                                                                           _vm
-                                                                            .result
-                                                                            .dish &&
-                                                                          _vm
                                                                             .dish
                                                                             .id ===
-                                                                            _vm
-                                                                              .result
-                                                                              .dish
-                                                                              .id
+                                                                          _vm
+                                                                            .result
+                                                                            .dish_id
                                                                       },
                                                                       on: {
                                                                         click:
@@ -1860,7 +2072,7 @@ var render = function() {
                                                         1
                                                       ),
                                                       _vm._v(" "),
-                                                      _vm.result
+                                                      _vm.dish && _vm.result
                                                         ? _c(
                                                             "div",
                                                             _vm._l(
@@ -1878,37 +2090,60 @@ var render = function() {
                                                                       "pa-3 mb-3 flex justify-center",
                                                                     attrs: {
                                                                       elevation:
-                                                                        "1",
-                                                                      color: _vm.mix.includes(
-                                                                        ing.id
-                                                                      )
-                                                                        ? "red lighten-3"
-                                                                        : ""
+                                                                        "1"
                                                                     }
                                                                   },
                                                                   [
                                                                     _c(
-                                                                      "p",
+                                                                      "div",
                                                                       {
-                                                                        class: !_vm.result.ingredient_ids.includes(
-                                                                          ing.id
-                                                                        )
-                                                                          ? "text-decoration-line-through"
-                                                                          : ""
+                                                                        staticClass:
+                                                                          "flex flex-row"
                                                                       },
                                                                       [
+                                                                        _c(
+                                                                          "p",
+                                                                          {
+                                                                            class: _vm.hasResultIncludeIngredient(
+                                                                              ing.id
+                                                                            )
+                                                                              ? ""
+                                                                              : "text-decoration-line-through"
+                                                                          },
+                                                                          [
+                                                                            _vm._v(
+                                                                              "\n                                                                    " +
+                                                                                _vm._s(
+                                                                                  key +
+                                                                                    1
+                                                                                ) +
+                                                                                ". " +
+                                                                                _vm._s(
+                                                                                  ing.name
+                                                                                ) +
+                                                                                "\n                                                                "
+                                                                            )
+                                                                          ]
+                                                                        ),
                                                                         _vm._v(
-                                                                          "\n                                                            " +
-                                                                            _vm._s(
-                                                                              key +
-                                                                                1
-                                                                            ) +
-                                                                            ". " +
-                                                                            _vm._s(
-                                                                              ing.name
-                                                                            ) +
-                                                                            "\n                                                        "
-                                                                        )
+                                                                          " "
+                                                                        ),
+                                                                        ing.analog
+                                                                          ? _c(
+                                                                              "span",
+                                                                              [
+                                                                                _vm._v(
+                                                                                  "\n                                                                    " +
+                                                                                    _vm._s(
+                                                                                      ing
+                                                                                        .analog
+                                                                                        .name
+                                                                                    ) +
+                                                                                    "\n                                                                "
+                                                                                )
+                                                                              ]
+                                                                            )
+                                                                          : _vm._e()
                                                                       ]
                                                                     ),
                                                                     _vm._v(" "),
@@ -1919,20 +2154,16 @@ var render = function() {
                                                                           "mt-2"
                                                                       },
                                                                       [
-                                                                        _vm.result &&
-                                                                        _vm
-                                                                          .result
-                                                                          .dish &&
                                                                         _vm.dish
                                                                           .id ===
                                                                           _vm
                                                                             .result
-                                                                            .dish
-                                                                            .id
+                                                                            .dish_id &&
+                                                                        !ing.analog
                                                                           ? _c(
                                                                               "v-btn",
                                                                               {
-                                                                                class: _vm.result.ingredient_ids.includes(
+                                                                                class: _vm.hasResultIncludeIngredient(
                                                                                   ing.id
                                                                                 )
                                                                                   ? "red"
@@ -1945,7 +2176,7 @@ var render = function() {
                                                                                   click: function(
                                                                                     $event
                                                                                   ) {
-                                                                                    _vm.result.ingredient_ids.includes(
+                                                                                    _vm.hasResultIncludeIngredient(
                                                                                       ing.id
                                                                                     )
                                                                                       ? _vm.removeIngredient(
@@ -1961,7 +2192,7 @@ var render = function() {
                                                                                 _vm._v(
                                                                                   "\n                                                                " +
                                                                                     _vm._s(
-                                                                                      _vm.result.ingredient_ids.includes(
+                                                                                      _vm.hasResultIncludeIngredient(
                                                                                         ing.id
                                                                                       )
                                                                                         ? "Убрать"
@@ -1975,19 +2206,17 @@ var render = function() {
                                                                         _vm._v(
                                                                           " "
                                                                         ),
-                                                                        _vm.result &&
-                                                                        _vm
-                                                                          .result
-                                                                          .dish &&
+                                                                        _vm.dish &&
                                                                         _vm.dish
                                                                           .id ===
                                                                           _vm
                                                                             .result
-                                                                            .dish
-                                                                            .id
+                                                                            .dish_id
                                                                           ? _c(
                                                                               "v-btn",
                                                                               {
+                                                                                staticClass:
+                                                                                  "ml-2",
                                                                                 attrs: {
                                                                                   "x-small":
                                                                                     ""
@@ -1996,15 +2225,28 @@ var render = function() {
                                                                                   click: function(
                                                                                     $event
                                                                                   ) {
-                                                                                    return _vm.replace(
-                                                                                      ing
-                                                                                    )
+                                                                                    !ing.analog
+                                                                                      ? _vm.showAnalogs(
+                                                                                          ing.id
+                                                                                        )
+                                                                                      : _vm.returnIngredient(
+                                                                                          ing.id,
+                                                                                          ing
+                                                                                            .analog
+                                                                                            .id
+                                                                                        )
                                                                                   }
                                                                                 }
                                                                               },
                                                                               [
                                                                                 _vm._v(
-                                                                                  "\n                                                                Замена\n                                                            "
+                                                                                  "\n                                                                " +
+                                                                                    _vm._s(
+                                                                                      !ing.analog
+                                                                                        ? "Замена"
+                                                                                        : "Отменить замену"
+                                                                                    ) +
+                                                                                    "\n                                                            "
                                                                                 )
                                                                               ]
                                                                             )
@@ -2121,6 +2363,146 @@ var render = function() {
                         1
                       )
                     : _vm._e()
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-dialog",
+        {
+          attrs: { scrollable: "", persistent: "", "max-width": "800px" },
+          model: {
+            value: _vm.dialog2,
+            callback: function($$v) {
+              _vm.dialog2 = $$v
+            },
+            expression: "dialog2"
+          }
+        },
+        [
+          _c(
+            "v-card",
+            [
+              _c("v-card-title", [
+                _vm._v("\n                Замена\n            ")
+              ]),
+              _vm._v(" "),
+              _c(
+                "v-card-text",
+                { staticStyle: { height: "400px" } },
+                [
+                  _c(
+                    "v-row",
+                    { staticClass: "mt-3" },
+                    [
+                      _c(
+                        "v-col",
+                        { attrs: { cols: "12", md: "4" } },
+                        [
+                          _c("v-select", {
+                            attrs: {
+                              items: _vm.ingredient_categories,
+                              label: "Категории",
+                              "item-text": "name",
+                              "return-object": "",
+                              outlined: "",
+                              clearable: ""
+                            },
+                            model: {
+                              value: _vm.chosen_category,
+                              callback: function($$v) {
+                                _vm.chosen_category = $$v
+                              },
+                              expression: "chosen_category"
+                            }
+                          })
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _vm.chosen_category
+                        ? _c(
+                            "v-col",
+                            _vm._l(_vm.chosen_category.ingredients, function(
+                              ing,
+                              key
+                            ) {
+                              return _c(
+                                "v-sheet",
+                                {
+                                  key: key,
+                                  staticClass: "pa-3 mb-3 flex justify-center",
+                                  class: _vm.mix.includes(ing.id)
+                                    ? "red lighten-3"
+                                    : "",
+                                  attrs: { elevation: "1" }
+                                },
+                                [
+                                  _c("p", [
+                                    _vm._v(
+                                      "\n                                " +
+                                        _vm._s(key + 1) +
+                                        ". " +
+                                        _vm._s(ing.name) +
+                                        "\n                            "
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    { staticClass: "mt-2" },
+                                    [
+                                      _c(
+                                        "v-btn",
+                                        {
+                                          attrs: { "x-small": "" },
+                                          on: {
+                                            click: function($event) {
+                                              return _vm.replaceIngredient(
+                                                ing.id
+                                              )
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _vm._v(
+                                            "\n                                    выбрать\n                                "
+                                          )
+                                        ]
+                                      )
+                                    ],
+                                    1
+                                  )
+                                ]
+                              )
+                            }),
+                            1
+                          )
+                        : _vm._e()
+                    ],
+                    1
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "v-card-actions",
+                [
+                  _c(
+                    "v-btn",
+                    {
+                      attrs: { color: "primary", text: "" },
+                      on: { click: _vm.closeDialog2 }
+                    },
+                    [_vm._v("\n                    Закрыть\n                ")]
+                  )
                 ],
                 1
               )

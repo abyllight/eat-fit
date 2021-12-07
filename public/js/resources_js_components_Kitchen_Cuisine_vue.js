@@ -281,6 +281,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         ingredients: [],
         is_custom: false
       },
+      dishes: [],
       btn_loading: false,
       loading: false,
       disabled: false,
@@ -308,8 +309,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this.cuisine = _this.cuisines.find(function (obj) {
                     return obj.duty === 1;
                   });
-                  var dishes = _this.cuisine.dishes;
-                  _this.dish = dishes ? dishes[0] : [];
+
+                  _this.getDishesByCuisine(_this.cuisine.id);
 
                   _this.getRations();
                 })["catch"](function (error) {
@@ -482,13 +483,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee6);
       }))();
     },
-    showDetails: function showDetails(cuisine) {
-      if (this.disabled) return;
-      this.cuisine = cuisine;
-      this.dish = cuisine.dishes[0];
-      this.getRations();
-    },
-    setCuisine: function setCuisine(id) {
+    getDishesByCuisine: function getDishesByCuisine(id) {
       var _this8 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee7() {
@@ -497,14 +492,44 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context7.prev = _context7.next) {
               case 0:
                 _context7.next = 2;
+                return axios.get('/api/dishes/cuisine/' + id).then(function (response) {
+                  _this8.dishes = response.data;
+                  _this8.dish = _this8.dishes[0];
+                })["catch"](function (error) {
+                  console.log(error);
+                });
+
+              case 2:
+              case "end":
+                return _context7.stop();
+            }
+          }
+        }, _callee7);
+      }))();
+    },
+    showDetails: function showDetails(cuisine) {
+      if (this.disabled) return;
+      this.cuisine = cuisine;
+      this.getDishesByCuisine(cuisine.id);
+      this.getRations();
+    },
+    setCuisine: function setCuisine(id) {
+      var _this9 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee8() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee8$(_context8) {
+          while (1) {
+            switch (_context8.prev = _context8.next) {
+              case 0:
+                _context8.next = 2;
                 return axios.post('/api/cuisine/duty/set', {
                   id: id
                 }).then(function (response) {
-                  _this8.cuisine = response.data;
+                  _this9.cuisine = response.data;
 
-                  _this8.getCuisines();
+                  _this9.getCuisines();
 
-                  _this8.$store.dispatch('showAlert', {
+                  _this9.$store.dispatch('showAlert', {
                     'isVisible': true,
                     'msg': response.data.name,
                     'color': 'green',
@@ -516,10 +541,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 2:
               case "end":
-                return _context7.stop();
+                return _context8.stop();
             }
           }
-        }, _callee7);
+        }, _callee8);
       }))();
     },
     setDish: function setDish(dish) {
@@ -551,32 +576,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
     },
     update: function update() {
-      var _this9 = this;
-
-      axios.patch('/api/dishes/' + this.dish.id, this.dish).then(function (response) {
-        _this9.$store.dispatch('showAlert', {
-          'isVisible': true,
-          'msg': response.data.msg,
-          'color': 'green',
-          'type': 'success'
-        });
-
-        if (response.data.status) {
-          _this9.dialog = false;
-
-          _this9.getCuisines();
-        } else {
-          _this9.errors = response.data.errors;
-        }
-      })["catch"](function (error) {
-        console.log(error);
-        _this9.errors = error.response.data.errors;
-      });
-    },
-    create: function create() {
       var _this10 = this;
 
-      axios.post('/api/dishes', this.dish).then(function (response) {
+      axios.patch('/api/dishes/' + this.dish.id, this.dish).then(function (response) {
         _this10.$store.dispatch('showAlert', {
           'isVisible': true,
           'msg': response.data.msg,
@@ -594,6 +596,29 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       })["catch"](function (error) {
         console.log(error);
         _this10.errors = error.response.data.errors;
+      });
+    },
+    create: function create() {
+      var _this11 = this;
+
+      axios.post('/api/dishes', this.dish).then(function (response) {
+        _this11.$store.dispatch('showAlert', {
+          'isVisible': true,
+          'msg': response.data.msg,
+          'color': 'green',
+          'type': 'success'
+        });
+
+        if (response.data.status) {
+          _this11.dialog = false;
+
+          _this11.getCuisines();
+        } else {
+          _this11.errors = response.data.errors;
+        }
+      })["catch"](function (error) {
+        console.log(error);
+        _this11.errors = error.response.data.errors;
       });
     },
     addDish: function addDish(ration) {
@@ -743,54 +768,48 @@ var render = function() {
             "v-col",
             { attrs: { sm: "12", md: "2", lg: "2" } },
             [
-              _vm.cuisines
-                ? _c(
-                    "v-list",
-                    { attrs: { dense: "" } },
-                    [
-                      _c("v-subheader", [_vm._v("Кухни мира")]),
-                      _vm._v(" "),
-                      _c(
-                        "v-list-item-group",
-                        { attrs: { color: "primary" } },
-                        _vm._l(_vm.cuisines, function(cuisine, i) {
-                          return _c(
-                            "v-list-item",
-                            {
-                              key: i,
-                              class: cuisine.duty
-                                ? "light-green lighten-3"
-                                : "",
-                              on: {
-                                click: function($event) {
-                                  return _vm.showDetails(cuisine)
-                                }
-                              }
-                            },
+              _c(
+                "v-list",
+                { attrs: { dense: "" } },
+                [
+                  _c("v-subheader", [_vm._v("Кухни мира")]),
+                  _vm._v(" "),
+                  _c(
+                    "v-list-item-group",
+                    { attrs: { color: "primary" } },
+                    _vm._l(_vm.cuisines, function(cuisine, i) {
+                      return _c(
+                        "v-list-item",
+                        {
+                          key: i,
+                          class: cuisine.duty ? "light-green lighten-3" : "",
+                          on: {
+                            click: function($event) {
+                              return _vm.showDetails(cuisine)
+                            }
+                          }
+                        },
+                        [
+                          _c(
+                            "v-list-item-content",
                             [
-                              _c(
-                                "v-list-item-content",
-                                [
-                                  _c("v-list-item-title", [
-                                    _vm._v(
-                                      _vm._s(i + 1) +
-                                        ". " +
-                                        _vm._s(cuisine.name)
-                                    )
-                                  ])
-                                ],
-                                1
-                              )
+                              _c("v-list-item-title", [
+                                _vm._v(
+                                  _vm._s(i + 1) + ". " + _vm._s(cuisine.name)
+                                )
+                              ])
                             ],
                             1
                           )
-                        }),
+                        ],
                         1
                       )
-                    ],
+                    }),
                     1
                   )
-                : _vm._e()
+                ],
+                1
+              )
             ],
             1
           ),
@@ -880,7 +899,7 @@ var render = function() {
                   _vm.cuisine
                     ? _c(
                         "v-list",
-                        _vm._l(_vm.cuisine.dishes, function(dish, index) {
+                        _vm._l(_vm.dishes, function(dish, index) {
                           return _c(
                             "v-list-item",
                             {
@@ -1118,7 +1137,7 @@ var render = function() {
                                           _vm._v(" "),
                                           _vm._l(
                                             _vm.dish.i_ingredients,
-                                            function(item) {
+                                            function(item, key) {
                                               return _c(
                                                 "v-list-item",
                                                 {
@@ -1131,7 +1150,9 @@ var render = function() {
                                                     [
                                                       _c("v-list-item-title", [
                                                         _vm._v(
-                                                          _vm._s(item.name)
+                                                          _vm._s(key + 1) +
+                                                            ". " +
+                                                            _vm._s(item.name)
                                                         )
                                                       ])
                                                     ],

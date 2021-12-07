@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use AmoCRM\Client;
 use App\Http\Resources\OrderCollection;
 use App\Http\Resources\OrderSelectCollection;
+use App\Http\Resources\SelectCollection;
+use App\Models\Cuisine;
+use App\Models\Dish;
 use App\Models\Order;
+use App\Models\Select;
 use App\Models\User;
 use App\Models\Week;
 use App\Models\Wishlist;
@@ -651,6 +655,72 @@ class OrderController extends Controller
         return response()->json([
             'status' => false,
             'msg' => 'Tag not found'
+        ]);
+    }
+
+    public function getSelectYesterday(){
+        return $this->select()->whereDate('created_at', Carbon::yesterday())->get()->sortBy('ration_id');
+    }
+
+    public function getPreviousOrderSelectByRation($order_id, $ration_id): JsonResponse
+    {
+        $order = Order::find($order_id);
+
+        if ($order){
+            $yesterday = $order->select()
+                ->whereDate('created_at','<=', Carbon::yesterday())
+                ->where('ration_id', $ration_id)
+                ->orderBy('created_at', 'desc')
+                ->first();
+
+            if ($yesterday){
+                return response()->json(new SelectCollection($yesterday));
+            }
+        }
+
+        return response()->json([
+            'status' => false,
+            'msg' => 'Order not found'
+        ]);
+    }
+
+    public function getOrderSelectByRation($order_id, $ration_id): JsonResponse
+    {
+        $order = Order::find($order_id);
+
+        if ($order){
+            $today = $order->select()
+                ->whereDate('created_at', Carbon::today())
+                ->where('ration_id', $ration_id)
+                ->first();
+
+            if ($today){
+                return response()->json(new SelectCollection($today));
+            }else{
+                $cuisine = Cuisine::where('is_on_duty', true)->first();
+                $dish = Dish::where('cuisine_id', $cuisine->id)->where('ration_id', $ration_id)->first();
+
+                $select = new Select();
+                $select->order_id = $order_id;
+                $select->cuisine_id = $cuisine->id;
+                $select->ration_id = $ration_id;
+                if ($dish){
+                    $select->dish_id = $dish->id;
+                }
+                $select->status = 5;
+                $select->save();
+
+                if ($dish){
+                    $select->ingredients()->sync($dish->getIngredientIds());
+                }
+
+                return response()->json(new SelectCollection($select));
+            }
+        }
+
+        return response()->json([
+            'status' => false,
+            'msg' => 'Order not found'
         ]);
     }
 }

@@ -21,7 +21,8 @@ class IngredientCollection extends JsonResource
             'description' => $this->description,
             'is_custom' => $this->is_custom(),
             'category_ids' => $this->getCategoryIds(),
-            'categories' => $this->categories
+            'categories' => $this->categories,
+            'analog' => new IngredientCollection($this->analog)
         ];
     }
 }

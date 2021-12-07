@@ -49,4 +49,9 @@ class Ingredient extends Model
     {
         return $this->iiko_id === null;
     }
+
+    public function analog()
+    {
+        return $this->belongsTo(Ingredient::class, 'analog_id');
+    }
 }
