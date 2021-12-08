@@ -858,7 +858,7 @@
             setDescription(){
                 axios
                     .post('/api/select/'+this.result.id+'/description',{
-                        description: this.description
+                        description: this.result_description
                     })
                     .then(response => {
                         this.$store.dispatch('showAlert', {
@@ -867,7 +867,7 @@
                             'color': response.data.status ? 'success' :'error',
                             'type': response.data.status ? 'success' :'error',
                         })
-                        this.description = response.data.description
+                        this.result_description = response.data.description
                     })
                     .catch(error => {
                         console.log(error)

@@ -33,11 +33,11 @@ class DishController extends Controller
                     $first = substr($dish['name'], 0, 1);
                     if (!in_array($first, $array) && is_numeric($first)) {
                         Dish::updateOrCreate(
-                            ['iiko_id' => $dish['id']],
+                            ['ration_id' => (int)$first],
                             [
                                 'iiko_name' => substr($dish['name'], 4),
                                 'name' => substr($dish['name'], 4),
-                                'ration_id' => (int) $first,
+                                'iiko_id' => $dish['id'],
                                 'cuisine_id' => $cuisine->id,
                                 'is_custom' => false
                             ]

@@ -1109,7 +1109,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this23 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/' + this.result.id + '/description', {
-        description: this.description
+        description: this.result_description
       }).then(function (response) {
         _this23.$store.dispatch('showAlert', {
           'isVisible': true,
@@ -1118,7 +1118,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           'type': response.data.status ? 'success' : 'error'
         });
 
-        _this23.description = response.data.description;
+        _this23.result_description = response.data.description;
       })["catch"](function (error) {
         console.log(error);
       });
