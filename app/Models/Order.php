@@ -95,7 +95,7 @@ class Order extends Model
     }
 
     public function getPreviousSelect(){
-        return $this->select()->whereDate('created_at','<=', Carbon::yesterday())->get()->sortBy('ration_id');
+        return $this->select()->whereDate('created_at', Carbon::yesterday())->get()->sortBy('ration_id');
     }
 
     public function getResultSelect(){
