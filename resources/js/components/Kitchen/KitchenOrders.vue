@@ -515,7 +515,6 @@
                     .get('/api/orders/select-orders')
                     .then(response => {
                         this.orders = response.data
-                        console.log(response.data)
                     })
                     .catch(error => {
                         this.loading = false

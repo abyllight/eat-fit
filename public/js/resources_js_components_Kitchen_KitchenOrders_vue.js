@@ -562,7 +562,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _context.next = 3;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/orders/select-orders').then(function (response) {
                   _this.orders = response.data;
-                  console.log(response.data);
                 })["catch"](function (error) {
                   _this.loading = false;
 
