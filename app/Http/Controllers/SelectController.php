@@ -40,6 +40,26 @@ class SelectController extends Controller
         ]);
     }
 
+    public function setDescriptionToSelect($select_id, Request $request){
+        $select = Select::find($select_id);
+
+        if (!$select){
+            return response()->json([
+                'status' => false,
+                'msg' => 'Select not found'
+            ]);
+        }
+
+        $select->description = $request->description;
+        $select->save();
+
+        return response()->json([
+            'status' => true,
+            'msg' => 'Информация сохранена',
+            'description' => $select->description
+        ]);
+    }
+
     public function addIngredientFromSelect(Request $request){
         $select = Select::find($request->select_id);
         $ingredient = Ingredient::find($request->ingredient_id);

@@ -284,6 +284,9 @@
                                                             </v-list-item-content>
                                                         </v-list-item>
                                                     </v-list>
+                                                    <p>
+                                                        {{previous_description}}
+                                                    </p>
                                                 </v-col>
                                                 <v-col cols="5">
                                                     <h4>Сегодня</h4>
@@ -351,19 +354,34 @@
                                                         </v-sheet>
                                                     </div>
                                                 </v-col>
-                                                <v-col v-if="result">
+                                                <v-col>
                                                     <h4>Итог</h4>
                                                     <span>{{cuisine.name}}</span>
-                                                    <p class="my-4">{{result.dish ? result.dish.name : ''}}</p>
-                                                    <v-sheet
-                                                        v-for="(ing, key) in result.ingredients"
-                                                        :key="ing.id"
-                                                        elevation="1"
-                                                        class="pa-3 mb-3 flex justify-center"
-                                                        :color="mix.includes(ing.id) ? 'red lighten-3' : ''"
-                                                    >
-                                                        {{key+1}}. {{ing.name}}
-                                                    </v-sheet>
+                                                    <div v-if="result">
+                                                        <p class="my-4">{{result.dish ? result.dish.name : ''}}</p>
+                                                        <v-sheet
+                                                            v-for="(ing, key) in result.ingredients"
+                                                            :key="ing.id"
+                                                            elevation="1"
+                                                            class="pa-3 mb-3 flex justify-center"
+                                                            :color="mix.includes(ing.id) ? 'red lighten-3' : ''"
+                                                        >
+                                                            {{key+1}}. {{ing.name}}
+                                                        </v-sheet>
+                                                        <v-textarea
+                                                            v-model="result_description"
+                                                            outlined
+                                                            clearable
+                                                            label="Доп. инфо"
+                                                        >
+                                                        </v-textarea>
+                                                        <v-btn
+                                                            color="primary"
+                                                            @click="setDescription"
+                                                        >
+                                                            сохранить
+                                                        </v-btn>
+                                                    </div>
                                                 </v-col>
                                             </v-row>
                                         </v-expansion-panel-content>
@@ -465,15 +483,19 @@
             target_ingredient: null,
             dishes: [],
             dish: {},
-            previous: [],
-            result: [],
+            select_previous: [],
+            select_result: [],
+            previous: {},
+            result: {},
             order: {},
             cuisine: {},
             mix: [],
             tag: '',
             tags: [],
             errors: [],
-            rations: []
+            rations: [],
+            result_description: '',
+            previous_description: ''
         }),
         created() {
             this.getLeads()
@@ -493,6 +515,7 @@
                     .get('/api/orders/select-orders')
                     .then(response => {
                         this.orders = response.data
+                        console.log(response.data)
                     })
                     .catch(error => {
                         this.loading = false
@@ -611,7 +634,7 @@
             },
             async getRations(){
                 await axios
-                    .get('/api/rations')
+                    .get('/api/rations/required')
                     .then(response => {
                         this.rations = response.data
                     })
@@ -626,7 +649,7 @@
                         this.dishes = response.data
                         if (this.dishes.length > 0){
                             this.dish = this.dishes.find(obj => {
-                                return obj.id === this.result.dish_id
+                                return obj.id === this.result && this.result.dish_id
                             })
 
                             if (!this.dish){
@@ -680,6 +703,8 @@
                 this.order = index
                 this.mix = index.blacklist
                 this.tags = index.wishlist
+                this.select_previous = index.previous
+                this.select_result = index.result
                 this.dialog = true
             },
             close(){
@@ -688,6 +713,8 @@
                 this.dialog = false
                 this.applied_categories = []
                 this.tag = ''
+                this.result_description = ''
+                this.previous_description = ''
             },
             closeDialog2(){
                 this.ingredient_categories = []
@@ -798,15 +825,17 @@
                     })
             },
             openRation(id){
-                this.getOrderSelectByRationId(id)
+                this.previous = this.select_previous.find(obj => obj.ration_id === id) ?? {}
+                this.result = this.select_result.find(obj => obj.ration_id === id) ?? {}
+                this.result_description = this.result.description
+                this.previous_description = this.previous.description
                 this.getDishes(id)
-                this.getPreviousOrderSelectByRationId(id)
             },
             hasResultIncludeIngredient(id){
-                return this.result.ingredient_ids.includes(id)
+                return Object.keys(this.result).length !== 0 && this.result.ingredient_ids.includes(id)
             },
             hasPreviousIncludeIngredient(id){
-                return this.dish.ingredient_ids.includes(id)
+                return Object.keys(this.dish).length !== 0 && this.dish.ingredient_ids.includes(id)
             },
             setDish(){
                 axios
@@ -821,6 +850,24 @@
                             })
                         }
                        this.result = response.data.data
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+            },
+            setDescription(){
+                axios
+                    .post('/api/select/'+this.result.id+'/description',{
+                        description: this.description
+                    })
+                    .then(response => {
+                        this.$store.dispatch('showAlert', {
+                            'isVisible': true,
+                            'msg': response.data.msg,
+                            'color': response.data.status ? 'success' :'error',
+                            'type': response.data.status ? 'success' :'error',
+                        })
+                        this.description = response.data.description
                     })
                     .catch(error => {
                         console.log(error)

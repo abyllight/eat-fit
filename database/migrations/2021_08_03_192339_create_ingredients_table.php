@@ -19,6 +19,7 @@ class CreateIngredientsTable extends Migration
             $table->string('iiko_name');
             $table->string('name')->nullable();
             $table->longText('description')->nullable();
+            $table->integer('analog_id')->nullable();
             $table->timestamps();
         });
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\DishCollection;
 use App\Models\Cuisine;
 use App\Models\Dish;
+use App\Models\Ration;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -151,6 +152,23 @@ class DishController extends Controller
             $dishes->prepend($dish);
         }
         return response()->json(DishCollection::collection($dishes));
+    }
+
+    public function getDishesByRations()
+    {
+        $cuisine = Cuisine::where('is_on_duty', true)->first();
+        $rations = Ration::where('is_required', true)->get();
+        $dishes = collect();
+
+        foreach ($rations as $ration){
+            $arr = Dish::where('ration_id', $ration->id)->where('is_custom', true)->get();
+            $dish = $cuisine->dishes->where('ration_id', $ration->id)->first();
+            $arr->prepend($dish);
+
+            $dishes->push($arr);
+        }
+
+        return response()->json($dishes);
     }
 
     public function getDishesByCuisine($id)

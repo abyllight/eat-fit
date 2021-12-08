@@ -659,7 +659,7 @@ class OrderController extends Controller
     }
 
     public function getSelectYesterday(){
-        return $this->select()->whereDate('created_at', Carbon::yesterday())->get()->sortBy('ration_id');
+        return $this->select()->whereDate('created_at','<=',Carbon::yesterday())->get()->sortBy('ration_id');
     }
 
     public function getPreviousOrderSelectByRation($order_id, $ration_id): JsonResponse

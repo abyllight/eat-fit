@@ -15,6 +15,11 @@ class RationController extends Controller
         return response()->json(RationCollection::collection(Ration::orderBy('position')->get()));
     }
 
+    public function getRequiredRations(): JsonResponse
+    {
+        return response()->json(RationCollection::collection(Ration::where('is_required', true)->orderBy('position')->get()));
+    }
+
     public function getRequired($id): JsonResponse
     {
         $cuisine = Cuisine::find($id);
