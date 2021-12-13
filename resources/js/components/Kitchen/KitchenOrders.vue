@@ -678,8 +678,13 @@
                 return '';
             },
             close(){
-                this.select_result.push(this.result)
-                this.mix = []
+                let index = this.select_result.findIndex(x => x.id === this.result.id)
+                if (index >= 0){
+                    this.select_result[index] = this.result
+                }else {
+                    this.select_result.push(this.result)
+                }
+
                 this.applied_categories = []
                 this.tag = ''
                 this.dialog = false
@@ -706,6 +711,8 @@
                 axios
                     .get('/api/order/blacklist/'+this.order.id)
                     .then(response => {
+                        this.mix = response.data.data
+                        this.order.blacklist = response.data.data
                     })
                     .catch(error => {
                         this.$store.dispatch('showAlert', {
@@ -741,6 +748,7 @@
                     .get('/api/order/wishlist/'+this.order.id)
                     .then(response => {
                         this.tags = response.data.data
+                        this.order.wishlist = response.data.data
                     })
                     .catch(error => {
                         this.$store.dispatch('showAlert', {

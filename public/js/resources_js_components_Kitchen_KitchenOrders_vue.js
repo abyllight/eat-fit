@@ -884,8 +884,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return '';
     },
     close: function close() {
-      this.select_result.push(this.result);
-      this.mix = [];
+      var _this13 = this;
+
+      var index = this.select_result.findIndex(function (x) {
+        return x.id === _this13.result.id;
+      });
+
+      if (index >= 0) {
+        this.select_result[index] = this.result;
+      } else {
+        this.select_result.push(this.result);
+      }
+
       this.applied_categories = [];
       this.tag = '';
       this.dialog = false;
@@ -898,10 +908,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.dialog2 = false;
     },
     applyCategories: function applyCategories() {
-      var _this13 = this;
+      var _this14 = this;
 
       var ings = this.applied_categories.map(function (item) {
-        var category = _this13.categories.find(function (obj) {
+        var category = _this14.categories.find(function (obj) {
           return obj.id === item;
         });
 
@@ -912,10 +922,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.mix = _toConsumableArray(new Set(ings));
     },
     getBlacklist: function getBlacklist() {
-      var _this14 = this;
+      var _this15 = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/order/blacklist/' + this.order.id).then(function (response) {})["catch"](function (error) {
-        _this14.$store.dispatch('showAlert', {
+      axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/order/blacklist/' + this.order.id).then(function (response) {
+        _this15.mix = response.data.data;
+        _this15.order.blacklist = response.data.data;
+      })["catch"](function (error) {
+        _this15.$store.dispatch('showAlert', {
           'isVisible': true,
           'msg': error.msg,
           'color': 'error',
@@ -924,15 +937,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
     },
     addToBlacklist: function addToBlacklist() {
-      var _this15 = this;
+      var _this16 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/blacklist', {
         id: this.order.id,
         blacklist: this.mix
       }).then(function (response) {
-        _this15.getBlacklist();
+        _this16.getBlacklist();
 
-        _this15.$store.dispatch('showAlert', {
+        _this16.$store.dispatch('showAlert', {
           'isVisible': true,
           'msg': response.data.msg,
           'color': 'green',
@@ -940,16 +953,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         });
       })["catch"](function (error) {
         console.log(error);
-        _this15.errors = error.response.data.errors;
+        _this16.errors = error.response.data.errors;
       });
     },
     getWishlist: function getWishlist() {
-      var _this16 = this;
+      var _this17 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/order/wishlist/' + this.order.id).then(function (response) {
-        _this16.tags = response.data.data;
+        _this17.tags = response.data.data;
+        _this17.order.wishlist = response.data.data;
       })["catch"](function (error) {
-        _this16.$store.dispatch('showAlert', {
+        _this17.$store.dispatch('showAlert', {
           'isVisible': true,
           'msg': error.msg,
           'color': 'error',
@@ -958,35 +972,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
     },
     addTag: function addTag() {
-      var _this17 = this;
+      var _this18 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/wishlist', {
         id: this.order.id,
         tag: this.tag
       }).then(function (response) {
-        _this17.tag = '';
+        _this18.tag = '';
 
-        _this17.getWishlist();
-
-        _this17.$store.dispatch('showAlert', {
-          'isVisible': true,
-          'msg': response.data.msg,
-          'color': response.data.status ? 'green' : 'error',
-          'type': response.data.status ? 'success' : 'error'
-        });
-
-        _this17.errors = [];
-      })["catch"](function (error) {
-        _this17.errors = error.response.data.errors;
-      });
-    },
-    removeTag: function removeTag(tag) {
-      var _this18 = this;
-
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/wishlist/remove', {
-        id: this.order.id,
-        tag: tag
-      }).then(function (response) {
         _this18.getWishlist();
 
         _this18.$store.dispatch('showAlert', {
@@ -995,9 +988,30 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           'color': response.data.status ? 'green' : 'error',
           'type': response.data.status ? 'success' : 'error'
         });
+
+        _this18.errors = [];
+      })["catch"](function (error) {
+        _this18.errors = error.response.data.errors;
+      });
+    },
+    removeTag: function removeTag(tag) {
+      var _this19 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/wishlist/remove', {
+        id: this.order.id,
+        tag: tag
+      }).then(function (response) {
+        _this19.getWishlist();
+
+        _this19.$store.dispatch('showAlert', {
+          'isVisible': true,
+          'msg': response.data.msg,
+          'color': response.data.status ? 'green' : 'error',
+          'type': response.data.status ? 'success' : 'error'
+        });
       })["catch"](function (error) {
         console.log(error);
-        _this18.errors = error.response.data.errors;
+        _this19.errors = error.response.data.errors;
       });
     },
     hasResultIncludeIngredient: function hasResultIncludeIngredient(id) {
@@ -1007,39 +1021,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return Object.keys(this.dish).length !== 0 && this.dish.ingredient_ids.includes(id);
     },
     setDish: function setDish() {
-      var _this19 = this;
+      var _this20 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/add/dish', {
         select_id: this.result ? this.result.id : null,
         order_id: this.order.id,
         ration_id: this.ration_id,
         dish_id: this.dish.id
-      }).then(function (response) {
-        if (!response.data.status) {
-          _this19.$store.dispatch('showAlert', {
-            'isVisible': true,
-            'msg': response.data.msg,
-            'color': 'error',
-            'type': 'error'
-          });
-        }
-
-        _this19.result = response.data.data;
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    },
-    showAnalogs: function showAnalogs(id) {
-      this.getCategoriesByIngredient(id);
-      this.target_ingredient = id;
-      this.dialog2 = true;
-    },
-    addIngredient: function addIngredient(id) {
-      var _this20 = this;
-
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/add/ingredient', {
-        select_id: this.result.id,
-        ingredient_id: id
       }).then(function (response) {
         if (!response.data.status) {
           _this20.$store.dispatch('showAlert', {
@@ -1055,10 +1043,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         console.log(error);
       });
     },
-    removeIngredient: function removeIngredient(id) {
+    showAnalogs: function showAnalogs(id) {
+      this.getCategoriesByIngredient(id);
+      this.target_ingredient = id;
+      this.dialog2 = true;
+    },
+    addIngredient: function addIngredient(id) {
       var _this21 = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/remove/ingredient', {
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/add/ingredient', {
         select_id: this.result.id,
         ingredient_id: id
       }).then(function (response) {
@@ -1076,37 +1069,34 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         console.log(error);
       });
     },
-    replaceIngredient: function replaceIngredient(id) {
+    removeIngredient: function removeIngredient(id) {
       var _this22 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/remove/ingredient', {
+        select_id: this.result.id,
+        ingredient_id: id
+      }).then(function (response) {
+        if (!response.data.status) {
+          _this22.$store.dispatch('showAlert', {
+            'isVisible': true,
+            'msg': response.data.msg,
+            'color': 'error',
+            'type': 'error'
+          });
+        }
+
+        _this22.result = response.data.data;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    replaceIngredient: function replaceIngredient(id) {
+      var _this23 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/replace/ingredient', {
         select_id: this.result.id,
         ingredient_id: this.target_ingredient,
         analog_id: id
-      }).then(function (response) {
-        if (response.data.status) {
-          _this22.result = response.data.select;
-          var ingredient = response.data.ingredient;
-
-          var index = _this22.dish.ingredients.findIndex(function (obj) {
-            return obj.id === ingredient.id;
-          });
-
-          _this22.dish.ingredients[index] = ingredient;
-
-          _this22.closeDialog2();
-        }
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    },
-    returnIngredient: function returnIngredient(target_id, analog_id) {
-      var _this23 = this;
-
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/return/ingredient', {
-        select_id: this.result.id,
-        ingredient_id: target_id,
-        analog_id: analog_id
       }).then(function (response) {
         if (response.data.status) {
           _this23.result = response.data.select;
@@ -1117,6 +1107,30 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           });
 
           _this23.dish.ingredients[index] = ingredient;
+
+          _this23.closeDialog2();
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    returnIngredient: function returnIngredient(target_id, analog_id) {
+      var _this24 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/return/ingredient', {
+        select_id: this.result.id,
+        ingredient_id: target_id,
+        analog_id: analog_id
+      }).then(function (response) {
+        if (response.data.status) {
+          _this24.result = response.data.select;
+          var ingredient = response.data.ingredient;
+
+          var index = _this24.dish.ingredients.findIndex(function (obj) {
+            return obj.id === ingredient.id;
+          });
+
+          _this24.dish.ingredients[index] = ingredient;
         }
       })["catch"](function (error) {
         console.log(error);
@@ -1144,11 +1158,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.dialog = true;
     },
     saveDetails: function saveDetails() {
-      var _this24 = this;
+      var _this25 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/add/details', this.result).then(function (response) {
-        _this24.result = response.data.data;
-        _this24.dialog3 = false;
+        _this25.result = response.data.data;
+        _this25.dialog3 = false;
       })["catch"](function (error) {
         console.log(error);
       });
