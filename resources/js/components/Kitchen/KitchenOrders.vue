@@ -481,7 +481,7 @@
             select_result: [],
             previous: {},
             result: {},
-            order: {},
+            order: [],
             cuisine: {},
             ration_id: null,
             ration_name: null,
@@ -534,6 +534,7 @@
                     .get('/api/amo/leads')
                     .then(() => {
                         this.getLeads()
+                        this.getSelect()
                     })
                     .catch(error => {
                         this.$store.dispatch('showAlert', {
@@ -677,11 +678,11 @@
                 return '';
             },
             close(){
-                this.order = {}
+                this.select_result.push(this.result)
                 this.mix = []
-                this.dialog = false
                 this.applied_categories = []
                 this.tag = ''
+                this.dialog = false
             },
             closeDialog2(){
                 this.ingredient_categories = []

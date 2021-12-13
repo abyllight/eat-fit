@@ -147,7 +147,7 @@ class DishController extends Controller
     {
         $cuisine = Cuisine::where('is_on_duty', true)->first();
         $dish = $cuisine->dishes->where('ration_id', $id)->first();
-        $dishes = Dish::where('ration_id', $id)->get();
+        $dishes = Dish::where('ration_id', $id)->get()->sortBy('name');
         if ($dish){
             $dishes->prepend($dish);
         }

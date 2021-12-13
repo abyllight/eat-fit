@@ -28,8 +28,6 @@ class SelectController extends Controller
             ]);
         }
 
-        $previous = $order->getPreviousSelect() ? new SelectCollection($order->getPreviousSelect()) : [];
-
         return response()->json([
             'result' => SelectCollection::collection($order->getResultSelect()),
             'previous' => SelectCollection::collection($order->getPreviousSelect())
@@ -98,26 +96,6 @@ class SelectController extends Controller
             'status' => true,
             'msg' => 'Информация сохранена',
             'data' => new SelectCollection($select)
-        ]);
-    }
-
-    public function setDescriptionToSelect($select_id, Request $request){
-        $select = Select::find($select_id);
-
-        if (!$select){
-            return response()->json([
-                'status' => false,
-                'msg' => 'Select not found'
-            ]);
-        }
-
-        $select->description = $request->description;
-        $select->save();
-
-        return response()->json([
-            'status' => true,
-            'msg' => 'Информация сохранена',
-            'description' => $select->description
         ]);
     }
 

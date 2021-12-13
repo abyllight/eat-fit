@@ -521,7 +521,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       select_result: [],
       previous: {},
       result: {},
-      order: {},
+      order: [],
       cuisine: {},
       ration_id: null,
       ration_name: null,
@@ -609,6 +609,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _context3.next = 3;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/amo/leads').then(function () {
                   _this3.getLeads();
+
+                  _this3.getSelect();
                 })["catch"](function (error) {
                   _this3.$store.dispatch('showAlert', {
                     'isVisible': true,
@@ -882,11 +884,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return '';
     },
     close: function close() {
-      this.order = {};
+      this.select_result.push(this.result);
       this.mix = [];
-      this.dialog = false;
       this.applied_categories = [];
       this.tag = '';
+      this.dialog = false;
     },
     closeDialog2: function closeDialog2() {
       this.ingredient_categories = [];
