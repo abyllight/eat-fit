@@ -19,11 +19,14 @@ class SelectCollection extends JsonResource
             'id'   => $this->id,
             'cuisine' => $this->cuisine->name,
             'dish_id' => $this->dish ? $this->dish->id : null,
+            'dish_name' => $this->dish_name,
             'ingredients' => IngredientCollection::collection($this->ingredients->sortBy('name')),
             'ingredient_ids' => $this->getIngredientIds(),
             'ration_id' => $this->ration_id,
             'created_at' => $this->created_at->format('Y-m-d'),
-            'description' => $this->description
+            'description' => $this->description,
+            'status' => $this->status,
+            'color' => $this->getStatusColor($this->status)
         ];
     }
 }

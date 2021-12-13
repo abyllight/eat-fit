@@ -95,13 +95,13 @@ class Order extends Model
     }
 
     public function getPreviousSelect(){
-        return $this->select()->whereDate('created_at', Carbon::yesterday())->get()->sortBy('ration_id');
+        return $this->select()->whereDate('created_at', Carbon::yesterday())->get();
     }
 
     public function getResultSelect(){
-        $result = $this->select()->whereDate('created_at', Carbon::today())->get();
+        return $this->select()->whereDate('created_at', Carbon::today())->get()->sortBy('ration_id');
 
-        if ($result->count() === 0){
+        /*if ($result->count() === 0){
             $cuisine = Cuisine::where('is_on_duty', true)->first();
             $rations = Ration::where('is_required', true)->get();
 
@@ -123,7 +123,7 @@ class Order extends Model
             }
         }
 
-        return $result;
+        return $result;*/
     }
 
     public function old()

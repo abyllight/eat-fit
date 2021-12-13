@@ -78,19 +78,21 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cuisines/iiko', [CuisineController::class, 'fetchCuisines']);
 
     Route::resource('dishes', DishController::class)->except(['create', 'show', 'edit']);
-    Route::get('dishes/ration/{id}', [DishController::class, 'getDishByRation']);
+    Route::get('dishes/ration/{id}', [DishController::class, 'getDishesByRation']);
     Route::get('dishes/rations/', [DishController::class, 'getDishesByRations']);
     Route::get('dishes/iiko', [DishController::class, 'fetchDishes']);
     Route::get('dishes/cuisine/{id}', [DishController::class, 'getDishesByCuisine']);
 
     Route::get('departments', [DepartmentController::class, 'index']);
 
-    Route::post('select/{select}/dish/{dish}', [SelectController::class, 'setDishToSelect']);
-    Route::post('select/{select}/description', [SelectController::class, 'setDescriptionToSelect']);
-    Route::post('select/remove/ingredient', [SelectController::class, 'removeIngredientFromSelect']);
+    Route::post('select/add/dish', [SelectController::class, 'setDishToSelect']);
+    Route::post('select/add/details', [SelectController::class, 'saveSelectDetails']);
     Route::post('select/add/ingredient', [SelectController::class, 'addIngredientFromSelect']);
+    Route::post('select/remove/ingredient', [SelectController::class, 'removeIngredientFromSelect']);
     Route::post('select/replace/ingredient', [SelectController::class, 'replaceIngredientFromSelect']);
     Route::post('select/return/ingredient', [SelectController::class, 'returnIngredientFromSelect']);
+    Route::get('/select/export', [SelectController::class, 'export']);
+    Route::get('/select/order/{id}', [SelectController::class, 'getSelectByOrder']);
 
     Route::resource('/categories', CategoryController::class)->except(['create', 'show', 'edit']);
     Route::get('/categories/ingredient/{id}', [CategoryController::class, 'getCategoriesByIngredient']);

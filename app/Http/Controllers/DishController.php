@@ -143,11 +143,11 @@ class DishController extends Controller
         ]);
     }
 
-    public function getDishByRation($id)
+    public function getDishesByRation($id): JsonResponse
     {
         $cuisine = Cuisine::where('is_on_duty', true)->first();
         $dish = $cuisine->dishes->where('ration_id', $id)->first();
-        $dishes = Dish::where('ration_id', $id)->where('is_custom', true)->get();
+        $dishes = Dish::where('ration_id', $id)->get();
         if ($dish){
             $dishes->prepend($dish);
         }

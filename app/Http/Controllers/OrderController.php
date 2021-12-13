@@ -123,8 +123,8 @@ class OrderController extends Controller
             $id = $order['id'];
             $name = $order['name'];
             $fields = [
-                'amo_id'    => null,
-                'name'      => null,
+                'amo_id'    => $id,
+                'name'      => $name,
                 'type'      => null,
                 'size'      => null,
                 'day'       => null,
@@ -140,9 +140,6 @@ class OrderController extends Controller
                 'logistic'  => null,
                 'diet'      => null
             ];
-
-            $fields['amo_id'] = $id;
-            $fields['name']   = $name;
 
             foreach ($order['custom_fields'] as $field) {
                 switch ($field['id']) {

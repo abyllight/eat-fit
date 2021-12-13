@@ -1,18 +1,70 @@
 <template>
     <div>
         <v-row>
-            <v-btn
-                class="ma-3"
-                :loading="amo_loading"
-                :disabled="amo_loading"
-                color="primary"
-                @click="fetchLeads"
-            >
-                Получить данные с AMOCRM
-            </v-btn>
+            <v-col>
+                <v-btn
+                    class="ma-3"
+                    :loading="amo_loading"
+                    :disabled="amo_loading"
+                    color="primary"
+                    @click="fetchLeads"
+                >
+                    Получить данные с AMOCRM
+                </v-btn>
+                <a
+                    type="button"
+                    href="/api/select/export"
+                >
+                    <v-btn
+                        color="primary"
+                        @click="excel"
+                        class="my-3 mr-7"
+                    >
+                        Excel
+                    </v-btn>
+                </a>
+                <v-chip
+                    class="ma-2"
+                    color="teal"
+                    text-color="white"
+                    label
+                >
+                    Итого: {{ select.total }}
+                </v-chip>
+                <v-chip
+                    class="ma-2"
+                    label
+                >
+                    XS: {{ select.xs }}
+                </v-chip>
+                <v-chip
+                    class="ma-2"
+                    label
+                >
+                    S: {{ select.s }}
+                </v-chip>
+                <v-chip
+                    class="ma-2"
+                    label
+                >
+                    M: {{ select.m }}
+                </v-chip>
+                <v-chip
+                    class="ma-2"
+                    label
+                >
+                    L: {{ select.l }}
+                </v-chip>
+                <v-chip
+                    class="ma-2"
+                    label
+                >
+                    XL: {{ select.xl }}
+                </v-chip>
+            </v-col>
         </v-row>
         <v-row>
-            <v-col cols="12" sm="12" lg="9">
+            <v-col cols="12" md="4">
                 <v-card>
                     <v-card-title>
                         <v-text-field
@@ -24,6 +76,7 @@
                         ></v-text-field>
                     </v-card-title>
                     <v-data-table
+                        height="90vh"
                         :loading="loading"
                         loading-text="Loading... Please wait"
                         :headers="headers"
@@ -40,104 +93,31 @@
                     </v-data-table>
                 </v-card>
             </v-col>
-            <v-col>
-                <v-card
-                    color="#385F73"
-                    dark
-                    class="mb-5"
-                >
-                    <v-card-title class="text-h5">
-                        Итого: {{ orders.length }}
-                    </v-card-title>
-                </v-card>
-                <v-card class="mb-5">
-                    <v-card-title class="text-h5">
-                        Lite: {{ lite.total }}
-                    </v-card-title>
-                    <v-card-text>
-                        <div>
-                            <v-chip
-                                class="ma-2"
-                                label
-                            >
-                                XS: {{ lite.xs }}
-                            </v-chip>
-                            <v-chip
-                                class="ma-2"
-                                label
-                            >
-                                S: {{ lite.s }}
-                            </v-chip>
-                            <v-chip
-                                class="ma-2"
-                                label
-                            >
-                                M: {{ lite.m }}
-                            </v-chip>
-                            <v-chip
-                                class="ma-2"
-                                label
-                            >
-                                L: {{ lite.l }}
-                            </v-chip>
-                            <v-chip
-                                class="ma-2"
-                                label
-                            >
-                                XL: {{ lite.xl }}
-                            </v-chip>
-                        </div>
-                    </v-card-text>
-                </v-card>
-                <v-card class="mb-5">
-                    <v-card-title class="text-h5">
-                        Select: {{ select.total }}
-                    </v-card-title>
-                    <v-card-text>
-                        <div>
-                            <v-chip
-                                class="ma-2"
-                                label
-                            >
-                                XS: {{ select.xs }}
-                            </v-chip>
-                            <v-chip
-                                class="ma-2"
-                                label
-                            >
-                                S: {{ select.s }}
-                            </v-chip>
-                            <v-chip
-                                class="ma-2"
-                                label
-                            >
-                                M: {{ select.m }}
-                            </v-chip>
-                            <v-chip
-                                class="ma-2"
-                                label
-                            >
-                                L: {{ select.l }}
-                            </v-chip>
-                            <v-chip
-                                class="ma-2"
-                                label
-                            >
-                                XL: {{ select.xl }}
-                            </v-chip>
-                        </div>
-                    </v-card-text>
-                </v-card>
-                <v-card class="mb-5">
-                    <v-card-title class="text-h5">
-                        Detox: {{ detox }}
-                    </v-card-title>
-                </v-card>
-                <v-card>
-                    <v-card-title class="text-h5">
-                        GO: {{ go }}
-                    </v-card-title>
-                </v-card>
+            <v-col v-if="Object.keys(order).length > 0">
+                <h3 class="mb-3">{{order.name}}</h3>
+                <v-row>
+                    <v-col
+                        cols="12" md="4"
+                        v-for="(ration,key) in rations"
+                        :key="key"
+                    >
+                        <v-card
+                            :color="getSelectColor(ration.id)"
+                        >
+                            <v-card-title>{{ration.name}}</v-card-title>
+                            <v-card-subtitle>{{getSelectName(ration.id)}}</v-card-subtitle>
+                            <v-card-actions>
+                                <v-btn
+                                    color="primary"
+                                    text
+                                    @click="openSettings(ration)"
+                                >
+                                    настроить
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-col>
+                </v-row>
             </v-col>
         </v-row>
         <v-row justify="center">
@@ -252,141 +232,122 @@
                                 </v-col>
                             </v-row>
                             <v-divider class="my-6"></v-divider>
-                            <h2 class="mb-6">{{cuisine.name}}</h2>
+                            <h2 class="mb-6">{{cuisine.name}} - {{ration_name}}</h2>
 
                             <v-row class="py-3">
-                                <v-expansion-panels>
-                                    <v-expansion-panel
-                                        v-for="ration in rations"
-                                        :key="ration.id"
-                                        @click="openRation(ration.id)"
-                                    >
-                                        <v-expansion-panel-header>
-                                            {{ration.name}}
-                                        </v-expansion-panel-header>
-                                        <v-expansion-panel-content>
-                                            <v-row>
-                                                <v-col
-                                                    v-if="previous"
-                                                    cols="3"
+                                <v-col
+                                    v-if="Object.keys(previous).length > 0"
+                                    cols="3"
+                                >
+                                    <h4>{{previous.created_at}}</h4>
+                                    <span>{{previous.cuisine}}</span>
+                                    <v-list v-if="dish" dense>
+                                        <v-subheader v-if="previous.dish">{{previous.dish.name}}</v-subheader>
+                                        <v-list-item
+                                            v-for="(ing, i) in previous.ingredients"
+                                            :key="i"
+                                            :class="hasPreviousIncludeIngredient(ing.id) ? 'yellow lighten-3' : ''"
+                                        >
+                                            <v-list-item-content>
+                                                <v-list-item-title>{{i+1}}. {{ing.name}}</v-list-item-title>
+                                            </v-list-item-content>
+                                        </v-list-item>
+                                    </v-list>
+                                    <v-card class="mb-5 mt-3" v-if="previous.dish_name" color="blue-grey lighten-5">
+                                        <v-card-title>{{previous.dish_name}}</v-card-title>
+                                        <v-card-subtitle>{{previous.description}}</v-card-subtitle>
+                                    </v-card>
+                                </v-col>
+                                <v-col cols="4">
+                                    <h4>Сегодня</h4>
+                                    <span>{{cuisine.name}}</span>
+                                    <v-row class="mt-2">
+                                        <v-col cols="8" v-if="dish">
+                                            <v-select
+                                                v-model="dish"
+                                                dense
+                                                :items="dishes"
+                                                item-text="name"
+                                                return-object
+                                                outlined
+                                                label="Блюда"
+                                            ></v-select>
+                                        </v-col>
+                                        <v-col v-if="dish">
+                                            <v-btn
+                                                color="primary"
+                                                small
+                                                @click="setDish"
+                                                :disabled="dish.id === result.dish_id"
+                                            >
+                                                Выбрать
+                                            </v-btn>
+                                        </v-col>
+                                    </v-row>
+                                    <div v-if="dish && result">
+                                        <v-sheet
+                                            v-for="(ing, key) in dish.ingredients"
+                                            :key="ing.id"
+                                            elevation="1"
+                                            class="pa-3 mb-3 flex justify-center"
+
+                                        >
+                                            <div class="flex flex-row">
+
+                                                <p :class="hasResultIncludeIngredient(ing.id) ? '' : 'text-decoration-line-through'">
+                                                    {{key+1}}. {{ing.name}}
+                                                </p>
+
+                                                <span v-if="ing.analog">
+                                                    {{ing.analog.name}}
+                                                </span>
+
+                                            </div>
+                                            <div class="mt-2">
+                                                <v-btn
+                                                    v-if="dish.id === result.dish_id && !ing.analog"
+                                                    x-small
+                                                    @click="hasResultIncludeIngredient(ing.id) ? removeIngredient(ing.id) : addIngredient(ing.id)"
+                                                    :class="hasResultIncludeIngredient(ing.id) ? 'red' : 'green'"
                                                 >
-                                                    <h4>{{previous.created_at}}</h4>
-                                                    <span>{{previous.cuisine}}</span>
-                                                    <v-list v-if="dish" dense>
-                                                        <v-subheader v-if="previous.dish">{{previous.dish.name}}</v-subheader>
-                                                        <v-list-item
-                                                            v-for="(ing, i) in previous.ingredients"
-                                                            :key="i"
-                                                            :class="hasPreviousIncludeIngredient(ing.id) ? 'yellow lighten-3' : ''"
-                                                        >
-                                                            <v-list-item-content>
-                                                                <v-list-item-title>{{i+1}}. {{ing.name}}</v-list-item-title>
-                                                            </v-list-item-content>
-                                                        </v-list-item>
-                                                    </v-list>
-                                                    <p>
-                                                        {{previous_description}}
-                                                    </p>
-                                                </v-col>
-                                                <v-col cols="5">
-                                                    <h4>Сегодня</h4>
-                                                    <span>{{cuisine.name}}</span>
-                                                    <v-row class="mt-2">
-                                                        <v-col>
-                                                            <v-select
-                                                                v-model="dish"
-                                                                dense
-                                                                :items="dishes"
-                                                                item-text="name"
-                                                                return-object
-                                                                outlined
-                                                                label="Блюда"
-                                                            ></v-select>
-                                                        </v-col>
-                                                        <v-col v-if="dish">
-                                                            <v-btn
-                                                                color="primary"
-                                                                small
-                                                                @click="setDish"
-                                                                :disabled="dish.id === result.dish_id"
-                                                            >
-                                                                Выбрать
-                                                            </v-btn>
-                                                        </v-col>
-                                                    </v-row>
-                                                    <div v-if="dish && result">
-                                                        <v-sheet
-                                                            v-for="(ing, key) in dish.ingredients"
-                                                            :key="ing.id"
-                                                            elevation="1"
-                                                            class="pa-3 mb-3 flex justify-center"
-
-                                                        >
-                                                            <div class="flex flex-row">
-
-                                                                    <p :class="hasResultIncludeIngredient(ing.id) ? '' : 'text-decoration-line-through'">
-                                                                        {{key+1}}. {{ing.name}}
-                                                                    </p>
-
-                                                                    <span v-if="ing.analog">
-                                                                        {{ing.analog.name}}
-                                                                    </span>
-
-                                                            </div>
-                                                            <div class="mt-2">
-                                                                <v-btn
-                                                                    v-if="dish.id === result.dish_id && !ing.analog"
-                                                                    x-small
-                                                                    @click="hasResultIncludeIngredient(ing.id) ? removeIngredient(ing.id) : addIngredient(ing.id)"
-                                                                    :class="hasResultIncludeIngredient(ing.id) ? 'red' : 'green'"
-                                                                >
-                                                                    {{hasResultIncludeIngredient(ing.id) ? 'Убрать' : 'Вернуть'}}
-                                                                </v-btn>
-                                                                <v-btn
-                                                                    v-if="dish && dish.id === result.dish_id"
-                                                                    x-small
-                                                                    @click="!ing.analog ? showAnalogs(ing.id) : returnIngredient(ing.id, ing.analog.id)"
-                                                                    class="ml-2"
-                                                                >
-                                                                    {{!ing.analog ? 'Замена' : 'Отменить замену'}}
-                                                                </v-btn>
-                                                            </div>
-                                                        </v-sheet>
-                                                    </div>
-                                                </v-col>
-                                                <v-col>
-                                                    <h4>Итог</h4>
-                                                    <span>{{cuisine.name}}</span>
-                                                    <div v-if="result">
-                                                        <p class="my-4">{{result.dish ? result.dish.name : ''}}</p>
-                                                        <v-sheet
-                                                            v-for="(ing, key) in result.ingredients"
-                                                            :key="ing.id"
-                                                            elevation="1"
-                                                            class="pa-3 mb-3 flex justify-center"
-                                                            :color="mix.includes(ing.id) ? 'red lighten-3' : ''"
-                                                        >
-                                                            {{key+1}}. {{ing.name}}
-                                                        </v-sheet>
-                                                        <v-textarea
-                                                            v-model="result_description"
-                                                            outlined
-                                                            clearable
-                                                            label="Доп. инфо"
-                                                        >
-                                                        </v-textarea>
-                                                        <v-btn
-                                                            color="primary"
-                                                            @click="setDescription"
-                                                        >
-                                                            сохранить
-                                                        </v-btn>
-                                                    </div>
-                                                </v-col>
-                                            </v-row>
-                                        </v-expansion-panel-content>
-                                    </v-expansion-panel>
-                                </v-expansion-panels>
+                                                    {{hasResultIncludeIngredient(ing.id) ? 'Убрать' : 'Вернуть'}}
+                                                </v-btn>
+                                                <v-btn
+                                                    v-if="dish.id === result.dish_id && hasResultIncludeIngredient(ing.id)"
+                                                    x-small
+                                                    @click="!ing.analog ? showAnalogs(ing.id) : returnIngredient(ing.id, ing.analog.id)"
+                                                    class="ml-2"
+                                                >
+                                                    {{!ing.analog ? 'Замена' : 'Отменить замену'}}
+                                                </v-btn>
+                                            </div>
+                                        </v-sheet>
+                                    </div>
+                                </v-col>
+                                <v-col cols="5">
+                                    <h4>Итог</h4>
+                                    <span>{{cuisine.name}}</span>
+                                    <div v-if="result">
+                                        <v-card class="mb-5 mt-3" color="blue-grey lighten-3">
+                                            <v-card-title>{{result.dish_name}}</v-card-title>
+                                            <v-card-subtitle>{{result.description}}</v-card-subtitle>
+                                            <v-card-actions>
+                                                <v-btn text @click="dialog3 = true">
+                                                    редактировать
+                                                </v-btn>
+                                            </v-card-actions>
+                                        </v-card>
+                                        <v-sheet
+                                            v-for="(ing, key) in result.ingredients"
+                                            :key="ing.id"
+                                            elevation="1"
+                                            class="pa-3 mb-3 flex justify-center"
+                                            :color="mix.includes(ing.id) ? 'red lighten-3' : ''"
+                                        >
+                                            {{key+1}}. {{ing.name}}
+                                        </v-sheet>
+                                    </div>
+                                </v-col>
                             </v-row>
                         </v-container>
                     </v-card-text>
@@ -451,6 +412,41 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <v-dialog
+            v-model="dialog3"
+            max-width="700px"
+        >
+            <v-card>
+                <v-card-title>
+                    Редактировать
+                </v-card-title>
+                <v-card-text>
+                    <v-text-field
+                        v-model="result.dish_name"
+                        clearable
+                        outlined
+                        label="Название"
+                    >
+                    </v-text-field>
+                    <v-textarea
+                        v-model="result.description"
+                        outlined
+                        clearable
+                        label="Дополнительная информация"
+                    >
+                    </v-textarea>
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn
+                        color="primary"
+                        text
+                        @click="saveDetails"
+                    >
+                        Сохранить
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 <script>
@@ -459,10 +455,7 @@
         name: 'KitchenOrders',
         data: () => ({
             orders: [],
-            lite: [],
             select: [],
-            detox: [],
-            go: [],
             itemsPerPage: 300,
             search: '',
             headers: [
@@ -474,6 +467,7 @@
             loading: true,
             dialog: false,
             dialog2: false,
+            dialog3: false,
             ingredients: [],
             categories: [],
             applied_categories: [],
@@ -489,20 +483,17 @@
             result: {},
             order: {},
             cuisine: {},
+            ration_id: null,
+            ration_name: null,
             mix: [],
             tag: '',
             tags: [],
             errors: [],
-            rations: [],
-            result_description: '',
-            previous_description: ''
+            rations: []
         }),
         created() {
             this.getLeads()
-            this.getLite()
             this.getSelect()
-            this.getDetox()
-            this.getGo()
             this.getIngredients()
             this.getCategories()
             this.getCuisine()
@@ -527,16 +518,6 @@
                     })
                     .finally(() => (this.loading = false))
             },
-            async getLite(){
-                await axios
-                    .get('/api/orders/lite')
-                    .then(response => {
-                        this.lite = response.data
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
-            },
             async getSelect(){
                 await axios
                     .get('/api/orders/select')
@@ -546,43 +527,6 @@
                     .catch(error => {
                         console.log(error)
                     })
-            },
-            async getDetox(){
-                await axios
-                    .get('/api/orders/detox')
-                    .then(response => {
-                        this.detox = response.data
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
-            },
-            async getGo(){
-                await axios
-                    .get('/api/orders/go')
-                    .then(response => {
-                        this.go = response.data
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
-            },
-            async webhook() {
-                this.amo_loading = true
-                await axios
-                    .get('/api/webhook')
-                    .then((response) => {
-                        console.log(response)
-                    })
-                    .catch(error => {
-                        this.$store.dispatch('showAlert', {
-                            'isVisible': true,
-                            'msg': error.message,
-                            'color': 'error',
-                            'type': 'error'
-                        })
-                    })
-                    .finally(() => (this.amo_loading = false))
             },
             async fetchLeads() {
                 this.amo_loading = true
@@ -646,9 +590,10 @@
                     .get('/api/dishes/ration/'+id)
                     .then(response => {
                         this.dishes = response.data
+
                         if (this.dishes.length > 0){
                             this.dish = this.dishes.find(obj => {
-                                return obj.id === this.result && this.result.dish_id
+                                return obj.id === this.result.dish_id
                             })
 
                             if (!this.dish){
@@ -698,13 +643,38 @@
                         console.log(error)
                     })
             },
+            async getSelectByOrder(id){
+                await axios
+                    .get('/api/select/order/'+id)
+                    .then(response => {
+                        this.select_previous = response.data.previous
+                        this.select_result = response.data.result
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+            },
             showDetails(index){
                 this.order = index
                 this.mix = index.blacklist
                 this.tags = index.wishlist
-                this.select_previous = index.previous
-                this.select_result = index.result
-                this.dialog = true
+                this.getSelectByOrder(index.id)
+            },
+            getSelectColor(id){
+                if (this.select_result.length > 0){
+                    let select = this.select_result.find(x => x.ration_id === id)
+                    return select ? select.color : ''
+                }
+
+                return '';
+            },
+            getSelectName(id){
+                if (this.select_result.length > 0){
+                    let select = this.select_result.find(x => x.ration_id === id)
+                    return select ? select.dish_name : ''
+                }
+
+                return '';
             },
             close(){
                 this.order = {}
@@ -712,8 +682,6 @@
                 this.dialog = false
                 this.applied_categories = []
                 this.tag = ''
-                this.result_description = ''
-                this.previous_description = ''
             },
             closeDialog2(){
                 this.ingredient_categories = []
@@ -823,13 +791,6 @@
                         this.errors = error.response.data.errors
                     })
             },
-            openRation(id){
-                this.previous = this.select_previous.find(obj => obj.ration_id === id) ?? {}
-                this.result = this.select_result.find(obj => obj.ration_id === id) ?? {}
-                this.result_description = this.result.description
-                this.previous_description = this.previous.description
-                this.getDishes(id)
-            },
             hasResultIncludeIngredient(id){
                 return Object.keys(this.result).length !== 0 && this.result.ingredient_ids.includes(id)
             },
@@ -838,7 +799,12 @@
             },
             setDish(){
                 axios
-                    .post('/api/select/'+this.result.id+'/dish/'+this.dish.id)
+                    .post('/api/select/add/dish', {
+                        select_id: this.result ? this.result.id : null,
+                        order_id: this.order.id,
+                        ration_id: this.ration_id,
+                        dish_id: this.dish.id
+                    })
                     .then(response => {
                         if (!response.data.status){
                             this.$store.dispatch('showAlert', {
@@ -849,24 +815,6 @@
                             })
                         }
                        this.result = response.data.data
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
-            },
-            setDescription(){
-                axios
-                    .post('/api/select/'+this.result.id+'/description',{
-                        description: this.result_description
-                    })
-                    .then(response => {
-                        this.$store.dispatch('showAlert', {
-                            'isVisible': true,
-                            'msg': response.data.msg,
-                            'color': response.data.status ? 'success' :'error',
-                            'type': response.data.status ? 'success' :'error',
-                        })
-                        this.result_description = response.data.description
                     })
                     .catch(error => {
                         console.log(error)
@@ -957,7 +905,37 @@
                     .catch(error => {
                         console.log(error)
                     })
-            }
+            },
+            excel(){
+                axios
+                    .get('/api/select/export')
+                    .then(response => {
+                        console.log(response)
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+            },
+            openSettings(ration){
+                this.previous = this.select_previous.find(obj => obj.ration_id === ration.id) ?? {}
+                this.result = this.select_result.find(obj => obj.ration_id === ration.id) ?? {}
+                this.getDishes(ration.id)
+                this.ration_id = ration.id
+                this.ration_name = ration.name
+                this.dialog = true
+            },
+            saveDetails(){
+                axios
+                    .post('/api/select/add/details', this.result)
+                    .then(response => {
+                        this.result = response.data.data
+                        this.dialog3 = false
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+            },
+            remove(){},
         }
     }
 </script>
