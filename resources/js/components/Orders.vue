@@ -251,9 +251,8 @@
             },
             async getLite(){
                 await axios
-                    .get('/api/orders/lite')
+                    .get('/api/orders/lite-stat')
                     .then(response => {
-                        console.log(response)
                         this.lite = response.data
                     })
                     .catch(error => {
@@ -262,7 +261,7 @@
             },
             async getSelect(){
                 await axios
-                    .get('/api/orders/select')
+                    .get('/api/orders/select-stat')
                     .then(response => {
                         this.select = response.data
                     })
@@ -272,7 +271,7 @@
             },
             async getDetox(){
                 await axios
-                    .get('/api/orders/detox')
+                    .get('/api/orders/detox-stat')
                     .then(response => {
                         this.detox = response.data
                     })
@@ -282,7 +281,7 @@
             },
             async getGo(){
                 await axios
-                    .get('/api/orders/go')
+                    .get('/api/orders/go-stat')
                     .then(response => {
                         this.go = response.data
                     })

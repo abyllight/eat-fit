@@ -43,13 +43,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/couriers', [UserController::class, 'getCouriers']);
 
     Route::get('/orders', [OrderController::class, 'index']);
-    Route::get('/orders/select-orders', [OrderController::class, 'getSelect']);
-    Route::get('/orders/select', [OrderController::class, 'getNbSelect']);
-    Route::get('/orders/lite', [OrderController::class, 'getNbLite']);
-    Route::get('/orders/detox', [OrderController::class, 'getNbDetox']);
-    Route::get('/orders/go', [OrderController::class, 'getNbGo']);
-    Route::get('/order/blacklist/{id}', [OrderController::class, 'getBlacklist']);
-    Route::get('/order/wishlist/{id}', [OrderController::class, 'getWishlist']);
+    Route::get('/orders/select', [OrderController::class, 'getSelect']);
+    Route::get('/orders/select-stat', [OrderController::class, 'getNbSelect']);
+    Route::get('/orders/lite-stat', [OrderController::class, 'getNbLite']);
+    Route::get('/orders/detox-stat', [OrderController::class, 'getNbDetox']);
+    Route::get('/orders/go-stat', [OrderController::class, 'getNbGo']);
     Route::get('/orders/{order}/previous/select/ration/{ration}', [OrderController::class, 'getPreviousOrderSelectByRation']);
     Route::get('/orders/{order}/today/select/ration/{ration}', [OrderController::class, 'getOrderSelectByRation']);
     Route::get('/amo/leads', [OrderController::class, 'getOrders']);

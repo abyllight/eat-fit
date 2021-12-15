@@ -553,42 +553,6 @@ class OrderController extends Controller
         $writer->save('php://output');
     }
 
-    public function getBlacklist($id){
-        $order = Order::find($id);
-
-        if (!$order) {
-            return response()->json([
-                'status' => false,
-                'msg' => 'Order not found'
-            ]);
-        }
-
-        return response()->json([
-            'status' => true,
-            'data' => $order->blacklist
-        ]);
-    }
-
-    public function getWishlist($id){
-        $order = Order::find($id);
-
-        if (!$order) {
-            return response()->json([
-                'status' => false,
-                'msg' => 'Order not found'
-            ]);
-        }
-
-        $wishes = array_map(function ($item){
-            return $item['wish'];
-        }, $order->wishlist()->get()->toArray());
-
-        return response()->json([
-            'status' => true,
-            'data' => $wishes
-        ]);
-    }
-
     public function addToBlacklist(Request $request): JsonResponse
     {
         $order = Order::find($request->id);
@@ -605,14 +569,15 @@ class OrderController extends Controller
 
         return response()->json([
             'status' => false,
-            'msg' => 'Order not found'
+            'msg' => 'Order not found',
+            'blacklist' => $order->getBlacklistIds()
         ]);
     }
 
     public function addToWishlist(Request $request): JsonResponse
     {
         $request->validate([
-            'tag' => 'required'
+            'tag' => 'required|unique:wishlists,wish'
         ]);
         $order = Order::find($request->id);
 

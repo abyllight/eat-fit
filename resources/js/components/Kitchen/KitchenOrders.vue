@@ -713,6 +713,7 @@
                     .then(response => {
                         this.mix = response.data.data
                         this.order.blacklist = response.data.data
+                        console.log(response)
                     })
                     .catch(error => {
                         this.$store.dispatch('showAlert', {

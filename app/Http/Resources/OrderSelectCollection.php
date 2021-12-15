@@ -23,8 +23,8 @@ class OrderSelectCollection extends JsonResource
             'size' => $this->getSize($this->size),
             'diet' => $this->diet,
             'diet_old' => $this->diet_old,
-            'blacklist' => $this->getBlacklistIds(),
-            'wishlist' => $this->getWishes(),
+            //'blacklist' => $this->getBlacklistIds(),
+            //'wishlist' => $this->getWishes(),
             //'previous' => SelectCollection::collection($this->getPreviousSelect()),
             //'result' => SelectCollection::collection($this->getResultSelect())
         ];

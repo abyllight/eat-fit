@@ -96,10 +96,10 @@ const router = new VueRouter({
             component: () => import('./components/Logistics/Report')
         },
         {
-            path: '/kitchen-orders',
-            name: 'kitchen_orders',
+            path: '/select',
+            name: 'select',
             meta: { auth: true },
-            component: () => import('./components/Kitchen/KitchenOrders')
+            component: () => import('./components/Kitchen/Select')
         },
         {
             path: '/rations',
@@ -130,12 +130,6 @@ const router = new VueRouter({
             name: 'ingredients',
             meta: { auth: true },
             component: () => import('./components/Kitchen/Ingredients')
-        },
-        {
-            path: '/select',
-            name: 'select',
-            meta: { auth: true },
-            component: () => import('./components/Kitchen/Select')
         },
         {
             path: '/promocodes',

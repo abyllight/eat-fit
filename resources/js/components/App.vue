@@ -145,8 +145,8 @@ export default {
         },
         {
             id: 12,
-            title: 'Заказы для Кухни',
-            link: '/kitchen-orders',
+            title: 'Селекты',
+            link: '/select',
             roles: [11]
         },
         {
@@ -178,13 +178,7 @@ export default {
             title: 'Ингредиенты',
             link: '/ingredients',
             roles: [11]
-        },
-        {
-            id: 14,
-            title: 'Select',
-            link: '/select',
-            roles: [11]
-        },
+        }
     ]
   }),
   computed: {

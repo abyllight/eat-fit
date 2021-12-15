@@ -29,6 +29,8 @@ class SelectController extends Controller
         }
 
         return response()->json([
+            'blacklist' => $order->getBlackListIds(),
+            'wishlist' => $order->getWishes(),
             'result' => SelectCollection::collection($order->getResultSelect()),
             'previous' => SelectCollection::collection($order->getPreviousSelect())
         ]);
@@ -37,6 +39,7 @@ class SelectController extends Controller
     public function setDishToSelect(Request $request): JsonResponse
     {
         $dish = Dish::find($request->dish_id);
+        $cuisine = Cuisine::where('is_on_duty', true)->first();
 
         if (!$dish){
             return response()->json([
@@ -46,13 +49,10 @@ class SelectController extends Controller
         }
 
         if (!$request->has('select_id')){
-            $cuisine = Cuisine::where('is_on_duty', true)->first();
-
             $select = new Select();
             $select->order_id = $request->order_id;
             $select->cuisine_id = $cuisine->id;
             $select->ration_id = $request->ration_id;
-
         }else{
             $select = Select::find($request->select_id);
 
@@ -63,10 +63,18 @@ class SelectController extends Controller
                 ]);
             }
         }
+        $duty_dish = Dish::where('cuisine_id', $cuisine->id)->where('ration_id', $request->ration_id)->first();
 
+        $select->r_id = $request->r_id;
         $select->dish_id = $request->dish_id;
         $select->dish_name = $dish->name;
-        $select->status = 5;
+
+        if ($request->dish_id !== $duty_dish->id) {
+            $select->status = Select::REPLACEMENT;
+        }else{
+            $select->status = Select::LITE;
+        }
+
         $select->save();
 
         $select->ingredients()->sync($dish->getIngredientIds());
@@ -119,6 +127,15 @@ class SelectController extends Controller
 
         $select->ingredients()->attach($request->ingredient_id);
 
+        if ($select->status === Select::WITHOUT){
+            $dish = Dish::where('cuisine_id', $select->cuisine_id)->where('ration_id', $select->ration_id)->first();
+            $diff = array_diff($dish->getIngredientIds(), $select->getIngredientIds());
+            if (!$diff){
+                $select->status = Select::LITE;
+                $select->save();
+            }
+        }
+
         return response()->json([
             'status' => true,
             'msg' => 'Success',
@@ -138,6 +155,11 @@ class SelectController extends Controller
 
         $select->ingredients()->detach($request->ingredient_id);
 
+        if ($select->status === Select::LITE){
+            $select->status = Select::WITHOUT;
+            $select->save();
+        }
+
         return response()->json([
             'status' => true,
             'msg' => 'Success',
@@ -155,18 +177,13 @@ class SelectController extends Controller
             ]);
         }
 
-        $ingredient = Ingredient::find($request->ingredient_id);
-        $ingredient->analog_id = $request->analog_id;
-        $ingredient->save();
-
         $select->ingredients()->detach($request->ingredient_id);
-        $select->ingredients()->attach($request->analog_id);
+        $select->ingredients()->attach([$request->analog_id => ['analog_id' => $request->ingredient_id]]);
 
         return response()->json([
             'status' => true,
             'msg' => 'Success',
-            'select' => new SelectCollection($select),
-            'ingredient' => new IngredientCollection($ingredient)
+            'select' => new SelectCollection($select)
         ]);
     }
 
@@ -183,15 +200,10 @@ class SelectController extends Controller
         $select->ingredients()->detach($request->analog_id);
         $select->ingredients()->attach($request->ingredient_id);
 
-        $ingredient = Ingredient::find($request->ingredient_id);
-        $ingredient->analog_id = null;
-        $ingredient->save();
-
         return response()->json([
             'status' => true,
             'msg' => 'Success',
-            'select' => new SelectCollection($select),
-            'ingredient' => new IngredientCollection($ingredient)
+            'select' => new SelectCollection($select)
         ]);
     }
 

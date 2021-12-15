@@ -927,6 +927,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/order/blacklist/' + this.order.id).then(function (response) {
         _this15.mix = response.data.data;
         _this15.order.blacklist = response.data.data;
+        console.log(response);
       })["catch"](function (error) {
         _this15.$store.dispatch('showAlert', {
           'isVisible': true,

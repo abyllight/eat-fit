@@ -310,8 +310,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.next = 2;
-                return axios.get('/api/orders/lite').then(function (response) {
-                  console.log(response);
+                return axios.get('/api/orders/lite-stat').then(function (response) {
                   _this2.lite = response.data;
                 })["catch"](function (error) {
                   console.log(error);
@@ -334,7 +333,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context3.prev = _context3.next) {
               case 0:
                 _context3.next = 2;
-                return axios.get('/api/orders/select').then(function (response) {
+                return axios.get('/api/orders/select-stat').then(function (response) {
                   _this3.select = response.data;
                 })["catch"](function (error) {
                   console.log(error);
@@ -357,7 +356,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context4.prev = _context4.next) {
               case 0:
                 _context4.next = 2;
-                return axios.get('/api/orders/detox').then(function (response) {
+                return axios.get('/api/orders/detox-stat').then(function (response) {
                   _this4.detox = response.data;
                 })["catch"](function (error) {
                   console.log(error);
@@ -380,7 +379,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context5.prev = _context5.next) {
               case 0:
                 _context5.next = 2;
-                return axios.get('/api/orders/go').then(function (response) {
+                return axios.get('/api/orders/go-stat').then(function (response) {
                   _this5.go = response.data;
                 })["catch"](function (error) {
                   console.log(error);
