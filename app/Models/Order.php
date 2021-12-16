@@ -113,6 +113,8 @@ class Order extends Model
                 $select->status = Select::START;
                 $select->save();
             }
+
+            return $this->select()->whereDate('created_at', Carbon::today())->get()->sortBy('ration_id');
         }
 
         return $result;

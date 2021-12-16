@@ -615,11 +615,10 @@
                         this.blacklist = response.data.blacklist
                         this.wishlist = response.data.wishlist
                         this.mix = response.data.blacklist
+                        this.select_loading = false
                     })
                     .catch(error => {
                         console.log(error)
-                    }).finally(() => {
-                        this.select_loading = false
                     })
             },
             async getCuisine(){

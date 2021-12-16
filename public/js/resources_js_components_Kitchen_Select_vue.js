@@ -718,10 +718,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this5.blacklist = response.data.blacklist;
                   _this5.wishlist = response.data.wishlist;
                   _this5.mix = response.data.blacklist;
+                  _this5.select_loading = false;
                 })["catch"](function (error) {
                   console.log(error);
-                })["finally"](function () {
-                  _this5.select_loading = false;
                 });
 
               case 3:
