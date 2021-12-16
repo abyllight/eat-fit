@@ -102,13 +102,14 @@
                         :key="key"
                     >
                         <v-card
-                            :color="getSelectColor(ration.id)"
+                            :color="isActive(ration.id) ? getSelectColor(ration.id) : 'grey'"
                             :loading="select_loading"
                         >
                             <v-card-title>{{ration.name}}</v-card-title>
                             <v-card-subtitle>{{getSelectName(ration.id)}}</v-card-subtitle>
                             <v-card-actions>
                                 <v-btn
+                                    v-if="isActive(ration.id)"
                                     color="primary"
                                     text
                                     @click="openSettings(ration)"
@@ -118,9 +119,9 @@
                                 <v-btn
                                     color="black"
                                     text
-                                    @click="openSettings(ration)"
+                                    @click="activateDeactivate(ration.id)"
                                 >
-
+                                    {{isActive(ration.id) ? 'Убрать' : 'Вернуть'}}
                                 </v-btn>
                             </v-card-actions>
                         </v-card>
@@ -365,8 +366,23 @@
                                             class="pa-3 mb-3 flex justify-center"
                                             :color="mix.includes(ing.id) ? 'red lighten-3' : ''"
                                         >
-                                            {{i+1}}. {{ing.name}}
+                                            <div>
+                                                {{i+1}}. {{ing.name}}
+                                            </div>
+                                            <div v-if="ing.pivot.editable">
+                                                <v-btn x-small @click="removeExtra(ing.id)">убрать</v-btn>
+                                            </div>
+
                                         </v-sheet>
+                                        <v-autocomplete
+                                            :items="ingredients"
+                                            item-text="name"
+                                            item-value="id"
+                                            clearable
+                                            outlined
+                                            label="Ингредиенты"
+                                            @change="addExtra"
+                                        ></v-autocomplete>
                                     </div>
                                 </v-col>
                             </v-row>
@@ -398,6 +414,15 @@
                                 clearable
                             >
                             </v-select>
+                            <v-autocomplete
+                                :items="ingredients"
+                                item-text="name"
+                                item-value="id"
+                                clearable
+                                outlined
+                                label="Ингредиенты"
+                                @change="r1"
+                            ></v-autocomplete>
                         </v-col>
                         <v-col v-if="chosen_category">
                             <v-sheet
@@ -640,16 +665,13 @@
                         this.dishes = response.data
 
                         if (this.dishes.length > 0){
-                            if (Object.keys(this.result).length !== 0){
-                                this.dish = this.dishes.find(obj => {
-                                    return obj.id === this.result.dish_id
-                                })
-                                if (!this.dish){
-                                    this.dish = this.dishes[0]
-                                }
-                                return
+                            this.dish = this.dishes.find(obj => {
+                                return obj.id === this.result.dish_id
+                            })
+
+                            if (!this.dish){
+                                this.dish = this.dishes[0]
                             }
-                            this.dish = this.dishes[0]
                         }else {
                             this.dish.ingredients = []
                         }
@@ -676,7 +698,7 @@
                 this.ration = ration
                 this.previous = this.select_previous.find(obj => obj.ration_id === ration.id) ?? {}
                 this.result = this.select_result.find(obj => obj.ration_id === ration.id) ?? {}
-                this.ration_id = Object.keys(this.result).length !== 0 ? this.result.r_id : ration.id
+                this.ration_id = this.result.r_id ?? ration.id
                 this.getDishesByRation(this.ration_id)
                 this.dialog = true
             },
@@ -688,6 +710,14 @@
 
                 return '';
             },
+            isActive(id){
+                if (this.select_result.length > 0){
+                    let select = this.select_result.find(x => x.ration_id === id)
+                    return select ? select.is_active : true
+                }
+
+                return true;
+            },
             getSelectName(id){
                 if (this.select_result.length > 0){
                     let select = this.select_result.find(x => x.ration_id === id)
@@ -695,6 +725,19 @@
                 }
 
                 return '';
+            },
+            activateDeactivate(id){
+                let select = this.select_result.find(obj => obj.ration_id === id)
+                axios
+                    .post('/api/select/activate-deactivate', {
+                        select_id: select.id
+                    })
+                    .then(response => {
+                        this.getSelectDetailsByOrder(this.order.id)
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
             },
             closeDialog(){
                 this.dish = {}
@@ -773,7 +816,8 @@
                     })
             },
             hasResultIncludeIngredient(id){
-                return Object.keys(this.result).length !== 0 && this.result.ingredient_ids.includes(id)
+                if (!this.result.ingredient_ids) return
+                return this.result.ingredient_ids.includes(id)
             },
             setDish(){
                 axios
@@ -880,7 +924,7 @@
                 this.dialog2 = true
             },
             hasAnalog(id){
-                if (Object.keys(this.result).length === 0) return
+                if (!this.result.ingredient_ids) return
                 let index = this.result.ingredients.findIndex(obj => obj.pivot.analog_id === id)
                 return index >= 0
             },
@@ -908,7 +952,37 @@
                         console.log(error)
                     })
             },
-            exportExcel(){}
+            exportExcel(){},
+            r1(id){
+                this.replaceIngredient(id)
+            },
+            addExtra(id){
+                if (!id) return
+                axios
+                    .post('/api/select/add/extra', {
+                        select_id: this.result.id,
+                        ingredient_id: id
+                    })
+                    .then(response => {
+                        this.result = response.data.data
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+            },
+            removeExtra(id){
+                axios
+                    .post('/api/select/remove/extra', {
+                        select_id: this.result.id,
+                        ingredient_id: id
+                    })
+                    .then(response => {
+                        this.result = response.data.data
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+            }
         }
     }
 </script>

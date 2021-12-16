@@ -180,6 +180,9 @@ class SelectController extends Controller
         $select->ingredients()->detach($request->ingredient_id);
         $select->ingredients()->attach([$request->analog_id => ['analog_id' => $request->ingredient_id]]);
 
+        $select->status = Select::REPLACEMENT;
+        $select->save();
+
         return response()->json([
             'status' => true,
             'msg' => 'Success',
@@ -200,10 +203,86 @@ class SelectController extends Controller
         $select->ingredients()->detach($request->analog_id);
         $select->ingredients()->attach($request->ingredient_id);
 
+        /*if ($select->status === Select::REPLACEMENT){
+            foreach ($select->ingredients as $select_ingredient){
+                if ($select_ingredient->pivot->analog_id){
+
+                }
+            }
+        }*/
+
         return response()->json([
             'status' => true,
             'msg' => 'Success',
             'select' => new SelectCollection($select)
+        ]);
+    }
+
+    public function activateDeactivate(Request $request){
+        $select = Select::find($request->select_id);
+
+        if (!$select){
+            return response()->json([
+                'status' => false,
+                'msg' => 'Select not found'
+            ]);
+        }
+
+        $select->is_active = !$select->is_active;
+        $select->save();
+    }
+
+    public function addExtraIngredient(Request $request){
+        $select = Select::find($request->select_id);
+        $ingredient = Ingredient::find($request->ingredient_id);
+
+        if (!$select){
+            return response()->json([
+                'status' => false,
+                'msg' => 'Select not found'
+            ]);
+        }
+
+        if (!$ingredient){
+            return response()->json([
+                'status' => false,
+                'msg' => 'Ingredient not found'
+            ]);
+        }
+
+        $select->ingredients()->attach($request->ingredient_id, ['editable' => true]);
+
+        return response()->json([
+            'status' => true,
+            'msg' => 'Success',
+            'data' => new SelectCollection($select)
+        ]);
+    }
+
+    public function removeExtraIngredient(Request $request){
+        $select = Select::find($request->select_id);
+        $ingredient = Ingredient::find($request->ingredient_id);
+
+        if (!$select){
+            return response()->json([
+                'status' => false,
+                'msg' => 'Select not found'
+            ]);
+        }
+
+        if (!$ingredient){
+            return response()->json([
+                'status' => false,
+                'msg' => 'Ingredient not found'
+            ]);
+        }
+
+        $select->ingredients()->detach($request->ingredient_id);
+
+        return response()->json([
+            'status' => true,
+            'msg' => 'Success',
+            'data' => new SelectCollection($select)
         ]);
     }
 

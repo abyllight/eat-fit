@@ -99,31 +99,23 @@ class Order extends Model
     }
 
     public function getResultSelect(){
-        return $this->select()->whereDate('created_at', Carbon::today())->get()->sortBy('ration_id');
+        $result = $this->select()->whereDate('created_at', Carbon::today())->get()->sortBy('ration_id');
 
-        /*if ($result->count() === 0){
+        if ($result->count() === 0){
             $cuisine = Cuisine::where('is_on_duty', true)->first();
             $rations = Ration::where('is_required', true)->get();
 
             foreach ($rations as $ration){
-                $dish = Dish::where('cuisine_id', $cuisine->id)->where('ration_id', $ration->id)->first();
                 $select = new Select();
                 $select->order_id = $this->id;
                 $select->cuisine_id = $cuisine->id;
                 $select->ration_id = $ration->id;
-                if ($dish){
-                    $select->dish_id = $dish->id;
-                }
-                $select->status = 5;
+                $select->status = Select::START;
                 $select->save();
-
-                if ($dish){
-                    $select->ingredients()->sync($dish->getIngredientIds());
-                }
             }
         }
 
-        return $result;*/
+        return $result;
     }
 
     public function old()

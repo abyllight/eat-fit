@@ -27,7 +27,8 @@ class SelectCollection extends JsonResource
             'created_at' => $this->created_at->format('Y-m-d'),
             'description' => $this->description,
             'status' => $this->status,
-            'color' => $this->getStatusColor($this->status)
+            'color' => $this->getStatusColor($this->status),
+            'is_active' => $this->is_active
         ];
     }
 }

@@ -505,6 +505,31 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Select',
@@ -796,19 +821,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this9.dishes = response.data;
 
                   if (_this9.dishes.length > 0) {
-                    if (Object.keys(_this9.result).length !== 0) {
-                      _this9.dish = _this9.dishes.find(function (obj) {
-                        return obj.id === _this9.result.dish_id;
-                      });
+                    _this9.dish = _this9.dishes.find(function (obj) {
+                      return obj.id === _this9.result.dish_id;
+                    });
 
-                      if (!_this9.dish) {
-                        _this9.dish = _this9.dishes[0];
-                      }
-
-                      return;
+                    if (!_this9.dish) {
+                      _this9.dish = _this9.dishes[0];
                     }
-
-                    _this9.dish = _this9.dishes[0];
                   } else {
                     _this9.dish.ingredients = [];
                   }
@@ -852,7 +871,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.getSelectDetailsByOrder(order.id);
     },
     openSettings: function openSettings(ration) {
-      var _this$select_previous, _this$select_result$f;
+      var _this$select_previous, _this$select_result$f, _this$result$r_id;
 
       this.ration = ration;
       this.previous = (_this$select_previous = this.select_previous.find(function (obj) {
@@ -861,7 +880,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.result = (_this$select_result$f = this.select_result.find(function (obj) {
         return obj.ration_id === ration.id;
       })) !== null && _this$select_result$f !== void 0 ? _this$select_result$f : {};
-      this.ration_id = Object.keys(this.result).length !== 0 ? this.result.r_id : ration.id;
+      this.ration_id = (_this$result$r_id = this.result.r_id) !== null && _this$result$r_id !== void 0 ? _this$result$r_id : ration.id;
       this.getDishesByRation(this.ration_id);
       this.dialog = true;
     },
@@ -875,6 +894,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       return '';
     },
+    isActive: function isActive(id) {
+      if (this.select_result.length > 0) {
+        var select = this.select_result.find(function (x) {
+          return x.ration_id === id;
+        });
+        return select ? select.is_active : true;
+      }
+
+      return true;
+    },
     getSelectName: function getSelectName(id) {
       if (this.select_result.length > 0) {
         var select = this.select_result.find(function (x) {
@@ -885,16 +914,30 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       return '';
     },
+    activateDeactivate: function activateDeactivate(id) {
+      var _this11 = this;
+
+      var select = this.select_result.find(function (obj) {
+        return obj.ration_id === id;
+      });
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/activate-deactivate', {
+        select_id: select.id
+      }).then(function (response) {
+        _this11.getSelectDetailsByOrder(_this11.order.id);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
     closeDialog: function closeDialog() {
       this.dish = {};
       this.dialog = false;
       this.getSelectDetailsByOrder(this.order.id);
     },
     applyCategories: function applyCategories() {
-      var _this11 = this;
+      var _this12 = this;
 
       var ings = this.applied_categories.map(function (item) {
-        var category = _this11.categories.find(function (obj) {
+        var category = _this12.categories.find(function (obj) {
           return obj.id === item;
         });
 
@@ -905,13 +948,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.mix = _toConsumableArray(new Set(ings));
     },
     saveBlacklist: function saveBlacklist() {
-      var _this12 = this;
+      var _this13 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/blacklist', {
         id: this.order.id,
         blacklist: this.mix
       }).then(function (response) {
-        _this12.$store.dispatch('showAlert', {
+        _this13.$store.dispatch('showAlert', {
           'isVisible': true,
           'msg': response.data.msg,
           'color': 'green',
@@ -919,42 +962,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         });
       })["catch"](function (error) {
         console.log(error);
-        _this12.errors = error.response.data.errors;
+        _this13.errors = error.response.data.errors;
       });
     },
     addTag: function addTag() {
-      var _this13 = this;
+      var _this14 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/wishlist', {
         id: this.order.id,
         tag: this.tag
       }).then(function (response) {
-        _this13.wishlist.push(_this13.tag);
+        _this14.wishlist.push(_this14.tag);
 
-        _this13.tag = '';
-
-        _this13.$store.dispatch('showAlert', {
-          'isVisible': true,
-          'msg': response.data.msg,
-          'color': response.data.status ? 'green' : 'error',
-          'type': response.data.status ? 'success' : 'error'
-        });
-
-        _this13.errors = [];
-      })["catch"](function (error) {
-        _this13.errors = error.response.data.errors;
-      });
-    },
-    removeTag: function removeTag(tag) {
-      var _this14 = this;
-
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/wishlist/remove', {
-        id: this.order.id,
-        tag: tag
-      }).then(function (response) {
-        _this14.wishlist = _this14.wishlist.filter(function (item) {
-          return item !== tag;
-        });
+        _this14.tag = '';
 
         _this14.$store.dispatch('showAlert', {
           'isVisible': true,
@@ -962,16 +982,40 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           'color': response.data.status ? 'green' : 'error',
           'type': response.data.status ? 'success' : 'error'
         });
+
+        _this14.errors = [];
       })["catch"](function (error) {
-        console.log(error);
         _this14.errors = error.response.data.errors;
       });
     },
+    removeTag: function removeTag(tag) {
+      var _this15 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/wishlist/remove', {
+        id: this.order.id,
+        tag: tag
+      }).then(function (response) {
+        _this15.wishlist = _this15.wishlist.filter(function (item) {
+          return item !== tag;
+        });
+
+        _this15.$store.dispatch('showAlert', {
+          'isVisible': true,
+          'msg': response.data.msg,
+          'color': response.data.status ? 'green' : 'error',
+          'type': response.data.status ? 'success' : 'error'
+        });
+      })["catch"](function (error) {
+        console.log(error);
+        _this15.errors = error.response.data.errors;
+      });
+    },
     hasResultIncludeIngredient: function hasResultIncludeIngredient(id) {
-      return Object.keys(this.result).length !== 0 && this.result.ingredient_ids.includes(id);
+      if (!this.result.ingredient_ids) return;
+      return this.result.ingredient_ids.includes(id);
     },
     setDish: function setDish() {
-      var _this15 = this;
+      var _this16 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/add/dish', {
         select_id: this.result ? this.result.id : null,
@@ -979,27 +1023,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         ration_id: this.ration.id,
         dish_id: this.dish.id,
         r_id: this.ration_id
-      }).then(function (response) {
-        if (!response.data.status) {
-          _this15.$store.dispatch('showAlert', {
-            'isVisible': true,
-            'msg': response.data.msg,
-            'color': 'error',
-            'type': 'error'
-          });
-        }
-
-        _this15.result = response.data.data;
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    },
-    addIngredient: function addIngredient(id) {
-      var _this16 = this;
-
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/add/ingredient', {
-        select_id: this.result.id,
-        ingredient_id: id
       }).then(function (response) {
         if (!response.data.status) {
           _this16.$store.dispatch('showAlert', {
@@ -1015,10 +1038,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         console.log(error);
       });
     },
-    removeIngredient: function removeIngredient(id) {
+    addIngredient: function addIngredient(id) {
       var _this17 = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/remove/ingredient', {
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/add/ingredient', {
         select_id: this.result.id,
         ingredient_id: id
       }).then(function (response) {
@@ -1036,8 +1059,29 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         console.log(error);
       });
     },
-    replaceIngredient: function replaceIngredient(id) {
+    removeIngredient: function removeIngredient(id) {
       var _this18 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/remove/ingredient', {
+        select_id: this.result.id,
+        ingredient_id: id
+      }).then(function (response) {
+        if (!response.data.status) {
+          _this18.$store.dispatch('showAlert', {
+            'isVisible': true,
+            'msg': response.data.msg,
+            'color': 'error',
+            'type': 'error'
+          });
+        }
+
+        _this18.result = response.data.data;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    replaceIngredient: function replaceIngredient(id) {
+      var _this19 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/replace/ingredient', {
         select_id: this.result.id,
@@ -1045,16 +1089,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         analog_id: id
       }).then(function (response) {
         if (response.data.status) {
-          _this18.result = response.data.select;
+          _this19.result = response.data.select;
 
-          _this18.closeDialog2();
+          _this19.closeDialog2();
         }
       })["catch"](function (error) {
         console.log(error);
       });
     },
     returnIngredient: function returnIngredient(target_id) {
-      var _this19 = this;
+      var _this20 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/return/ingredient', {
         select_id: this.result.id,
@@ -1062,7 +1106,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         analog_id: this.getAnalogId(target_id)
       }).then(function (response) {
         if (response.data.status) {
-          _this19.result = response.data.select;
+          _this20.result = response.data.select;
         }
       })["catch"](function (error) {
         console.log(error);
@@ -1074,7 +1118,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.dialog2 = true;
     },
     hasAnalog: function hasAnalog(id) {
-      if (Object.keys(this.result).length === 0) return;
+      if (!this.result.ingredient_ids) return;
       var index = this.result.ingredients.findIndex(function (obj) {
         return obj.pivot.analog_id === id;
       });
@@ -1098,16 +1142,44 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.dialog2 = false;
     },
     saveDetails: function saveDetails() {
-      var _this20 = this;
+      var _this21 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/add/details', this.result).then(function (response) {
-        _this20.result = response.data.data;
-        _this20.dialog3 = false;
+        _this21.result = response.data.data;
+        _this21.dialog3 = false;
       })["catch"](function (error) {
         console.log(error);
       });
     },
-    exportExcel: function exportExcel() {}
+    exportExcel: function exportExcel() {},
+    r1: function r1(id) {
+      this.replaceIngredient(id);
+    },
+    addExtra: function addExtra(id) {
+      var _this22 = this;
+
+      if (!id) return;
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/add/extra', {
+        select_id: this.result.id,
+        ingredient_id: id
+      }).then(function (response) {
+        _this22.result = response.data.data;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    removeExtra: function removeExtra(id) {
+      var _this23 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/remove/extra', {
+        select_id: this.result.id,
+        ingredient_id: id
+      }).then(function (response) {
+        _this23.result = response.data.data;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    }
   }
 });
 
@@ -1389,7 +1461,9 @@ var render = function() {
                             "v-card",
                             {
                               attrs: {
-                                color: _vm.getSelectColor(ration.id),
+                                color: _vm.isActive(ration.id)
+                                  ? _vm.getSelectColor(ration.id)
+                                  : "grey",
                                 loading: _vm.select_loading
                               }
                             },
@@ -1403,31 +1477,49 @@ var render = function() {
                               _c(
                                 "v-card-actions",
                                 [
+                                  _vm.isActive(ration.id)
+                                    ? _c(
+                                        "v-btn",
+                                        {
+                                          attrs: { color: "primary", text: "" },
+                                          on: {
+                                            click: function($event) {
+                                              return _vm.openSettings(ration)
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _vm._v(
+                                            "\n                                настроить\n                            "
+                                          )
+                                        ]
+                                      )
+                                    : _vm._e(),
+                                  _vm._v(" "),
                                   _c(
                                     "v-btn",
                                     {
-                                      attrs: { color: "primary", text: "" },
+                                      attrs: { color: "black", text: "" },
                                       on: {
                                         click: function($event) {
-                                          return _vm.openSettings(ration)
+                                          return _vm.activateDeactivate(
+                                            ration.id
+                                          )
                                         }
                                       }
                                     },
                                     [
                                       _vm._v(
-                                        "\n                                настроить\n                            "
+                                        "\n                                " +
+                                          _vm._s(
+                                            _vm.isActive(ration.id)
+                                              ? "Убрать"
+                                              : "Вернуть"
+                                          ) +
+                                          "\n                            "
                                       )
                                     ]
-                                  ),
-                                  _vm._v(" "),
-                                  _c("v-btn", {
-                                    attrs: { color: "black", text: "" },
-                                    on: {
-                                      click: function($event) {
-                                        return _vm.openSettings(ration)
-                                      }
-                                    }
-                                  })
+                                  )
                                 ],
                                 1
                               )
@@ -2192,17 +2284,58 @@ var render = function() {
                                                     }
                                                   },
                                                   [
-                                                    _vm._v(
-                                                      "\n                                        " +
-                                                        _vm._s(i + 1) +
-                                                        ". " +
-                                                        _vm._s(ing.name) +
-                                                        "\n                                    "
-                                                    )
+                                                    _c("div", [
+                                                      _vm._v(
+                                                        "\n                                            " +
+                                                          _vm._s(i + 1) +
+                                                          ". " +
+                                                          _vm._s(ing.name) +
+                                                          "\n                                        "
+                                                      )
+                                                    ]),
+                                                    _vm._v(" "),
+                                                    ing.pivot.editable
+                                                      ? _c(
+                                                          "div",
+                                                          [
+                                                            _c(
+                                                              "v-btn",
+                                                              {
+                                                                attrs: {
+                                                                  "x-small": ""
+                                                                },
+                                                                on: {
+                                                                  click: function(
+                                                                    $event
+                                                                  ) {
+                                                                    return _vm.removeExtra(
+                                                                      ing.id
+                                                                    )
+                                                                  }
+                                                                }
+                                                              },
+                                                              [_vm._v("убрать")]
+                                                            )
+                                                          ],
+                                                          1
+                                                        )
+                                                      : _vm._e()
                                                   ]
                                                 )
                                               }
-                                            )
+                                            ),
+                                            _vm._v(" "),
+                                            _c("v-autocomplete", {
+                                              attrs: {
+                                                items: _vm.ingredients,
+                                                "item-text": "name",
+                                                "item-value": "id",
+                                                clearable: "",
+                                                outlined: "",
+                                                label: "Ингредиенты"
+                                              },
+                                              on: { change: _vm.addExtra }
+                                            })
                                           ],
                                           2
                                         )
@@ -2276,6 +2409,18 @@ var render = function() {
                               },
                               expression: "chosen_category"
                             }
+                          }),
+                          _vm._v(" "),
+                          _c("v-autocomplete", {
+                            attrs: {
+                              items: _vm.ingredients,
+                              "item-text": "name",
+                              "item-value": "id",
+                              clearable: "",
+                              outlined: "",
+                              label: "Ингредиенты"
+                            },
+                            on: { change: _vm.r1 }
                           })
                         ],
                         1
