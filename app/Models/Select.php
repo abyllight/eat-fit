@@ -47,29 +47,29 @@ class Select extends Model
         }, $this->ingredients()->get()->toArray());
     }
 
-    public function getStatusColor(int $color){
-        switch ($color){
-            case 0:
-                return '';
-            case 1:
-                return 'grey darken-1';
-            case 2:
-                return 'red lighten-3';
-            case 3:
-                return 'lime lighten-2';
-            case 5:
-                return 'cyan lighten-1';
+    public function getStatusColor(int $status): string
+    {
+        $color = '';
+
+        if ($status === self::REPLACEMENT){
+            $color = 'red lighten-3';
+        }else if ($status === self::LITE || $status === self::WITHOUT){
+            $color = 'lime lighten-2';
         }
+
+        return $color;
     }
 
-    public function getStatusColorExcel(int $color){
-        switch ($color){
-            case 2:
-                return 'EF9A9A';
-            case 3:
-                return 'DCE775';
-            case 5:
-                return '';
+    public function getStatusColorExcel(int $status): string
+    {
+        $color = '';
+
+        if ($status === self::REPLACEMENT){
+            $color = 'EF9A9A';
+        }else if ($status === self::LITE || $status === self::WITHOUT){
+            $color = 'DCE775';
         }
+
+        return $color;
     }
 }

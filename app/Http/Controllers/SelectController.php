@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\IngredientCollection;
 use App\Http\Resources\SelectCollection;
 use App\Models\Cuisine;
 use App\Models\Dish;
 use App\Models\Ingredient;
 use App\Models\Order;
+use App\Models\Ration;
 use App\Models\Select;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -290,9 +290,15 @@ class SelectController extends Controller
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
+        $rations = Ration::where('is_required', true)->orderBy('position')->get()->toArray();
+        $ration_names = array_map(function ($obj){
+            return $obj['name'];
+        }, $rations);
+
         $arrayHeader = [
-            ['#', 'Тэг', 'Клиент', 'ЗАВТРАК', 'II_ЗАВТРАК', 'ОБЕД_суп', 'ОБЕД_салат', 'ОБЕД_осн', 'ОБЕД_гарнир', 'ПОЛДНИК', 'УЖИН_осн', 'УЖИН_овощи', 'УЖИН_гарнир']
+            ['#', 'Тэг', 'Клиент']
         ];
+        array_push($arrayHeader[0], ...$ration_names);
 
         $sheet->fromArray($arrayHeader, NULL, 'A1');
 
@@ -393,7 +399,7 @@ class SelectController extends Controller
                 $sheet->setCellValue($letters[$i] . ($n+1), $content);
                 $sheet->getStyle($letters[$i] . ($n+1))->applyFromArray($center);
 
-                if ($s->status === Select::REPLACEMENT || $s->status === Select::WITHOUT){
+                if ($s->status === Select::REPLACEMENT || $s->status === Select::WITHOUT || $s->status === Select::LITE){
                     $sheet->getStyle($letters[$i] . ($n+1))
                         ->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB($s->getStatusColorExcel($s->status));
                 }
