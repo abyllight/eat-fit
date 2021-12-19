@@ -2036,7 +2036,14 @@ var render = function() {
                                                     key: ing.id,
                                                     staticClass:
                                                       "pa-3 mb-3 flex justify-center",
-                                                    attrs: { elevation: "1" }
+                                                    attrs: {
+                                                      elevation: "1",
+                                                      color: _vm.mix.includes(
+                                                        ing.id
+                                                      )
+                                                        ? "red lighten-3"
+                                                        : ""
+                                                    }
                                                   },
                                                   [
                                                     _c(

@@ -9,6 +9,7 @@ use App\Models\Dish;
 use App\Models\Ingredient;
 use App\Models\Order;
 use App\Models\Select;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -180,7 +181,14 @@ class SelectController extends Controller
         $select->ingredients()->detach($request->ingredient_id);
         $select->ingredients()->attach([$request->analog_id => ['analog_id' => $request->ingredient_id]]);
 
-        $select->status = Select::REPLACEMENT;
+        $dish = Dish::where('cuisine_id', $select->cuisine_id)->where('ration_id', $select->ration_id)->first();
+
+        if ($dish->id === $select->dish_id){
+            $select->status = Select::WITHOUT;
+        }else{
+            $select->status = Select::REPLACEMENT;
+        }
+
         $select->save();
 
         return response()->json([
@@ -202,14 +210,6 @@ class SelectController extends Controller
 
         $select->ingredients()->detach($request->analog_id);
         $select->ingredients()->attach($request->ingredient_id);
-
-        /*if ($select->status === Select::REPLACEMENT){
-            foreach ($select->ingredients as $select_ingredient){
-                if ($select_ingredient->pivot->analog_id){
-
-                }
-            }
-        }*/
 
         return response()->json([
             'status' => true,
@@ -321,7 +321,11 @@ class SelectController extends Controller
                 'horizontal' => Alignment::HORIZONTAL_CENTER,
                 'vertical' => Alignment::VERTICAL_CENTER,
                 'wrapText' => true
-            ]
+            ],
+            'font' => [
+                'bold' => true,
+                'size' => 9
+            ],
         ];
 
         $sheet->getStyle('A1:M1')->applyFromArray($blackStyleArray);
@@ -344,8 +348,11 @@ class SelectController extends Controller
         $spreadsheet->getActiveSheet()->getColumnDimension('M')->setWidth(24);
 
         $orders = Order::where('type', 1)->where('is_active', true)->orderBy('size')->get();
+        $letters = ['D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'];
         $n = 1;
         foreach ($orders as $key => $order){
+            $select = $order->select()->whereDate('created_at', Carbon::today())->orderBy('ration_id')->get();
+
             $n++;
             $sheet->setCellValue('A' . $n, $key+1);
             $sheet->mergeCells('A' . $n . ':A' . ($n + 1));
@@ -356,15 +363,44 @@ class SelectController extends Controller
             $sheet->getStyle('B' . $n)->getFont()->setBold(true);
             $sheet->getStyle('B' . $n)->getFont()->setSize(15);
 
-            $sheet->setCellValue('C' . $n, $order->name.' - '.$order->getSize($order->size));
+            $sheet->setCellValue('C' . $n, ($key+1).'/'.$order->name);
             $sheet->mergeCells('C' . $n . ':C' . ($n + 1));
             $sheet->getStyle('C' . $n)->applyFromArray($center);
 
-            $sheet->setCellValue('D' . $n, $order->name.' - '.$order->getSize($order->size));
-            $sheet->getStyle('D' . $n)->applyFromArray($center);
+            foreach ($select as $i => $s) {
+                $sheet->setCellValue($letters[$i] . $n, ($key+1).'/'.$order->name.' - '.$order->getSize($order->size).' - '. $s->ration->name);
+                $sheet->getStyle($letters[$i] . $n)->applyFromArray($center);
 
-            $sheet->setCellValue('D' . ($n+1), $order->name.' - '.$order->getSize($order->size));
-            $sheet->getStyle('D' . ($n+1))->applyFromArray($center);
+                $content = 'X';
+
+                if ($s->is_active){
+                    $content = $s->dish_name. "\n";
+
+                    if ($s->status === Select::WITHOUT){
+                        $dish = Dish::getDutyDishByRation($s->ration_id);
+                        $diff = array_diff($dish->getIngredientIds(), $s->getIngredientIds());
+                        if ($diff){
+                            foreach ($diff as $id){
+                                $ing = Ingredient::find($id);
+                                $content.='/без '. $ing->name;
+                            }
+                        }
+                    }
+
+                    $content.="\n".$s->description;
+                }
+
+                $sheet->setCellValue($letters[$i] . ($n+1), $content);
+                $sheet->getStyle($letters[$i] . ($n+1))->applyFromArray($center);
+
+                if ($s->status === Select::REPLACEMENT || $s->status === Select::WITHOUT){
+                    $sheet->getStyle($letters[$i] . ($n+1))
+                        ->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB($s->getStatusColorExcel($s->status));
+                }
+            }
+
+            /*$sheet->setCellValue('D' . ($n+1), $order->order_name.' - '.$order->order_tag);
+            $sheet->getStyle('D' . ($n+1))->applyFromArray($center);*/
 
             $n++;
         }

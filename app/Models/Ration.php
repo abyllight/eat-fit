@@ -17,4 +17,9 @@ class Ration extends Model
     {
         return $this->hasMany(Dish::class, 'ration_id', 'id');
     }
+
+    public function select()
+    {
+        return $this->hasMany(Select::class, 'ration_id', 'id');
+    }
 }

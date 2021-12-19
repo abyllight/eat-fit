@@ -54,4 +54,9 @@ class Dish extends Model
     {
         return Department::DEPARTMENTS[$this->department_id];
     }
+
+    public static function getDutyDishByRation($ration_id){
+        $cuisine = Cuisine::where('is_on_duty', true)->first();
+        return Dish::where('cuisine_id', $cuisine->id)->where('ration_id', $ration_id)->first();
+    }
 }

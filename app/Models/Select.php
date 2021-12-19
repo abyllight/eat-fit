@@ -10,7 +10,6 @@ class Select extends Model
     use HasFactory;
 
     const START = 0;
-    const NO = 1;
     const REPLACEMENT = 2;
     const WITHOUT = 3;
     const LITE = 5;
@@ -23,6 +22,11 @@ class Select extends Model
     public function cuisine()
     {
         return $this->belongsTo(Cuisine::class, 'cuisine_id', 'id');
+    }
+
+    public function ration()
+    {
+        return $this->belongsTo(Ration::class, 'ration_id', 'id');
     }
 
     public function ingredients()
@@ -55,6 +59,17 @@ class Select extends Model
                 return 'lime lighten-2';
             case 5:
                 return 'cyan lighten-1';
+        }
+    }
+
+    public function getStatusColorExcel(int $color){
+        switch ($color){
+            case 2:
+                return 'EF9A9A';
+            case 3:
+                return 'DCE775';
+            case 5:
+                return '';
         }
     }
 }

@@ -312,7 +312,7 @@
                                             :key="ing.id"
                                             elevation="1"
                                             class="pa-3 mb-3 flex justify-center"
-
+                                            :color="mix.includes(ing.id) ? 'red lighten-3' : ''"
                                         >
                                             <div class="flex flex-row">
 
