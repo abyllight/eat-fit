@@ -391,6 +391,8 @@ class SelectController extends Controller
                                 $content.='/без '. $ing->name;
                             }
                         }
+                    }elseif ($s->status === Select::LITE){
+                        $content = '0';
                     }
 
                     $content.="\n".$s->description;
