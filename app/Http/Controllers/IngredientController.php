@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\IngredientCollection;
 use App\Models\Dish;
 use App\Models\Ingredient;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -21,15 +22,16 @@ class IngredientController extends Controller
         $iiko = new IikoController();
         $token = $iiko->getAuthToken();
 
-        $dishes = Dish::where('cuisine_id', $id)->get();
+        $dishes = Dish::where('cuisine_id', $id)->where('ration_id', 7)->get();
+        $today = Carbon::today()->format('Y-m-d');
 
         foreach ($dishes as $dish){
-            $link = '/resto/api/v2/assemblyCharts/getPrepared?date=2021-10-12&productId=' . $dish->iiko_id . '&key=';
+            $link = '/resto/api/v2/assemblyCharts/getPrepared?date='.$today.'&productId=' . $dish->iiko_id . '&key=';
             $ingredients = $iiko->doRequest($token, $link);
 
             if (is_array($ingredients)) {
                 $ingredients = $ingredients['preparedCharts'][0]['items'];
-
+                $ings = [];
                 foreach ($ingredients as $ingredient) {
                     $link2 = '/resto/api/v2/entities/products/list?types=GOODS&ids=' . $ingredient['productId'] . '&key=';
                     $goods = $iiko->doRequest($token, $link2);
@@ -39,10 +41,10 @@ class IngredientController extends Controller
                             ['iiko_id' => $goods[0]['id']],
                             ['iiko_name' => $goods[0]['name'], 'name' => $goods[0]['name']]
                         );
-
-                        $dish->ingredients()->syncWithoutDetaching($i, false);
+                        $ings[] = $i->id;
                     }
                 }
+                $dish->ingredients()->sync($ings);
             }else {
                 return response()->json([
                     'status' => false,
