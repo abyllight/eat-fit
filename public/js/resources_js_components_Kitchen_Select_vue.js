@@ -530,6 +530,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Select',
@@ -578,7 +579,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       chosen_category: {},
       chosen_ingredient: {},
       target_ingredient: null,
-      errors: []
+      errors: [],
+      r1_val: null
     };
   },
   created: function created() {
@@ -1138,6 +1140,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.chosen_category = {};
       this.chosen_ingredient = {};
       this.target_ingredient = null;
+      this.r1_val = null;
       this.dialog2 = false;
     },
     saveDetails: function saveDetails() {
@@ -1151,8 +1154,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
     },
     exportExcel: function exportExcel() {},
-    r1: function r1(id) {
-      this.replaceIngredient(id);
+    r1: function r1() {
+      this.replaceIngredient(this.r1_val);
     },
     addExtra: function addExtra(id) {
       var _this22 = this;
@@ -2426,7 +2429,14 @@ var render = function() {
                               outlined: "",
                               label: "Ингредиенты"
                             },
-                            on: { change: _vm.r1 }
+                            on: { change: _vm.r1 },
+                            model: {
+                              value: _vm.r1_val,
+                              callback: function($$v) {
+                                _vm.r1_val = $$v
+                              },
+                              expression: "r1_val"
+                            }
                           })
                         ],
                         1

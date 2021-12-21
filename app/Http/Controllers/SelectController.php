@@ -129,9 +129,9 @@ class SelectController extends Controller
         $select->ingredients()->attach($request->ingredient_id);
 
         if ($select->status === Select::WITHOUT){
-            $dish = Dish::where('cuisine_id', $select->cuisine_id)->where('ration_id', $select->ration_id)->first();
-            $diff = array_diff($dish->getIngredientIds(), $select->getIngredientIds());
-            if (!$diff){
+            $has_removed_ingredients = $this->hasRemovedIngredients($select);
+
+            if (!$has_removed_ingredients){
                 $select->status = Select::LITE;
                 $select->save();
             }
@@ -181,13 +181,7 @@ class SelectController extends Controller
         $select->ingredients()->detach($request->ingredient_id);
         $select->ingredients()->attach([$request->analog_id => ['analog_id' => $request->ingredient_id]]);
 
-        $dish = Dish::where('cuisine_id', $select->cuisine_id)->where('ration_id', $select->ration_id)->first();
-
-        if ($dish->id === $select->dish_id){
-            $select->status = Select::WITHOUT;
-        }else{
-            $select->status = Select::REPLACEMENT;
-        }
+        $select->status = Select::REPLACEMENT;
 
         $select->save();
 
@@ -211,11 +205,45 @@ class SelectController extends Controller
         $select->ingredients()->detach($request->analog_id);
         $select->ingredients()->attach($request->ingredient_id);
 
+        $dish = Dish::where('cuisine_id', $select->cuisine_id)->where('ration_id', $select->ration_id)->first();
+
+        if ($dish->id === $select->dish_id){
+            $has_replaced_ingredients = $this->hasReplacedIngredients($select);
+
+            if (!$has_replaced_ingredients){
+                $has_removed_ingredients = $this->hasRemovedIngredients($select);
+                if ($has_removed_ingredients){
+                    $select->status = Select::WITHOUT;
+                }else{
+                    $select->status = Select::LITE;
+                }
+                $select->save();
+            }
+        }
+
         return response()->json([
             'status' => true,
             'msg' => 'Success',
             'select' => new SelectCollection($select)
         ]);
+    }
+
+    public function hasReplacedIngredients(Select $select): bool
+    {
+        foreach ($select->ingredients as $ingredient){
+            if ($ingredient->pivot->analog_id){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function hasRemovedIngredients(Select $select): bool
+    {
+        $dish = Dish::where('cuisine_id', $select->cuisine_id)->where('ration_id', $select->ration_id)->first();
+        $diff = array_diff($dish->getIngredientIds(), $select->getIngredientIds());
+        return count($diff) > 0;
     }
 
     public function activateDeactivate(Request $request){

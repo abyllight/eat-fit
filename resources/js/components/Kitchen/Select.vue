@@ -415,6 +415,7 @@
                             >
                             </v-select>
                             <v-autocomplete
+                                v-model="r1_val"
                                 :items="ingredients"
                                 item-text="name"
                                 item-value="id"
@@ -538,7 +539,8 @@
             chosen_category: {},
             chosen_ingredient: {},
             target_ingredient: null,
-            errors: []
+            errors: [],
+            r1_val: null
         }),
         created() {
             this.getOrders()
@@ -938,6 +940,7 @@
                 this.chosen_category = {}
                 this.chosen_ingredient = {}
                 this.target_ingredient = null
+                this.r1_val = null
                 this.dialog2 = false
             },
             saveDetails(){
@@ -952,8 +955,8 @@
                     })
             },
             exportExcel(){},
-            r1(id){
-                this.replaceIngredient(id)
+            r1(){
+                this.replaceIngredient(this.r1_val)
             },
             addExtra(id){
                 if (!id) return
