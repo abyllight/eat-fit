@@ -22,7 +22,7 @@ class IngredientController extends Controller
         $iiko = new IikoController();
         $token = $iiko->getAuthToken();
 
-        $dishes = Dish::where('cuisine_id', $id)->where('ration_id', 7)->get();
+        $dishes = Dish::where('cuisine_id', $id)->get();
         $today = Carbon::today()->format('Y-m-d');
 
         foreach ($dishes as $dish){
