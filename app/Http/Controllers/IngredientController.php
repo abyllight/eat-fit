@@ -22,7 +22,7 @@ class IngredientController extends Controller
         $iiko = new IikoController();
         $token = $iiko->getAuthToken();
 
-        $dishes = Dish::where('cuisine_id', $id)->get();
+        $dishes = Dish::where('cuisine_id', $id)->where('iiko_id','!=', null)->orderBy('ration_id')->get();
         $today = Carbon::today()->format('Y-m-d');
 
         foreach ($dishes as $dish){
@@ -48,7 +48,7 @@ class IngredientController extends Controller
             }else {
                 return response()->json([
                     'status' => false,
-                    'msg' => $ingredients
+                    'msg' => $ingredients. 'asds'
                 ]);
             }
         }

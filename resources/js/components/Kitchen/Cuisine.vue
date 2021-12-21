@@ -367,6 +367,7 @@
                 await axios
                     .get('/api/ingredients/iiko/'+id)
                     .then(response => {
+                        console.log(response)
                         this.$store.dispatch('showAlert', {
                             'isVisible': true,
                             'msg': response.data.msg,

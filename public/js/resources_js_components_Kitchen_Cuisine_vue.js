@@ -460,6 +460,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _this7.loading = true;
                 _context6.next = 4;
                 return axios.get('/api/ingredients/iiko/' + id).then(function (response) {
+                  console.log(response);
+
                   _this7.$store.dispatch('showAlert', {
                     'isVisible': true,
                     'msg': response.data.msg,
