@@ -205,6 +205,15 @@
                                         dense
                                         clearable
                                     ></v-text-field>
+                                    <v-select
+                                        v-model="dish.ration_id"
+                                        :items="all_rations"
+                                        dense
+                                        item-text="name"
+                                        item-value="id"
+                                        outlined
+                                        label="Рационы"
+                                    ></v-select>
                                     <v-autocomplete
                                         v-model="dish.department_id"
                                         :items="departments"
@@ -250,6 +259,7 @@
             ingredients: [],
             departments: [],
             rations: [],
+            all_rations: [],
             cuisine: {},
             dish: {
                 name: '',
@@ -271,6 +281,7 @@
             this.getCuisines()
             this.getIngredients()
             this.getDepartments()
+            this.getAllRations()
         },
         methods: {
             async getCuisines() {
@@ -303,6 +314,16 @@
                     .get('/api/departments')
                     .then(response => {
                         this.departments = response.data
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+            },
+            async getAllRations(){
+                await axios
+                    .get('/api/rations/required')
+                    .then(response => {
+                        this.all_rations = response.data
                     })
                     .catch(error => {
                         console.log(error)
