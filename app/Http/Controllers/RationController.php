@@ -12,12 +12,12 @@ class RationController extends Controller
 {
     public function index(): JsonResponse
     {
-        return response()->json(RationCollection::collection(Ration::orderBy('position')->get()));
+        return response()->json(RationCollection::collection(Ration::all()));
     }
 
     public function getRequiredRations(): JsonResponse
     {
-        return response()->json(RationCollection::collection(Ration::where('is_required', true)->orderBy('position')->get()));
+        return response()->json(RationCollection::collection(Ration::where('is_required', true)->get()));
     }
 
     public function getRequired($id): JsonResponse
@@ -37,7 +37,7 @@ class RationController extends Controller
         });
         $diff = $rations->diff($dish_rations);
 
-        return response()->json(RationCollection::collection($diff->sortBy('position')));
+        return response()->json(RationCollection::collection($diff));
     }
 
     public function store(Request $request): JsonResponse
@@ -49,7 +49,6 @@ class RationController extends Controller
         $ration = new Ration();
         $ration->name = $request->name;
         $ration->is_required = $request->is_required;
-        $ration->position = Ration::max('position') + 1;
         $ration->save();
 
         return response()->json([

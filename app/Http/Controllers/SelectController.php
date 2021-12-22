@@ -314,11 +314,65 @@ class SelectController extends Controller
         ]);
     }
 
+    public function showIngredient(Request $request){
+        $select = Select::find($request->select_id);
+        $ingredient = Ingredient::find($request->ingredient_id);
+
+        if (!$select){
+            return response()->json([
+                'status' => false,
+                'msg' => 'Select not found'
+            ]);
+        }
+
+        if (!$ingredient){
+            return response()->json([
+                'status' => false,
+                'msg' => 'Ingredient not found'
+            ]);
+        }
+
+        $select->ingredients()->updateExistingPivot($request->ingredient_id, ['is_visible' => true]);
+
+        return response()->json([
+            'status' => true,
+            'msg' => 'Success',
+            'data' => new SelectCollection($select)
+        ]);
+    }
+
+    public function hideIngredient(Request $request){
+        $select = Select::find($request->select_id);
+        $ingredient = Ingredient::find($request->ingredient_id);
+
+        if (!$select){
+            return response()->json([
+                'status' => false,
+                'msg' => 'Select not found'
+            ]);
+        }
+
+        if (!$ingredient){
+            return response()->json([
+                'status' => false,
+                'msg' => 'Ingredient not found'
+            ]);
+        }
+
+        $select->ingredients()->updateExistingPivot($request->ingredient_id, ['is_visible' => false]);
+
+        return response()->json([
+            'status' => true,
+            'msg' => 'Success',
+            'data' => new SelectCollection($select)
+        ]);
+    }
+
     public function export(){
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
-        $rations = Ration::where('is_required', true)->orderBy('position')->get()->toArray();
+        $rations = Ration::where('is_required', true)->get()->toArray();
         $ration_names = array_map(function ($obj){
             return $obj['name'];
         }, $rations);
@@ -385,7 +439,7 @@ class SelectController extends Controller
         $letters = ['D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'];
         $n = 1;
         foreach ($orders as $key => $order){
-            $select = $order->select()->whereDate('created_at', Carbon::today())->orderBy('ration_id')->get();
+            $select = $order->select()->whereDate('created_at', Carbon::today())->get();
 
             $n++;
             $sheet->setCellValue('A' . $n, $key+1);
@@ -421,6 +475,11 @@ class SelectController extends Controller
                         }
                     }elseif ($s->status === Select::LITE){
                         $content = '0';
+                    }elseif ($s->status === Select::REPLACEMENT){
+                        $ingredients = $s->ingredients()->where('is_visible', true)->get();
+                        foreach ($ingredients as $ingredient){
+                            $content.= $ingredient->name.'+';
+                        }
                     }
 
                     $content.="\n".$s->description;

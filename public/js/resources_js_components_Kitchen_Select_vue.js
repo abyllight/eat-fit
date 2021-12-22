@@ -531,6 +531,24 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Select',
@@ -580,7 +598,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       chosen_ingredient: {},
       target_ingredient: null,
       errors: [],
-      r1_val: null
+      r1_val: null,
+      r2_val: null
     };
   },
   created: function created() {
@@ -1166,6 +1185,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         ingredient_id: id
       }).then(function (response) {
         _this22.result = response.data.data;
+        _this22.r2_val = null;
       })["catch"](function (error) {
         console.log(error);
       });
@@ -1178,6 +1198,30 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         ingredient_id: id
       }).then(function (response) {
         _this23.result = response.data.data;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    showIngredient: function showIngredient(id) {
+      var _this24 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/show/ingredient', {
+        select_id: this.result.id,
+        ingredient_id: id
+      }).then(function (response) {
+        _this24.result = response.data.data;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    hideIngredient: function hideIngredient(id) {
+      var _this25 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/hide/ingredient', {
+        select_id: this.result.id,
+        ingredient_id: id
+      }).then(function (response) {
+        _this25.result = response.data.data;
       })["catch"](function (error) {
         console.log(error);
       });
@@ -2281,8 +2325,7 @@ var render = function() {
                                                   "v-sheet",
                                                   {
                                                     key: i,
-                                                    staticClass:
-                                                      "pa-3 mb-3 flex justify-center",
+                                                    staticClass: "pa-3 mb-3",
                                                     attrs: {
                                                       elevation: "1",
                                                       color: _vm.mix.includes(
@@ -2293,43 +2336,132 @@ var render = function() {
                                                     }
                                                   },
                                                   [
-                                                    _c("div", [
-                                                      _vm._v(
-                                                        "\n                                            " +
-                                                          _vm._s(i + 1) +
-                                                          ". " +
-                                                          _vm._s(ing.name) +
-                                                          "\n                                        "
-                                                      )
-                                                    ]),
-                                                    _vm._v(" "),
-                                                    ing.pivot.editable
-                                                      ? _c(
-                                                          "div",
-                                                          [
-                                                            _c(
-                                                              "v-btn",
+                                                    _c(
+                                                      "v-row",
+                                                      [
+                                                        ing.pivot.is_visible
+                                                          ? _c(
+                                                              "v-col",
                                                               {
                                                                 attrs: {
-                                                                  "x-small": ""
-                                                                },
-                                                                on: {
-                                                                  click: function(
-                                                                    $event
-                                                                  ) {
-                                                                    return _vm.removeExtra(
-                                                                      ing.id
-                                                                    )
-                                                                  }
+                                                                  cols: "1"
                                                                 }
                                                               },
-                                                              [_vm._v("убрать")]
+                                                              [
+                                                                _c(
+                                                                  "v-icon",
+                                                                  {
+                                                                    attrs: {
+                                                                      left: ""
+                                                                    }
+                                                                  },
+                                                                  [
+                                                                    _vm._v(
+                                                                      "\n                                                    mdi-checkbox-marked-circle\n                                                "
+                                                                    )
+                                                                  ]
+                                                                )
+                                                              ],
+                                                              1
                                                             )
-                                                          ],
-                                                          1
-                                                        )
-                                                      : _vm._e()
-                                                  ]
+                                                          : _vm._e(),
+                                                        _vm._v(" "),
+                                                        _c("v-col", [
+                                                          _vm._v(
+                                                            "\n                                                " +
+                                                              _vm._s(i + 1) +
+                                                              ". " +
+                                                              _vm._s(ing.name) +
+                                                              "\n                                            "
+                                                          )
+                                                        ])
+                                                      ],
+                                                      1
+                                                    ),
+                                                    _vm._v(" "),
+                                                    _c(
+                                                      "v-row",
+                                                      [
+                                                        _vm.result.status === 2
+                                                          ? _c(
+                                                              "v-col",
+                                                              [
+                                                                _c(
+                                                                  "v-btn",
+                                                                  {
+                                                                    attrs: {
+                                                                      "x-small":
+                                                                        ""
+                                                                    },
+                                                                    on: {
+                                                                      click: function(
+                                                                        $event
+                                                                      ) {
+                                                                        ing
+                                                                          .pivot
+                                                                          .is_visible
+                                                                          ? _vm.hideIngredient(
+                                                                              ing.id
+                                                                            )
+                                                                          : _vm.showIngredient(
+                                                                              ing.id
+                                                                            )
+                                                                      }
+                                                                    }
+                                                                  },
+                                                                  [
+                                                                    _vm._v(
+                                                                      _vm._s(
+                                                                        ing
+                                                                          .pivot
+                                                                          .is_visible
+                                                                          ? "не показывать"
+                                                                          : "показывать"
+                                                                      )
+                                                                    )
+                                                                  ]
+                                                                )
+                                                              ],
+                                                              1
+                                                            )
+                                                          : _vm._e(),
+                                                        _vm._v(" "),
+                                                        ing.pivot.editable
+                                                          ? _c(
+                                                              "v-col",
+                                                              [
+                                                                _c(
+                                                                  "v-btn",
+                                                                  {
+                                                                    attrs: {
+                                                                      "x-small":
+                                                                        ""
+                                                                    },
+                                                                    on: {
+                                                                      click: function(
+                                                                        $event
+                                                                      ) {
+                                                                        return _vm.removeExtra(
+                                                                          ing.id
+                                                                        )
+                                                                      }
+                                                                    }
+                                                                  },
+                                                                  [
+                                                                    _vm._v(
+                                                                      "убрать"
+                                                                    )
+                                                                  ]
+                                                                )
+                                                              ],
+                                                              1
+                                                            )
+                                                          : _vm._e()
+                                                      ],
+                                                      1
+                                                    )
+                                                  ],
+                                                  1
                                                 )
                                               }
                                             ),
@@ -2343,7 +2475,14 @@ var render = function() {
                                                 outlined: "",
                                                 label: "Ингредиенты"
                                               },
-                                              on: { change: _vm.addExtra }
+                                              on: { change: _vm.addExtra },
+                                              model: {
+                                                value: _vm.r2_val,
+                                                callback: function($$v) {
+                                                  _vm.r2_val = $$v
+                                                },
+                                                expression: "r2_val"
+                                              }
                                             })
                                           ],
                                           2

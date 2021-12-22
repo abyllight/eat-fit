@@ -92,6 +92,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('select/activate-deactivate', [SelectController::class, 'activateDeactivate']);
     Route::post('select/add/extra', [SelectController::class, 'addExtraIngredient']);
     Route::post('select/remove/extra', [SelectController::class, 'removeExtraIngredient']);
+    Route::post('select/show/ingredient', [SelectController::class, 'showIngredient']);
+    Route::post('select/hide/ingredient', [SelectController::class, 'hideIngredient']);
     Route::get('/select/export', [SelectController::class, 'export']);
     Route::get('/select/order/{id}', [SelectController::class, 'getSelectByOrder']);
 

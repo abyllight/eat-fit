@@ -32,7 +32,7 @@ class Select extends Model
     public function ingredients()
     {
         return $this->belongsToMany(Ingredient::class, 'select_ingredients', 'select_id', 'ingredient_id')
-                ->withPivot('analog_id', 'editable');
+                ->withPivot('analog_id', 'editable', 'is_visible');
     }
 
     public function dish()

@@ -363,18 +363,36 @@
                                             v-for="(ing, i) in result.ingredients"
                                             :key="i"
                                             elevation="1"
-                                            class="pa-3 mb-3 flex justify-center"
+                                            class="pa-3 mb-3"
                                             :color="mix.includes(ing.id) ? 'red lighten-3' : ''"
                                         >
-                                            <div>
-                                                {{i+1}}. {{ing.name}}
-                                            </div>
-                                            <div v-if="ing.pivot.editable">
-                                                <v-btn x-small @click="removeExtra(ing.id)">убрать</v-btn>
-                                            </div>
+                                            <v-row>
+                                                <v-col v-if="ing.pivot.is_visible" cols="1">
+                                                    <v-icon
+                                                        left
+                                                    >
+                                                        mdi-checkbox-marked-circle
+                                                    </v-icon>
+                                                </v-col>
+                                                <v-col>
+                                                    {{i+1}}. {{ing.name}}
+                                                </v-col>
+                                            </v-row>
+                                            <v-row>
+                                                <v-col v-if="result.status === 2">
+                                                    <v-btn
+                                                        x-small
+                                                        @click="ing.pivot.is_visible ? hideIngredient(ing.id) : showIngredient(ing.id)"
+                                                    >{{ing.pivot.is_visible ? 'не показывать' : 'показывать'}}</v-btn>
+                                                </v-col>
+                                                <v-col v-if="ing.pivot.editable">
+                                                    <v-btn x-small @click="removeExtra(ing.id)">убрать</v-btn>
 
+                                                </v-col>
+                                            </v-row>
                                         </v-sheet>
                                         <v-autocomplete
+                                            v-model="r2_val"
                                             :items="ingredients"
                                             item-text="name"
                                             item-value="id"
@@ -540,7 +558,8 @@
             chosen_ingredient: {},
             target_ingredient: null,
             errors: [],
-            r1_val: null
+            r1_val: null,
+            r2_val: null
         }),
         created() {
             this.getOrders()
@@ -967,6 +986,7 @@
                     })
                     .then(response => {
                         this.result = response.data.data
+                        this.r2_val = null
                     })
                     .catch(error => {
                         console.log(error)
@@ -975,6 +995,33 @@
             removeExtra(id){
                 axios
                     .post('/api/select/remove/extra', {
+                        select_id: this.result.id,
+                        ingredient_id: id
+                    })
+                    .then(response => {
+                        this.result = response.data.data
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+            },
+            showIngredient(id){
+                axios
+                    .post('/api/select/show/ingredient', {
+                        select_id: this.result.id,
+                        ingredient_id: id
+                    })
+                    .then(response => {
+                        this.result = response.data.data
+
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+            },
+            hideIngredient(id){
+                axios
+                    .post('/api/select/hide/ingredient', {
                         select_id: this.result.id,
                         ingredient_id: id
                     })
