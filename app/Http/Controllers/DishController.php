@@ -31,23 +31,51 @@ class DishController extends Controller
             if (is_array($dishes)){
                 foreach ($dishes as $dish) {
                     $first = substr($dish['name'], 0, 1);
-                    if (!in_array($first, $array) && is_numeric($first)) {
-                        Dish::updateOrCreate(
-                            ['ration_id' => (int)$first, 'cuisine_id' => $cuisine->id],
+
+                    if (!is_numeric($first)){
+                        continue;
+                    }
+
+                    $first = (int)$first;
+
+                    if (!in_array($first, $array)) {
+                        $array[] = $first;
+                        switch ($first){
+                            case 4:
+                                $first = 5;
+                                break;
+                            case 5:
+                                $first = 4;
+                                break;
+                            case 6:
+                                $first = 7;
+                                break;
+                            case 7:
+                                $first = 8;
+                                break;
+                        }
+
+                        $d = Dish::updateOrCreate(
+                            ['ration_id' => $first, 'cuisine_id' => $cuisine->id],
                             [
                                 'iiko_name' => substr($dish['name'], 4),
-                                'name' => substr($dish['name'], 4),
                                 'iiko_id' => $dish['id'],
+                                'ration_id' => $first,
+                                'cuisine_id' => $cuisine->id,
                                 'is_custom' => false
                             ]
                         );
+
+                        if (!$d->name){
+                            $d->name = $d->iiko_name;
+                            $d->save();
+                        }
                     }
-                    $array[] = $first;
                 }
             }else {
                 return response()->json([
                     'status' => false,
-                    'msg' => $dishes
+                    'msg' => $dishes. 'asdas'
                 ]);
             }
         }

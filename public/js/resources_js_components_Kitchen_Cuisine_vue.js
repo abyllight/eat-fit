@@ -467,6 +467,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     'color': response.data.status ? 'green' : 'error',
                     'type': response.data.status ? 'success' : 'error'
                   });
+
+                  _this7.getCuisines();
                 })["catch"](function (error) {
                   console.log(error);
                 })["finally"](function () {
@@ -967,7 +969,8 @@ var render = function() {
                                             _vm._v(
                                               "[" +
                                                 _vm._s(dish.ration.name) +
-                                                "]"
+                                                "] " +
+                                                _vm._s(dish.i_name)
                                             )
                                           ]
                                         )

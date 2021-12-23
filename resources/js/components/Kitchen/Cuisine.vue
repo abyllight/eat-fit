@@ -89,7 +89,7 @@
                         >
                             <v-list-item-content>
                                 <v-list-item-title>{{index+1}}. {{dish.name}}</v-list-item-title>
-                                <v-list-item-subtitle v-if="dish.ration"><span class="font-weight-bold">[{{dish.ration.name}}]</span></v-list-item-subtitle>
+                                <v-list-item-subtitle v-if="dish.ration"><span class="font-weight-bold">[{{dish.ration.name}}] {{dish.i_name}}</span></v-list-item-subtitle>
                             </v-list-item-content>
                             <v-list-item-action>
                                 <v-btn icon @click="editDish(dish)">
@@ -373,6 +373,7 @@
                             'color': response.data.status ? 'green' : 'error',
                             'type': response.data.status ? 'success' : 'error',
                         })
+                        this.getCuisines()
                     })
                     .catch(error => {
                         console.log(error)
