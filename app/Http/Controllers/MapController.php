@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\OrderCollection;
+use App\Http\Resources\OrderLogisticCollection;
 use App\Models\Order;
 use App\Models\Week;
 use Illuminate\Http\JsonResponse;
@@ -33,7 +33,7 @@ class MapController extends Controller
 
         $query = $query->get();
 
-        $collection = OrderCollection::collection($query);
+        $collection = OrderLogisticCollection::collection($query);
 
         return response()->json($collection);
     }

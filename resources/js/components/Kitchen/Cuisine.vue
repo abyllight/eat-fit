@@ -22,26 +22,23 @@
             </v-btn>
         </v-row>
         <v-row>
-            <v-col sm="12" md="2" lg="2">
-                <v-list dense>
-                    <v-subheader>Кухни мира</v-subheader>
-                    <v-list-item-group
-                        color="primary"
-                    >
-                        <v-list-item
-                            v-for="(cuisine, i) in cuisines"
-                            :key="i"
-                            :class="cuisine.duty ? 'light-green lighten-3': ''"
-                            @click="showDetails(cuisine)"
-                        >
-                            <v-list-item-content>
-                                <v-list-item-title>{{i+1}}. {{cuisine.name}}</v-list-item-title>
-                            </v-list-item-content>
-                        </v-list-item>
-                    </v-list-item-group>
-                </v-list>
+            <v-col>
+                <v-chip
+                    v-for="(c, key) in cuisines"
+                    :key="key"
+                    class="ma-1"
+                    :class="c.duty ? 'green': ''"
+                    :disabled="disabled"
+                    @click="showDetails(c)"
+                    small
+                    dark
+                >
+                    {{key+1}}. {{c.name}}
+                </v-chip>
             </v-col>
-            <v-col sm="12" md="10" lg="6">
+        </v-row>
+        <v-row>
+            <v-col sm="12" md="6">
                 <v-card
                     v-if="cuisine"
                     :color="cuisine.duty ? 'light-green lighten-3' : 'light-blue lighten-3'"
@@ -117,7 +114,7 @@
                     </v-card-actions>
                 </v-card>
             </v-col>
-            <v-col sm="12" lg="4">
+            <v-col sm="12" md="6">
                 <v-card
                     v-if="dish"
                     :disabled="disabled"
@@ -425,7 +422,7 @@
             },
             async setCuisine(id){
                 await axios
-                    .post('/api/cuisine/duty/set', {
+                    .post('/api/cuisine/duty', {
                         id: id
                     })
                     .then(response => {

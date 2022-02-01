@@ -109,7 +109,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("h2", [
-      _vm._v("Здравствуй, " + _vm._s(this.$store.state.user.name) + "!")
+      _vm._v("Здравствуй, " + _vm._s(this.$store.state.auth.user.name) + "!")
     ])
   ])
 }

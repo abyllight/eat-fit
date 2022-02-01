@@ -60,7 +60,7 @@
                                 <td>{{ index + 1 }}</td>
                                 <td :class="order.color">{{ order.name }}</td>
                                 <td :class="order.color">{{ order.tag }}</td>
-                                <td :class="order.has_bag === 'Ланчбэг' ? 'red' : ''">{{ order.has_bag }}</td>
+                                <td :class="order.has_bag ? 'red' : ''">{{ order.has_bag ? 'Ланчбэг' : '' }}</td>
                                 <td>{{ order.phone }}</td>
                                 <td>{{ order.time }}</td>
                                 <td>{{ order.address }}</td>
@@ -91,7 +91,7 @@ export default {
     methods: {
         async getData(){
             await axios
-                .get('/api/list/data')
+                .get('/api/list/stat')
                 .then(response => {
                     this.total = response.data.total
                     this.assigned = response.data.assigned
@@ -101,7 +101,6 @@ export default {
                 })
         },
         async fetchCouriers() {
-            this.couriers = []
             await axios
                 .get('/api/couriers')
                 .then(response => {
@@ -122,13 +121,12 @@ export default {
             })
 
             axios
-                .post('/api/list', {
+                .post('/api/list/sort', {
                     order_id: order_id,
                     courier_id: courier_id,
                     ids: ids
                 })
-                .then(response => {
-                   console.log(response)
+                .then(() => {
                 })
                 .catch(error => {
                     console.log(error)
@@ -137,8 +135,7 @@ export default {
         excel(){
             axios
                 .get('/api/list/export')
-                .then(response => {
-                    console.log(response)
+                .then(() => {
                 })
                 .catch(error => {
                     console.log(error)

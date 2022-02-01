@@ -276,7 +276,6 @@ export default {
                     this.orders = response.data
                 })
                 .catch(error => {
-                    console.log(error)
                     this.$store.dispatch('showAlert', {
                         'isVisible': true,
                         'msg': error.message,
@@ -284,52 +283,6 @@ export default {
                         'type': 'error'
                     })
                 })
-        },
-        async geocode() {
-            this.loading = true
-            await axios
-                .get('/api/map/geocode')
-                .then(response => {
-                    this.$store.dispatch('showAlert', {
-                        'isVisible': true,
-                        'msg': response.data.message,
-                        'color': response.status ? 'green' : 'error',
-                        'type': response.status ? 'success' : 'error',
-                    })
-                })
-                .catch(error => {
-                    console.log(error)
-                    this.$store.dispatch('showAlert', {
-                        'isVisible': true,
-                        'msg': error.message,
-                        'color': 'error',
-                        'type': 'error'
-                    })
-                })
-                .finally(() => (this.loading = false))
-        },
-        async setInterval() {
-            this.loading = true
-            await axios
-                .get('/api/map/interval')
-                .then(response => {
-                    this.$store.dispatch('showAlert', {
-                        'isVisible': true,
-                        'msg': response.data.message,
-                        'color': response.status ? 'green' : 'error',
-                        'type': response.status ? 'success' : 'error',
-                    })
-                })
-                .catch(error => {
-                    console.log(error)
-                    this.$store.dispatch('showAlert', {
-                        'isVisible': true,
-                        'msg': error.message,
-                        'color': 'error',
-                        'type': 'error'
-                    })
-                })
-                .finally(() => (this.loading = false))
         },
         setOrder(target){
             let footer = target.properties.get('balloonContentFooter').split(' ')
@@ -374,11 +327,11 @@ export default {
                     value.tag + '<br/>' +
                     value.yaddress,
                 balloonContentFooter: value.id + ' ' + value.courier_id,
-                iconContent: value.courier ? value.courier.name : '',
+                iconContent: value.courier_name,
                 hintContent: value.name + '<br/' + value.tag + '<br/>' + value.time
             }, {
                 preset: this.colors[value.interval],
-                zIndex: value.courier ? 1 : 1000
+                zIndex: value.courier_id ? 1 : 1000
             });
         },
         displayPlaceMarks(data){

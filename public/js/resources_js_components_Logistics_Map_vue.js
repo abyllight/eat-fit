@@ -315,8 +315,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                   _this3.orders = response.data;
                 })["catch"](function (error) {
-                  console.log(error);
-
                   _this3.$store.dispatch('showAlert', {
                     'isVisible': true,
                     'msg': error.message,
@@ -333,7 +331,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee2);
       }))();
     },
-    geocode: function geocode() {
+    setOrder: function setOrder(target) {
+      var footer = target.properties.get('balloonContentFooter').split(' ');
+      var id = parseInt(footer[0]);
+      this.order = this.orders.find(function (item) {
+        return item.id === id;
+      });
+      this.courier_id = this.order.courier_id;
+    },
+    fetchCouriers: function fetchCouriers() {
       var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
@@ -341,26 +347,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _this4.loading = true;
+                _this4.couriers = [];
                 _context3.next = 3;
-                return axios.get('/api/map/geocode').then(function (response) {
-                  _this4.$store.dispatch('showAlert', {
-                    'isVisible': true,
-                    'msg': response.data.message,
-                    'color': response.status ? 'green' : 'error',
-                    'type': response.status ? 'success' : 'error'
+                return axios.get('/api/couriers').then(function (response) {
+                  _this4.couriers = response.data.data;
+
+                  _this4.couriers.unshift({
+                    id: 0,
+                    name: 'Не выбрано'
                   });
                 })["catch"](function (error) {
                   console.log(error);
-
-                  _this4.$store.dispatch('showAlert', {
-                    'isVisible': true,
-                    'msg': error.message,
-                    'color': 'error',
-                    'type': 'error'
-                  });
-                })["finally"](function () {
-                  return _this4.loading = false;
                 });
 
               case 3:
@@ -371,91 +368,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee3);
       }))();
     },
-    setInterval: function setInterval() {
-      var _this5 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
-          while (1) {
-            switch (_context4.prev = _context4.next) {
-              case 0:
-                _this5.loading = true;
-                _context4.next = 3;
-                return axios.get('/api/map/interval').then(function (response) {
-                  _this5.$store.dispatch('showAlert', {
-                    'isVisible': true,
-                    'msg': response.data.message,
-                    'color': response.status ? 'green' : 'error',
-                    'type': response.status ? 'success' : 'error'
-                  });
-                })["catch"](function (error) {
-                  console.log(error);
-
-                  _this5.$store.dispatch('showAlert', {
-                    'isVisible': true,
-                    'msg': error.message,
-                    'color': 'error',
-                    'type': 'error'
-                  });
-                })["finally"](function () {
-                  return _this5.loading = false;
-                });
-
-              case 3:
-              case "end":
-                return _context4.stop();
-            }
-          }
-        }, _callee4);
-      }))();
-    },
-    setOrder: function setOrder(target) {
-      var footer = target.properties.get('balloonContentFooter').split(' ');
-      var id = parseInt(footer[0]);
-      this.order = this.orders.find(function (item) {
-        return item.id === id;
-      });
-      this.courier_id = this.order.courier_id;
-    },
-    fetchCouriers: function fetchCouriers() {
-      var _this6 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
-          while (1) {
-            switch (_context5.prev = _context5.next) {
-              case 0:
-                _this6.couriers = [];
-                _context5.next = 3;
-                return axios.get('/api/couriers').then(function (response) {
-                  _this6.couriers = response.data.data;
-
-                  _this6.couriers.unshift({
-                    id: 0,
-                    name: 'Не выбрано'
-                  });
-                })["catch"](function (error) {
-                  console.log(error);
-                });
-
-              case 3:
-              case "end":
-                return _context5.stop();
-            }
-          }
-        }, _callee5);
-      }))();
-    },
     setCourier: function setCourier() {
-      var _this7 = this;
+      var _this5 = this;
 
       axios.post('/api/map/courier', {
         order_id: this.order.id,
         courier_id: this.courier_id
       }).then(function (response) {
-        _this7.order.courier = response.data;
+        _this5.order.courier = response.data;
 
-        _this7.filter();
+        _this5.filter();
       })["catch"](function (error) {
         console.log(error);
       });
@@ -465,11 +387,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         balloonContentHeader: value.name,
         balloonContentBody: value.time + '<br/>' + value.phone + '<br/>' + value.tag + '<br/>' + value.yaddress,
         balloonContentFooter: value.id + ' ' + value.courier_id,
-        iconContent: value.courier ? value.courier.name : '',
+        iconContent: value.courier_name,
         hintContent: value.name + '<br/' + value.tag + '<br/>' + value.time
       }, {
         preset: this.colors[value.interval],
-        zIndex: value.courier ? 1 : 1000
+        zIndex: value.courier_id ? 1 : 1000
       });
     },
     displayPlaceMarks: function displayPlaceMarks(data) {

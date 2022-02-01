@@ -5,6 +5,9 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
@@ -28,6 +31,7 @@ class Order extends Model
         'has_bag',
         'interval',
         'position',
+        'courier_position',
         'logistic',
         'time1',
         'time2',
@@ -47,46 +51,124 @@ class Order extends Model
         'courier2_id',
         'is_active',
         'diet',
-        'diet_old',
-        'has_water'
+        'diet_old'
     ];
 
-    public const SIZES = ['xs', 's', 'm', 'l', 'xl', 'eat'];
+    const EAT_FIT_LITE = 1;
+    const EAT_FIT_SELECT = 2;
+    const EAT_FIT_DETOX = 3;
+    const EAT_FIT_GO = 4;
+    const EAT_CHILL = 5;
+    const CAKES = 6;
 
-    public const TYPES = ['lite', 'select', 'detox', 'fit_go'];
+    const XS = 1;
+    const S = 2;
+    const M = 3;
+    const L = 4;
+    const XL = 5;
+    const EAT = 6;
 
-    public function courier()
+    const EAT_FIT_ARRAY = [self::EAT_FIT_LITE, self::EAT_FIT_SELECT, self::EAT_FIT_DETOX];
+
+    const TYPES = ['LITE', 'SELECT', 'DETOX', 'GO', 'CHILL', 'CAKES'];
+
+    const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'EAT'];
+
+    public static function isWeek(): bool
     {
-        $is_weekend = Week::isWeekend();
-        $c_id = $is_weekend ? 'courier2_id' : 'courier1_id';
+        return Week::isWeek();
+    }
+
+    public function courier(): BelongsTo
+    {
+        $c_id = self::isWeek() ? 'courier1_id' : 'courier2_id';
         return $this->belongsTo(User::class, $c_id,'id');
     }
 
-    public function blacklist()
+    public function getTag(int $type, int $size = null): string
+    {
+        $s = $size ? self::SIZES[$size - 1] : '';
+
+        return strtoupper(self::TYPES[$type - 1] . ' ' . $s);
+    }
+
+    public function getTime()
+    {
+        return self::isWeek() ? $this->time1 : $this->time2;
+    }
+
+    public function getTimeOld()
+    {
+        return self::isWeek() ? $this->time1_old : $this->time2_old;
+    }
+
+    public function getYaddress()
+    {
+        return self::isWeek() ? $this->yaddress1 : $this->yaddress2;
+    }
+
+    public function getYaddressOld()
+    {
+        return self::isWeek() ? $this->yaddress1_old : $this->yaddress2_old;
+    }
+
+    public function getAddress()
+    {
+        return self::isWeek() ? $this->address1 : $this->address2;
+    }
+
+    public function getLat()
+    {
+        return self::isWeek() ? $this->lat1 : $this->lat2;
+    }
+
+    public function getLng()
+    {
+        return self::isWeek() ? $this->lng1 : $this->lng2;
+    }
+
+    public function getCourierName()
+    {
+        return $this->courier ? $this->courier->name : '-';
+    }
+
+    public function isGeocoded(): bool
+    {
+        return $this->getLat() !== null;
+    }
+
+    public function getCourierId()
+    {
+        return self::isWeek() ? $this->courier1_id : $this->courier2_id;
+    }
+
+    public function reports(): HasMany
+    {
+        return $this->hasMany(Report::class, 'order_id', 'id');
+    }
+
+    public function blacklist(): BelongsToMany
     {
         return $this->belongsToMany(Ingredient::class, 'blacklists', 'order_id', 'ingredient_id');
     }
 
-    public function wishlist()
+    public function wishlist(): HasMany
     {
         return $this->hasMany(Wishlist::class, 'order_id', 'id');
     }
 
-    public function getBlacklistIds(){
+    public function getBlacklistIds(): array
+    {
         return array_map(function ($item){
             return $item['id'];
         }, $this->blacklist()->get()->toArray());
     }
 
-    public function getWishes(){
+    public function getWishes(): array
+    {
         return array_map(function ($item){
             return $item['wish'];
         }, $this->wishlist()->get()->toArray());
-    }
-
-    public function reports()
-    {
-        return $this->hasMany(Report::class, 'order_id', 'id');
     }
 
     public function select()
@@ -120,55 +202,68 @@ class Order extends Model
         return $result;
     }
 
-    public function old()
-    {
-        return $this->hasOne(OrderHistory::class, 'order_id', 'id');
-    }
-
-    public static function isWeekend(): bool {
-        return Week::isWeekend();
-    }
-
     public static function getType(int $type): string
     {
-        return self::TYPES[$type];
+        return self::TYPES[$type - 1];
     }
 
     public static function getSize(int $size): string
     {
-        return strtoupper(self::SIZES[$size]);
+        return strtoupper(self::SIZES[$size - 1]);
     }
 
-    public static function getNbType(int $type): int
+    public static function getOrderByType(int $type)
     {
-        return self::where('is_active', true)->where('type', $type)->count();
+        return self::where('is_active', true)->where('type', $type)->get();
     }
 
-    public static function getNbTypeAndSize(int $type, int $size): int
+    public static function getOrderByTypeAndSize(int $type, int $size)
     {
-        return self::where('is_active', true)->where('type', $type)->where('size', $size)->count();
-    }
-
-    public function getTag(int $type, int $size): string
-    {
-        return strtoupper(self::TYPES[$type] . ' ' . self::SIZES[$size]);
+        return self::where('is_active', true)->where('type', $type)->where('size', $size)->get();
     }
 
     public function getTagColor(int $type) {
         $color = '';
 
         switch ($type) {
-            case 0:
+            case Order::EAT_FIT_LITE:
                 $color = 'yellow';
                 break;
-            case 1:
+            case Order::EAT_FIT_SELECT:
                 $color = 'green';
                 break;
-            case 2:
+            case Order::EAT_FIT_DETOX:
                 $color = 'blue';
                 break;
-            case 3:
+            case Order::EAT_FIT_GO:
                 $color = 'purple';
+                break;
+            case Order::CAKES:
+                $color = 'pink';
+                break;
+        }
+
+        return $color;
+    }
+
+    public function getHexColor(int $type) {
+        $color = '';
+
+        switch ($type) {
+            case Order::EAT_FIT_LITE:
+                $color = 'fff59d';
+                break;
+            case Order::EAT_FIT_SELECT:
+                $color = 'a5d6a7';
+                break;
+            case Order::EAT_FIT_DETOX:
+                $color = '90CAF9';
+                break;
+            case Order::EAT_FIT_GO:
+                $color = 'CE93D8';
+                break;
+            case Order::CAKES:
+                $color = 'EC407A';
                 break;
         }
 
@@ -185,46 +280,6 @@ class Order extends Model
         }
 
         return '';
-    }
-
-    public function getTime()
-    {
-        return self::isWeekend() ? $this->time2 : $this->time1;
-    }
-
-    public function getTimeOld()
-    {
-        return self::isWeekend() ? $this->time2_old : $this->time1_old;
-    }
-
-    public function getYaddress()
-    {
-        return self::isWeekend() ? $this->yaddress2 : $this->yaddress1;
-    }
-
-    public function getYaddressOld()
-    {
-        return self::isWeekend() ? $this->yaddress2_old : $this->yaddress1_old;
-    }
-
-    public function getAddress()
-    {
-        return self::isWeekend() ? $this->address2 : $this->address1;
-    }
-
-    public function getLat()
-    {
-        return self::isWeekend() ? $this->lat2 : $this->lat1;
-    }
-
-    public function getLng()
-    {
-        return self::isWeekend() ? $this->lng2 : $this->lng1;
-    }
-
-    public function getCourierId(): int
-    {
-        return self::isWeekend() ? $this->courier2_id : $this->courier1_id;
     }
 
     public function isNotified(){

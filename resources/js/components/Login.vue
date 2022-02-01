@@ -49,7 +49,7 @@ export default {
         errors: []
     }),
     methods: {
-      submit () {
+        async submit () {
             this.loading = true
             let phone = this.getPhone()
 
@@ -59,12 +59,14 @@ export default {
                     password: this.password
                 }).then(response => {
                     this.loading = false
-                    if(response.data.status){
-                        this.$store.dispatch('login', response.data.user)
-                        this.$router.push({name: 'dashboard'})
-                    }else{
+
+                    if(response.data.status) {
+                        this.$store.dispatch('auth/login', response.data.user)
+                        this.$router.push({ name: 'dashboard' })
+                    }else {
                         this.errors = response.data.errors
                     }
+
                 }).catch(error => {
                     this.loading = false
                     this.errors = error.response.data.errors
@@ -77,9 +79,9 @@ export default {
                     type: 'error'
                 })
             })
-        },
+      },
       getPhone() {
-        return this.phone.replace(/[^0-9]/g,'')
+          return this.phone.replace(/[^0-9]/g,'')
       }
     }
 }

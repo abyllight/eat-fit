@@ -3,74 +3,194 @@
 namespace App\Http\Controllers;
 
 use AmoCRM\Client;
-use App\Http\Resources\OrderCollection;
+use App\Http\Resources\OrderLogisticCollection;
 use App\Http\Resources\OrderSelectCollection;
 use App\Http\Resources\SelectCollection;
 use App\Models\Cuisine;
 use App\Models\Dish;
 use App\Models\Order;
 use App\Models\Select;
-use App\Models\User;
-use App\Models\Week;
 use App\Models\Wishlist;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Style\Alignment;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class OrderController extends Controller
 {
     public function index(): JsonResponse
     {
-        $orders = OrderCollection::collection(Order::where('is_active', true)->orderBy('name')->get());
+        $orders = OrderLogisticCollection::collection(Order::where('is_active', true)->orderBy('name')->get());
         return response()->json($orders);
     }
 
+    public function store(Request $request){
+        $request->validate([
+            'type' => 'required',
+            'name' => 'required',
+            'phone' => 'required',
+            'yaddress1' => 'required',
+            'address1' => 'required'
+        ]);
+
+        $order = new Order();
+        $order->name = $request->name;
+        $order->phone = $request->phone;
+        $order->whatsapp = $request->whatsapp;
+        $order->type = $request->type;
+        $order->size = $request->size;
+        $order->day = $request->day;
+        $order->course = $request->course;
+        $order->yaddress1 = $request->yaddress1;
+        $order->address1 = $request->address1;
+        $order->logistic = $request->logistic;
+
+        $order->yaddress2 = !$request->yaddress2 ? $request->yaddress1 : $request->yaddress2;
+        $order->address2 = !$request->address2 ? $request->address1 : $request->address2;
+
+        if ($request->time1_start && $request->time1_end){
+            $order->time1 = $request->time1_start . '-' . $request->time1_end;
+        }
+
+        if ($request->time2_start && $request->time2_end){
+            $order->time2 = $request->time2_start . '-' . $request->time2_end;
+        }else{
+            $order->time2 = $request->time1_start . '-' . $request->time1_end;
+        }
+
+        $order->is_active = true;
+        $order->save();
+
+        return response()->json([
+            'status' => true,
+            'msg' => 'Заказ добавлен'
+        ]);
+    }
+
+    public function show($id): JsonResponse
+    {
+        $order = Order::find($id);
+
+        if (!$order){
+            return response()->json([
+                'status' => false,
+                'msg' => 'Order not found'
+            ]);
+        }
+
+        return response()->json([
+            'status' => true,
+            'order' => $order
+        ]);
+    }
+
+    public function update(Request $request, $id){
+        $order = Order::find($id);
+
+        if (!$order){
+            return response()->json([
+                'status' => false,
+                'msg' => 'Order not found'
+            ]);
+        }
+
+        $request->validate([
+            'type' => 'required',
+            'name' => 'required',
+            'phone' => 'required',
+            'yaddress1' => 'required',
+            'address1' => 'required'
+        ]);
+
+        $order->name = $request->name;
+        $order->phone = $request->phone;
+        $order->whatsapp = $request->whatsapp;
+        $order->type = $request->type;
+        $order->size = $request->size;
+        $order->day = $request->day;
+        $order->course = $request->course;
+        $order->yaddress1 = $request->yaddress1;
+        $order->address1 = $request->address1;
+        $order->logistic = $request->logistic;
+
+        $order->yaddress2 = !$request->yaddress2 ? $request->yaddress1 : $request->yaddress2;
+        $order->address2 = !$request->address2 ? $request->address1 : $request->address2;
+
+        if ($request->time1_start && $request->time1_end){
+            $order->time1 = $request->time1_start . '-' . $request->time1_end;
+        }
+
+        if ($request->time2_start && $request->time2_end){
+            $order->time2 = $request->time2_start . '-' . $request->time2_end;
+        }else{
+            $order->time2 = $request->time1_start . '-' . $request->time1_end;
+        }
+
+        $order->save();
+
+        return response()->json([
+            'status' => true,
+            'msg' => 'Заказ обновлен'
+        ]);
+    }
+
+    public function deactivate($id){
+        $order = Order::find($id);
+
+        if (!$order){
+            return response()->json([
+                'status' => false,
+                'msg' => 'Order not found'
+            ]);
+        }
+
+        $order->is_active = false;
+        $order->save();
+
+        return response()->json([
+            'status' => true,
+            'msg' => 'Заказ деактивирован'
+        ]);
+    }
+
     public function getSelect(){
-        $orders = Order::where('type', 1)->where('is_active', true)->orderBy('size')->get();
+        $orders = Order::where('type', Order::EAT_FIT_SELECT)->where('is_active', true)->orderBy('size')->get();
         return response()->json(OrderSelectCollection::collection($orders));
     }
 
-    public function getNbLite(): JsonResponse
+    public function getOrderStat(): JsonResponse
     {
+        $items = Order::getOrderByType(Order::EAT_FIT_LITE);
         $lite = [
-            'total' => Order::getNbType(0),
-            'xs'    => Order::getNbTypeAndSize(0, 0),
-            's'     => Order::getNbTypeAndSize(0, 1),
-            'm'     => Order::getNbTypeAndSize(0, 2),
-            'l'     => Order::getNbTypeAndSize(0, 3),
-            'xl'    => Order::getNbTypeAndSize(0, 4)
+            'total' => $items->count(),
+            'xs'    => $items->where('size', Order::XS)->count(),
+            's'     => $items->where('size', Order::S)->count(),
+            'm'     => $items->where('size', Order::M)->count(),
+            'l'     => $items->where('size', Order::L)->count(),
+            'xl'    => $items->where('size', Order::XL)->count()
         ];
 
-        return response()->json($lite);
-    }
-
-    public function getNbSelect(): JsonResponse
-    {
+        $items = Order::getOrderByType(Order::EAT_FIT_SELECT);
         $select = [
-            'total' => Order::getNbType(1),
-            'xs'    => Order::getNbTypeAndSize(1, 0),
-            's'     => Order::getNbTypeAndSize(1, 1),
-            'm'     => Order::getNbTypeAndSize(1, 2),
-            'l'     => Order::getNbTypeAndSize(1, 3),
-            'xl'    => Order::getNbTypeAndSize(1, 4)
+            'total' => $items->count(),
+            'xs'    => $items->where('size', Order::XS)->count(),
+            's'     => $items->where('size', Order::S)->count(),
+            'm'     => $items->where('size', Order::M)->count(),
+            'l'     => $items->where('size', Order::L)->count(),
+            'xl'    => $items->where('size', Order::XL)->count()
         ];
 
-        return response()->json($select);
-    }
+        $detox = Order::getOrderByType(Order::EAT_FIT_DETOX)->count();
+        $go = Order::getOrderByType(Order::EAT_FIT_GO)->count();
+        $cakes = Order::getOrderByType(Order::CAKES)->count();
 
-    public function getNbDetox(): JsonResponse
-    {
-        return response()->json(Order::getNbType(2));
-    }
-
-    public function getNbGo(): JsonResponse
-    {
-        return response()->json(Order::getNbType(3));
+        return response()->json([
+            'lite' => $lite,
+            'select' => $select,
+            'detox' => $detox,
+            'go' => $go,
+            'cakes' => $cakes
+        ]);
     }
 
     public function fetch(): array
@@ -108,25 +228,28 @@ class OrderController extends Controller
         }
     }
 
-    public function getOrders(): JsonResponse
+    public function getEatFit(): JsonResponse
     {
         $orders = $this->fetch();
 
         if (!$orders['status']) {
-            return response()->json($orders['message'], $orders['code']);
+            return response()->json([
+                'status' => false,
+                'msg' => $orders['code']. '. ' .$orders['message']
+            ]);
         }
 
-        Order::where('is_active', true)->update(['is_active' => false, 'updated_at' => DB::raw('updated_at')]);
-        $now = Carbon::now();
+        Order::where('is_active', true)
+            ->where('amo_id', '!=', null)
+            ->whereIn('type', Order::EAT_FIT_ARRAY)
+            ->update(['is_active' => false, 'updated_at' => DB::raw('updated_at')]);
 
         foreach ($orders['data'] as $order) {
-            $id = $order['id'];
-            $name = $order['name'];
             $fields = [
-                'amo_id'    => $id,
-                'name'      => $name,
-                'type'      => null,
-                'size'      => null,
+                'amo_id'    => $order['id'],
+                'name'      => $order['name'],
+                'type'      => 1,
+                'size'      => 1,
                 'day'       => null,
                 'course'    => null,
                 'phone'     => null,
@@ -190,50 +313,50 @@ class OrderController extends Controller
 
             switch ($fields['type']) {
                 case '678649': //Lite
-                    $fields['type'] = 0;
+                    $fields['type'] = Order::EAT_FIT_LITE;
                     break;
                 case '678647': //Select
-                    $fields['type'] = 1;
+                    $fields['type'] = Order::EAT_FIT_SELECT;
                     break;
                 case '954721': //Detox
-                    $fields['type'] = 2;
+                    $fields['type'] = Order::EAT_FIT_DETOX;
                     break;
                 case '833911': //FitGo
-                    $fields['type'] = 3;
+                    $fields['type'] = Order::EAT_FIT_GO;
                     break;
             }
 
             switch ($fields['size']) {
                 case '678741': //XS
-                    $fields['size'] = 0;
+                    $fields['size'] = Order::XS;
                     break;
                 case '678743': //S
-                    $fields['size'] = 1;
+                    $fields['size'] = Order::S;
                     break;
                 case '678745': //M
-                    $fields['size'] = 2;
+                    $fields['size'] = Order::M;
                     break;
                 case '678747': //L
-                    $fields['size'] = 3;
+                    $fields['size'] = Order::L;
                     break;
                 case '678749': //XL
-                    $fields['size'] = 4;
+                    $fields['size'] = Order::XL;
                     break;
                 case '929511': //Eat
-                    $fields['size'] = 5;
+                    $fields['size'] = Order::EAT;
                     break;
             }
 
             $fields['has_bag'] = strpos($fields['logistic'], 'ланчбэг') !== false;
 
-            $existing_order = Order::where('amo_id', $id)->orWhere('name', $name)->first();
+            $existing_order = Order::where('amo_id', $fields['amo_id'])->orWhere('name', $fields['name'])->first();
 
             if ($existing_order) {
-                $this->updateOrder($existing_order, $now, $fields);
+                $this->updateOrder($existing_order, $fields);
             }else {
                 Order::create([
-                    'amo_id'    => $id,
-                    'name'      => $name,
+                    'amo_id'    => $fields['amo_id'],
+                    'name'      => $fields['name'],
                     'type'      => $fields['type'],
                     'size'      => $fields['size'],
                     'day'       => $fields['day'],
@@ -255,20 +378,25 @@ class OrderController extends Controller
         }
 
         Order::where('is_active', false)->update([
+            'courier_position' => null,
             'position'      => null,
             'interval'      => 0,
             'time1_old'     => null,
             'time2_old'     => null,
             'yaddress1_old' => null,
-            'yaddress2_old' => null,
-            'day_old'       => null
+            'yaddress2_old' => null
         ]);
 
-        return response()->json('Success');
+        return response()->json([
+            'status' => true,
+            'msg' => 'Success'
+        ]);
     }
 
-    public function updateOrder(Order $order, $now, array $fields = [])
+    public function updateOrder(Order $order, array $fields = [])
     {
+        $now = Carbon::now();
+
         $order->amo_id   = $fields['amo_id'];
         $order->name     = $fields['name'];
         $order->type     = $fields['type'];
@@ -280,11 +408,6 @@ class OrderController extends Controller
         $order->address1 = $fields['a1'];
         $order->address2 = $fields['a2'];
         $order->logistic = $fields['logistic'];
-
-        if ($order->day !== $fields['day']) {
-            $order->day_old = $order->day;
-            $order->day     = $fields['day'];
-        }
 
         if ($order->diet !== $fields['diet']) {
             $order->diet_old = $order->diet;
@@ -339,218 +462,6 @@ class OrderController extends Controller
 
         $order->is_active = true;
         $order->save();
-    }
-
-    public function listData(): JsonResponse
-    {
-        $is_weekend = Week::isWeekend();
-        $courier = $is_weekend ? 'courier2_id' : 'courier1_id';
-        $nb_assigned = Order::where('is_active', true)->where($courier, '>', 0)->count();
-        $total       = Order::where('is_active', true)->count();
-
-        return response()->json([
-            'total' => $total,
-            'assigned' => $nb_assigned
-        ]);
-    }
-
-    public function orderList(Request $request): JsonResponse
-    {
-        $order_id = $request->order_id;
-        $courier_id = $request->courier_id;
-        $ids = $request->ids ?? [];
-        $is_weekend = Week::isWeekend();
-        $num = 0;
-
-        if ($ids) {
-            Order::where('is_active', true)
-                ->update(['position' => null]);
-
-            foreach ($ids as $id){
-                $num = $num + 1;
-                $order = Order::find((int)$id);
-                $order->position = $num;
-
-                if ($id === $order_id) {
-                    $is_weekend ? $order->courier2_id = $courier_id : $order->courier1_id = $courier_id;
-                }
-
-                $order->save();
-            }
-        }
-
-        return response()->json('Success');
-    }
-
-    public function export()
-    {
-        $is_weekend = Week::isWeekend();
-        $couriers = User::couriers();
-        $n = 1;
-        $color = 'ffffff';
-        $bag_color = 'ffffff';
-        $xs = $s = $m = $l = $xl = 0;
-
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-
-        //Row height
-        $sheet->getDefaultRowDimension()->setRowHeight(16);
-
-        //Borders style
-        $borderStyleArray = array(
-            'borders' => array(
-                'outline' => array(
-                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-                    'color' => array('rgb' => '222222'),
-                ),
-                'horizontal' => array(
-                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-                    'color' => array('rgb' => '222222'),
-                ),
-                'vertical' => array(
-                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-                    'color' => array('rgb' => '222222'),
-                ),
-            ),
-        );
-
-        foreach ($couriers as $courier) {
-
-            foreach ($courier->orders as $c) {
-                if($c->type === 0) {
-
-                    switch ($c->size) {
-                        case 0:
-                            ++$xs;
-                            break;
-                        case 1:
-                            ++$s;
-                            break;
-                        case 2:
-                            ++$m;
-                            break;
-                        case 3:
-                            ++$l;
-                            break;
-                        case 4:
-                            ++$xl;
-                            break;
-                    }
-                }
-            }
-
-            $xs = $xs > 0 ? ' [XS - ' . $xs . '] ' : '';
-            $s  = $s  > 0 ? ' [S - ' . $s . '] ' : '';
-            $m  = $m  > 0 ? ' [M - ' . $m . '] ' : '';
-            $l  = $l  > 0 ? ' [L - ' . $l . '] ' : '';
-            $xl = $xl > 0 ? ' [XL - ' . $xl . '] ' : '';
-
-            //Merge courier name cells
-            $sheet->mergeCells('A' . $n . ':F' . $n);
-            $sheet->setCellValue(
-                'A' . $n,
-                $courier->name . ' - ' . count($courier->orders) .
-                ' | Lite '. $xs . $s . $m . $l . $xl
-            );
-
-            $xs = $s = $m = $l = $xl = 0;
-
-            //Courier name size
-            $sheet->getStyle('A' . $n)->getFont()->setSize(16);
-            $sheet->getStyle('A' . $n)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
-
-            $n = $n + 1;
-            $count = $n;
-
-            $arrayHeader = [
-                ['#', 'Имя', 'Тег', 'Ланчбэг', 'Время', 'Телефон', 'Адрес']
-            ];
-
-            //Alignment and size of header
-            $sheet->fromArray($arrayHeader, NULL, 'A' . $n);
-            $sheet->getStyle('A' . $n . ':F' . $n)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
-            $sheet->getStyle('A' . $n . ':F' . $n)->getFont()->setBold(true)->setSize(13);
-
-
-            foreach ($courier->orders as $v => $value) {
-                $count = $count + 1;
-
-                switch ($value->type) {
-                    case 1:
-                        $color = 'a5d6a7';
-                        break;
-                    case 0:
-                        $color = 'fff59d';
-                        break;
-                    case 2:
-                        $color = '90CAF9';
-                        break;
-                    case 3:
-                        $color = 'CE93D8';
-                        break;
-                }
-
-                $bag_color = $value->has_bag ? 'F44336' : 'ffffff';
-                //Alignment of # and A:F row
-                $sheet->getStyle('A' . $count)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-                $sheet->getStyle('A' . $count . ':F' . $count)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
-
-                //Merge # rows
-                $sheet->mergeCells('A' . $count . ':A' . ($count + 1));
-
-                $time = $is_weekend ? $value->time2 : $value->time1;
-                $address = $is_weekend ? $value->address2 : $value->address1;
-
-                $arrayData = [
-                    [$v + 1, $value->name, $value->getTag($value->type, $value->size), $value->has_bag ? 'Ланчбэг' : '-', $time, $value->phone, $address]
-                ];
-
-                $sheet->fromArray($arrayData, NULL, 'A' . $count);
-
-                //Name and tag bold
-                $sheet->getStyle('B' . $count . ':C' . $count)->getFont()->setBold(true);
-                //Name and tag color
-                $sheet->getStyle('B' . $count . ':C' . $count)
-                    ->getFill()
-                    ->setFillType(Fill::FILL_SOLID)
-                    ->getStartColor()
-                    ->setRGB($color);
-
-                //Addition style
-                $sheet->mergeCells('B' . ($count + 1) . ':F' . ($count + 1));
-                $sheet->setCellValue('B' . ($count + 1), $value->logistic);
-                $sheet->getStyle('B' . ($count + 1))->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
-                $sheet->getStyle('B' . ($count + 1))->getAlignment()->setWrapText(true);
-                //$sheet->getRowDimension('B')->setRowHeight(-1);
-
-                //Bag color
-                $sheet->getStyle('D' . $count)
-                    ->getFill()
-                    ->setFillType(Fill::FILL_SOLID)
-                    ->getStartColor()
-                    ->setRGB($bag_color);
-
-                $count = $count + 1;
-            }
-
-            $sheet->getStyle('A' . $n . ':F' . $count)->applyFromArray($borderStyleArray);
-
-            $n = $count + 2;
-        }
-
-        $sheet->getColumnDimension('B')->setAutoSize(true);
-        $sheet->getColumnDimension('C')->setAutoSize(true);
-        $sheet->getColumnDimension('D')->setAutoSize(true);
-        $sheet->getColumnDimension('E')->setAutoSize(true);
-        $sheet->getColumnDimension('F')->setAutoSize(true);
-
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="Список.xlsx"');
-        header('Cache-Control: max-age=0');
-
-        $writer = new Xlsx($spreadsheet);
-        $writer->save('php://output');
     }
 
     public function addToBlacklist(Request $request): JsonResponse

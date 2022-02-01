@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('phone')->unique();
             $table->string('password');
             $table->boolean('is_admin')->default(false);
-            $table->rememberToken();
+            $table->integer('city_id')->default(1);
             $table->timestamps();
         });
     }

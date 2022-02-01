@@ -2,7 +2,8 @@
 
 namespace App\Http\Resources;
 
-use App\Http\Controllers\HelperController;
+use App\Models\City;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -17,11 +18,9 @@ class CourierCollection extends JsonResource
     public function toArray($request): array
     {
         return [
-            'id'     => $this->id,
-            'name'   => $this->name,
-            'phone'  => HelperController::beautifyMobile($this->phone),
-            'car'    => $this->car,
-            'orders' => OrderCollection::collection($this->orders)
+            'id'   => $this->id,
+            'name' => $this->name,
+            'orders' => OrderLogisticCollection::collection($this->orders)
         ];
     }
 }

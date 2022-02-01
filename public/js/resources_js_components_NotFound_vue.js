@@ -75,7 +75,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", [_c("h3", [_vm._v("404. Not Found")])])
+    return _c("div", [_c("h3", [_vm._v("404. Страница не найдена")])])
   }
 ]
 render._withStripped = true

@@ -124,7 +124,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return axios.get('/api/list/data').then(function (response) {
+                return axios.get('/api/list/stat').then(function (response) {
                   _this.total = response.data.total;
                   _this.assigned = response.data.assigned;
                 })["catch"](function (error) {
@@ -147,15 +147,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _this2.couriers = [];
-                _context2.next = 3;
+                _context2.next = 2;
                 return axios.get('/api/couriers').then(function (response) {
                   _this2.couriers = response.data.data;
                 })["catch"](function (error) {
                   console.log(error);
                 });
 
-              case 3:
+              case 2:
               case "end":
                 return _context2.stop();
             }
@@ -171,20 +170,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       array.forEach(function (item) {
         ids.push(item.id);
       });
-      axios.post('/api/list', {
+      axios.post('/api/list/sort', {
         order_id: order_id,
         courier_id: courier_id,
         ids: ids
-      }).then(function (response) {
-        console.log(response);
-      })["catch"](function (error) {
+      }).then(function () {})["catch"](function (error) {
         console.log(error);
       });
     },
     excel: function excel() {
-      axios.get('/api/list/export').then(function (response) {
-        console.log(response);
-      })["catch"](function (error) {
+      axios.get('/api/list/export').then(function () {})["catch"](function (error) {
         console.log(error);
       });
     }
@@ -4128,11 +4123,12 @@ var render = function() {
                                   _vm._v(" "),
                                   _c(
                                     "td",
-                                    {
-                                      class:
-                                        order.has_bag === "Ланчбэг" ? "red" : ""
-                                    },
-                                    [_vm._v(_vm._s(order.has_bag))]
+                                    { class: order.has_bag ? "red" : "" },
+                                    [
+                                      _vm._v(
+                                        _vm._s(order.has_bag ? "Ланчбэг" : "")
+                                      )
+                                    ]
                                   ),
                                   _vm._v(" "),
                                   _c("td", [_vm._v(_vm._s(order.phone))]),

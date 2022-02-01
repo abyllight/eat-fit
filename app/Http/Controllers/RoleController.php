@@ -17,7 +17,7 @@ class RoleController extends Controller
      */
     public function index(): JsonResponse
     {
-        return response()->json(RoleCollection::collection(Role::all()));
+        return response()->json(RoleCollection::collection(Role::orderBy('name')->get()));
     }
 
     /**
@@ -40,26 +40,7 @@ class RoleController extends Controller
 
         return response()->json([
             'status' => true,
-            'msg' => 'Role created'
-        ]);
-    }
-
-    public function edit($id): JsonResponse
-    {
-        $role = Role::find($id);
-
-        if ($role) {
-            return response()->json([
-                'status' => true,
-                'msg' => 'OK',
-                'role' => $role
-            ]);
-        }
-
-        return response()->json([
-            'status' => false,
-            'msg' => 'Role not found',
-            'role' => null
+            'msg' => 'Роль добавлена'
         ]);
     }
 
@@ -67,10 +48,10 @@ class RoleController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param  int  $id
+     * @param int $id
      * @return JsonResponse
      */
-    public function update(Request $request, $id): JsonResponse
+    public function update(Request $request, int $id): JsonResponse
     {
         $request->validate([
             'name' => 'required|unique:roles,name,' . $id,
@@ -100,13 +81,18 @@ class RoleController extends Controller
      * Remove the specified resource from storage.
      *
      * @param int $id
-     * @return Response
+     * @return JsonResponse
      */
     public function destroy(int $id): JsonResponse
     {
         $role = Role::find($id);
 
         if ($role) {
+
+            if ($role->users()->exists()){
+                $role->users()->detach();
+            }
+
             $role->delete();
 
             return response()->json([

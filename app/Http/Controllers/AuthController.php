@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\UserCollection;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,6 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
-            //$request->session()->regenerate();
             return response()->json([
                 'status' => true,
                 'user' => new UserCollection(Auth::user()),
@@ -26,7 +26,7 @@ class AuthController extends Controller
 
         return response()->json([
             'status'  => false,
-            'message' => 'Пользователь не найден',
+            'message' => 'Пользователь не найден!',
             'errors' => [
                 'phone' => 'Пользователь не найден'
             ]
@@ -36,15 +36,13 @@ class AuthController extends Controller
     public function profile(Request $request): JsonResponse
     {
         return response()->json([
-            'user' => $request->user()
+            'user' => new UserCollection($request->user())
         ]);
     }
 
-    public function logout(Request $request): JsonResponse
+    public function logout(): JsonResponse
     {
         Auth::guard('web')->logout();
-        //$request->session()->invalidate();
-        //$request->session()->regenerateToken();
 
         return response()->json([
             'status' => true,

@@ -28,7 +28,6 @@
             >
                 Интервал
             </v-btn>
-
             <v-switch
                 class="ma-3"
                 color="primary"
@@ -38,7 +37,7 @@
             ></v-switch>
         </v-row>
         <v-row>
-            <v-col cols="12" sm="12" lg="9">
+            <v-col cols="12" md="10">
                 <v-card>
                     <v-card-title>
                         <v-text-field
@@ -48,6 +47,10 @@
                             single-line
                             hide-details
                         ></v-text-field>
+                        <v-spacer></v-spacer>
+                        <v-btn color="primary" dark @click="dialog=true">
+                            Добавить заказ
+                        </v-btn>
                     </v-card-title>
                     <v-data-table
                         :loading="loading"
@@ -58,6 +61,7 @@
                         item-key="id"
                         :search="search"
                         hide-default-footer
+                        @click:row="openOrder"
                     >
 
                         <template v-slot:item.index="{ index }">
@@ -73,15 +77,13 @@
                         </template>
                         <template v-slot:item.geo="{ item }">
                             <v-chip
-                                :color="item.lat ? 'green' : 'red'"
+                                :color="item.geo ? 'green' : 'red'"
                                 label
                                 x-small
                                 text-color="white"
-                            >
-                                geo
-                            </v-chip>
+                            >geo</v-chip>
                         </template>
-                        <template v-slot:item.int="{ item }">
+                        <template v-slot:item.interval="{ item }">
                             <v-chip
                                 :color="item.interval > 0 ? 'green' : 'red'"
                                 label
@@ -94,7 +96,7 @@
                     </v-data-table>
                 </v-card>
             </v-col>
-            <v-col>
+            <v-col cols="12" md="2">
                 <v-card
                     color="#385F73"
                     dark
@@ -187,24 +189,41 @@
                         Detox: {{ detox }}
                     </v-card-title>
                 </v-card>
-                <v-card>
+                <v-card class="mb-5">
                     <v-card-title class="text-h5">
                         GO: {{ go }}
                     </v-card-title>
                 </v-card>
+                <v-card>
+                    <v-card-title class="text-h5">
+                        Cakes: {{ cakes }}
+                    </v-card-title>
+                </v-card>
             </v-col>
         </v-row>
+        <CrudOrder
+            ref="child"
+            :dialog="dialog"
+            :link="link"
+            :id="id"
+            :is-edit="is_edit"
+            @close="closeDialog"
+            @refresh="refresh"
+        />
     </div>
 </template>
 <script>
+    import CrudOrder from "./Utilities/CrudOrder";
     export default {
         name: 'Client',
+        components: {CrudOrder},
         data: () => ({
             orders: [],
             lite: [],
             select: [],
             detox: 0,
             go: 0,
+            cakes: 0,
             week: '',
             is_weekend: false,
             itemsPerPage: 300,
@@ -217,18 +236,19 @@
                 { text: 'Yandex', value: 'yaddress' },
                 { text: 'Курьер', value: 'courier_name' },
                 { text: 'Geo', value: 'geo' },
-                { text: 'Int', value: 'int' },
+                { text: 'Gap', value: 'interval' },
             ],
             amo_loading: false,
-            loading: true
+            loading: true,
+            dialog: false,
+            link: '/api/orders/',
+            id: null,
+            is_edit: false
         }),
         mounted() {
             this.getWeek()
             this.getLeads()
-            this.getLite()
-            this.getSelect()
-            this.getDetox()
-            this.getGo()
+            this.getOrderStat()
         },
         methods: {
             async getLeads() {
@@ -249,52 +269,21 @@
                     })
                     .finally(() => (this.loading = false))
             },
-            async getLite(){
-                await axios
-                    .get('/api/orders/lite-stat')
-                    .then(response => {
-                        this.lite = response.data
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
-            },
-            async getSelect(){
-                await axios
-                    .get('/api/orders/select-stat')
-                    .then(response => {
-                        this.select = response.data
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
-            },
-            async getDetox(){
-                await axios
-                    .get('/api/orders/detox-stat')
-                    .then(response => {
-                        this.detox = response.data
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
-            },
-            async getGo(){
-                await axios
-                    .get('/api/orders/go-stat')
-                    .then(response => {
-                        this.go = response.data
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
-            },
             async fetchLeads() {
                 this.amo_loading = true
                 await axios
-                    .get('/api/amo/leads')
-                    .then(() => {
-                        this.getLeads()
+                    .get('/api/orders/eat-fit')
+                    .then((response) => {
+                        if (response.data.status){
+                            this.getLeads()
+                        }else {
+                            this.$store.dispatch('showAlert', {
+                                'isVisible': true,
+                                'msg': response.data.msg,
+                                'color': 'error',
+                                'type': 'error'
+                            })
+                        }
                     })
                     .catch(error => {
                         this.$store.dispatch('showAlert', {
@@ -305,6 +294,20 @@
                         })
                     })
                     .finally(() => (this.amo_loading = false))
+            },
+            async getOrderStat(){
+                await axios
+                    .get('/api/orders/stat')
+                    .then(response => {
+                        this.lite = response.data.lite
+                        this.select = response.data.select
+                        this.detox = response.data.detox
+                        this.go = response.data.go
+                        this.cakes = response.data.cakes
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
             },
             async geocode() {
                 this.amo_loading = true
@@ -383,6 +386,19 @@
                             'type': 'error'
                         })
                     })
+            },
+            closeDialog(){
+                this.dialog = false
+            },
+            refresh(){
+                this.closeDialog()
+                this.getLeads()
+            },
+            openOrder(val){
+                this.id = val.id
+                this.is_edit = true
+                this.$refs.child.fetchOrder(val.id)
+                this.dialog = true
             }
         }
     }

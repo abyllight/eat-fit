@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CourierCollection;
 use App\Http\Resources\UserCollection;
+use App\Models\Courier;
 use App\Models\Order;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\Hash;
 
@@ -15,11 +19,11 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return ResourceCollection
+     * @return JsonResponse
      */
-    public function index(): ResourceCollection
+    public function index(): JsonResponse
     {
-        return UserCollection::collection(User::all());
+        return response()->json(UserCollection::collection(User::where('is_admin', false)->orderBy('name')->get()));
     }
 
     /**
@@ -34,12 +38,14 @@ class UserController extends Controller
             'name' => 'required',
             'phone' => 'required|unique:users,phone|min:11',
             'roles' => 'required',
+            'city_id' => 'required',
             'password' => 'required|min:3',
         ]);
 
         $user = new User();
         $user->name = $request->name;
         $user->phone = $request->phone;
+        $user->city_id = $request->city_id;
         $user->password = Hash::make($request->password);
         $user->save();
 
@@ -48,25 +54,6 @@ class UserController extends Controller
         return response()->json([
             'status' => true,
             'msg' => 'User created'
-        ]);
-    }
-
-    public function edit($id): JsonResponse
-    {
-        $user = User::find($id);
-
-        if ($user) {
-            return response()->json([
-                'status' => true,
-                'msg' => 'OK',
-                'user' => new UserCollection($user)
-            ]);
-        }
-
-        return response()->json([
-            'status' => false,
-            'msg' => 'User not found',
-            'user' => null
         ]);
     }
 
@@ -82,6 +69,7 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required',
             'phone' => 'required|min:11|unique:users,phone,' . $id,
+            'city_id' => 'required',
             'roles' => 'required'
         ]);
 
@@ -96,6 +84,7 @@ class UserController extends Controller
         if($user) {
             $user->name = $request->name;
             $user->phone = $request->phone;
+            $user->city_id = $request->city_id;
 
             if ($request->password) {
                 $user->password = Hash::make($request->password);
@@ -103,15 +92,7 @@ class UserController extends Controller
 
             $user->save();
 
-            if ($request->roles) {
-
-                $roles = array_map(function ($item) {
-                    return $item;
-                }, $request->roles);
-
-                $user->roles()->detach();
-                $user->roles()->sync($roles);
-            }
+            $user->roles()->sync($request->roles);
 
             return response()->json([
                 'status' => true,
@@ -136,11 +117,11 @@ class UserController extends Controller
         $user = User::find($id);
 
         if ($user) {
-            if ($user->roles){
+            if ($user->roles()->exists()){
                 $user->roles()->detach();
             }
 
-            if ($user->reports){
+            if ($user->reports()->exists()){
                 $user->reports()->detach();
             }
 
@@ -171,8 +152,8 @@ class UserController extends Controller
         ]);
     }
 
-    public function getCouriers()
+    public function getCouriers(): ResourceCollection
     {
-        return User::couriers();
+        return User::getCouriers();
     }
 }

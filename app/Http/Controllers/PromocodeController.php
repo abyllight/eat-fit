@@ -16,7 +16,7 @@ class PromocodeController extends Controller
      */
     public function index(): JsonResponse
     {
-        return response()->json(Promocode::all());
+        return response()->json(Promocode::orderBy('name')->get());
     }
 
     /**

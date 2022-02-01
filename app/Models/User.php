@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
-use App\Http\Resources\UserCollection;
+use App\Http\Resources\CourierCollection;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class User extends Authenticatable
 {
@@ -18,6 +21,7 @@ class User extends Authenticatable
         'phone',
         'is_admin',
         'password',
+        'city_id'
     ];
 
     /**
@@ -30,19 +34,59 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    public function roles()
+    public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class, 'roles_users', 'user_id', 'role_id');
     }
 
-    public function orders()
+    public function getRoleNames(): array
+    {
+        return array_map(function ($role){
+            return $role['name'];
+        }, $this->roles->toArray());
+    }
+
+    public function getRoleSlugs(): array
+    {
+        return array_map(function ($role){
+            return $role['slug'];
+        }, $this->roles->toArray());
+    }
+
+    public function getRoleIds(): array
+    {
+        return array_map(function ($role){
+            return $role['id'];
+        }, $this->roles->toArray());
+    }
+
+    public function isCourier(): bool
+    {
+        $slugs = array_map(function ($role){
+            return $role['slug'];
+        }, $this->roles->toArray());
+
+        return in_array('courier', $slugs);
+    }
+
+    public function addresses()
+    {
+        return $this->hasMany(Address::class, 'courier_id', 'id');
+    }
+
+    public function orders(): HasMany
     {
         $is_weekend = Week::isWeekend();
         $c_id = $is_weekend ? 'courier2_id' : 'courier1_id';
         return $this->hasMany(Order::class, $c_id, 'id')->where('is_active', true)->orderBy('position');
     }
 
-    public static function couriers()
+    public function courier(): HasOne
+    {
+        return $this->hasOne(Courier::class, 'user_id', 'id');
+    }
+
+    public static function getCouriers(): ResourceCollection
     {
         $couriers = [];
 
@@ -54,14 +98,20 @@ class User extends Authenticatable
             }
         }
 
-        return UserCollection::collection($couriers);
+        return CourierCollection::collection($couriers);
     }
 
     public function reports(){
         return $this->hasMany(Report::class, 'courier_id', 'id');
     }
 
-    public static function beautifyMobile(string $v){
+    public static function beautifyMobile(string $v): string
+    {
         return sprintf('+%s (%s%s%s) %s%s%s-%s%s-%s%s', $v[0], $v[1], $v[2], $v[3], $v[4], $v[5], $v[6], $v[7], $v[8], $v[9], $v[10]);
+    }
+
+    public static function uglifyMobile(string $v): string
+    {
+        return preg_replace("/[^0-9]/", "", $v);
     }
 }

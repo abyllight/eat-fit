@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use AmoCRM\Client;
-use App\Http\Resources\OrderCollection;
+use App\Http\Resources\MyOrderCollection;
+use App\Http\Resources\OrderLogisticCollection;
+use App\Models\Courier;
 use App\Models\Order;
 use App\Models\Report;
 use App\Models\User;
@@ -15,16 +17,16 @@ use Illuminate\Support\Facades\Auth;
 
 class CourierController extends Controller
 {
-    public function index()
+    public function index(): JsonResponse
     {
         $is_weekend = Week::isWeekend();
         $courier = $is_weekend ? 'courier2_id' : 'courier1_id';
 
-        $orders = Order::where($courier, Auth::id())->where('is_active', true)->orderBy('position')->get();
+        $orders = Order::where($courier, Auth::id())->where('is_active', true)->orderBy('courier_position')->get();
 
         return response()->json([
             'status' => true,
-            'data' => OrderCollection::collection($orders)
+            'data' => MyOrderCollection::collection($orders)
         ]);
     }
 

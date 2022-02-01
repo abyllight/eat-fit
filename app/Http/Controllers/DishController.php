@@ -39,29 +39,11 @@ class DishController extends Controller
                     $first = (int)$first;
 
                     if (!in_array($first, $array)) {
-                        $array[] = $first;
-                        switch ($first){
-                            case 4:
-                                $first = 5;
-                                break;
-                            case 5:
-                                $first = 4;
-                                break;
-                            case 6:
-                                $first = 7;
-                                break;
-                            case 7:
-                                $first = 8;
-                                break;
-                        }
-
                         $d = Dish::updateOrCreate(
                             ['ration_id' => $first, 'cuisine_id' => $cuisine->id],
                             [
                                 'iiko_name' => substr($dish['name'], 4),
                                 'iiko_id' => $dish['id'],
-                                'ration_id' => $first,
-                                'cuisine_id' => $cuisine->id,
                                 'is_custom' => false
                             ]
                         );
@@ -70,6 +52,8 @@ class DishController extends Controller
                             $d->name = $d->iiko_name;
                             $d->save();
                         }
+
+                        $array[] = $first;
                     }
                 }
             }else {

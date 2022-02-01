@@ -573,7 +573,7 @@
             async fetchOrdersFromAmo() {
                 this.amo_loading = true
                 await axios
-                    .get('/api/amo/leads')
+                    .get('/api/orders/eat-fit')
                     .then(() => {
                         this.getOrders()
                         this.getSelectStat()
@@ -608,9 +608,9 @@
             },
             async getSelectStat(){
                 await axios
-                    .get('/api/orders/select-stat')
+                    .get('/api/orders/stat')
                     .then(response => {
-                        this.select_stat = response.data
+                        this.select_stat = response.data.select
                     })
                     .catch(error => {
                         console.log(error)

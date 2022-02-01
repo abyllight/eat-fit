@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import auth from "./store/auth";
 
 Vue.use(VueRouter)
 
@@ -12,146 +13,190 @@ const router = new VueRouter({
             component: () => import('./components/NotFound')
         },
         {
+            path: '/access',
+            name: 'noAccess',
+            meta: {
+                auth: false,
+                roles: []
+            },
+            component: () => import('./components/NoAccess')
+        },
+        {
             path: '/login',
             name: 'login',
-            meta: { auth: false },
+            meta: {
+                auth: false,
+                roles: []
+            },
             component: () => import('./components/Login')
         },
         {
             path: '/',
             name: 'dashboard',
-            meta: { auth: true },
+            meta: {
+                auth: true,
+                roles: []
+            },
             component: () => import('./components/Dashboard')
         },
         {
             path: '/my-orders',
             name: 'my_orders',
-            meta: { auth: true },
+            meta: {
+                auth: true,
+                roles: ['courier', 'logistic']
+            },
             component: () => import('./components/MyOrders')
         },
         {
             path: '/roles',
             name: 'roles',
-            meta: { auth: true },
-            component: () => import('./components/Roles/Roles')
-        },
-        {
-            path: '/roles/create',
-            name: 'roles_create',
-            meta: { auth: true },
-            component: () => import('./components/Roles/CreateRole')
-        },
-        {
-            path: '/roles/:id/edit',
-            name: 'roles_edit',
-            meta: { auth: true },
-            component: () => import('./components/Roles/EditRole')
+            meta: {
+                auth: true,
+                roles: ['admin']
+            },
+            component: () => import('./components/Admin/Roles')
         },
         {
             path: '/users',
             name: 'users',
-            meta: { auth: true },
-            component: () => import('./components/Users/Users')
-        },
-        {
-            path: '/users/create',
-            name: 'users_create',
-            meta: { auth: true },
-            component: () => import('./components/Users/CreateUser')
-        },
-        {
-            path: '/users/:id/edit',
-            name: 'users_edit',
-            meta: { auth: true },
-            component: () => import('./components/Users/EditUser')
-        },
-        {
-            path: '/couriers/:id',
-            name: 'password',
-            meta: { auth: true },
-            component: () => import('./components/UpdatePassword')
+            meta: {
+                auth: true ,
+                roles: ['admin', 'logistic']
+            },
+            component: () => import('./components/Admin/Users')
         },
         {
             path: '/orders',
             name: 'orders',
-            meta: { auth: true },
+            meta: {
+                auth: true,
+                roles: ['admin', 'logistic']
+            },
             component: () => import('./components/Orders')
         },
         {
             path: '/map',
             name: 'map',
-            meta: { auth: true },
+            meta: {
+                auth: true,
+                roles: ['admin', 'logistic']
+            },
             component: () => import('./components/Logistics/Map')
         },
         {
             path: '/list',
             name: 'list',
-            meta: { auth: true },
+            meta: {
+                auth: true,
+                roles: ['admin', 'logistic']
+            },
             component: () => import('./components/Logistics/OrderList')
         },
         {
             path: '/reports',
             name: 'report',
-            meta: { auth: true },
+            meta: {
+                auth: true,
+                roles: ['admin', 'logistic']
+            },
             component: () => import('./components/Logistics/Report')
         },
         {
             path: '/select',
             name: 'select',
-            meta: { auth: true },
+            meta: {
+                auth: true,
+                roles: ['admin', 'diet']
+            },
             component: () => import('./components/Kitchen/Select')
         },
         {
             path: '/rations',
             name: 'rations',
-            meta: { auth: true },
+            meta: {
+                auth: true,
+                roles: ['admin', 'diet']
+            },
             component: () => import('./components/Kitchen/Rations')
         },
         {
             path: '/cuisines',
             name: 'cuisine',
-            meta: { auth: true },
+            meta: {
+                auth: true,
+                roles: ['admin', 'diet']
+            },
             component: () => import('./components/Kitchen/Cuisine')
         },
         {
             path: '/dishes',
             name: 'dishes',
-            meta: { auth: true },
+            meta: {
+                auth: true,
+                roles: ['admin', 'diet']
+            },
             component: () => import('./components/Kitchen/Dishes')
         },
         {
             path: '/category',
             name: 'category',
-            meta: { auth: true },
+            meta: {
+                auth: true,
+                roles: ['admin', 'diet']
+            },
             component: () => import('./components/Kitchen/Category')
         },
         {
             path: '/ingredients',
             name: 'ingredients',
-            meta: { auth: true },
+            meta: {
+                auth: true,
+                roles: ['admin', 'diet']
+            },
             component: () => import('./components/Kitchen/Ingredients')
         },
         {
             path: '/promocodes',
             name: 'promocode',
-            meta: { auth: true },
-            component: () => import('./components/Promocodes')
+            meta: {
+                auth: true,
+                roles: ['admin', 'office']
+            },
+            component: () => import('./components/Admin/Promocodes')
         },
     ]
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeResolve((to, from, next) => {
 
-    const currentUser = localStorage.getItem('authenticated')
-    const requireAuth = to.matched.some(record => record.meta.auth)
+    const authenticated = localStorage.getItem('authenticated')
+    const requireAuth = to.meta.auth
 
-    if(requireAuth && !currentUser) {
-        next('/login')
-    }else if(currentUser && to.name === 'login'){
-        next('/')
-    }else {
+    if(to.name === 'login' && authenticated){
+        next({name: 'dashboard'})
+    }else if(requireAuth){
+        if(!authenticated){
+            next({name: 'login'})
+        }else{
+            if (hasAccess(to.meta.roles)){
+                next()
+            }else {
+                next({name: 'noAccess'})
+            }
+        }
+    }else{
         next()
     }
 })
+
+function hasAccess(roles) {
+    const user = auth.state.user
+
+    if (user.is_admin) return true
+    if (roles.length === 0) return true
+    let has_access = user && roles.some(role => user.role_slugs.includes(role))
+    return !!has_access;
+}
 
 export default router;

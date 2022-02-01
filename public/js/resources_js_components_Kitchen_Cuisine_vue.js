@@ -269,9 +269,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Cuisine',
   data: function data() {
@@ -560,7 +557,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context9.prev = _context9.next) {
               case 0:
                 _context9.next = 2;
-                return axios.post('/api/cuisine/duty/set', {
+                return axios.post('/api/cuisine/duty', {
                   id: id
                 }).then(function (response) {
                   _this10.cuisine = response.data;
@@ -804,57 +801,43 @@ var render = function() {
         [
           _c(
             "v-col",
-            { attrs: { sm: "12", md: "2", lg: "2" } },
-            [
-              _c(
-                "v-list",
-                { attrs: { dense: "" } },
+            _vm._l(_vm.cuisines, function(c, key) {
+              return _c(
+                "v-chip",
+                {
+                  key: key,
+                  staticClass: "ma-1",
+                  class: c.duty ? "green" : "",
+                  attrs: { disabled: _vm.disabled, small: "", dark: "" },
+                  on: {
+                    click: function($event) {
+                      return _vm.showDetails(c)
+                    }
+                  }
+                },
                 [
-                  _c("v-subheader", [_vm._v("Кухни мира")]),
-                  _vm._v(" "),
-                  _c(
-                    "v-list-item-group",
-                    { attrs: { color: "primary" } },
-                    _vm._l(_vm.cuisines, function(cuisine, i) {
-                      return _c(
-                        "v-list-item",
-                        {
-                          key: i,
-                          class: cuisine.duty ? "light-green lighten-3" : "",
-                          on: {
-                            click: function($event) {
-                              return _vm.showDetails(cuisine)
-                            }
-                          }
-                        },
-                        [
-                          _c(
-                            "v-list-item-content",
-                            [
-                              _c("v-list-item-title", [
-                                _vm._v(
-                                  _vm._s(i + 1) + ". " + _vm._s(cuisine.name)
-                                )
-                              ])
-                            ],
-                            1
-                          )
-                        ],
-                        1
-                      )
-                    }),
-                    1
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(key + 1) +
+                      ". " +
+                      _vm._s(c.name) +
+                      "\n            "
                   )
-                ],
-                1
+                ]
               )
-            ],
+            }),
             1
-          ),
-          _vm._v(" "),
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-row",
+        [
           _c(
             "v-col",
-            { attrs: { sm: "12", md: "10", lg: "6" } },
+            { attrs: { sm: "12", md: "6" } },
             [
               _vm.cuisine
                 ? _c(
@@ -1055,7 +1038,7 @@ var render = function() {
           _vm._v(" "),
           _c(
             "v-col",
-            { attrs: { sm: "12", lg: "4" } },
+            { attrs: { sm: "12", md: "6" } },
             [
               _vm.dish
                 ? _c(

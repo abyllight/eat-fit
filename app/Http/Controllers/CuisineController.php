@@ -76,14 +76,15 @@ class CuisineController extends Controller
     public function setCuisine(Request $request): JsonResponse
     {
         $duty = Cuisine::find($request->id);
-        $current = Cuisine::where('is_on_duty', true)->first();
 
-        if ($duty && $current){
+        Cuisine::where('is_on_duty', true)
+            ->update([
+            'is_on_duty' => false
+        ]);
+
+        if ($duty){
             $duty->is_on_duty = true;
             $duty->save();
-
-            $current->is_on_duty = false;
-            $current->save();
         }
 
         return response()->json(new CuisineCollection($duty));

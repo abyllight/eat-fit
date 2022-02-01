@@ -9,7 +9,13 @@ class Week extends Model
 {
     use HasFactory;
 
-    public static function isWeekend():bool {
+    public static function isWeek():bool
+    {
+        return !Week::find(1)->is_weekend;
+    }
+
+    public static function isWeekend():bool
+    {
         return Week::find(1)->is_weekend;
     }
 }

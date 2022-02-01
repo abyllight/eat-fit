@@ -621,7 +621,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _this.amo_loading = true;
                 _context.next = 3;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/amo/leads').then(function () {
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/orders/eat-fit').then(function () {
                   _this.getOrders();
 
                   _this.getSelectStat();
@@ -686,8 +686,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context3.prev = _context3.next) {
               case 0:
                 _context3.next = 2;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/orders/select-stat').then(function (response) {
-                  _this3.select_stat = response.data;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/orders/stat').then(function (response) {
+                  _this3.select_stat = response.data.select;
                 })["catch"](function (error) {
                   console.log(error);
                 });

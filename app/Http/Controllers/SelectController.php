@@ -368,7 +368,53 @@ class SelectController extends Controller
         ]);
     }
 
+    public function generateCode()
+    {
+        $groups = Select::with('ingredients')
+            ->whereDate('created_at', Carbon::today())
+            ->where('dish_id', '!=', null)
+            ->get()
+            ->groupBy('ration_id');
+
+        foreach ($groups as $group){
+
+            $ids = [];
+            //beautify
+            foreach ($group as $item){
+                $ids[] = [
+                    'id'=> $item->id,
+                    'code' => null,
+                    'ids' => $item->getIngredientIds()
+                ];
+            }
+
+            for ($i = 0; $i < count($ids); $i++){
+
+                if ($ids[$i]['code'] === null){
+                    $ids[$i]['code'] = $i;
+                }else{
+                    continue;
+                }
+
+                for ($j = $i+1; $j < count($ids); $j++){
+                    $a = array_diff($ids[$i]['ids'], $ids[$j]['ids']);
+                    $b = array_diff($ids[$j]['ids'], $ids[$i]['ids']);
+
+                    if (count($a) === 0 && count($b) === 0){
+                        $ids[$j]['code'] = $i;
+                    }
+                }
+            }
+
+            foreach ($group as $key => $item){
+                $item->code = $ids[$key]['code'];
+                $item->save();
+            }
+        }
+    }
+
     public function export(){
+        //$this->generateCode();
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
@@ -416,6 +462,18 @@ class SelectController extends Controller
             ],
         ];
 
+        $code = [
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+                'wrapText' => true
+            ],
+            'font' => [
+                'bold' => true,
+                'size' => 32
+            ],
+        ];
+
         $sheet->getStyle('A1:M1')->applyFromArray($blackStyleArray);
 
         //Row height
@@ -435,7 +493,7 @@ class SelectController extends Controller
         $spreadsheet->getActiveSheet()->getColumnDimension('L')->setWidth(24);
         $spreadsheet->getActiveSheet()->getColumnDimension('M')->setWidth(24);
 
-        $orders = Order::where('type', 1)->where('is_active', true)->orderBy('size')->get();
+        $orders = Order::where('type', Order::EAT_FIT_SELECT)->where('is_active', true)->orderBy('size')->get();
         $letters = ['D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'];
         $n = 1;
         foreach ($orders as $key => $order){
@@ -461,8 +519,17 @@ class SelectController extends Controller
 
                 $content = 'X';
 
-                if ($s->is_active){
-                    $content = $s->dish_name. "\n";
+                if ($s->is_active && $s->code !== null){
+                    switch ($s->ration_id){
+                        case 1:
+                            $content = 'Z1-';
+                            break;
+                        case 2:
+                            $content = 'Z2-';
+                            break;
+                    }
+                    $content .= $s->code;
+                    /*$content = $s->dish_name. "\n";
 
                     if ($s->status === Select::WITHOUT){
                         $dish = Dish::getDutyDishByRation($s->ration_id);
@@ -482,16 +549,16 @@ class SelectController extends Controller
                         }
                     }
 
-                    $content.="\n".$s->description;
+                    $content.="\n".$s->description;*/
                 }
 
                 $sheet->setCellValue($letters[$i] . ($n+1), $content);
-                $sheet->getStyle($letters[$i] . ($n+1))->applyFromArray($center);
+                $sheet->getStyle($letters[$i] . ($n+1))->applyFromArray($code);
 
-                if ($s->status === Select::REPLACEMENT || $s->status === Select::WITHOUT || $s->status === Select::LITE){
+                /*if ($s->status === Select::REPLACEMENT || $s->status === Select::WITHOUT || $s->status === Select::LITE){
                     $sheet->getStyle($letters[$i] . ($n+1))
                         ->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB($s->getStatusColorExcel($s->status));
-                }
+                }*/
             }
 
             /*$sheet->setCellValue('D' . ($n+1), $order->order_name.' - '.$order->order_tag);
