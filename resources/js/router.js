@@ -190,6 +190,8 @@ router.beforeResolve((to, from, next) => {
 
     const authenticated = localStorage.getItem('authenticated')
     const requireAuth = to.meta.auth
+    const user = auth.state.user
+    console.log(user)
 
     if(to.name === 'login' && authenticated){
         next({name: 'dashboard'})
