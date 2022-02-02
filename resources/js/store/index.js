@@ -10,8 +10,7 @@ axios.defaults.baseURL = 'https://back.eatandfit.kz'
 
 export default new Vuex.Store({
     modules: {
-        auth: auth,
-        //admin: admin
+        auth: auth
     },
     state: {
         alert: {

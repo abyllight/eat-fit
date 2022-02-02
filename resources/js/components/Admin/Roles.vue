@@ -95,7 +95,7 @@ export default {
                 value: null
             }
         ],
-        link: '/api/roles/',
+        link: '/api/roles',
         is_edit: false
     }),
     mounted() {

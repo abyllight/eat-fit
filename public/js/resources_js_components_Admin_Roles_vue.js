@@ -125,7 +125,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         type: 'v-text-field',
         value: null
       }],
-      link: '/api/roles/',
+      link: '/api/roles',
       is_edit: false
     };
   },
@@ -732,15 +732,23 @@ var render = function() {
                               _vm._v(" "),
                               _vm._l(_vm.models, function(model) {
                                 return _c(model.type, {
+                                  directives: [
+                                    {
+                                      name: "mask",
+                                      rawName: "v-mask",
+                                      value:
+                                        model.model === "phone"
+                                          ? "+7 (###) ###-##-##"
+                                          : "",
+                                      expression:
+                                        "model.model === 'phone' ? '+7 (###) ###-##-##' : ''"
+                                    }
+                                  ],
                                   key: model.model,
                                   tag: "component",
                                   attrs: {
                                     label: model.label,
                                     "error-messages": _vm.errors[model.model],
-                                    "v-mask":
-                                      model.model === "phone"
-                                        ? "+7 (###) ###-##-##"
-                                        : "",
                                     chips: model.chips,
                                     items: model.items,
                                     "item-text": model.item_name,

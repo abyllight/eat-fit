@@ -124,7 +124,7 @@ export default {
                 value: null
             },
         ],
-        link: '/api/users/',
+        link: '/api/users',
         is_edit: false
     }),
     mounted() {
