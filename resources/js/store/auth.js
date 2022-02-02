@@ -30,7 +30,7 @@ export default {
         },
         me({ commit }){
             const auth = localStorage.getItem('authenticated')
-
+            console.log('auth from storage', auth)
             if (auth) {
                 axios.get('/api/user').then(response => {
                     commit('SET_AUTHENTICATED',  true)

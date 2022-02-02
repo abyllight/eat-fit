@@ -194,7 +194,7 @@ function hasAccess(roles) {
     const user = auth.state.user
     console.log(user)
     if (user.is_admin) return true
-    if (roles.length === 0) return false
+    if (roles.length === 0) return true
     let has_access = user && roles.some(role => user.role_slugs.includes(role))
     return !!has_access;
 }
