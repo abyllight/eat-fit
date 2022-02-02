@@ -25,7 +25,7 @@
                                     :is="model.type"
                                     :label="model.label"
                                     :error-messages="errors[model.model]"
-                                    :v-mask="model.model === 'phone' ? '+7 (###) ###-##-##' : ''"
+                                    v-mask="model.model === 'phone' ? '+7 (###) ###-##-##' : ''"
                                     :chips="model.chips"
                                     :items="model.items"
                                     :item-text="model.item_name"
