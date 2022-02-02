@@ -18,7 +18,7 @@ class ProductCollection extends JsonResource
         return [
             'id'    => $this->id,
             'title' => $this->title,
-            'image' => $this->image,
+            'image' => null,
             'description' => $this->description,
             'composition' => $this->composition,
             'price' => $this->price,

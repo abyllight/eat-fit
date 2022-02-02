@@ -17,7 +17,7 @@
                     <v-container fluid>
                         <v-row>
                             <v-col sm="12" lg="4" offset-lg="4">
-                                <img :src="image" width="320">
+                                <img v-if="hasImage" :src="image" width="320">
                                 <component
                                     v-for="model in models"
                                     :key="model.model"
@@ -91,14 +91,17 @@ export default {
                 return item.model === 'image'
             })
 
+            if (!image) return false
+
             return image.value !== null
         },
         image(){
-            let image = this.models.find(item => {
+            return ''
+            /*let image = this.models.find(item => {
                 return item.model === 'image'
             })
 
-            return image.value !== null ? 'storage/'+image.value : ''
+            return image.value !== null ? 'storage/'+image.value : ''*/
         }
     },
     methods: {
@@ -117,7 +120,7 @@ export default {
                 dataForm.append(item.model, item.value)
                 return params[item.model] = item.value;
             })
-            console.log(this.multipart, dataForm)
+
             axios({
                 method: this.method,
                 url: this.action_link,

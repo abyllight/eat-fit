@@ -289,13 +289,15 @@ __webpack_require__.r(__webpack_exports__);
       var image = this.models.find(function (item) {
         return item.model === 'image';
       });
+      if (!image) return false;
       return image.value !== null;
     },
     image: function image() {
-      var image = this.models.find(function (item) {
-        return item.model === 'image';
-      });
-      return image.value !== null ? 'storage/' + image.value : '';
+      return '';
+      /*let image = this.models.find(item => {
+          return item.model === 'image'
+      })
+       return image.value !== null ? 'storage/'+image.value : ''*/
     }
   },
   methods: {
@@ -316,7 +318,6 @@ __webpack_require__.r(__webpack_exports__);
         dataForm.append(item.model, item.value);
         return params[item.model] = item.value;
       });
-      console.log(this.multipart, dataForm);
       axios({
         method: this.method,
         url: this.action_link,
@@ -719,9 +720,11 @@ var render = function() {
                             "v-col",
                             { attrs: { sm: "12", lg: "4", "offset-lg": "4" } },
                             [
-                              _c("img", {
-                                attrs: { src: _vm.image, width: "320" }
-                              }),
+                              _vm.hasImage
+                                ? _c("img", {
+                                    attrs: { src: _vm.image, width: "320" }
+                                  })
+                                : _vm._e(),
                               _vm._v(" "),
                               _vm._l(_vm.models, function(model) {
                                 return _c(model.type, {
