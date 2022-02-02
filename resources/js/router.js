@@ -1,11 +1,12 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import auth from "./store/auth";
+import store from "./store/index.js";
 
 Vue.use(VueRouter)
 
 const router = new VueRouter({
-    mode: 'hash',
+    mode: 'history',
     base: process.env.BASE_URL,
     routes: [
         {
@@ -190,8 +191,6 @@ router.beforeResolve((to, from, next) => {
 
     const authenticated = localStorage.getItem('authenticated')
     const requireAuth = to.meta.auth
-    const user = auth.state.user
-    console.log(user)
 
     if(to.name === 'login' && authenticated){
         next({name: 'dashboard'})
