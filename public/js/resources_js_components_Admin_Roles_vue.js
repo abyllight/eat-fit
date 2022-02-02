@@ -261,6 +261,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "CRUD",
   props: {
@@ -270,7 +271,8 @@ __webpack_require__.r(__webpack_exports__);
     id: Number,
     models: Array,
     link: String,
-    isEdit: Boolean
+    isEdit: Boolean,
+    multipart: Boolean
   },
   data: function data() {
     return {
@@ -286,6 +288,18 @@ __webpack_require__.r(__webpack_exports__);
     },
     delete_link: function delete_link() {
       return this.link + this.id;
+    },
+    hasImage: function hasImage() {
+      var image = this.models.find(function (item) {
+        return item.model === 'image';
+      });
+      return image.value !== null;
+    },
+    image: function image() {
+      var image = this.models.find(function (item) {
+        return item.model === 'image';
+      });
+      return image.value !== null ? 'storage/' + image.value : '';
     }
   },
   methods: {
@@ -297,17 +311,23 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       var params = {};
+      var dataForm = new FormData();
       this.models.map(function (item) {
         if (item.model === 'phone') {
           item.value = _this.getPhone(item.value);
         }
 
+        dataForm.append(item.model, item.value);
         return params[item.model] = item.value;
       });
+      console.log(this.multipart, dataForm);
       axios({
         method: this.method,
         url: this.action_link,
-        data: params
+        data: this.multipart ? dataForm : params,
+        headers: {
+          "Content-Type": this.multipart ? "multipart/form-data" : 'application/json'
+        }
       }).then(function (response) {
         _this.$emit('refresh');
 
@@ -703,28 +723,24 @@ var render = function() {
                             "v-col",
                             { attrs: { sm: "12", lg: "4", "offset-lg": "4" } },
                             [
+                              _c("img", {
+                                attrs: { src: _vm.image, width: "320" }
+                              }),
+                              _vm._v(" "),
                               _vm._l(_vm.models, function(model) {
                                 return _c(model.type, {
-                                  directives: [
-                                    {
-                                      name: "mask",
-                                      rawName: "v-mask",
-                                      value:
-                                        model.model === "phone"
-                                          ? "+7 (###) ###-##-##"
-                                          : "",
-                                      expression:
-                                        "model.model === 'phone' ? '+7 (###) ###-##-##' : ''"
-                                    }
-                                  ],
                                   key: model.model,
                                   tag: "component",
                                   attrs: {
                                     label: model.label,
                                     "error-messages": _vm.errors[model.model],
+                                    "v-mask":
+                                      model.model === "phone"
+                                        ? "+7 (###) ###-##-##"
+                                        : "",
                                     chips: model.chips,
                                     items: model.items,
-                                    "item-text": "name",
+                                    "item-text": model.item_name,
                                     "item-value": "id",
                                     multiple: model.multiple,
                                     outlined: "",

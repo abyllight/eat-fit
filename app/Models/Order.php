@@ -68,7 +68,7 @@ class Order extends Model
     const XL = 5;
     const EAT = 6;
 
-    const EAT_FIT_ARRAY = [self::EAT_FIT_LITE, self::EAT_FIT_SELECT, self::EAT_FIT_DETOX];
+    const EAT_FIT_ARRAY = [self::EAT_FIT_LITE, self::EAT_FIT_SELECT, self::EAT_FIT_DETOX, self::EAT_FIT_GO];
 
     const TYPES = ['LITE', 'SELECT', 'DETOX', 'GO', 'CHILL', 'CAKES'];
 

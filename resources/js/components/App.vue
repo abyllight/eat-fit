@@ -145,6 +145,24 @@ export default {
                 ]
             },
             {
+                title: 'Лавка',
+                roles: ['admin'],
+                links: [
+                    {
+                        title: 'Категории',
+                        link: '/product-categories',
+                        icon: 'alpha-c-box',
+                        roles: ['admin', 'office']
+                    },
+                    {
+                        title: 'Продукты',
+                        link: '/products',
+                        icon: 'alpha-p-box',
+                        roles: ['admin', 'office']
+                    }
+                ]
+            },
+            {
                 title: 'Диетология',
                 roles: ['admin', 'diet'],
                 links: [

@@ -11,6 +11,8 @@ use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\ListController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductCategoryController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PromocodeController;
 use App\Http\Controllers\RationController;
 use App\Http\Controllers\ReportController;
@@ -117,6 +119,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/rations/required', [RationController::class, 'getRequiredRations']);
 
     Route::resource('promocodes', PromocodeController::class)->except(['create', 'show', 'edit']);
+    Route::resource('products', ProductController::class)->except(['create', 'show', 'edit']);
+    Route::resource('product-categories', ProductCategoryController::class)->except(['create', 'show', 'edit']);
+
 });
 
 Route::get('/promocode/{promocode}', [PromocodeController::class, 'check']);

@@ -15,7 +15,7 @@
                     <v-toolbar
                         flat
                     >
-                        <v-toolbar-title>Пользователи</v-toolbar-title>
+                        <v-toolbar-title>Категории</v-toolbar-title>
                         <v-divider
                             class="mx-4"
                             inset
@@ -65,77 +65,45 @@
 
 <script>
 import CRUD from "../Utilities/CRUD";
-
 export default {
-    name: "Users",
+    name: "ProductCategory",
     components: { CRUD },
     data: () => ({
         loading: true,
         dialog: false,
         dialogDelete: false,
-        title: 'Пользователь',
+        title: 'Категория',
         headers: [
             { text: '#', value: 'index' },
-            { text: 'Имя', value: 'name' },
-            { text: 'Телефон', value: 'phone', sortable: false },
-            { text: 'Город', value: 'city'},
-            { text: 'Роли', value: 'role_names', sortable: false },
+            { text: 'Имя', value: 'title' },
             { text: 'Действия', value: 'actions', sortable: false },
         ],
         items: [],
         id: null,
-        roles: [],
-        cities: [],
         models: [
             {
-                model: 'name',
-                label: 'Имя',
+                model: 'title',
+                label: 'Название',
                 type: 'v-text-field',
                 value: null
             },
             {
-                model: 'phone',
-                label: 'Телефон',
-                type: 'v-text-field',
+                model: 'image',
+                label: 'Картинка',
+                type: 'v-file-input',
                 value: null
-            },
-            {
-                model: 'roles',
-                label: 'Роли',
-                type: 'v-select',
-                chips: true,
-                multiple: true,
-                item_name: 'name',
-                items: [],
-                value: null
-            },
-            {
-                model: 'city_id',
-                label: 'Город',
-                type: 'v-select',
-                item_name: 'name',
-                items: [],
-                value: null
-            },
-            {
-                model: 'password',
-                label: 'Пароль',
-                type: 'v-text-field',
-                value: null
-            },
+            }
         ],
-        link: '/api/users/',
+        link: '/api/product-categories/',
         is_edit: false
     }),
     mounted() {
-        this.fetchUsers()
-        this.fetchRoles()
-        this.fetchCities()
+        this.fetchCategories()
     },
     methods: {
-        async fetchUsers() {
+        async fetchCategories() {
             await axios
-                .get('/api/users')
+                .get('/api/product-categories')
                 .then(response => {
                     this.items = response.data
                 })
@@ -143,28 +111,6 @@ export default {
                     console.log(error)
                 })
                 .finally(() => (this.loading = false))
-        },
-        async fetchRoles() {
-            await axios
-                .get('/api/roles')
-                .then(response => {
-                    this.roles = response.data
-                    this.models[2].items = response.data
-                })
-                .catch(error => {
-                    console.log(error)
-                })
-        },
-        async fetchCities() {
-            await axios
-                .get('/api/cities')
-                .then(response => {
-                    this.roles = response.data
-                    this.models[3].items = response.data
-                })
-                .catch(error => {
-                    console.log(error)
-                })
         },
         create(){
             this.dialog = true
@@ -187,7 +133,7 @@ export default {
         },
         refresh(){
             this.close()
-            this.fetchUsers()
+            this.fetchCategories()
         },
         deleteItem(id){
             this.id = id

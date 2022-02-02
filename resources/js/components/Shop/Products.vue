@@ -11,11 +11,14 @@
                 <template v-slot:item.index="{ index }">
                     {{ index + 1 }}
                 </template>
+                <template v-slot:item.image="{ item }">
+                    <img :src="'storage/'+item.image" width="40">
+                </template>
                 <template v-slot:top>
                     <v-toolbar
                         flat
                     >
-                        <v-toolbar-title>Пользователи</v-toolbar-title>
+                        <v-toolbar-title>Продукты</v-toolbar-title>
                         <v-divider
                             class="mx-4"
                             inset
@@ -56,6 +59,7 @@
                 :link="link"
                 :id="id"
                 :is-edit="is_edit"
+                :multipart="multipart"
                 @close="close"
                 @refresh="refresh"
             />
@@ -65,77 +69,115 @@
 
 <script>
 import CRUD from "../Utilities/CRUD";
-
 export default {
-    name: "Users",
+    name: "Products",
     components: { CRUD },
     data: () => ({
         loading: true,
         dialog: false,
         dialogDelete: false,
-        title: 'Пользователь',
+        title: 'Продукт',
+        categories: [],
         headers: [
             { text: '#', value: 'index' },
-            { text: 'Имя', value: 'name' },
-            { text: 'Телефон', value: 'phone', sortable: false },
-            { text: 'Город', value: 'city'},
-            { text: 'Роли', value: 'role_names', sortable: false },
+            { text: 'Image', value: 'image' },
+            { text: 'Имя', value: 'title' },
+            { text: 'Цена', value: 'price' },
+            { text: 'Категория', value: 'category_name' },
             { text: 'Действия', value: 'actions', sortable: false },
         ],
         items: [],
         id: null,
-        roles: [],
-        cities: [],
+        multipart: true,
         models: [
             {
-                model: 'name',
-                label: 'Имя',
+                model: 'title',
+                label: 'Название',
                 type: 'v-text-field',
                 value: null
             },
             {
-                model: 'phone',
-                label: 'Телефон',
-                type: 'v-text-field',
-                value: null
-            },
-            {
-                model: 'roles',
-                label: 'Роли',
+                model: 'category_id',
+                label: 'Категория',
                 type: 'v-select',
-                chips: true,
-                multiple: true,
-                item_name: 'name',
+                chips: false,
+                multiple: false,
+                item_name: 'title',
                 items: [],
                 value: null
             },
             {
-                model: 'city_id',
-                label: 'Город',
-                type: 'v-select',
-                item_name: 'name',
-                items: [],
+                model: 'image',
+                label: 'Картинка',
+                type: 'v-file-input',
                 value: null
             },
             {
-                model: 'password',
-                label: 'Пароль',
+                model: 'price',
+                label: 'Цена',
                 type: 'v-text-field',
                 value: null
             },
+            {
+                model: 'wholesale_price',
+                label: 'Цена оптовая',
+                type: 'v-text-field',
+                value: null
+            },
+            {
+                model: 'description',
+                label: 'Описание',
+                type: 'v-textarea',
+                value: null
+            },
+            {
+                model: 'composition',
+                label: 'Состав',
+                type: 'v-textarea',
+                value: null
+            },
+            {
+                model: 'weight',
+                label: 'Вес',
+                type: 'v-text-field',
+                value: null
+            },
+            {
+                model: 'kcal',
+                label: 'Ккал',
+                type: 'v-text-field',
+                value: null
+            },
+            {
+                model: 'fat',
+                label: 'Жиры',
+                type: 'v-text-field',
+                value: null
+            },
+            {
+                model: 'protein',
+                label: 'Белки',
+                type: 'v-text-field',
+                value: null
+            },
+            {
+                model: 'carbohydrate',
+                label: 'Углеводы',
+                type: 'v-text-field',
+                value: null
+            }
         ],
-        link: '/api/users/',
+        link: '/api/products/',
         is_edit: false
     }),
     mounted() {
-        this.fetchUsers()
-        this.fetchRoles()
-        this.fetchCities()
+        this.fetchProducts()
+        this.fetchCategories()
     },
     methods: {
-        async fetchUsers() {
+        async fetchProducts() {
             await axios
-                .get('/api/users')
+                .get('/api/products')
                 .then(response => {
                     this.items = response.data
                 })
@@ -144,27 +186,17 @@ export default {
                 })
                 .finally(() => (this.loading = false))
         },
-        async fetchRoles() {
+        async fetchCategories() {
             await axios
-                .get('/api/roles')
+                .get('/api/product-categories')
                 .then(response => {
-                    this.roles = response.data
-                    this.models[2].items = response.data
+                    this.categories = response.data
+                    this.models[1].items = response.data
                 })
                 .catch(error => {
                     console.log(error)
                 })
-        },
-        async fetchCities() {
-            await axios
-                .get('/api/cities')
-                .then(response => {
-                    this.roles = response.data
-                    this.models[3].items = response.data
-                })
-                .catch(error => {
-                    console.log(error)
-                })
+                .finally(() => (this.loading = false))
         },
         create(){
             this.dialog = true
@@ -187,7 +219,7 @@ export default {
         },
         refresh(){
             this.close()
-            this.fetchUsers()
+            this.fetchCategories()
         },
         deleteItem(id){
             this.id = id

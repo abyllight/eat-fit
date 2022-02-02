@@ -17,6 +17,7 @@
                     <v-container fluid>
                         <v-row>
                             <v-col sm="12" lg="4" offset-lg="4">
+                                <img :src="image" width="320">
                                 <component
                                     v-for="model in models"
                                     :key="model.model"
@@ -24,10 +25,10 @@
                                     :is="model.type"
                                     :label="model.label"
                                     :error-messages="errors[model.model]"
-                                    v-mask="model.model === 'phone' ? '+7 (###) ###-##-##' : ''"
+                                    :v-mask="model.model === 'phone' ? '+7 (###) ###-##-##' : ''"
                                     :chips="model.chips"
                                     :items="model.items"
-                                    item-text="name"
+                                    :item-text="model.item_name"
                                     item-value="id"
                                     :multiple="model.multiple"
                                     outlined
@@ -69,7 +70,8 @@ export default {
         id: Number,
         models: Array,
         link: String,
-        isEdit: Boolean
+        isEdit: Boolean,
+        multipart: Boolean
     },
     data: () => ({
         errors: []
@@ -83,6 +85,20 @@ export default {
         },
         delete_link(){
             return this.link + this.id
+        },
+        hasImage(){
+            let image = this.models.find(item => {
+                return item.model === 'image'
+            })
+
+            return image.value !== null
+        },
+        image(){
+            let image = this.models.find(item => {
+                return item.model === 'image'
+            })
+
+            return image.value !== null ? 'storage/'+image.value : ''
         }
     },
     methods: {
@@ -92,18 +108,21 @@ export default {
         },
         save(){
             let params = {}
+            let dataForm = new FormData()
 
             this.models.map(item => {
                 if (item.model === 'phone'){
                     item.value = this.getPhone(item.value)
                 }
+                dataForm.append(item.model, item.value)
                 return params[item.model] = item.value;
             })
-
+            console.log(this.multipart, dataForm)
             axios({
                 method: this.method,
                 url: this.action_link,
-                data: params
+                data: this.multipart ? dataForm : params,
+                headers: { "Content-Type": this.multipart ? "multipart/form-data" : 'application/json' }
             }).then(response => {
                 this.$emit('refresh')
                 this.$store.dispatch('showAlert', {

@@ -165,6 +165,24 @@ const router = new VueRouter({
             },
             component: () => import('./components/Admin/Promocodes')
         },
+        {
+            path: '/products',
+            name: 'products',
+            meta: {
+                auth: true,
+                roles: ['admin', 'office']
+            },
+            component: () => import('./components/Shop/Products')
+        },
+        {
+            path: '/product-categories',
+            name: 'product_categories',
+            meta: {
+                auth: true,
+                roles: ['admin', 'office']
+            },
+            component: () => import('./components/Shop/ProductCategory')
+        },
     ]
 })
 
