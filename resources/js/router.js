@@ -192,9 +192,9 @@ router.beforeResolve((to, from, next) => {
 
 function hasAccess(roles) {
     const user = auth.state.user
-
+    console.log(user)
     if (user.is_admin) return true
-    if (roles.length === 0) return true
+    if (roles.length === 0) return false
     let has_access = user && roles.some(role => user.role_slugs.includes(role))
     return !!has_access;
 }
