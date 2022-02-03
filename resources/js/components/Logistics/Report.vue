@@ -112,7 +112,16 @@
                                         {{ item.report_status }}
                                     </v-chip>
                                 </td>
-                                <td>{{ item.reported_at }}</td>
+                                <td>
+                                    {{ item.reported_at }}
+                                    <v-chip
+                                        label
+                                        small
+                                        :color="item.report_time_color"
+                                    >
+                                        {{ item.report_time_status }}
+                                    </v-chip>
+                                </td>
                                 <td>
                                     <v-chip
                                         label

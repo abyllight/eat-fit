@@ -151,6 +151,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Report',
@@ -983,9 +992,36 @@ var render = function() {
                                         1
                                       ),
                                       _vm._v(" "),
-                                      _c("td", [
-                                        _vm._v(_vm._s(item.reported_at))
-                                      ]),
+                                      _c(
+                                        "td",
+                                        [
+                                          _vm._v(
+                                            "\n                                 " +
+                                              _vm._s(item.reported_at) +
+                                              "\n                                 "
+                                          ),
+                                          _c(
+                                            "v-chip",
+                                            {
+                                              attrs: {
+                                                label: "",
+                                                small: "",
+                                                color: item.report_time_color
+                                              }
+                                            },
+                                            [
+                                              _vm._v(
+                                                "\n                                     " +
+                                                  _vm._s(
+                                                    item.report_time_status
+                                                  ) +
+                                                  "\n                                 "
+                                              )
+                                            ]
+                                          )
+                                        ],
+                                        1
+                                      ),
                                       _vm._v(" "),
                                       _c(
                                         "td",

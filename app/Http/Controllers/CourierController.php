@@ -118,6 +118,7 @@ class CourierController extends Controller
                 $new->order_id = $request->order_id;
                 $new->courier_id = Auth::user()->id;
                 $new->report_status = $request->status;
+                $new->report_time_status = $this->getStatus($order->getTime(),$now);
                 $new->comment = $request->comment;
                 $new->reported_at = $now;
                 $new->payment_type = $request->payment_type;

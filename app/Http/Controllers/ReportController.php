@@ -55,8 +55,10 @@ class ReportController extends Controller
                 'comment' => $item->comment,
                 'report_status' => $item->getReportStatus(),
                 'report_color' => $item->getReportColor(),
-                'notification_status' => $item->getNotificationStatus(),
-                'notification_color' => $item->getNotificationColor(),
+                'report_time_status' => $item->getTimeStatus($item->report_time_status),
+                'report_time_color' => $item->getTimeColor($item->report_time_status),
+                'notification_status' => $item->getTimeStatus($item->notification_status),
+                'notification_color' => $item->getTimeColor($item->notification_status),
                 'notified_at' => $item->getNotifiedAt(),
                 'reported_at' => $item->getReportedAt()
             ];

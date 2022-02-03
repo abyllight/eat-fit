@@ -65,9 +65,9 @@ class Report extends Model
         return $color;
     }
 
-    public function getNotificationStatus(): string
+    public function getTimeStatus($status): string
     {
-        switch ($this->notification_status){
+        switch ($status){
             case '0':
                 $status = 'вовремя';
                 break;
@@ -84,9 +84,9 @@ class Report extends Model
         return $status;
     }
 
-    public function getNotificationColor(): string
+    public function getTimeColor($status): string
     {
-        switch ($this->notification_status){
+        switch ($status){
             case '0':
                 $color = 'green';
                 break;

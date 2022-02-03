@@ -18,13 +18,19 @@ class ReportCollection extends JsonResource
         return [
             'id' => $this->id,
             'courier' => $this->courier->name,
-            'order' => $this->order->name,
+            'time' => $this->order->getTime(),
+            'phone' => $this->order->phone,
+            'name' => $this->order->name,
+            'address' => $this->order->getYaddress(),
+            'amount' => $this->amount ?? '-',
+            'type' => $this->payment_type,
             'comment' => $this->comment,
-            'amount' => $this->amount,
-            'payment_type' => $this->payment_type,
-            'reported_at' => $this->reported_at,
-            'notified_at' => $this->notified_at,
-            'status' => $this->status
+            'report_status' => $this->getReportStatus(),
+            'report_color' => $this->getReportColor(),
+            'notification_status' => $this->getNotificationStatus(),
+            'notification_color' => $this->getNotificationColor(),
+            'notified_at' => $this->getNotifiedAt(),
+            'reported_at' => $this->getReportedAt()
         ];
     }
 }
