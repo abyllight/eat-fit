@@ -97,6 +97,7 @@ export default {
                 model: 'phone',
                 label: 'Телефон',
                 type: 'v-text-field',
+                mask: '+7 (###) ###-##-##',
                 value: null
             },
             {

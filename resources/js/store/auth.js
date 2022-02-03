@@ -29,7 +29,6 @@ export default {
             location.reload()
         },
         async me({ commit }){
-            console.log('auth')
             const auth = localStorage.getItem('authenticated')
 
             if (auth) {

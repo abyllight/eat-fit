@@ -280,10 +280,10 @@ __webpack_require__.r(__webpack_exports__);
       return this.isEdit ? 'PATCH' : 'POST';
     },
     action_link: function action_link() {
-      return this.isEdit ? this.link + this.id : this.link;
+      return this.isEdit ? this.link + '/' + this.id : this.link;
     },
     delete_link: function delete_link() {
-      return this.link + this.id;
+      return this.link + '/' + this.id;
     },
     hasImage: function hasImage() {
       var image = this.models.find(function (item) {
@@ -311,10 +311,6 @@ __webpack_require__.r(__webpack_exports__);
       var params = {};
       var dataForm = new FormData();
       this.models.map(function (item) {
-        if (item.model === 'phone') {
-          item.value = _this.getPhone(item.value);
-        }
-
         dataForm.append(item.model, item.value);
         return params[item.model] = item.value;
       });
@@ -353,9 +349,6 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         console.log(error);
       });
-    },
-    getPhone: function getPhone(phone) {
-      return phone.replace(/[^0-9]/g, '');
     }
   }
 });
@@ -732,12 +725,8 @@ var render = function() {
                                     {
                                       name: "mask",
                                       rawName: "v-mask",
-                                      value:
-                                        model.model === "phone"
-                                          ? "+7 (###) ###-##-##"
-                                          : "",
-                                      expression:
-                                        "model.model === 'phone' ? '+7 (###) ###-##-##' : ''"
+                                      value: model.mask,
+                                      expression: "model.mask"
                                     }
                                   ],
                                   key: model.model,

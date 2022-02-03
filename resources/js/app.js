@@ -29,7 +29,7 @@ axios.interceptors.response.use(
 
 Vue.use(Vuetify)
 Vue.use(VueMask)
-console.log('start')
+
 store.dispatch('auth/me').then(() => {
     new Vue({
         vuetify: new Vuetify(),

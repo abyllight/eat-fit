@@ -24,8 +24,8 @@
                                     v-model="model.value"
                                     :is="model.type"
                                     :label="model.label"
+                                    v-mask="model.mask"
                                     :error-messages="errors[model.model]"
-                                    v-mask="model.model === 'phone' ? '+7 (###) ###-##-##' : ''"
                                     :chips="model.chips"
                                     :items="model.items"
                                     :item-text="model.item_name"
@@ -81,10 +81,10 @@ export default {
             return this.isEdit ? 'PATCH' : 'POST'
         },
         action_link(){
-            return this.isEdit ? this.link + this.id : this.link
+            return this.isEdit ? this.link + '/' + this.id : this.link
         },
         delete_link(){
-            return this.link + this.id
+            return this.link + '/' + this.id
         },
         hasImage(){
             let image = this.models.find(item => {
@@ -114,9 +114,6 @@ export default {
             let dataForm = new FormData()
 
             this.models.map(item => {
-                if (item.model === 'phone'){
-                    item.value = this.getPhone(item.value)
-                }
                 dataForm.append(item.model, item.value)
                 return params[item.model] = item.value;
             })
@@ -153,9 +150,6 @@ export default {
                 .catch(error => {
                     console.log(error)
                 })
-        },
-        getPhone(phone) {
-            return phone.replace(/[^0-9]/g,'')
         }
     }
 }

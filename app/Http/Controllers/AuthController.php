@@ -17,6 +17,8 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
+        $credentials['phone'] = User::uglifyMobile($credentials['phone']);
+
         if (Auth::attempt($credentials)) {
             return response()->json([
                 'status' => true,

@@ -51,11 +51,10 @@ export default {
     methods: {
         async submit () {
             this.loading = true
-            let phone = this.getPhone()
 
             axios.get('/csrf-cookie').then(() => {
                 axios.post('/api/login', {
-                    phone: phone,
+                    phone: this.phone,
                     password: this.password
                 }).then(response => {
                     this.loading = false
@@ -79,9 +78,6 @@ export default {
                     type: 'error'
                 })
             })
-      },
-      getPhone() {
-          return this.phone.replace(/[^0-9]/g,'')
       }
     }
 }

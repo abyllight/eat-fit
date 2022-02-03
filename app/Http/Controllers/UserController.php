@@ -34,6 +34,8 @@ class UserController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        $request->phone = User::uglifyMobile($request->phone);
+
         $request->validate([
             'name' => 'required',
             'phone' => 'required|unique:users,phone|min:11',
@@ -66,6 +68,8 @@ class UserController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
+        $request->phone = User::uglifyMobile($request->phone);
+
         $request->validate([
             'name' => 'required',
             'phone' => 'required|min:11|unique:users,phone,' . $id,
