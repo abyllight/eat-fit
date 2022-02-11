@@ -123,6 +123,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('products', ProductController::class)->except(['create', 'show', 'edit']);
     Route::resource('product-categories', ProductCategoryController::class)->except(['create', 'show', 'edit']);
     Route::resource('brands', BrandController::class)->except(['create', 'show', 'edit']);
+
+    Route::get('/optimize', [RationController::class, 'getRequired']);
+
 });
 
 Route::get('/promocode/{promocode}', [PromocodeController::class, 'check']);
