@@ -17,23 +17,42 @@
                     <v-container fluid>
                         <v-row>
                             <v-col sm="12" lg="4" offset-lg="4">
-                                <img v-if="hasImage" :src="image" width="320">
-                                <component
+                                <template
                                     v-for="model in models"
-                                    :key="model.model"
-                                    v-model="model.value"
-                                    :is="model.type"
-                                    :label="model.label"
-                                    v-mask="model.mask"
-                                    :error-messages="errors[model.model]"
-                                    :chips="model.chips"
-                                    :items="model.items"
-                                    :item-text="model.item_name"
-                                    item-value="id"
-                                    :multiple="model.multiple"
-                                    outlined
-                                    clearable
-                                ></component>
+                                >
+                                    <img v-if="isInputFile(model)" :src="'storage/'+model.value" width="128">
+                                    <component
+                                        :key="model.model"
+                                        v-if="model.mask"
+                                        v-model="model.value"
+                                        v-mask="model.mask"
+                                        :is="model.type"
+                                        :label="model.label"
+                                        :error-messages="errors[model.model]"
+                                        :chips="model.chips"
+                                        :items="model.items"
+                                        :item-text="model.item_name"
+                                        item-value="id"
+                                        :multiple="model.multiple"
+                                        outlined
+                                        clearable
+                                    ></component>
+                                    <component
+                                        v-else
+                                        :key="model.model"
+                                        v-model="isInputFile(model) ? [] : model.value"
+                                        :is="model.type"
+                                        :label="model.label"
+                                        :error-messages="errors[model.model]"
+                                        :chips="model.chips"
+                                        :items="model.items"
+                                        :item-text="model.item_name"
+                                        item-value="id"
+                                        :multiple="model.multiple"
+                                        outlined
+                                        clearable
+                                    ></component>
+                                </template>
                                 <v-btn
                                     color="primary"
                                     @click="save"
@@ -78,6 +97,10 @@ export default {
     }),
     computed: {
         method(){
+            if (this.multipart) return 'POST'
+            return this.isEdit ? 'PATCH' : 'POST'
+        },
+        multipart_method(){
             return this.isEdit ? 'PATCH' : 'POST'
         },
         action_link(){
@@ -85,29 +108,15 @@ export default {
         },
         delete_link(){
             return this.link + '/' + this.id
-        },
-        hasImage(){
-            let image = this.models.find(item => {
-                return item.model === 'image'
-            })
-
-            if (!image) return false
-
-            return image.value !== null
-        },
-        image(){
-            return ''
-            /*let image = this.models.find(item => {
-                return item.model === 'image'
-            })
-
-            return image.value !== null ? 'storage/'+image.value : ''*/
         }
     },
     methods: {
         close() {
             this.errors = []
             this.$emit('close')
+        },
+        isInputFile(model){
+            return model.type === 'v-file-input' && model.value
         },
         save(){
             let params = {}
@@ -118,11 +127,17 @@ export default {
                 return params[item.model] = item.value;
             })
 
+            dataForm.append('_method', this.multipart_method);
+
+            let data = this.multipart ? dataForm : params
+
             axios({
                 method: this.method,
                 url: this.action_link,
-                data: this.multipart ? dataForm : params,
-                headers: { "Content-Type": this.multipart ? "multipart/form-data" : 'application/json' }
+                data: data,
+                headers: {
+                    'content-type': this.multipart ? 'multipart/form-data' : 'application/json'
+                }
             }).then(response => {
                 this.$emit('refresh')
                 this.$store.dispatch('showAlert', {

@@ -11,6 +11,7 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
+        'brand_id',
         'category_id',
         'title',
         'description',
@@ -27,9 +28,19 @@ class Product extends Model
         'is_active'
     ];
 
+    public function brand(): BelongsTo
+    {
+        return $this->belongsTo(Brand::class, 'brand_id', 'id');
+    }
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(ProductCategory::class, 'category_id', 'id');
+    }
+
+    public function getBrandName()
+    {
+        return $this->brand ? $this->brand->title : '';
     }
 
     public function getCategoryName()

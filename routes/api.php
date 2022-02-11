@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CourierController;
@@ -121,10 +122,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('promocodes', PromocodeController::class)->except(['create', 'show', 'edit']);
     Route::resource('products', ProductController::class)->except(['create', 'show', 'edit']);
     Route::resource('product-categories', ProductCategoryController::class)->except(['create', 'show', 'edit']);
-
+    Route::resource('brands', BrandController::class)->except(['create', 'show', 'edit']);
 });
 
 Route::get('/promocode/{promocode}', [PromocodeController::class, 'check']);
+
+Route::get('/products-all', [ProductController::class, 'getProducts']);
+Route::get('/brands-all', [BrandController::class, 'getBrands']);
 
 Route::get('/webhook', [AdminController::class, 'webhook']);
 

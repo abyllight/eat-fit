@@ -2,13 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ProductCategory;
+use App\Http\Resources\BrandCollection;
+use App\Models\Brand;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-class ProductCategoryController extends Controller
+class BrandController extends Controller
 {
+    public function getBrands(): JsonResponse
+    {
+        return response()->json(BrandCollection::collection(Brand::all()));
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +22,7 @@ class ProductCategoryController extends Controller
      */
     public function index(): JsonResponse
     {
-        return response()->json(ProductCategory::all());
+        return response()->json(Brand::all());
     }
 
     /**
@@ -31,23 +37,23 @@ class ProductCategoryController extends Controller
             'title' => 'required'
         ]);
 
-        $category = new ProductCategory();
-        $category->title = $request->title;
-        $category->is_active = true;
+        $brand = new Brand();
+        $brand->title = $request->title;
+        $brand->is_active = true;
 
         if ($request->has('image') && $request->image !== null && $request->image !== "null"){
             $request->validate([
                 'image' => 'image|mimes:jpeg,jpg,png|max:10000'
             ]);
 
-            $category->image = $request->file('image')->store('categories', 'public');
+            $brand->image = $request->file('image')->store('brands', 'public');
         }
 
-        $category->save();
+        $brand->save();
 
         return response()->json([
             'status' => true,
-            'msg' => 'Категория добавлена'
+            'msg' => 'Брэнд добавлен'
         ]);
     }
 
@@ -64,30 +70,30 @@ class ProductCategoryController extends Controller
             'title' => 'required'
         ]);
 
-        $category = ProductCategory::find($id);
+        $brand = Brand::find($id);
 
-        if (!$category){
+        if (!$brand){
             return response()->json([
                 'status' => false,
-                'msg' => 'Категория не найдена'
+                'msg' => 'Брэнд не найден'
             ]);
         }
 
-        if ($request->has('image') && $request->image !== null && $request->image !== "null" && $request->image !== $category->image){
+        if ($request->has('image') && $request->image !== null && $request->image !== "null" && $request->image !== $brand->image){
             $request->validate([
                 'image' => 'image|mimes:jpeg,jpg,png|max:10000'
             ]);
 
-            Storage::disk('public')->delete($category->image);
-            $category->image = $request->file('image')->store('categories', 'public');
+            Storage::disk('public')->delete($brand->image);
+            $brand->image = $request->file('image')->store('brands', 'public');
         }
 
-        $category->title = $request->title;
-        $category->save();
+        $brand->title = $request->title;
+        $brand->save();
 
         return response()->json([
             'status' => true,
-            'msg' => 'Категория редактирована'
+            'msg' => 'Брэнд редактирован'
         ]);
     }
 
@@ -99,27 +105,27 @@ class ProductCategoryController extends Controller
      */
     public function destroy($id): JsonResponse
     {
-        $category = ProductCategory::find($id);
+        $brand = Brand::find($id);
 
-        if (!$category){
+        if (!$brand){
             return response()->json([
                 'status' => false,
-                'msg' => 'Категория не найдена'
+                'msg' => 'Брэнд не найден'
             ]);
         }
 
-        foreach ($category->products as $product){
-            $product->category_id = null;
+        foreach ($brand->products as $product){
+            $product->brand_id = null;
             $product->save();
         }
 
-        Storage::disk('public')->delete($category->image);
+        Storage::disk('public')->delete($brand->image);
 
-        $category->delete();
+        $brand->delete();
 
         return response()->json([
             'status' => true,
-            'msg' => 'Категория удалена'
+            'msg' => 'Брэнд удален'
         ]);
     }
 }

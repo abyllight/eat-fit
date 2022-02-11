@@ -78,11 +78,13 @@ export default {
         dialogDelete: false,
         title: 'Продукт',
         categories: [],
+        brands: [],
         headers: [
             { text: '#', value: 'index' },
             { text: 'Image', value: 'image' },
             { text: 'Имя', value: 'title' },
             { text: 'Цена', value: 'price' },
+            { text: 'Брэнд', value: 'brand_name' },
             { text: 'Категория', value: 'category_name' },
             { text: 'Действия', value: 'actions', sortable: false },
         ],
@@ -99,6 +101,16 @@ export default {
             {
                 model: 'category_id',
                 label: 'Категория',
+                type: 'v-select',
+                chips: false,
+                multiple: false,
+                item_name: 'title',
+                items: [],
+                value: null
+            },
+            {
+                model: 'brand_id',
+                label: 'Брэнд',
                 type: 'v-select',
                 chips: false,
                 multiple: false,
@@ -167,11 +179,12 @@ export default {
                 value: null
             }
         ],
-        link: '/api/products/',
+        link: '/api/products',
         is_edit: false
     }),
     mounted() {
         this.fetchProducts()
+        this.fetchBrands()
         this.fetchCategories()
     },
     methods: {
@@ -180,6 +193,18 @@ export default {
                 .get('/api/products')
                 .then(response => {
                     this.items = response.data
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+                .finally(() => (this.loading = false))
+        },
+        async fetchBrands() {
+            await axios
+                .get('/api/brands')
+                .then(response => {
+                    this.brands = response.data
+                    this.models[2].items = response.data
                 })
                 .catch(error => {
                     console.log(error)
@@ -219,7 +244,7 @@ export default {
         },
         refresh(){
             this.close()
-            this.fetchCategories()
+            this.fetchProducts()
         },
         deleteItem(id){
             this.id = id

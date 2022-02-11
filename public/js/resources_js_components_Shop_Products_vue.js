@@ -102,6 +102,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       dialogDelete: false,
       title: 'Продукт',
       categories: [],
+      brands: [],
       headers: [{
         text: '#',
         value: 'index'
@@ -114,6 +115,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }, {
         text: 'Цена',
         value: 'price'
+      }, {
+        text: 'Брэнд',
+        value: 'brand_name'
       }, {
         text: 'Категория',
         value: 'category_name'
@@ -133,6 +137,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }, {
         model: 'category_id',
         label: 'Категория',
+        type: 'v-select',
+        chips: false,
+        multiple: false,
+        item_name: 'title',
+        items: [],
+        value: null
+      }, {
+        model: 'brand_id',
+        label: 'Брэнд',
         type: 'v-select',
         chips: false,
         multiple: false,
@@ -190,12 +203,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         type: 'v-text-field',
         value: null
       }],
-      link: '/api/products/',
+      link: '/api/products',
       is_edit: false
     };
   },
   mounted: function mounted() {
     this.fetchProducts();
+    this.fetchBrands();
     this.fetchCategories();
   },
   methods: {
@@ -224,7 +238,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee);
       }))();
     },
-    fetchCategories: function fetchCategories() {
+    fetchBrands: function fetchBrands() {
       var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
@@ -233,9 +247,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.next = 2;
-                return axios.get('/api/product-categories').then(function (response) {
-                  _this2.categories = response.data;
-                  _this2.models[1].items = response.data;
+                return axios.get('/api/brands').then(function (response) {
+                  _this2.brands = response.data;
+                  _this2.models[2].items = response.data;
                 })["catch"](function (error) {
                   console.log(error);
                 })["finally"](function () {
@@ -248,6 +262,32 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             }
           }
         }, _callee2);
+      }))();
+    },
+    fetchCategories: function fetchCategories() {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.next = 2;
+                return axios.get('/api/product-categories').then(function (response) {
+                  _this3.categories = response.data;
+                  _this3.models[1].items = response.data;
+                })["catch"](function (error) {
+                  console.log(error);
+                })["finally"](function () {
+                  return _this3.loading = false;
+                });
+
+              case 2:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
       }))();
     },
     create: function create() {
@@ -271,7 +311,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     refresh: function refresh() {
       this.close();
-      this.fetchCategories();
+      this.fetchProducts();
     },
     deleteItem: function deleteItem(id) {
       this.id = id;
@@ -354,6 +394,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "CRUD",
   props: {
@@ -373,6 +432,10 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     method: function method() {
+      if (this.multipart) return 'POST';
+      return this.isEdit ? 'PATCH' : 'POST';
+    },
+    multipart_method: function multipart_method() {
       return this.isEdit ? 'PATCH' : 'POST';
     },
     action_link: function action_link() {
@@ -380,26 +443,15 @@ __webpack_require__.r(__webpack_exports__);
     },
     delete_link: function delete_link() {
       return this.link + '/' + this.id;
-    },
-    hasImage: function hasImage() {
-      var image = this.models.find(function (item) {
-        return item.model === 'image';
-      });
-      if (!image) return false;
-      return image.value !== null;
-    },
-    image: function image() {
-      return '';
-      /*let image = this.models.find(item => {
-          return item.model === 'image'
-      })
-       return image.value !== null ? 'storage/'+image.value : ''*/
     }
   },
   methods: {
     close: function close() {
       this.errors = [];
       this.$emit('close');
+    },
+    isInputFile: function isInputFile(model) {
+      return model.type === 'v-file-input' && model.value;
     },
     save: function save() {
       var _this = this;
@@ -410,12 +462,14 @@ __webpack_require__.r(__webpack_exports__);
         dataForm.append(item.model, item.value);
         return params[item.model] = item.value;
       });
+      dataForm.append('_method', this.multipart_method);
+      var data = this.multipart ? dataForm : params;
       axios({
         method: this.method,
         url: this.action_link,
-        data: this.multipart ? dataForm : params,
+        data: data,
         headers: {
-          "Content-Type": this.multipart ? "multipart/form-data" : 'application/json'
+          'content-type': this.multipart ? 'multipart/form-data' : 'application/json'
         }
       }).then(function (response) {
         _this.$emit('refresh');
@@ -821,43 +875,82 @@ var render = function() {
                             "v-col",
                             { attrs: { sm: "12", lg: "4", "offset-lg": "4" } },
                             [
-                              _vm.hasImage
-                                ? _c("img", {
-                                    attrs: { src: _vm.image, width: "320" }
-                                  })
-                                : _vm._e(),
-                              _vm._v(" "),
                               _vm._l(_vm.models, function(model) {
-                                return _c(model.type, {
-                                  directives: [
-                                    {
-                                      name: "mask",
-                                      rawName: "v-mask",
-                                      value: model.mask,
-                                      expression: "model.mask"
-                                    }
-                                  ],
-                                  key: model.model,
-                                  tag: "component",
-                                  attrs: {
-                                    label: model.label,
-                                    "error-messages": _vm.errors[model.model],
-                                    chips: model.chips,
-                                    items: model.items,
-                                    "item-text": model.item_name,
-                                    "item-value": "id",
-                                    multiple: model.multiple,
-                                    outlined: "",
-                                    clearable: ""
-                                  },
-                                  model: {
-                                    value: model.value,
-                                    callback: function($$v) {
-                                      _vm.$set(model, "value", $$v)
-                                    },
-                                    expression: "model.value"
-                                  }
-                                })
+                                return [
+                                  _vm.isInputFile(model)
+                                    ? _c("img", {
+                                        attrs: {
+                                          src: "storage/" + model.value,
+                                          width: "128"
+                                        }
+                                      })
+                                    : _vm._e(),
+                                  _vm._v(" "),
+                                  model.mask
+                                    ? _c(model.type, {
+                                        directives: [
+                                          {
+                                            name: "mask",
+                                            rawName: "v-mask",
+                                            value: model.mask,
+                                            expression: "model.mask"
+                                          }
+                                        ],
+                                        key: model.model,
+                                        tag: "component",
+                                        attrs: {
+                                          label: model.label,
+                                          "error-messages":
+                                            _vm.errors[model.model],
+                                          chips: model.chips,
+                                          items: model.items,
+                                          "item-text": model.item_name,
+                                          "item-value": "id",
+                                          multiple: model.multiple,
+                                          outlined: "",
+                                          clearable: ""
+                                        },
+                                        model: {
+                                          value: model.value,
+                                          callback: function($$v) {
+                                            _vm.$set(model, "value", $$v)
+                                          },
+                                          expression: "model.value"
+                                        }
+                                      })
+                                    : _c(model.type, {
+                                        key: model.model,
+                                        tag: "component",
+                                        attrs: {
+                                          label: model.label,
+                                          "error-messages":
+                                            _vm.errors[model.model],
+                                          chips: model.chips,
+                                          items: model.items,
+                                          "item-text": model.item_name,
+                                          "item-value": "id",
+                                          multiple: model.multiple,
+                                          outlined: "",
+                                          clearable: ""
+                                        },
+                                        model: {
+                                          value: _vm.isInputFile(model)
+                                            ? []
+                                            : model.value,
+                                          callback: function($$v) {
+                                            _vm.$set(
+                                              _vm.isInputFile(model)
+                                                ? []
+                                                : model,
+                                              "value",
+                                              $$v
+                                            )
+                                          },
+                                          expression:
+                                            "isInputFile(model) ? [] : model.value"
+                                        }
+                                      })
+                                ]
                               }),
                               _vm._v(" "),
                               _c(

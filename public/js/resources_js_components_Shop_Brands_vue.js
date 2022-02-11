@@ -1,9 +1,9 @@
 "use strict";
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["resources_js_components_Admin_Roles_vue"],{
+(self["webpackChunk"] = self["webpackChunk"] || []).push([["resources_js_components_Shop_Brands_vue"],{
 
-/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Admin/Roles.vue?vue&type=script&lang=js&":
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Shop/Brands.vue?vue&type=script&lang=js&":
 /*!******************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Admin/Roles.vue?vue&type=script&lang=js& ***!
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Shop/Brands.vue?vue&type=script&lang=js& ***!
   \******************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -85,9 +85,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: "Roles",
+  name: "Brands",
   components: {
     CRUD: _Utilities_CRUD__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
@@ -96,17 +97,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       loading: true,
       dialog: false,
       dialogDelete: false,
-      title: 'Роль',
+      title: 'Брэнд',
+      multipart: true,
       headers: [{
         text: '#',
         value: 'index'
       }, {
         text: 'Имя',
-        value: 'name'
-      }, {
-        text: 'Код',
-        value: 'slug',
-        sortable: false
+        value: 'title'
       }, {
         text: 'Действия',
         value: 'actions',
@@ -115,25 +113,25 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       items: [],
       id: null,
       models: [{
-        model: 'name',
+        model: 'title',
         label: 'Название',
         type: 'v-text-field',
         value: null
       }, {
-        model: 'slug',
-        label: 'Код',
-        type: 'v-text-field',
+        model: 'image',
+        label: 'Картинка',
+        type: 'v-file-input',
         value: null
       }],
-      link: '/api/roles',
+      link: '/api/brands',
       is_edit: false
     };
   },
   mounted: function mounted() {
-    this.fetchRoles();
+    this.fetchBrands();
   },
   methods: {
-    fetchRoles: function fetchRoles() {
+    fetchBrands: function fetchBrands() {
       var _this = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
@@ -142,7 +140,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return axios.get('/api/roles').then(function (response) {
+                return axios.get('/api/brands').then(function (response) {
                   _this.items = response.data;
                 })["catch"](function (error) {
                   console.log(error);
@@ -179,7 +177,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     refresh: function refresh() {
       this.close();
-      this.fetchRoles();
+      this.fetchBrands();
     },
     deleteItem: function deleteItem(id) {
       this.id = id;
@@ -373,9 +371,9 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/Admin/Roles.vue":
+/***/ "./resources/js/components/Shop/Brands.vue":
 /*!*************************************************!*\
-  !*** ./resources/js/components/Admin/Roles.vue ***!
+  !*** ./resources/js/components/Shop/Brands.vue ***!
   \*************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -383,8 +381,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _Roles_vue_vue_type_template_id_474d3442___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Roles.vue?vue&type=template&id=474d3442& */ "./resources/js/components/Admin/Roles.vue?vue&type=template&id=474d3442&");
-/* harmony import */ var _Roles_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Roles.vue?vue&type=script&lang=js& */ "./resources/js/components/Admin/Roles.vue?vue&type=script&lang=js&");
+/* harmony import */ var _Brands_vue_vue_type_template_id_1ad850ec___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Brands.vue?vue&type=template&id=1ad850ec& */ "./resources/js/components/Shop/Brands.vue?vue&type=template&id=1ad850ec&");
+/* harmony import */ var _Brands_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Brands.vue?vue&type=script&lang=js& */ "./resources/js/components/Shop/Brands.vue?vue&type=script&lang=js&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -394,9 +392,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 ;
 var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _Roles_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _Roles_vue_vue_type_template_id_474d3442___WEBPACK_IMPORTED_MODULE_0__.render,
-  _Roles_vue_vue_type_template_id_474d3442___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  _Brands_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Brands_vue_vue_type_template_id_1ad850ec___WEBPACK_IMPORTED_MODULE_0__.render,
+  _Brands_vue_vue_type_template_id_1ad850ec___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
   false,
   null,
   null,
@@ -406,7 +404,7 @@ var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/js/components/Admin/Roles.vue"
+component.options.__file = "resources/js/components/Shop/Brands.vue"
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
 
 /***/ }),
@@ -449,9 +447,9 @@ component.options.__file = "resources/js/components/Utilities/CRUD.vue"
 
 /***/ }),
 
-/***/ "./resources/js/components/Admin/Roles.vue?vue&type=script&lang=js&":
+/***/ "./resources/js/components/Shop/Brands.vue?vue&type=script&lang=js&":
 /*!**************************************************************************!*\
-  !*** ./resources/js/components/Admin/Roles.vue?vue&type=script&lang=js& ***!
+  !*** ./resources/js/components/Shop/Brands.vue?vue&type=script&lang=js& ***!
   \**************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -459,8 +457,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Roles_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Roles.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Admin/Roles.vue?vue&type=script&lang=js&");
- /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Roles_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Brands_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Brands.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Shop/Brands.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Brands_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
@@ -479,18 +477,18 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/Admin/Roles.vue?vue&type=template&id=474d3442&":
+/***/ "./resources/js/components/Shop/Brands.vue?vue&type=template&id=1ad850ec&":
 /*!********************************************************************************!*\
-  !*** ./resources/js/components/Admin/Roles.vue?vue&type=template&id=474d3442& ***!
+  !*** ./resources/js/components/Shop/Brands.vue?vue&type=template&id=1ad850ec& ***!
   \********************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Roles_vue_vue_type_template_id_474d3442___WEBPACK_IMPORTED_MODULE_0__.render),
-/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Roles_vue_vue_type_template_id_474d3442___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Brands_vue_vue_type_template_id_1ad850ec___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Brands_vue_vue_type_template_id_1ad850ec___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Roles_vue_vue_type_template_id_474d3442___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Roles.vue?vue&type=template&id=474d3442& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Admin/Roles.vue?vue&type=template&id=474d3442&");
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Brands_vue_vue_type_template_id_1ad850ec___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Brands.vue?vue&type=template&id=1ad850ec& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Shop/Brands.vue?vue&type=template&id=1ad850ec&");
 
 
 /***/ }),
@@ -511,9 +509,9 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Admin/Roles.vue?vue&type=template&id=474d3442&":
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Shop/Brands.vue?vue&type=template&id=1ad850ec&":
 /*!***********************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Admin/Roles.vue?vue&type=template&id=474d3442& ***!
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Shop/Brands.vue?vue&type=template&id=1ad850ec& ***!
   \***********************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -562,7 +560,7 @@ var render = function() {
                       "v-toolbar",
                       { attrs: { flat: "" } },
                       [
-                        _c("v-toolbar-title", [_vm._v("Роли")]),
+                        _c("v-toolbar-title", [_vm._v("Брэнды")]),
                         _vm._v(" "),
                         _c("v-divider", {
                           staticClass: "mx-4",
@@ -644,7 +642,8 @@ var render = function() {
               models: _vm.models,
               link: _vm.link,
               id: _vm.id,
-              "is-edit": _vm.is_edit
+              "is-edit": _vm.is_edit,
+              multipart: _vm.multipart
             },
             on: { close: _vm.close, refresh: _vm.refresh }
           })

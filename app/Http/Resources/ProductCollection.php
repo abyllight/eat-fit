@@ -18,7 +18,7 @@ class ProductCollection extends JsonResource
         return [
             'id'    => $this->id,
             'title' => $this->title,
-            'image' => null,
+            'image' => $this->image,
             'description' => $this->description,
             'composition' => $this->composition,
             'price' => $this->price,
@@ -28,6 +28,9 @@ class ProductCollection extends JsonResource
             'fat' => $this->fat,
             'protein' => $this->protein,
             'carbohydrate' => $this->carbohydrate,
+            'brand_id' => $this->brand ? $this->brand->id : null,
+            'brand_name' => $this->getBrandName(),
+            'category_id' => $this->category->id,
             'category_name' => $this->getCategoryName()
         ];
     }

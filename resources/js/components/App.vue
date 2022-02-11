@@ -149,6 +149,12 @@ export default {
                 roles: ['admin'],
                 links: [
                     {
+                        title: 'Брэнд',
+                        link: '/brands',
+                        icon: 'alpha-b-box',
+                        roles: ['admin', 'office']
+                    },
+                    {
                         title: 'Категории',
                         link: '/product-categories',
                         icon: 'alpha-c-box',

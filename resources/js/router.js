@@ -176,6 +176,15 @@ const router = new VueRouter({
             component: () => import('./components/Shop/Products')
         },
         {
+            path: '/brands',
+            name: 'brands',
+            meta: {
+                auth: true,
+                roles: ['admin', 'office']
+            },
+            component: () => import('./components/Shop/Brands')
+        },
+        {
             path: '/product-categories',
             name: 'product_categories',
             meta: {

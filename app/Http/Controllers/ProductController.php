@@ -6,11 +6,15 @@ use App\Http\Resources\ProductCollection;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
+    public function getProducts(): JsonResponse
+    {
+        return response()->json(ProductCollection::collection(Product::all()));
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -34,6 +38,7 @@ class ProductController extends Controller
         $request->validate([
             'title' => 'required',
             'category_id' => 'required',
+            'brand_id' => 'required',
             'image' => 'image|mimes:jpeg,jpg,png|required|max:10000',
             'price' => 'required'
         ]);
@@ -41,6 +46,7 @@ class ProductController extends Controller
         $product = new Product();
         $product->title = $request->title;
         $product->category_id = $request->category_id;
+        $product->brand_id = $request->brand_id;
         $product->description = $request->description;
         $product->composition = $request->composition;
         $product->image = $request->file('image')->store('products', 'public');
@@ -70,8 +76,9 @@ class ProductController extends Controller
     public function update(Request $request, $id): JsonResponse
     {
         $request->validate([
-            'title' => 'reqiured',
+            'title' => 'required',
             'category_id' => 'required',
+            'brand_id' => 'required',
             'price' => 'required'
         ]);
 
@@ -95,6 +102,7 @@ class ProductController extends Controller
 
         $product->title = $request->title;
         $product->category_id = $request->category_id;
+        $product->brand_id = $request->brand_id;
         $product->description = $request->description;
         $product->composition = $request->composition;
         $product->price = $request->price;

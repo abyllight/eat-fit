@@ -142,6 +142,11 @@ class CourierController extends Controller
     public function getStatus(string $interval, Carbon $now): string
     {
         $explode = explode('-', $interval);
+
+        if (count($explode) < 2){
+            return 3;
+        }
+
         $start = (float)$explode[0] * 100;
         $end = (float)$explode[1] * 100;
         $time = (float)$now->format('H.i') * 100;

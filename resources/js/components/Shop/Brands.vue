@@ -15,7 +15,7 @@
                     <v-toolbar
                         flat
                     >
-                        <v-toolbar-title>Категории</v-toolbar-title>
+                        <v-toolbar-title>Брэнды</v-toolbar-title>
                         <v-divider
                             class="mx-4"
                             inset
@@ -67,13 +67,13 @@
 <script>
 import CRUD from "../Utilities/CRUD";
 export default {
-    name: "ProductCategory",
+    name: "Brands",
     components: { CRUD },
     data: () => ({
         loading: true,
         dialog: false,
         dialogDelete: false,
-        title: 'Категория',
+        title: 'Брэнд',
         multipart: true,
         headers: [
             { text: '#', value: 'index' },
@@ -96,16 +96,16 @@ export default {
                 value: null
             }
         ],
-        link: '/api/product-categories',
+        link: '/api/brands',
         is_edit: false
     }),
     mounted() {
-        this.fetchCategories()
+        this.fetchBrands()
     },
     methods: {
-        async fetchCategories() {
+        async fetchBrands() {
             await axios
-                .get('/api/product-categories')
+                .get('/api/brands')
                 .then(response => {
                     this.items = response.data
                 })
@@ -135,7 +135,7 @@ export default {
         },
         refresh(){
             this.close()
-            this.fetchCategories()
+            this.fetchBrands()
         },
         deleteItem(id){
             this.id = id
