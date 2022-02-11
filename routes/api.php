@@ -8,6 +8,7 @@ use App\Http\Controllers\CourierController;
 use App\Http\Controllers\CuisineController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DishController;
+use App\Http\Controllers\HelperController;
 use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\ListController;
 use App\Http\Controllers\MapController;
@@ -123,15 +124,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('products', ProductController::class)->except(['create', 'show', 'edit']);
     Route::resource('product-categories', ProductCategoryController::class)->except(['create', 'show', 'edit']);
     Route::resource('brands', BrandController::class)->except(['create', 'show', 'edit']);
-
-    Route::get('/optimize', [RationController::class, 'getRequired']);
-
 });
 
 Route::get('/promocode/{promocode}', [PromocodeController::class, 'check']);
 
 Route::get('/products-all', [ProductController::class, 'getProducts']);
 Route::get('/brands-all', [BrandController::class, 'getBrands']);
+
+Route::get('/optimize', [HelperController::class, 'optimize']);
+Route::get('/storage', [HelperController::class, 'storage']);
 
 Route::get('/webhook', [AdminController::class, 'webhook']);
 

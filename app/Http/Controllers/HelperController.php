@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 
 class HelperController extends Controller
@@ -16,5 +15,10 @@ class HelperController extends Controller
     {
         Artisan::call('config:cache');
         Artisan::call('route:cache');
+    }
+
+    public function storage()
+    {
+        Artisan::call('storage:link');
     }
 }
