@@ -129,7 +129,10 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/promocode/{promocode}', [PromocodeController::class, 'check']);
 
 Route::get('/products-all', [ProductController::class, 'getProducts']);
+Route::get('/product/{id}', [ProductController::class, 'getProduct']);
+
 Route::get('/brands-all', [BrandController::class, 'getBrands']);
+Route::get('/brand/{id}', [BrandController::class, 'getBrand']);
 
 Route::get('/optimize', [HelperController::class, 'optimize']);
 Route::get('/storage', [HelperController::class, 'storage']);

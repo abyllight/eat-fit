@@ -13,8 +13,10 @@ class HelperController extends Controller
 
     public function optimize()
     {
-        Artisan::call('config:cache');
-        Artisan::call('route:cache');
+        Artisan::call('config:clear');
+        //Artisan::call('config:cache');
+        Artisan::call('route:clear');
+        //Artisan::call('route:cache');
     }
 
     public function storage()

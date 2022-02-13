@@ -15,6 +15,20 @@ class ProductController extends Controller
         return response()->json(ProductCollection::collection(Product::all()));
     }
 
+    public function getProduct($id): JsonResponse
+    {
+        $product = Product::find($id);
+
+        if (!$product){
+            return response()->json([
+                'status' => false,
+                'msg' => 'Продукт не найден'
+            ]);
+        }
+
+        return response()->json(new ProductCollection($product));
+    }
+
     /**
      * Display a listing of the resource.
      *

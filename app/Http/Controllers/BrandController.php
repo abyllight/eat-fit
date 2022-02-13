@@ -15,6 +15,20 @@ class BrandController extends Controller
         return response()->json(BrandCollection::collection(Brand::all()));
     }
 
+    public function getBrand($id): JsonResponse
+    {
+        $brand = Brand::find($id);
+
+        if (!$brand){
+            return response()->json([
+                'status' => false,
+                'msg' => 'Brand не найден'
+            ]);
+        }
+
+        return response()->json(new BrandCollection($brand));
+    }
+
     /**
      * Display a listing of the resource.
      *
