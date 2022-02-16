@@ -12,7 +12,8 @@ class BrandController extends Controller
 {
     public function getBrands(): JsonResponse
     {
-        return response()->json(BrandCollection::collection(Brand::all()));
+        $brands = Brand::with('products')->has('products')->get();
+        return response()->json(BrandCollection::collection($brands));
     }
 
     public function getBrand($id): JsonResponse
