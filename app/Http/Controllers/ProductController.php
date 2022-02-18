@@ -105,7 +105,7 @@ class ProductController extends Controller
             ]);
         }
 
-        if ($request->has('image')){
+        if ($request->has('image') && $request->image !== null && $request->image !== "null" && $request->image !== $product->image){
             $request->validate([
                 'image' => 'image|mimes:jpeg,jpg,png|required|max:10000'
             ]);
