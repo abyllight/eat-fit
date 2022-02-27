@@ -53,7 +53,7 @@ class ProductController extends Controller
             'title' => 'required',
             'category_id' => 'required',
             'brand_id' => 'required',
-            'image' => 'image|mimes:jpeg,jpg,png|required|max:10000',
+            'image' => 'image|required|max:10000',
             'price' => 'required'
         ]);
 
@@ -107,7 +107,7 @@ class ProductController extends Controller
 
         if ($request->has('image') && $request->image !== null && $request->image !== "null" && $request->image !== $product->image){
             $request->validate([
-                'image' => 'image|mimes:jpeg,jpg,png|required|max:10000'
+                'image' => 'image|required|max:10000'
             ]);
 
             Storage::disk('public')->delete($product->image);
