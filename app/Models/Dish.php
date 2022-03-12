@@ -42,7 +42,7 @@ class Dish extends Model
 
     public function ration()
     {
-        return $this->belongsTo(Ration::class, 'ration_id', 'id');
+        return $this->belongsTo(Ration::class, 'ration_id', 'iiko_id');
     }
 
     public function selects()

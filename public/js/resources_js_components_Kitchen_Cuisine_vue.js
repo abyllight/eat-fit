@@ -493,8 +493,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _this8.loading = true;
                 _context7.next = 4;
                 return axios.get('/api/ingredients/iiko/' + id).then(function (response) {
-                  console.log(response);
-
                   _this8.$store.dispatch('showAlert', {
                     'isVisible': true,
                     'msg': response.data.msg,
@@ -1243,7 +1241,7 @@ var render = function() {
                                           items: _vm.all_rations,
                                           dense: "",
                                           "item-text": "name",
-                                          "item-value": "id",
+                                          "item-value": "iiko_id",
                                           outlined: "",
                                           label: "Рационы"
                                         },

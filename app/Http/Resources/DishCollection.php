@@ -25,6 +25,7 @@ class DishCollection extends JsonResource
             'department' => $this->getDepartment(),
             'ration' => $this->ration,
             'ration_id' => $this->ration_id,
+            'position' => $this->ration->position,
             'is_custom' => $this->is_custom,
             'ingredient_ids' => $this->getIngredientIds(),
             'ingredients' => IngredientCollection::collection($this->ingredients->sortBy('name')),

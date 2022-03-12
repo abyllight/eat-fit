@@ -58,7 +58,7 @@ class BrandController extends Controller
 
         if ($request->has('image') && $request->image !== null && $request->image !== "null"){
             $request->validate([
-                'image' => 'image|mimes:jpeg,jpg,png|max:10000'
+                'image' => 'image|max:10000'
             ]);
 
             $brand->image = $request->file('image')->store('brands', 'public');
@@ -96,7 +96,7 @@ class BrandController extends Controller
 
         if ($request->has('image') && $request->image !== null && $request->image !== "null" && $request->image !== $brand->image){
             $request->validate([
-                'image' => 'image|mimes:jpeg,jpg,png|max:10000'
+                'image' => 'image|max:10000'
             ]);
 
             Storage::disk('public')->delete($brand->image);

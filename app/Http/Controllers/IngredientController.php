@@ -39,8 +39,14 @@ class IngredientController extends Controller
                     if ($goods) {
                         $i = Ingredient::updateOrCreate(
                             ['iiko_id' => $goods[0]['id']],
-                            ['iiko_name' => $goods[0]['name'], 'name' => $goods[0]['name']]
+                            ['iiko_name' => $goods[0]['name']]
                         );
+
+                        if (!$i->name){
+                            $i->name = $i->iiko_name;
+                            $i->save();
+                        }
+
                         $ings[] = $i->id;
                     }
                 }

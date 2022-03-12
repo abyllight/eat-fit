@@ -279,7 +279,7 @@
                                                 @change="getDishesByRation(ration_id)"
                                                 dense
                                                 item-text="name"
-                                                item-value="id"
+                                                item-value="iiko_id"
                                                 outlined
                                                 label="Рационы"
                                             ></v-select>

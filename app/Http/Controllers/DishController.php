@@ -76,7 +76,6 @@ class DishController extends Controller
             'name' => 'required',
             'ration_id' => 'required',
             'department_id' => 'required',
-            //'code' => 'required',
             'ingredient_ids' => 'required'
         ]);
 
@@ -165,7 +164,7 @@ class DishController extends Controller
         return response()->json(DishCollection::collection($dishes));
     }
 
-    public function getDishesByRations()
+    public function getDishesByRations(): JsonResponse
     {
         $cuisine = Cuisine::where('is_on_duty', true)->first();
         $rations = Ration::where('is_required', true)->get();

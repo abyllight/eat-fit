@@ -1990,7 +1990,7 @@ var render = function() {
                                                   items: _vm.rations,
                                                   dense: "",
                                                   "item-text": "name",
-                                                  "item-value": "id",
+                                                  "item-value": "iiko_id",
                                                   outlined: "",
                                                   label: "Рационы"
                                                 },

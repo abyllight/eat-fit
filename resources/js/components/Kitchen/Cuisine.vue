@@ -207,7 +207,7 @@
                                         :items="all_rations"
                                         dense
                                         item-text="name"
-                                        item-value="id"
+                                        item-value="iiko_id"
                                         outlined
                                         label="Рационы"
                                     ></v-select>
@@ -386,7 +386,6 @@
                 await axios
                     .get('/api/ingredients/iiko/'+id)
                     .then(response => {
-                        console.log(response)
                         this.$store.dispatch('showAlert', {
                             'isVisible': true,
                             'msg': response.data.msg,

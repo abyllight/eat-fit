@@ -488,8 +488,9 @@ class OrderController extends Controller
     public function addToWishlist(Request $request): JsonResponse
     {
         $request->validate([
-            'tag' => 'required|unique:wishlists,wish'
+            'tag' => 'required'
         ]);
+
         $order = Order::find($request->id);
 
         if ($order){
