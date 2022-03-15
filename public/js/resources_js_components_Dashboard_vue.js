@@ -23,7 +23,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Dashboard",
   mounted: function mounted() {
-    axios__WEBPACK_IMPORTED_MODULE_0___default().post('/api/cart-item/add/1/4').then(function (response) {
+    axios__WEBPACK_IMPORTED_MODULE_0___default().post('/api/customer', {
+      id: 1
+    }).then(function (response) {
       console.log(response);
     });
   }

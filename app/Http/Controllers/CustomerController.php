@@ -10,10 +10,10 @@ use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
-    public function store($id): JsonResponse
+    public function store(Request $request): JsonResponse
     {
         $customer = new Customer();
-        $customer->uuid = $id;
+        $customer->uuid = $request->id;
         $customer->save();
 
         $cart = new Cart();
