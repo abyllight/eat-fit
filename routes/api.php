@@ -134,7 +134,7 @@ Route::get('/customer/{id}', [CustomerController::class, 'getCustomerById']);
 Route::post('/customer', [CustomerController::class, 'store']);
 Route::post('/customer/{id}', [CustomerController::class, 'update']);
 
-Route::post('/cart-item/add/{customer_id}/{product_id}', [CartItemController::class, 'addItem']);
+Route::post('/cart-item/add', [CartItemController::class, 'addItem']);
 Route::post('/cart-item/remove/{id}', [CartItemController::class, 'destroy']);
 Route::post('/cart-item/increment/{id}', [CartItemController::class, 'increment']);
 Route::post('/cart-item/decrement/{id}', [CartItemController::class, 'decrement']);

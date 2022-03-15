@@ -6,17 +6,18 @@ use App\Http\Resources\CartItemCollection;
 use App\Models\Cart;
 use App\Models\CartItem;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class CartItemController extends Controller
 {
     public $cutlery = [];
-    public function addItem($customer_id, $product_id): JsonResponse
+    public function addItem(Request $request): JsonResponse
     {
-        $cart = Cart::where('customer_id', $customer_id)->first();
+        $cart = Cart::where('customer_id', $request->customer_id)->first();
 
         $item = new CartItem();
         $item->cart_id = $cart->id;
-        $item->product_id = $product_id;
+        $item->product_id = $request->product_id;
         $item->quantity = 1;
         $item->save();
 
