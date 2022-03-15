@@ -10,20 +10,17 @@ use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
-    public function store(Request $request): JsonResponse
+    public function store($id): Customer
     {
         $customer = new Customer();
-        $customer->uuid = $request->id;
+        $customer->uuid = $id;
         $customer->save();
 
         $cart = new Cart();
         $cart->customer_id = $customer->id;
         $cart->save();
 
-        return response()->json([
-            'status' => true,
-            'data' => new CustomerCollection($customer)
-        ]);
+        return $customer;
     }
 
     public function update($id, Request $request): JsonResponse
@@ -53,10 +50,7 @@ class CustomerController extends Controller
         $customer = Customer::where('uuid', $id)->first();
 
         if (!$customer) {
-            return response()->json([
-                'status' => false,
-                'msg' => 'Customer not found'
-            ]);
+            $customer = $this->store($id);
         }
 
         return response()->json([
