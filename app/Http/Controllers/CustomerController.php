@@ -7,6 +7,7 @@ use App\Models\Cart;
 use App\Models\Customer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Ramsey\Uuid\Uuid;
 
 class CustomerController extends Controller
 {
@@ -17,6 +18,7 @@ class CustomerController extends Controller
         $customer->save();
 
         $cart = new Cart();
+        $cart->uuid = Uuid::uuid1();
         $cart->customer_id = $customer->id;
         $cart->save();
 

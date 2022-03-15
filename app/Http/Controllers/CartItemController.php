@@ -7,6 +7,7 @@ use App\Models\Cart;
 use App\Models\CartItem;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Ramsey\Uuid\Uuid;
 
 class CartItemController extends Controller
 {
@@ -16,6 +17,7 @@ class CartItemController extends Controller
         $cart = Cart::where('customer_id', $request->customer_id)->first();
 
         $item = new CartItem();
+        $item->uuid = Uuid::uuid1();
         $item->cart_id = $cart->id;
         $item->product_id = $request->product_id;
         $item->quantity = 1;
