@@ -10,10 +10,7 @@ import axios from "axios";
 export default {
     name: "Dashboard",
     mounted() {
-        axios.get('/api/brands-all')
-            .then(response => {
-                console.log(response)
-            })
+
     }
 }
 </script>
