@@ -10,14 +10,31 @@ import axios from "axios";
 export default {
     name: "Dashboard",
     mounted() {
-        return
-        axios.post('/api/cart-item/add', {
-            customer_id: 1,
-            product_id: 4
-        })
-            .then(response => {
-                console.log(response)
+        this.me()
+    },
+    methods: {
+        async me(){
+            let device = localStorage.getItem('v_device')
+
+            if (device === null || device === undefined) {
+                device = '123'
+                window.localStorage.setItem('v_device', device);
+            }
+
+            await axios.get('/api/customer/'+device)
+                .then(response => {
+                    console.log(response)
+                })
+        },
+        add() {
+            axios.post('/api/cart-item/add', {
+                customer_id: 1,
+                product_id: 3
             })
+                .then(response => {
+                    console.log(response)
+                })
+        }
     }
 }
 </script>
