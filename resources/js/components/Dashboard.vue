@@ -10,7 +10,7 @@ import axios from "axios";
 export default {
     name: "Dashboard",
     mounted() {
-        this.getCartById()
+        //this.increment()
     },
     methods: {
         async me(){
@@ -37,6 +37,14 @@ export default {
         },
         getCartById() {
              axios.get('/api/cart/df444f88-a4fd-11ec-8c7e-1e009a1ab465')
+                .then(response => {
+                    console.log(response)
+                })
+        },
+        increment() {
+            axios.post('/api/cart-item/increment/', {
+                id: '255cc886-a500-11ec-a507-1e009a1ab465'
+            })
                 .then(response => {
                     console.log(response)
                 })
