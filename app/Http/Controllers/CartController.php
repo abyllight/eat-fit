@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CartItemCollection;
 use App\Models\Cart;
+use Illuminate\Http\JsonResponse;
 
 class CartController extends Controller
 {
@@ -17,5 +19,15 @@ class CartController extends Controller
 
         $cart->total = $total;
         $cart->save();
+    }
+
+    public function getCartById($id): JsonResponse
+    {
+        $cart = Cart::where('uuid', $id)->get();
+
+        return response()->json([
+            'status' => true,
+            'data' => CartItemCollection::collection($cart->items)
+        ]);
     }
 }

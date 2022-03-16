@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CartItemController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CityController;
@@ -131,13 +132,14 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/promocode/{promocode}', [PromocodeController::class, 'check']);
 
 Route::get('/customer/{id}', [CustomerController::class, 'getCustomerById']);
+Route::get('/cart/{id}', [CartController::class, 'getCartById']);
 Route::post('/customer', [CustomerController::class, 'store']);
 Route::post('/customer/{id}', [CustomerController::class, 'update']);
 
 Route::post('/cart-item/add', [CartItemController::class, 'addItem']);
-Route::post('/cart-item/remove/{id}', [CartItemController::class, 'destroy']);
-Route::post('/cart-item/increment/{id}', [CartItemController::class, 'increment']);
-Route::post('/cart-item/decrement/{id}', [CartItemController::class, 'decrement']);
+Route::post('/cart-item/remove', [CartItemController::class, 'destroy']);
+Route::post('/cart-item/increment', [CartItemController::class, 'increment']);
+Route::post('/cart-item/decrement', [CartItemController::class, 'decrement']);
 
 Route::get('/products-all', [ProductController::class, 'getProducts']);
 Route::get('/product/{id}', [ProductController::class, 'getProduct']);

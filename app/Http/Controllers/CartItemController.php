@@ -26,9 +26,9 @@ class CartItemController extends Controller
         ]);
     }
 
-    public function increment($id): JsonResponse
+    public function increment(Request $request): JsonResponse
     {
-        $item = CartItem::where('uuid', $id)->get();
+        $item = CartItem::where('uuid', $request->id)->get();
 
         if (!$item) {
             return response()->json([
@@ -45,9 +45,9 @@ class CartItemController extends Controller
         ]);
     }
 
-    public function decrement($id): JsonResponse
+    public function decrement(Request $request): JsonResponse
     {
-        $item = CartItem::where('uuid', $id)->get();
+        $item = CartItem::where('uuid', $request->id)->get();
 
         if (!$item) {
             return response()->json([
@@ -78,9 +78,9 @@ class CartItemController extends Controller
         $this->calculateTotal($item->cart);
     }
 
-    public function destroy($id): JsonResponse
+    public function destroy(Request $request): JsonResponse
     {
-        $item = CartItem::where('uuid', $id)->get();
+        $item = CartItem::where('uuid', $request->id)->get();
 
         if (!$item) {
             return response()->json([
