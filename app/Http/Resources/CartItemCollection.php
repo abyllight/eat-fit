@@ -24,7 +24,8 @@ class CartItemCollection extends JsonResource
             'image' => $this->product->image,
             'q' => $this->quantity,
             'price' => $this->product->price,
-            'wholesale_price' => $this->product->wholesale_price
+            'wholesale_price' => $this->product->wholesale_price,
+            'total' => $this->quantity * $this->product->price
         ];
     }
 }
