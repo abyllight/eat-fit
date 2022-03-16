@@ -20,6 +20,7 @@ class CartItemCollection extends JsonResource
         return [
             'id' => $this->id,
             'uuid' => $this->uuid,
+            'title' => $this->product->title,
             'p_id' => $this->product->id,
             'image' => $this->product->image,
             'q' => $this->quantity,
