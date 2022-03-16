@@ -28,7 +28,7 @@ class CartItemController extends Controller
 
     public function increment($id): JsonResponse
     {
-        $item = CartItem::find($id);
+        $item = CartItem::where('uuid', $id)->get();
 
         if (!$item) {
             return response()->json([
@@ -47,7 +47,7 @@ class CartItemController extends Controller
 
     public function decrement($id): JsonResponse
     {
-        $item = CartItem::find($id);
+        $item = CartItem::where('uuid', $id)->get();
 
         if (!$item) {
             return response()->json([
@@ -80,7 +80,7 @@ class CartItemController extends Controller
 
     public function destroy($id): JsonResponse
     {
-        $item = CartItem::find($id);
+        $item = CartItem::where('uuid', $id)->get();
 
         if (!$item) {
             return response()->json([
