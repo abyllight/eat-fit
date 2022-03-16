@@ -19,6 +19,7 @@ class CustomerCollection extends JsonResource
         return [
             'id'       => $this->id,
             'uuid'     => $this->uuid,
+            'cart_id'  => $this->cart->uuid,
             'name'     => $this->name,
             'phone'    => User::beautifyMobile($this->phone),
             'address'  => $this->address
