@@ -25,6 +25,12 @@ class CartController extends Controller
     {
         $cart = Cart::where('uuid', $id)->get();
 
+        if (!$cart) {
+            return response()->json([
+                'status' => false
+            ]);
+        }
+
         return response()->json([
             'status' => true,
             'data' => CartItemCollection::collection($cart->items)

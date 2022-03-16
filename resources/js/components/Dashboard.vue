@@ -34,6 +34,12 @@ export default {
                 .then(response => {
                     console.log(response)
                 })
+        },
+        getCartById() {
+             axios.get('/api/cart/df444f88-a4fd-11ec-8c7e-1e009a1ab465')
+                .then(response => {
+                    console.log(response)
+                })
         }
     }
 }
