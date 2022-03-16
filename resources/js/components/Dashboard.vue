@@ -10,8 +10,10 @@ import axios from "axios";
 export default {
     name: "Dashboard",
     mounted() {
-        axios.post('/api/customer', {
-            id: 1
+        return
+        axios.post('/api/cart-item/add', {
+            customer_id: 1,
+            product_id: 4
         })
             .then(response => {
                 console.log(response)

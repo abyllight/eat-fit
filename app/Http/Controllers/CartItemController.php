@@ -12,7 +12,6 @@ use Ramsey\Uuid\Uuid;
 
 class CartItemController extends Controller
 {
-    public $cutlery = [];
     public function addItem(Request $request): JsonResponse
     {
         $cart = Cart::where('customer_id', $request->customer_id)->first();
