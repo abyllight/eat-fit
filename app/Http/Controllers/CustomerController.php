@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CartCollection;
 use App\Http\Resources\CustomerCollection;
 use App\Models\Cart;
 use App\Models\Customer;
@@ -57,7 +58,8 @@ class CustomerController extends Controller
 
         return response()->json([
             'status' => true,
-            'data' => new CustomerCollection($customer)
+            'user' => new CustomerCollection($customer),
+            'cart' => new CartCollection($customer->cart)
         ]);
     }
 }

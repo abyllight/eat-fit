@@ -19,8 +19,7 @@ class CartCollection extends JsonResource
     {
         return [
             'id' => $this->id,
-            'items' => CartItemCollection::collection($this->items),
-            'total' => $this->total
+            'items' => CartItemCollection::collection($this->items)
         ];
     }
 }

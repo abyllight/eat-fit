@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\CartCollection;
-use App\Http\Resources\CartItemCollection;
 use App\Models\Cart;
 use App\Models\CartItem;
 use Illuminate\Http\JsonResponse;
@@ -23,11 +21,8 @@ class CartItemController extends Controller
         $item->quantity = 1;
         $item->save();
 
-        $this->calculateTotal($cart);
-
         return response()->json([
-            'status' => true,
-            'cart' => new CartCollection($cart)
+            'status' => true
         ]);
     }
 
@@ -45,18 +40,14 @@ class CartItemController extends Controller
         $item->quantity += 1;
         $item->save();
 
-        $this->calculateSubTotal($item);
-
         return response()->json([
-            'status' => true,
-            'cart' => new CartCollection($item->cart)
+            'status' => true
         ]);
     }
 
     public function decrement($id): JsonResponse
     {
         $item = CartItem::find($id);
-        $cart = $item->cart;
 
         if (!$item) {
             return response()->json([
@@ -68,15 +59,15 @@ class CartItemController extends Controller
         if ($item->quantity > 1) {
             $item->quantity -= 1;
             $item->save();
-        }else {
-            $item->delete();
-        }
 
-        $this->calculateTotal($cart);
+            return response()->json([
+                'status' => true
+            ]);
+        }
+        $item->delete();
 
         return response()->json([
-            'status' => true,
-            'cart' => new CartCollection($cart)
+            'status' => true
         ]);
     }
 
@@ -90,7 +81,6 @@ class CartItemController extends Controller
     public function destroy($id): JsonResponse
     {
         $item = CartItem::find($id);
-        $cart = $item->cart;
 
         if (!$item) {
             return response()->json([
@@ -101,11 +91,8 @@ class CartItemController extends Controller
 
         $item->delete();
 
-        $this->calculateTotal($cart);
-
         return response()->json([
-            'status' => true,
-            'cart' => new CartCollection($cart)
+            'status' => true
         ]);
     }
 
