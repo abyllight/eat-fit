@@ -19,9 +19,10 @@ class CartItemCollection extends JsonResource
     {
         return [
             'id' => $this->id,
-            'product' => new ProductCollection($this->product),
-            'quantity' => $this->quantity,
-            'subtotal' => $this->subtotal
+            'p_id' => $this->product->id,
+            'q' => $this->quantity,
+            'price' => $this->product->price,
+            'wholesale_price' => $this->product->wholesale_price
         ];
     }
 }
