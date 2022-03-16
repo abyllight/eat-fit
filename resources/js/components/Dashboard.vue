@@ -10,7 +10,7 @@ import axios from "axios";
 export default {
     name: "Dashboard",
     mounted() {
-        this.me()
+        this.getCartById()
     },
     methods: {
         async me(){

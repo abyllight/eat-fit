@@ -31,7 +31,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Dashboard",
   mounted: function mounted() {
-    this.me();
+    this.getCartById();
   },
   methods: {
     me: function me() {
@@ -66,6 +66,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         customer_id: 1,
         product_id: 3
       }).then(function (response) {
+        console.log(response);
+      });
+    },
+    getCartById: function getCartById() {
+      axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/cart/df444f88-a4fd-11ec-8c7e-1e009a1ab465').then(function (response) {
         console.log(response);
       });
     }

@@ -23,7 +23,7 @@ class CartController extends Controller
 
     public function getCartById($id): JsonResponse
     {
-        $cart = Cart::where('uuid', $id)->get();
+        $cart = Cart::where('uuid', $id)->first();
 
         if (!$cart) {
             return response()->json([
