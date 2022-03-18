@@ -20,7 +20,8 @@ class BrandCollection extends JsonResource
             'id'    => $this->id,
             'title' => $this->title,
             'image' => $this->image,
-            'categories' => ProductCategoryCollection::collection($this->categories())
+            'categories' => ProductCategoryCollection::collection($this->categories()),
+            'products' => $this->products->groupBy('category_id')
         ];
     }
 }

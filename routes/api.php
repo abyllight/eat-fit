@@ -133,6 +133,7 @@ Route::get('/promocode/{promocode}', [PromocodeController::class, 'check']);
 
 Route::get('/customer/{id}', [CustomerController::class, 'getCustomerById']);
 Route::get('/cart/{id}', [CartController::class, 'getCartById']);
+Route::post('/cart/{id}', [CartController::class, 'destroy']);
 Route::post('/customer', [CustomerController::class, 'store']);
 Route::post('/customer/{id}', [CustomerController::class, 'update']);
 

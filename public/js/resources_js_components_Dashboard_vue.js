@@ -30,9 +30,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Dashboard",
-  mounted: function mounted() {//this.increment()
+  mounted: function mounted() {
+    //this.increment()
+    this.getBrand();
   },
   methods: {
+    getBrand: function getBrand() {
+      axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/brand/2').then(function (response) {
+        console.log(response);
+      });
+    },
     me: function me() {
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
         var device;

@@ -11,8 +11,15 @@ export default {
     name: "Dashboard",
     mounted() {
         //this.increment()
+        //this.getBrand()
     },
     methods: {
+        getBrand() {
+            axios.get('/api/brand/2')
+                .then(response => {
+                    console.log(response)
+                })
+        },
         async me(){
             let device = localStorage.getItem('v_device')
 

@@ -36,4 +36,25 @@ class CartController extends Controller
             'data' => CartItemCollection::collection($cart->items)
         ]);
     }
+
+    public function destroy($id): JsonResponse
+    {
+        $cart = Cart::where('uuid', $id)->first();
+
+        if (!$cart) {
+            return response()->json([
+                'status' => false
+            ]);
+        }
+
+        foreach ($cart->items as $item) {
+            $item->delete();
+        }
+
+        $cart->delete();
+
+        return response()->json([
+            'status' => true
+        ]);
+    }
 }
