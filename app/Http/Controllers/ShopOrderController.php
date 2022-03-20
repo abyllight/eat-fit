@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\Log;
 
 class ShopOrderController extends Controller
 {
-    public function store($c_id, $cutlery): JsonResponse
+    public function placeOrder(Request $request): JsonResponse
     {
-        $customer = Customer::where('uuid', $c_id)->first();
+        $customer = Customer::where('uuid', $request->c_id)->first();
 
         if (!$customer) {
             return response()->json([
@@ -21,6 +21,20 @@ class ShopOrderController extends Controller
                 'msg' => 'Customer not found'
             ]);
         }
+
+        $name = $request->user['name'];
+        $phone = $request->user['phone'];
+        $address = $request->user['address'];
+        $time = $request->time;
+        $payment_method = $request->user['payment'];
+        $total = $request->total;
+        $wholesale = $request->wholesale ?? 0;
+        $cutlery = $request->cutlery;
+
+        $customer->name = $name;
+        $customer->phone = $phone;
+        $customer->address = $address;
+        $customer->save();
 
         $cart = $customer->cart;
 
@@ -31,7 +45,21 @@ class ShopOrderController extends Controller
             ]);
         }
 
-        foreach ($cart->items as $item) {
+        $products = 'Приборы - '. $cutlery . 'шт,' . PHP_EOL;
+
+        foreach ($cart->items as $key => $item) {
+            $title = $item->product_id !== null ? $item->product->title : 'Торт №' . ($key+1);
+
+            $products .= $title . ' - ' . $item->quantity;
+
+            if ($item->meta) {
+                $products .= ' - ' . $item->meta;
+            }
+
+            if (end($cart->items) !== $item) {
+                $products .= ', '.PHP_EOL;
+            }
+
             $order = new ShopOrder();
             $order->customer_id = $customer->id;
             $order->product_id = $item->product_id;
@@ -45,40 +73,15 @@ class ShopOrderController extends Controller
 
         if ($cutlery > 0) {
             $order = new ShopOrder();
-            $order->customer_id = $c_id;
+            $order->customer_id = $customer->id;
             $order->product_id = 0;
             $order->quantity = $cutlery;
             $order->status = 1;
             $order->save();
         }
 
-        $cart->delete();
-    }
-
-    public function placeOrder(Request $request): JsonResponse
-    {
-        $name = $request->user['name'];
-        $phone = $request->user['phone'];
-        $address = $request->user['address'];
-        $time = $request->time;
-        $payment_method = $request->user['payment'];
-        $total = $request->total;
-        $wholesale = $request->wholesale ?? 0;
-        $cart = $request->cart;
-        $products = 'Приборы - '. $request->cutlery . 'шт,' . PHP_EOL;
-
-        if ($cart) {
-            foreach ($cart as $item) {
-                $q = $item['q'];
-                $products .= $item['title'] . ' - ' . $q;
-                if (end($cart) !== $item) {
-                    $products .= ', '.PHP_EOL;
-                }
-            }
-        }
-
         try {
-            Log::info('creating amo request for: ' . $name . '(' . $phone . ')', $cart);
+            Log::info('creating amo request for: ' . $name . '(' . $phone . ')' . $products);
             $amo = new Client(env('AMO_SUBDOMAIN'), env('AMO_LOGIN'), env('AMO_HASH'));
 
             $lead = $amo->lead;
@@ -121,15 +124,13 @@ class ShopOrderController extends Controller
 
             Log::info('Order placed successfully');
 
-            $this->store($request->c_id, $request->cutlery);
-
             return response()->json([
                 'status' => true,
                 'message' => 'Заказ успешно создан'
             ]);
 
         }catch (\AmoCRM\Exception $e) {
-            Log::alert('amo request failed'. $name . '(' . $phone . ')', $cart);
+            Log::alert('amo request failed'. $name . '(' . $phone . ')' . $products);
             return response()->json([
                 'status' => false,
                 'message' => $e->getCode(). ' ' . $e->getMessage()

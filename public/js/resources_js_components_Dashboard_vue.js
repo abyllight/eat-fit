@@ -40,9 +40,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/shop', {
         c_id: '123',
         cutlery: 2,
-        date: '2022-01-01',
+        total: 2000,
+        wholesale: 1000,
         time: '09:00',
-        meta: 'meta'
+        user: {
+          name: 'test',
+          address: 'address',
+          phone: '+11111111111',
+          payment: 'cashless'
+        }
       }).then(function (response) {
         console.log(response);
       });

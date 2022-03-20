@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\CartCollection;
 use App\Http\Resources\CartItemCollection;
 use App\Http\Resources\CustomerCollection;
 use App\Models\Cart;
@@ -56,15 +55,6 @@ class CustomerController extends Controller
         if (!$customer) {
             $customer = $this->store($id);
         }
-
-        if (!$customer->cart) {
-            $cart = new Cart();
-            $cart->uuid = Uuid::uuid1();
-            $cart->customer_id = $customer->id;
-            $cart->save();
-        }
-
-        $customer->refresh();
 
         return response()->json([
             'status' => true,

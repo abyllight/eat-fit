@@ -10,7 +10,7 @@ import axios from "axios";
 export default {
     name: "Dashboard",
     mounted() {
-        //this.me()
+        this.me()
         //this.increment()
         //this.getBrand()
         //this.store()
@@ -20,9 +20,15 @@ export default {
             axios.post('/api/shop', {
                 c_id: '123',
                 cutlery: 2,
-                date: '2022-01-01',
+                total: 2000,
+                wholesale: 1000,
                 time: '09:00',
-                meta: 'meta'
+                user: {
+                    name: 'test',
+                    address: 'address',
+                    phone: '+11111111111',
+                    payment: 'cashless',
+                }
             }).then(response => {
                 console.log(response)
             })
