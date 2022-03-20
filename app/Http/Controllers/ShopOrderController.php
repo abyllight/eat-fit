@@ -30,17 +30,13 @@ class ShopOrderController extends Controller
             ]);
         }
 
-        $today = Carbon::today()->format('Y-m-d');
-
         foreach ($cart->items as $item) {
             $order = new ShopOrder();
-            $order->customer_id = $request->c_id;
+            $order->customer_id = $customer->id;
             $order->product_id = $item->product_id;
             $order->quantity = $item->quantity;
             $order->status = 1;
-            $order->date = $request->date ?? $today;
-            $order->time = $request->time;
-            $order->meta = $request->meta;
+            $order->meta = $item->meta;
             $order->save();
 
             $item->delete();
