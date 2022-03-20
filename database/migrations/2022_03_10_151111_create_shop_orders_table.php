@@ -18,7 +18,11 @@ class CreateShopOrdersTable extends Migration
             $table->integer('customer_id');
             $table->integer('product_id');
             $table->integer('quantity');
-            $table->integer('cutlery')->default(0);
+            $table->integer('discount')->nullable();
+            $table->integer('status')->default(0);
+            $table->date('date')->nullable();
+            $table->time('time')->nullable();
+            $table->text('meta')->nullable();
             $table->timestamps();
         });
     }

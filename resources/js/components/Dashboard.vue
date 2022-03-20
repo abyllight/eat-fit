@@ -12,8 +12,20 @@ export default {
     mounted() {
         //this.increment()
         //this.getBrand()
+        //this.store()
     },
     methods: {
+        store() {
+            axios.post('/api/shop', {
+                c_id: '123',
+                cutlery: 2,
+                date: '2022-01-01',
+                time: '09:00',
+                meta: 'meta'
+            }).then(response => {
+                console.log(response)
+            })
+        },
         getBrand() {
             axios.get('/api/brand/2')
                 .then(response => {

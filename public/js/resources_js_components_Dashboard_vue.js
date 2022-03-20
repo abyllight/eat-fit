@@ -32,9 +32,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   name: "Dashboard",
   mounted: function mounted() {
     //this.increment()
-    this.getBrand();
+    //this.getBrand()
+    this.store();
   },
   methods: {
+    store: function store() {
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/shop', {
+        c_id: '123',
+        cutlery: 2,
+        date: '2022-01-01',
+        time: '09:00',
+        meta: 'meta'
+      }).then(function (response) {
+        console.log(response);
+      });
+    },
     getBrand: function getBrand() {
       axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/brand/2').then(function (response) {
         console.log(response);

@@ -23,6 +23,7 @@ use App\Http\Controllers\RationController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SelectController;
+use App\Http\Controllers\ShopOrderController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -141,6 +142,8 @@ Route::post('/cart-item/add', [CartItemController::class, 'addItem']);
 Route::post('/cart-item/remove', [CartItemController::class, 'destroy']);
 Route::post('/cart-item/increment', [CartItemController::class, 'increment']);
 Route::post('/cart-item/decrement', [CartItemController::class, 'decrement']);
+
+Route::post('/shop', [ShopOrderController::class, 'store']);
 
 Route::get('/products-all', [ProductController::class, 'getProducts']);
 Route::get('/product/{id}', [ProductController::class, 'getProduct']);
