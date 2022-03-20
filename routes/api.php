@@ -143,7 +143,7 @@ Route::post('/cart-item/remove', [CartItemController::class, 'destroy']);
 Route::post('/cart-item/increment', [CartItemController::class, 'increment']);
 Route::post('/cart-item/decrement', [CartItemController::class, 'decrement']);
 
-Route::post('/shop', [ShopOrderController::class, 'store']);
+Route::post('/shop', [ShopOrderController::class, 'placeOrder']);
 
 Route::get('/products-all', [ProductController::class, 'getProducts']);
 Route::get('/product/{id}', [ProductController::class, 'getProduct']);
