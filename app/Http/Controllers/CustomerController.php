@@ -57,10 +57,16 @@ class CustomerController extends Controller
             $customer = $this->store($id);
         }
 
+        $cart = [];
+
+        if ($customer->cart) {
+            $cart = $customer->cart->items;
+        }
+
         return response()->json([
             'status' => true,
             'user' => new CustomerCollection($customer),
-            'cart' => CartItemCollection::collection($customer->cart->items)
+            'cart' => CartItemCollection::collection($cart)
         ]);
     }
 }
