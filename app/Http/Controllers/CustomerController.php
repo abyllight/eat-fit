@@ -64,6 +64,8 @@ class CustomerController extends Controller
             $cart->save();
         }
 
+        $customer->refresh();
+
         return response()->json([
             'status' => true,
             'user' => new CustomerCollection($customer),

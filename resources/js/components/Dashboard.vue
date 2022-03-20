@@ -10,6 +10,7 @@ import axios from "axios";
 export default {
     name: "Dashboard",
     mounted() {
+        //this.me()
         //this.increment()
         //this.getBrand()
         //this.store()

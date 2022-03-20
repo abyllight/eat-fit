@@ -31,9 +31,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Dashboard",
   mounted: function mounted() {
-    //this.increment()
+    this.me(); //this.increment()
     //this.getBrand()
-    this.store();
+    //this.store()
   },
   methods: {
     store: function store() {
