@@ -265,6 +265,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Promocodes',
   data: function data() {
@@ -311,24 +312,34 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10),
       first: false,
       second: false,
+      types: [{
+        type: 0,
+        name: 'Процент'
+      }, {
+        type: 1,
+        name: 'Сумма'
+      }, {
+        type: 2,
+        name: 'Текст'
+      }],
       editedIndex: -1,
       editedItem: {
         id: null,
         name: '',
         code: '',
+        type: 0,
         sum: '',
         date_from: '',
-        date_to: '',
-        is_fixed: false
+        date_to: ''
       },
       defaultItem: {
         id: 0,
         name: null,
         code: null,
         sum: null,
+        type: 0,
         date_from: null,
-        date_to: null,
-        is_fixed: false
+        date_to: null
       },
       errors: []
     };
@@ -373,7 +384,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     activate: function activate(item) {
       var _this2 = this;
 
-      axios.patch('/api/promocodes/activate/' + item.id).then(function (response) {
+      axios.post('/api/promocode/' + item.id + '/activate').then(function (response) {
         if (response.data.status) {
           _this2.$store.dispatch('showAlert', {
             'isVisible': true,
@@ -453,20 +464,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     save: function save() {
       var _this5 = this;
 
-      var link = '/api/promocodes/';
+      var link = '/api/promocodes';
 
       if (this.editedIndex > -1) {
-        link += this.editedItem.id;
+        link += '/' + this.editedItem.id;
       }
 
-      console.log(link);
-      axios.post(link, {
-        name: this.editedItem.name,
-        code: this.editedItem.code,
-        sum: this.editedItem.sum,
-        is_fixed: this.editedItem.is_fixed,
-        date_from: this.editedItem.date_from,
-        date_to: this.editedItem.date_to
+      axios({
+        method: this.editedIndex > -1 ? 'PATCH' : 'POST',
+        url: link,
+        data: {
+          name: this.editedItem.name,
+          code: this.editedItem.code,
+          sum: this.editedItem.sum,
+          type: this.editedItem.type,
+          date_from: this.editedItem.date_from,
+          date_to: this.editedItem.date_to
+        }
       }).then(function (response) {
         _this5.close();
 
@@ -592,7 +606,13 @@ var render = function() {
         fn: function(ref) {
           var item = ref.item
           return [
-            _vm._v("\n        " + _vm._s(item.is_fixed ? "тг" : "%") + "\n    ")
+            _vm._v(
+              "\n        " +
+                _vm._s(
+                  item.type === 1 ? "тг" : item.type === 0 ? "%" : "Текст"
+                ) +
+                "\n    "
+            )
           ]
         }
       },
@@ -747,22 +767,22 @@ var render = function() {
                                       "v-col",
                                       { attrs: { cols: "12", sm: "6" } },
                                       [
-                                        _c("v-switch", {
+                                        _c("v-autocomplete", {
                                           attrs: {
-                                            label: _vm.editedItem.is_fixed
-                                              ? "Сумма"
-                                              : "Процент"
+                                            items: _vm.types,
+                                            "item-text": "name",
+                                            "item-value": "type"
                                           },
                                           model: {
-                                            value: _vm.editedItem.is_fixed,
+                                            value: _vm.editedItem.type,
                                             callback: function($$v) {
                                               _vm.$set(
                                                 _vm.editedItem,
-                                                "is_fixed",
+                                                "type",
                                                 $$v
                                               )
                                             },
-                                            expression: "editedItem.is_fixed"
+                                            expression: "editedItem.type"
                                           }
                                         })
                                       ],
@@ -776,9 +796,6 @@ var render = function() {
                                         _c("v-text-field", {
                                           attrs: {
                                             label: "Значение",
-                                            suffix: _vm.editedItem.is_fixed
-                                              ? "тг"
-                                              : "%",
                                             "error-messages": _vm.errors.sum
                                           },
                                           model: {

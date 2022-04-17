@@ -1,5 +1,6 @@
 <template>
     <div>
+        <!--  Select data section  -->
         <v-row>
             <v-col>
                 <v-btn
@@ -63,7 +64,11 @@
                 </v-chip>
             </v-col>
         </v-row>
+
+        <!--   Customer list and select cards   -->
         <v-row>
+
+            <!--  Table list          -->
             <v-col cols="12" md="4">
                 <v-card>
                     <v-card-title>
@@ -93,35 +98,39 @@
                     </v-data-table>
                 </v-card>
             </v-col>
+
+            <!--   Cards         -->
             <v-col v-if="Object.keys(order).length > 0">
+
                 <h3 class="mb-3">{{order.name}}</h3>
+
                 <v-row>
                     <v-col
                         cols="12" md="4"
-                        v-for="(ration, key) in rations"
+                        v-for="(result, key) in select_result"
                         :key="key"
                     >
                         <v-card
-                            :color="isActive(ration.id) ? getSelectColor(ration.id) : 'grey'"
+                            :color="result.color"
                             :loading="select_loading"
                         >
-                            <v-card-title>{{ration.name}}</v-card-title>
-                            <v-card-subtitle>{{getSelectName(ration.id)}}</v-card-subtitle>
+                            <v-card-title>{{result.ration.name}}</v-card-title>
+                            <v-card-subtitle>{{result.dish_name}}</v-card-subtitle>
                             <v-card-actions>
                                 <v-btn
-                                    v-if="isActive(ration.id)"
+                                    v-if="result.is_active"
                                     color="primary"
                                     text
-                                    @click="openSettings(ration)"
+                                    @click="openSettings(result.ration)"
                                 >
                                     настроить
                                 </v-btn>
                                 <v-btn
                                     color="black"
                                     text
-                                    @click="activateDeactivate(ration.id)"
+                                    @click="activateDeactivate(result.id)"
                                 >
-                                    {{isActive(ration.id) ? 'Убрать' : 'Вернуть'}}
+                                    {{result.is_active ? 'Убрать' : 'Вернуть'}}
                                 </v-btn>
                             </v-card-actions>
                         </v-card>
@@ -129,6 +138,8 @@
                 </v-row>
             </v-col>
         </v-row>
+
+        <!--  Select Modal   -->
         <v-row justify="center">
             <v-dialog
                 v-model="dialog"
@@ -137,6 +148,8 @@
                 transition="dialog-bottom-transition"
             >
                 <v-card>
+
+                    <!-- Toolbar  -->
                     <v-toolbar
                         dark
                         color="primary"
@@ -144,21 +157,25 @@
                         <v-btn
                             icon
                             dark
-                            @click="closeDialog"
+                            @click="dialog = false"
                         >
                             <v-icon>mdi-close</v-icon>
                         </v-btn>
                         <v-toolbar-title>Диета - {{ration.name}}</v-toolbar-title>
                         <v-spacer></v-spacer>
                     </v-toolbar>
+
                     <v-card-title>{{order.name}} - {{order.tag}}</v-card-title>
+
                     <v-card-text v-if="order">
                         <v-container fluid>
+
+                            <!-- Diet description    -->
                             <v-row>
                                 <v-col
                                     cols="12"
                                     sm="12"
-                                    lg="5"
+                                    lg="4   "
                                 >
                                     <v-card v-if="order.diet" class="mb-4" color="lime lighten-4">
                                         <v-card-text>
@@ -166,10 +183,11 @@
                                         </v-card-text>
                                     </v-card>
                                 </v-col>
+
                                 <v-col
                                     cols="12"
                                     sm="12"
-                                    lg="5"
+                                    lg="4   "
                                 >
                                     <v-card v-if="order.diet_old" color="red lighten-4">
                                         <v-card-text>
@@ -178,9 +196,12 @@
                                     </v-card>
                                 </v-col>
                             </v-row>
-                            <h3 class="my-5">Черный список</h3>
-                            <v-row class="mb-4">
-                                <v-col sm="12" lg="4">
+
+                            <!-- Blacklist -->
+                            <v-divider class="my-8"></v-divider>
+                            <h3 class="mb-5">Черный список</h3>
+                            <v-row>
+                                <v-col cols="12" sm="12" lg="4">
                                     <v-autocomplete
                                         v-model="applied_categories"
                                         :items="categories"
@@ -193,7 +214,8 @@
                                         multiple
                                     ></v-autocomplete>
                                 </v-col>
-                                <v-col sm="12" lg="8">
+
+                                <v-col cols="12" sm="12" lg="8">
                                     <v-autocomplete
                                         v-model="mix"
                                         :items="ingredients"
@@ -204,7 +226,20 @@
                                         small-chips
                                         label="Ингредиенты"
                                         multiple
-                                    ></v-autocomplete>
+                                    >
+                                        <template v-slot:selection="data">
+                                            <v-chip
+                                                small
+                                                v-bind="data.attrs"
+                                                :input-value="data.selected"
+                                                close
+                                                @click="data.select"
+                                                @click:close="removeIngredientFromBlacklist(data.item.id)"
+                                            >
+                                                {{ data.item.name }}
+                                            </v-chip>
+                                        </template>
+                                    </v-autocomplete>
                                     <v-btn
                                         dark
                                         @click="saveBlacklist"
@@ -213,6 +248,8 @@
                                     </v-btn>
                                 </v-col>
                             </v-row>
+
+                            <!-- Wishlist -->
                             <h3 class="my-5">Зеленый список</h3>
                             <v-row class="mb-4">
                                 <v-col sm="12" lg="4">
@@ -232,20 +269,24 @@
                                 </v-col>
                                 <v-col sm="12" lg="8">
                                     <v-chip
-                                        v-for="(tag,index) in wishlist"
-                                        :key="index"
+                                        v-for="t in wishlist"
+                                        :key="t"
                                         class="ma-2"
                                         close
-                                        @click:close="removeTag(tag)"
+                                        @click:close="removeTag(t)"
                                     >
-                                        {{ tag }}
+                                        {{ t }}
                                     </v-chip>
                                 </v-col>
                             </v-row>
                             <v-divider class="my-6"></v-divider>
-                            <h2 class="mb-6">{{cuisine.name}} - {{ration.name}}</h2>
 
+                            <!-- Nakovalnya -->
+
+                            <h2 class="mb-6">{{cuisine.name}} - {{ration.name}}</h2>
                             <v-row class="py-3">
+
+                                <!-- Previous -->
                                 <v-col
                                     v-if="Object.keys(previous).length > 0"
                                     cols="3"
@@ -268,6 +309,8 @@
                                         </v-list-item>
                                     </v-list>
                                 </v-col>
+
+                                <!-- Today -->
                                 <v-col cols="5">
                                     <h4>Сегодня</h4>
                                     <span>{{cuisine.name}}</span>
@@ -346,6 +389,8 @@
                                         </v-sheet>
                                     </div>
                                 </v-col>
+
+                                <!-- Result -->
                                 <v-col cols="4">
                                     <h4>Итог</h4>
                                     <span>{{cuisine.name}}</span>
@@ -359,6 +404,17 @@
                                                 </v-btn>
                                             </v-card-actions>
                                         </v-card>
+                                        <v-autocomplete
+                                            v-if="result.status === 2"
+                                            v-model="r2_val"
+                                            :items="ingredients"
+                                            item-text="name"
+                                            item-value="id"
+                                            clearable
+                                            outlined
+                                            label="Добавить ингредиент"
+                                            @change="addExtra"
+                                        ></v-autocomplete>
                                         <v-sheet
                                             v-for="(ing, i) in result.ingredients"
                                             :key="i"
@@ -379,28 +435,17 @@
                                                 </v-col>
                                             </v-row>
                                             <v-row>
-                                                <v-col v-if="result.status === 2">
+<!--                                                <v-col v-if="result.status === 2">
                                                     <v-btn
                                                         x-small
                                                         @click="ing.pivot.is_visible ? hideIngredient(ing.id) : showIngredient(ing.id)"
                                                     >{{ing.pivot.is_visible ? 'не показывать' : 'показывать'}}</v-btn>
-                                                </v-col>
+                                                </v-col>-->
                                                 <v-col v-if="ing.pivot.editable">
                                                     <v-btn x-small @click="removeExtra(ing.id)">убрать</v-btn>
-
                                                 </v-col>
                                             </v-row>
                                         </v-sheet>
-                                        <v-autocomplete
-                                            v-model="r2_val"
-                                            :items="ingredients"
-                                            item-text="name"
-                                            item-value="id"
-                                            clearable
-                                            outlined
-                                            label="Ингредиенты"
-                                            @change="addExtra"
-                                        ></v-autocomplete>
                                     </div>
                                 </v-col>
                             </v-row>
@@ -409,6 +454,8 @@
                 </v-card>
             </v-dialog>
         </v-row>
+
+        <!-- Замена -->
         <v-dialog
             v-model="dialog2"
             scrollable
@@ -423,6 +470,7 @@
                     <v-row class="mt-3">
                         <v-col cols="12" md="4">
                             <v-select
+                                v-if="ingredient_categories.length > 0"
                                 v-model="chosen_category"
                                 :items="ingredient_categories"
                                 label="Категории"
@@ -477,6 +525,8 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+
+        <!-- Редактировать название и описание блюда -->
         <v-dialog
             v-model="dialog3"
             max-width="700px"
@@ -505,6 +555,13 @@
                     <v-btn
                         color="primary"
                         text
+                        @click="dialog3=false"
+                    >
+                        Закрыть
+                    </v-btn>
+                    <v-btn
+                        color="primary"
+                        text
                         @click="saveDetails"
                     >
                         Сохранить
@@ -516,8 +573,10 @@
 </template>
 <script>
     import axios from "axios";
+    import SelectModal from "./SelectModal";
     export default {
         name: 'Select',
+        components: {SelectModal},
         data: () => ({
             amo_loading: false,
             orders: [],
@@ -563,11 +622,10 @@
         }),
         created() {
             this.getOrders()
-            this.getSelectStat()
-            this.getRations()
             this.getCuisine()
             this.getCategories()
             this.getIngredients()
+            this.getRations()
         },
         methods: {
             async fetchOrdersFromAmo() {
@@ -576,7 +634,6 @@
                     .get('/api/orders/eat-fit')
                     .then(() => {
                         this.getOrders()
-                        this.getSelectStat()
                     })
                     .catch(error => {
                         this.$store.dispatch('showAlert', {
@@ -593,7 +650,8 @@
                 await axios
                     .get('/api/orders/select')
                     .then(response => {
-                        this.orders = response.data
+                        this.orders = response.data.orders
+                        this.select_stat = response.data.stat
                     })
                     .catch(error => {
                         this.loading = false
@@ -605,58 +663,6 @@
                         })
                     })
                     .finally(() => (this.loading = false))
-            },
-            async getSelectStat(){
-                await axios
-                    .get('/api/orders/stat')
-                    .then(response => {
-                        this.select_stat = response.data.select
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
-            },
-            async getRations(){
-                await axios
-                    .get('/api/rations/required')
-                    .then(response => {
-                        this.rations = response.data
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
-            },
-            async getSelectDetailsByOrder(id){
-                this.select_loading = true
-                await axios
-                    .get('/api/select/order/'+id)
-                    .then(response => {
-                        this.select_previous = response.data.previous
-                        this.select_result = response.data.result
-                        this.blacklist = response.data.blacklist
-                        this.wishlist = response.data.wishlist
-                        this.mix = response.data.blacklist
-                        this.select_loading = false
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
-            },
-            async getCuisine(){
-                await axios
-                    .get('/api/cuisine/duty')
-                    .then(response => {
-                        this.cuisine = response.data
-                    })
-                    .catch(error => {
-                        this.loading = false
-                        this.$store.dispatch('showAlert', {
-                            'isVisible': true,
-                            'msg': error.message,
-                            'color': 'error',
-                            'type': 'error'
-                        })
-                    })
             },
             async getIngredients(){
                 await axios
@@ -678,79 +684,64 @@
                         console.log(error)
                     })
             },
-            async getDishesByRation(id){
+            async getRations(){
                 await axios
-                    .get('/api/dishes/ration/'+id)
+                    .get('/api/rations/required')
                     .then(response => {
-                        this.dishes = response.data
-
-                        if (this.dishes.length > 0){
-                            this.dish = this.dishes.find(obj => {
-                                return obj.id === this.result.dish_id
-                            })
-
-                            if (!this.dish){
-                                this.dish = this.dishes[0]
-                            }
-                        }else {
-                            this.dish.ingredients = []
-                        }
+                        this.rations = response.data
                     })
                     .catch(error => {
                         console.log(error)
                     })
             },
-            async getCategoriesByIngredient(id){
+            async getCuisine(){
                 await axios
-                    .get('/api/categories/ingredient/'+id)
+                    .get('/api/cuisine/duty')
                     .then(response => {
-                        this.ingredient_categories = response.data
+                        this.cuisine = response.data
                     })
                     .catch(error => {
-                        console.log(error)
+                        this.loading = false
+                        this.$store.dispatch('showAlert', {
+                            'isVisible': true,
+                            'msg': error.message,
+                            'color': 'error',
+                            'type': 'error'
+                        })
                     })
             },
             showOrderDetails(order){
                 this.order = order
                 this.getSelectDetailsByOrder(order.id)
             },
+            async getSelectDetailsByOrder(id){
+                this.select_loading = true
+                await axios
+                    .get('/api/select/order/'+id)
+                    .then(response => {
+                        this.select_previous = response.data.previous
+                        this.select_result = response.data.result
+                        this.blacklist = response.data.blacklist
+                        this.mix = response.data.blacklist
+                        this.wishlist = response.data.wishlist
+                        this.select_loading = false
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+            },
             openSettings(ration){
                 this.ration = ration
-                this.previous = this.select_previous.find(obj => obj.ration_id === ration.id) ?? {}
-                this.result = this.select_result.find(obj => obj.ration_id === ration.id) ?? {}
-                this.ration_id = this.result.r_id ?? ration.id
-                this.getDishesByRation(this.ration_id)
+                this.ration_id = ration.id
+                this.previous = this.select_previous.find(obj => obj.ration.id === ration.id) ?? {}
+                this.result = this.select_result.find(obj => obj.ration.id === ration.id) ?? {}
+                this.getDishesByRation(this.ration.iiko_id)
                 this.dialog = true
             },
-            getSelectColor(id){
-                if (this.select_result.length > 0){
-                    let select = this.select_result.find(x => x.ration_id === id)
-                    return select ? select.color : ''
-                }
-
-                return '';
-            },
-            isActive(id){
-                if (this.select_result.length > 0){
-                    let select = this.select_result.find(x => x.ration_id === id)
-                    return select ? select.is_active : true
-                }
-
-                return true;
-            },
-            getSelectName(id){
-                if (this.select_result.length > 0){
-                    let select = this.select_result.find(x => x.ration_id === id)
-                    return select ? select.dish_name : ''
-                }
-
-                return '';
-            },
             activateDeactivate(id){
-                let select = this.select_result.find(obj => obj.ration_id === id)
                 axios
                     .post('/api/select/activate-deactivate', {
-                        select_id: select.id
+                        select_id: id
                     })
                     .then(response => {
                         this.getSelectDetailsByOrder(this.order.id)
@@ -758,11 +749,6 @@
                     .catch(error => {
                         console.log(error)
                     })
-            },
-            closeDialog(){
-                this.dish = {}
-                this.dialog = false
-                this.getSelectDetailsByOrder(this.order.id)
             },
             applyCategories(){
                 let ings = this.applied_categories.map(item => {
@@ -774,6 +760,11 @@
                 ings = ings.flat()
                 ings = ings.concat(this.blacklist)
                 this.mix = [...new Set(ings)]
+            },
+            removeIngredientFromBlacklist(id) {
+                this.mix = this.mix.filter(function(item) {
+                    return item !== id
+                })
             },
             saveBlacklist(){
                 axios
@@ -794,7 +785,7 @@
                         this.errors = error.response.data.errors
                     })
             },
-            addTag(){
+            addTag() {
                 axios
                     .post('/api/wishlist', {
                         id: this.order.id,
@@ -839,14 +830,35 @@
                 if (!this.result.ingredient_ids) return
                 return this.result.ingredient_ids.includes(id)
             },
-            setDish(){
+            async getDishesByRation(id){
+                //console.log(id)
+                await axios
+                    .get('/api/dishes/ration/'+id)
+                    .then(response => {
+                        this.dishes = response.data
+
+                        if (this.dishes.length > 0){
+                            this.dish = this.dishes.find(obj => {
+                                return obj.id === this.result.dish_id
+                            })
+
+                            if (!this.dish){
+                                this.dish = this.dishes[0]
+                            }
+                        }else {
+                            this.dish.ingredients = []
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+            },
+            setDish() {
                 axios
                     .post('/api/select/add/dish', {
-                        select_id: this.result ? this.result.id : null,
-                        order_id: this.order.id,
-                        ration_id: this.ration.id,
-                        dish_id: this.dish.id,
-                        r_id: this.ration_id
+                        select_id: this.result.id,
+                        ration_id: this.ration.iiko_id,
+                        dish_id: this.dish.id
                     })
                     .then(response => {
                         if (!response.data.status){
@@ -862,6 +874,14 @@
                     .catch(error => {
                         console.log(error)
                     })
+            },
+            getAnalogName(id){
+                return this.result.ingredients.find(obj => obj.pivot.analog_id === id).name
+            },
+            hasAnalog(id){
+                if (!this.result.ingredient_ids) return
+                let index = this.result.ingredients.findIndex(obj => obj.pivot.analog_id === id)
+                return index >= 0
             },
             addIngredient(id){
                 axios
@@ -879,6 +899,7 @@
                             })
                         }
                         this.result = response.data.data
+                        this.getSelectDetailsByOrder(this.order.id)
                     })
                     .catch(error => {
                         console.log(error)
@@ -900,10 +921,19 @@
                             })
                         }
                         this.result = response.data.data
+                        this.getSelectDetailsByOrder(this.order.id)
                     })
                     .catch(error => {
                         console.log(error)
                     })
+            },
+            showAnalogs(id){
+                this.getCategoriesByIngredient(id)
+                this.target_ingredient = id
+                this.dialog2 = true
+            },
+            getAnalogId(id){
+                return this.result.ingredients.find(obj => obj.pivot.analog_id === id).id
             },
             replaceIngredient(id){
                 axios
@@ -915,6 +945,7 @@
                     .then(response => {
                         if (response.data.status){
                             this.result = response.data.select
+                            this.getSelectDetailsByOrder(this.order.id)
                             this.closeDialog2()
                         }
                     })
@@ -932,27 +963,52 @@
                     .then(response => {
                         if (response.data.status){
                             this.result = response.data.select
+                            this.getSelectDetailsByOrder(this.order.id)
                         }
                     })
                     .catch(error => {
                         console.log(error)
                     })
             },
-            showAnalogs(id){
-                this.getCategoriesByIngredient(id)
-                this.target_ingredient = id
-                this.dialog2 = true
+
+            async getCategoriesByIngredient(id){
+                await axios
+                    .get('/api/categories/ingredient/'+id)
+                    .then(response => {
+                        this.ingredient_categories = response.data
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
             },
-            hasAnalog(id){
-                if (!this.result.ingredient_ids) return
-                let index = this.result.ingredients.findIndex(obj => obj.pivot.analog_id === id)
-                return index >= 0
+            getSelectColor(id){
+                if (this.select_result.length > 0){
+                    let select = this.select_result.find(x => x.ration_id === id)
+                    return select ? select.color : ''
+                }
+
+                return '';
             },
-            getAnalogId(id){
-                return this.result.ingredients.find(obj => obj.pivot.analog_id === id).id
+            isActive(id){
+                if (this.select_result.length > 0){
+                    let select = this.select_result.find(x => x.ration_id === id)
+                    return select ? select.is_active : true
+                }
+
+                return true;
             },
-            getAnalogName(id){
-                return this.result.ingredients.find(obj => obj.pivot.analog_id === id).name
+            getSelectName(id){
+                if (this.select_result.length > 0){
+                    let select = this.select_result.find(x => x.ration_id === id)
+                    return select ? select.dish_name : ''
+                }
+
+                return '';
+            },
+            closeDialog(){
+                this.dish = {}
+                this.dialog = false
+                this.getSelectDetailsByOrder(this.order.id)
             },
             closeDialog2(){
                 this.ingredient_categories = []
@@ -986,6 +1042,7 @@
                     })
                     .then(response => {
                         this.result = response.data.data
+                        this.getSelectDetailsByOrder(this.order.id)
                         this.r2_val = null
                     })
                     .catch(error => {
@@ -1000,6 +1057,7 @@
                     })
                     .then(response => {
                         this.result = response.data.data
+                        this.getSelectDetailsByOrder(this.order.id)
                     })
                     .catch(error => {
                         console.log(error)
@@ -1031,7 +1089,7 @@
                     .catch(error => {
                         console.log(error)
                     })
-            }
+            },
         }
     }
 </script>

@@ -47,13 +47,17 @@ class Select extends Model
         }, $this->ingredients()->get()->toArray());
     }
 
-    public function getStatusColor(int $status): string
+    public function getStatusColor(): string
     {
         $color = '';
 
-        if ($status === self::REPLACEMENT){
+        if (!$this->is_active) {
+            return 'grey';
+        }
+
+        if ($this->status === self::REPLACEMENT){
             $color = 'red lighten-3';
-        }else if ($status === self::LITE || $status === self::WITHOUT){
+        }else if ($this->status === self::LITE || $this->status === self::WITHOUT){
             $color = 'lime lighten-2';
         }
 

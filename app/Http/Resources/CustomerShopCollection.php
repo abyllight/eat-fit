@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CuisineCollection extends JsonResource
+class CustomerShopCollection extends JsonResource
 {
     /**
      * Transform the resource collection into an array.
@@ -17,12 +17,8 @@ class CuisineCollection extends JsonResource
     {
         return [
             'id'   => $this->id,
-            'i_id' => $this->iiko_id,
-            'i_name' => $this->iiko_name,
             'name' => $this->name,
-            'duty' => $this->is_on_duty,
-            'left_rations' => $this->getLeftRations(),
-            'dishes' => DishCollection::collection($this->dishes->sortBy('ration_id'))
+            'items' => ShopItemsCollection::collection($this->shop_items)
         ];
     }
 }

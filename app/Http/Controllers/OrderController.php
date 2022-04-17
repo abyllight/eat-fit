@@ -154,8 +154,23 @@ class OrderController extends Controller
     }
 
     public function getSelect(){
+
         $orders = Order::where('type', Order::EAT_FIT_SELECT)->where('is_active', true)->orderBy('size')->get();
-        return response()->json(OrderSelectCollection::collection($orders));
+
+        $select = [
+            'total' => $orders->count(),
+            'xs'    => $orders->where('size', Order::XS)->count(),
+            's'     => $orders->where('size', Order::S)->count(),
+            'm'     => $orders->where('size', Order::M)->count(),
+            'l'     => $orders->where('size', Order::L)->count(),
+            'xl'    => $orders->where('size', Order::XL)->count()
+        ];
+
+        return response()->json([
+            'status' => true,
+            'orders' => OrderSelectCollection::collection($orders),
+            'stat' => $select
+        ]);
     }
 
     public function getOrderStat(): JsonResponse

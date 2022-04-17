@@ -20,26 +20,6 @@ class RationController extends Controller
         return response()->json(RationCollection::collection(Ration::where('is_required', true)->get()));
     }
 
-    public function getRequired($id): JsonResponse
-    {
-        $cuisine = Cuisine::find($id);
-
-        if (!$cuisine){
-            return response()->json([
-                'status' => true,
-                'msg' => 'Кухня не найдена'
-            ]);
-        }
-
-        $rations = Ration::where('is_required', true)->get();
-        $dish_rations = $cuisine->dishes->map(function ($item){
-            return $item->ration;
-        });
-        $diff = $rations->diff($dish_rations);
-
-        return response()->json(RationCollection::collection($diff));
-    }
-
     public function store(Request $request): JsonResponse
     {
         $request->validate([

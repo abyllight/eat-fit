@@ -789,20 +789,11 @@ var render = function() {
                                           clearable: ""
                                         },
                                         model: {
-                                          value: _vm.isInputFile(model)
-                                            ? []
-                                            : model.value,
+                                          value: model.value,
                                           callback: function($$v) {
-                                            _vm.$set(
-                                              _vm.isInputFile(model)
-                                                ? []
-                                                : model,
-                                              "value",
-                                              $$v
-                                            )
+                                            _vm.$set(model, "value", $$v)
                                           },
-                                          expression:
-                                            "isInputFile(model) ? [] : model.value"
+                                          expression: "model.value"
                                         }
                                       })
                                 ]

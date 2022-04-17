@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use AmoCRM\Client;
+use App\Http\Resources\CustomerShopCollection;
 use App\Models\Customer;
 use App\Models\ShopOrder;
 use Illuminate\Http\JsonResponse;
@@ -11,6 +12,13 @@ use Illuminate\Support\Facades\Log;
 
 class ShopOrderController extends Controller
 {
+    public function index(): JsonResponse
+    {
+        $customers = Customer::all();
+
+        return response()->json(CustomerShopCollection::collection($customers));
+    }
+
     public function placeOrder(Request $request): JsonResponse
     {
         $customer = Customer::where('uuid', $request->c_id)->first();

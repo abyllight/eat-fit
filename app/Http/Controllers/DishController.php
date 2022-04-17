@@ -16,60 +16,6 @@ class DishController extends Controller
         return response()->json(DishCollection::collection(Dish::where('is_custom', true)->orderBy('ration_id')->orderBy('name')->get()));
     }
 
-    public function fetchDishes(): JsonResponse
-    {
-        $iiko = new IikoController();
-        $token = $iiko->getAuthToken();
-
-        $cuisines = Cuisine::all();
-
-        foreach ($cuisines as $cuisine) {
-            $link = '/resto/api/v2/entities/products/list?types=DISH&parentIds=' . $cuisine->iiko_id . '&key=';
-            $dishes = $iiko->doRequest($token, $link);
-            $array = [];
-
-            if (is_array($dishes)){
-                foreach ($dishes as $dish) {
-                    $first = substr($dish['name'], 0, 1);
-
-                    if (!is_numeric($first)){
-                        continue;
-                    }
-
-                    $first = (int)$first;
-
-                    if (!in_array($first, $array)) {
-                        $d = Dish::updateOrCreate(
-                            ['ration_id' => $first, 'cuisine_id' => $cuisine->id],
-                            [
-                                'iiko_name' => substr($dish['name'], 4),
-                                'iiko_id' => $dish['id'],
-                                'is_custom' => false
-                            ]
-                        );
-
-                        if (!$d->name){
-                            $d->name = $d->iiko_name;
-                            $d->save();
-                        }
-
-                        $array[] = $first;
-                    }
-                }
-            }else {
-                return response()->json([
-                    'status' => false,
-                    'msg' => $dishes. 'asdas'
-                ]);
-            }
-        }
-
-        return response()->json([
-            'status' => true,
-            'msg' => 'Блюда получены'
-        ]);
-    }
-
     public function store(Request $request): JsonResponse
     {
         $request->validate([
@@ -89,7 +35,7 @@ class DishController extends Controller
         $dish->is_custom = $request->has('is_custom') ? $request->is_custom : true;
         $dish->save();
 
-        $dish->ingredients()->sync($request->ingredient_ids);
+        $dish->custom_ingredients()->sync($request->ingredient_ids);
 
         return response()->json([
             'status' => true,
@@ -177,22 +123,6 @@ class DishController extends Controller
 
             $dishes->push($arr);
         }
-
-        return response()->json($dishes);
-    }
-
-    public function getDishesByCuisine($id)
-    {
-        $cuisine = Cuisine::find($id);
-
-        if (!$cuisine){
-            return response()->json([
-                'status' => false,
-                'msg' => 'Cuisine not found'
-            ]);
-        }
-
-        $dishes = DishCollection::collection($cuisine->dishes->sortBy('ration_id'));
 
         return response()->json($dishes);
     }

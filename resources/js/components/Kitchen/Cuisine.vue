@@ -1,5 +1,6 @@
 <template>
     <div>
+        <!--  Fetch Cuisines -->
         <v-row>
             <v-btn
                 class="ma-3"
@@ -10,17 +11,9 @@
             >
                 Получить Кухни
             </v-btn>
-
-            <v-btn
-                class="ma-3"
-                :loading="btn_loading"
-                :disabled="disabled"
-                color="primary"
-                @click="fetchDishes"
-            >
-                Получить Блюда
-            </v-btn>
         </v-row>
+
+        <!--  Cuisines -->
         <v-row>
             <v-col>
                 <v-chip
@@ -37,10 +30,12 @@
                 </v-chip>
             </v-col>
         </v-row>
-        <v-row>
+
+        <!--  Cuisine Dish cards -->
+        <v-row v-if="Object.keys(cuisine).length !== 0">
             <v-col sm="12" md="6">
+                <!-- Cuisine name and controls -->
                 <v-card
-                    v-if="cuisine"
                     :color="cuisine.duty ? 'light-green lighten-3' : 'light-blue lighten-3'"
                     :disabled="disabled"
                     :loading="disabled"
@@ -61,18 +56,32 @@
                         </v-btn>
                         <v-btn
                             text
+                            @click="fetchDishesByCuisineId(cuisine.id)"
+                        >
+                            <v-icon
+                                dark
+                                left
+                            >
+                                mdi-refresh
+                            </v-icon>
+                            Блюда
+                        </v-btn>
+                        <v-btn
+                            text
                             @click="fetchIngredients(cuisine.id)"
                         >
                             <v-icon
                                 dark
                                 left
                             >
-                                mdi-silverware
+                                mdi-refresh
                             </v-icon>
-                            Получить Ингредиенты
+                            Ингредиенты
                         </v-btn>
                     </v-card-actions>
                 </v-card>
+
+                <!--  Dish list -->
                 <v-card
                     class="mt-4"
                     :disabled="disabled"
@@ -96,8 +105,10 @@
                         </v-list-item>
                     </v-list>
                 </v-card>
+
+                <!--  Left rations -->
                 <v-card
-                    v-for="item in rations"
+                    v-for="item in left_rations"
                     :key="item.id"
                     class="mt-4"
                 >
@@ -141,6 +152,8 @@
                 </v-card>
             </v-col>
         </v-row>
+
+        <!--  Modal -->
         <v-row justify="center">
             <v-dialog
                 v-model="dialog"
@@ -174,6 +187,7 @@
                                     <v-list-item
                                         v-for="(item, key) in dish.i_ingredients"
                                         :key="item.id"
+                                        :class="!dish.ingredient_ids.includes(item.id) ? 'yellow lighten-3' : ''"
                                         dense
                                     >
                                         <v-list-item-content>
@@ -255,7 +269,7 @@
             cuisines: [],
             ingredients: [],
             departments: [],
-            rations: [],
+            left_rations: [],
             all_rations: [],
             cuisine: {},
             dish: {
@@ -286,11 +300,15 @@
                     .get('/api/cuisines')
                     .then(response => {
                         this.cuisines = response.data
-                        this.cuisine = this.cuisines.find(obj => {
-                            return obj.duty === 1
-                        })
-                        this.getDishesByCuisine(this.cuisine.id)
-                        this.getRations()
+
+                        if (this.cuisines.length > 0) {
+                            this.cuisine = this.cuisines.find(obj => {
+                                return obj.duty === 1
+                            })
+                            this.dishes = this.cuisine.dishes
+                            this.dish = this.dishes[0]
+                            this.left_rations = this.cuisine.left_rations
+                        }
                     })
                     .catch(error => {
                         console.log(error)
@@ -326,16 +344,6 @@
                         console.log(error)
                     })
             },
-            getRations(){
-                axios
-                    .get('/api/rations/required/'+this.cuisine.id)
-                    .then(response => {
-                        this.rations = response.data
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
-            },
             async fetchCuisines() {
                 this.btn_loading = true
                 this.disabled = true
@@ -358,11 +366,11 @@
                         this.disabled = false
                     })
             },
-            async fetchDishes() {
+            async fetchDishesByCuisineId(id) {
                 this.btn_loading = true
                 this.disabled = true
                 await axios
-                    .get('/api/dishes/iiko')
+                    .get('/api/cuisines/'+id+'/dishes/iiko')
                     .then(response => {
                         this.$store.dispatch('showAlert', {
                             'isVisible': true,
@@ -392,7 +400,7 @@
                             'color': response.status ? 'green' : 'error',
                             'type': response.status ? 'success' : 'error',
                         })
-                        this.getCuisines()
+                        location.reload()
                     })
                     .catch(error => {
                         console.log(error)
@@ -402,22 +410,11 @@
                         this.loading = false
                     })
             },
-            async getDishesByCuisine(id){
-                await axios
-                    .get('/api/dishes/cuisine/'+id)
-                    .then(response => {
-                        this.dishes = response.data
-                        this.dish = this.dishes[0]
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
-            },
             showDetails(cuisine) {
-                if (this.disabled) return
                 this.cuisine = cuisine
-                this.getDishesByCuisine(cuisine.id)
-                this.getRations()
+                this.dishes = cuisine.dishes
+                this.dish = this.dishes[0]
+                this.left_rations = cuisine.left_rations
             },
             async setCuisine(id){
                 await axios
@@ -457,7 +454,6 @@
             },
             editDish(dish) {
                 this.dish = dish
-                this.dish.cuisine_id = this.cuisine.id
                 this.dialog = true
             },
             save(){
@@ -518,7 +514,7 @@
                     id: null,
                     name: '',
                     cuisine_id: this.cuisine.id,
-                    ration_id: ration.id,
+                    ration_id: ration.iiko_id,
                     code: '',
                     department_id: 0,
                     ingredients: [],

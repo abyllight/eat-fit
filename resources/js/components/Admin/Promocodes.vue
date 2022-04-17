@@ -10,7 +10,7 @@
             {{ index + 1 }}
         </template>
         <template v-slot:item.is_fixed="{ item }">
-            {{ item.is_fixed ? 'тг' : '%'}}
+            {{ item.type === 1 ? 'тг' : (item.type === 0 ? '%' : 'Текст')}}
         </template>
         <template v-slot:item.is_active="{ item }">
             {{ item.is_active ? 'Активирован' : 'Деактивирован'}}
@@ -71,10 +71,12 @@
                                         cols="12"
                                         sm="6"
                                     >
-                                        <v-switch
-                                            v-model="editedItem.is_fixed"
-                                            :label="editedItem.is_fixed ? 'Сумма' : 'Процент'"
-                                        ></v-switch>
+                                        <v-autocomplete
+                                            v-model="editedItem.type"
+                                            :items="types"
+                                            item-text="name"
+                                            item-value="type"
+                                        ></v-autocomplete>
                                     </v-col>
                                     <v-col
                                         cols="12"
@@ -83,7 +85,6 @@
                                         <v-text-field
                                             v-model.trim="editedItem.sum"
                                             label="Значение"
-                                            :suffix="editedItem.is_fixed ? 'тг' : '%'"
                                             :error-messages="errors.sum"
                                         ></v-text-field>
                                     </v-col>
@@ -266,24 +267,38 @@ export default {
         date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
         first: false,
         second: false,
+        types: [
+            {
+                type: 0,
+                name: 'Процент'
+            },
+            {
+                type: 1,
+                name: 'Сумма'
+            },
+            {
+                type: 2,
+                name: 'Текст'
+            }
+        ],
         editedIndex: -1,
         editedItem: {
             id: null,
             name: '',
             code: '',
+            type: 0,
             sum: '',
             date_from: '',
-            date_to: '',
-            is_fixed: false,
+            date_to: ''
         },
         defaultItem: {
             id: 0,
             name: null,
             code: null,
             sum: null,
+            type: 0,
             date_from: null,
-            date_to: null,
-            is_fixed: false,
+            date_to: null
         },
         errors: []
     }),
@@ -310,7 +325,7 @@ export default {
         },
         activate (item) {
             axios
-                .patch('/api/promocodes/activate/' + item.id)
+                .post('/api/promocode/' + item.id+ '/activate')
                 .then(response => {
                     if (response.data.status) {
                         this.$store.dispatch('showAlert', {
@@ -386,22 +401,24 @@ export default {
             })
         },
         save () {
-            let link = '/api/promocodes/'
+            let link = '/api/promocodes'
 
             if (this.editedIndex > -1) {
-                link += this.editedItem.id
+                link += '/'+this.editedItem.id
             }
-            console.log(link)
-            axios
-                .post(link, {
+
+            axios({
+                method: this.editedIndex > -1 ? 'PATCH' : 'POST',
+                url: link,
+                data: {
                     name: this.editedItem.name,
                     code: this.editedItem.code,
                     sum: this.editedItem.sum,
-                    is_fixed: this.editedItem.is_fixed,
+                    type: this.editedItem.type,
                     date_from: this.editedItem.date_from,
                     date_to: this.editedItem.date_to
-                })
-                .then(response => {
+                }
+            }).then(response => {
                     this.close()
                     this.$store.dispatch('showAlert', {
                         'isVisible': true,

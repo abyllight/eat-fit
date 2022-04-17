@@ -30,7 +30,7 @@ class PromocodeController extends Controller
         $request->validate([
             'name' => 'required|unique:promocodes,name',
             'code' => 'required|unique:promocodes,code',
-            'sum' => 'required|min:1',
+            'sum' => 'required',
             'date_from' => 'required|date|date_format:Y-m-d|after_or_equal:today',
             'date_to' => 'required|date|date_format:Y-m-d|after_or_equal:date_from',
         ]);
@@ -38,8 +38,8 @@ class PromocodeController extends Controller
         $promocode = new Promocode();
         $promocode->name = $request->name;
         $promocode->code = $request->code;
+        $promocode->type = $request->type;
         $promocode->sum = $request->sum;
-        $promocode->is_fixed = $request->is_fixed;
         $promocode->date_to = $request->date_to;
         $promocode->date_from = $request->date_from;
         $promocode->is_active = true;
@@ -63,7 +63,7 @@ class PromocodeController extends Controller
         $request->validate([
             'name' => 'required|unique:promocodes,name,' . $id,
             'code' => 'required|unique:promocodes,code,' . $id,
-            'sum' => 'required|min:1',
+            'sum' => 'required',
             'date_from' => 'required|date|date_format:Y-m-d|after_or_equal:today',
             'date_to' => 'required|date|date_format:Y-m-d|after_or_equal:date_from',
         ]);
@@ -73,8 +73,8 @@ class PromocodeController extends Controller
         if ($promocode) {
             $promocode->name = $request->name;
             $promocode->code = $request->code;
+            $promocode->type = $request->type;
             $promocode->sum = $request->sum;
-            $promocode->is_fixed = $request->is_fixed;
             $promocode->date_to = $request->date_to;
             $promocode->date_from = $request->date_from;
             $promocode->save();

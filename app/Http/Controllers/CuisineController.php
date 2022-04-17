@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CuisineCollection;
+use App\Http\Resources\DishCollection;
 use App\Models\Cuisine;
 use App\Models\Dish;
 use App\Models\Ingredient;
@@ -16,7 +17,8 @@ class CuisineController extends Controller
 {
     public function index(): JsonResponse
     {
-        return response()->json(CuisineCollection::collection(Cuisine::orderBy('name')->get()));
+        $cuisines = Cuisine::orderBy('name')->get();
+        return response()->json(CuisineCollection::collection($cuisines));
     }
 
     public function fetchCuisines(): JsonResponse
@@ -78,9 +80,9 @@ class CuisineController extends Controller
         $duty = Cuisine::find($request->id);
 
         Cuisine::where('is_on_duty', true)
-            ->update([
-            'is_on_duty' => false
-        ]);
+                ->update([
+                    'is_on_duty' => false
+                ]);
 
         if ($duty){
             $duty->is_on_duty = true;
@@ -93,5 +95,76 @@ class CuisineController extends Controller
     public function getDutyCuisine(): JsonResponse
     {
         return response()->json(Cuisine::where('is_on_duty', true)->first());
+    }
+
+    public function getDishesByCuisineId($id): JsonResponse
+    {
+        $cuisine = Cuisine::find($id);
+
+        $dishes = DishCollection::collection($cuisine->dishes->sortBy('ration_id'));
+
+        return response()->json($dishes);
+    }
+
+    public function fetchDishesByCuisineId($id): JsonResponse
+    {
+        $iiko = new IikoController();
+        $token = $iiko->getAuthToken();
+
+        $cuisine = Cuisine::find($id);
+
+        $link = '/resto/api/v2/entities/products/list?types=DISH&parentIds=' . $cuisine->iiko_id . '&key=';
+        $dishes = $iiko->doRequest($token, $link);
+        $array = [];
+
+        $rations = Ration::where('is_required', true)->get();
+
+        $r_numbers = $rations->map(function ($r) {
+            return $r->iiko_id;
+        });
+
+        if (is_array($dishes)){
+            foreach ($dishes as $dish) {
+                $first = substr($dish['name'], 0, 1);
+
+                if (!is_numeric($first)){
+                    continue;
+                }
+
+                $first = (int)$first;
+
+                if (!in_array($first, $r_numbers->toArray())){
+                    continue;
+                }
+
+                if (!in_array($first, $array)) {
+                    $d = Dish::updateOrCreate(
+                        ['ration_id' => $first, 'cuisine_id' => $cuisine->id],
+                        [
+                            'iiko_name' => substr($dish['name'], 4),
+                            'iiko_id' => $dish['id'],
+                            'is_custom' => false
+                        ]
+                    );
+
+                    if (!$d->name){
+                        $d->name = $d->iiko_name;
+                        $d->save();
+                    }
+
+                    $array[] = $first;
+                }
+            }
+        }else {
+            return response()->json([
+                'status' => false,
+                'msg' => $dishes. 'error'
+            ]);
+        }
+
+        return response()->json([
+            'status' => true,
+            'msg' => 'Блюда получены'
+        ]);
     }
 }

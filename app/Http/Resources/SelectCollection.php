@@ -24,12 +24,12 @@ class SelectCollection extends JsonResource
             'dish_name' => $this->dish_name,
             'ingredients' => $this->ingredients->sortBy('name')->toArray(),
             'ingredient_ids' => $this->getIngredientIds(),
-            'ration_id' => $this->ration_id,
+            'ration' => $this->ration,
             'r_id' => $this->r_id,
             'created_at' => $this->created_at->format('Y-m-d'),
             'description' => $this->description,
             'status' => $this->status,
-            'color' => $this->getStatusColor($this->status),
+            'color' => $this->getStatusColor(),
             'is_active' => $this->is_active
         ];
     }

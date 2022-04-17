@@ -50,7 +50,7 @@ class IngredientController extends Controller
                         $ings[] = $i->id;
                     }
                 }
-                $dish->ingredients()->sync($ings);
+                $dish->iiko_ingredients()->sync($ings);
             }else {
                 return response()->json([
                     'status' => false,

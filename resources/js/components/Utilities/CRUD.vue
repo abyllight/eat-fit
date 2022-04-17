@@ -40,7 +40,7 @@
                                     <component
                                         v-else
                                         :key="model.model"
-                                        v-model="isInputFile(model) ? [] : model.value"
+                                        v-model="model.value"
                                         :is="model.type"
                                         :label="model.label"
                                         :error-messages="errors[model.model]"

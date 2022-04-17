@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\BuilderCategoryController;
+use App\Http\Controllers\BuilderMixController;
+use App\Http\Controllers\BuilderValueController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CartItemController;
 use App\Http\Controllers\CategoryController;
@@ -89,6 +92,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cuisine/duty', [CuisineController::class, 'getDutyCuisine']);
     Route::post('/cuisine/duty', [CuisineController::class, 'setCuisine']);
     Route::get('/cuisines/iiko', [CuisineController::class, 'fetchCuisines']);
+    Route::get('/cuisines/{id}/dishes', [CuisineController::class, 'getDishesByCuisineId']);
+    Route::get('cuisines/{id}/dishes/iiko', [CuisineController::class, 'fetchDishesByCuisineId']);
 
     Route::resource('dishes', DishController::class)->except(['create', 'show', 'edit']);
     Route::get('dishes/ration/{id}', [DishController::class, 'getDishesByRation']);
@@ -125,9 +130,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/rations/required', [RationController::class, 'getRequiredRations']);
 
     Route::resource('promocodes', PromocodeController::class)->except(['create', 'show', 'edit']);
+    Route::post('/promocode/{promocode}/activate', [PromocodeController::class, 'activate']);
     Route::resource('products', ProductController::class)->except(['create', 'show', 'edit']);
     Route::resource('product-categories', ProductCategoryController::class)->except(['create', 'show', 'edit']);
     Route::resource('brands', BrandController::class)->except(['create', 'show', 'edit']);
+    Route::resource('builder-categories', BuilderCategoryController::class)->except(['create', 'show', 'edit']);
+    Route::resource('builder-values', BuilderValueController::class)->except(['create', 'show', 'edit']);
+    Route::resource('builder-mix', BuilderMixController::class)->except(['create', 'show', 'edit']);
+
+    Route::get('/customer-orders', [ShopOrderController::class, 'index']);
+
 });
 
 Route::get('/promocode/{promocode}', [PromocodeController::class, 'check']);

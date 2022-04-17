@@ -21,7 +21,8 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class SelectController extends Controller
 {
-    public function getSelectByOrder($order_id){
+    public function getSelectByOrder($order_id): JsonResponse
+    {
         $order = Order::find($order_id);
 
         if (!$order){
@@ -43,6 +44,7 @@ class SelectController extends Controller
     {
         $dish = Dish::find($request->dish_id);
         $cuisine = Cuisine::where('is_on_duty', true)->first();
+        $select = Select::find($request->select_id);
 
         if (!$dish){
             return response()->json([
@@ -50,7 +52,7 @@ class SelectController extends Controller
                 'msg' => 'Dish not found'
             ]);
         }
-
+/*
         if (!$request->has('select_id')){
             $select = new Select();
             $select->order_id = $request->order_id;
@@ -65,12 +67,13 @@ class SelectController extends Controller
                     'msg' => 'Select not found'
                 ]);
             }
-        }
+        }*/
         $duty_dish = Dish::where('cuisine_id', $cuisine->id)->where('ration_id', $request->ration_id)->first();
 
-        $select->r_id = $request->r_id;
+        //$select->r_id = $request->r_id;
         $select->dish_id = $request->dish_id;
         $select->dish_name = $dish->name;
+        $select->description = null;
 
         if ($request->dish_id !== $duty_dish->id) {
             $select->status = Select::REPLACEMENT;
@@ -281,6 +284,11 @@ class SelectController extends Controller
         }
 
         $select->ingredients()->attach($request->ingredient_id, ['editable' => true]);
+
+        /*if ($select->status === Select::LITE || $select->status === Select::WITHOUT) {
+            $select->status = Select::REPLACEMENT;
+            $select->save();
+        }*/
 
         return response()->json([
             'status' => true,
@@ -493,10 +501,9 @@ class SelectController extends Controller
         $spreadsheet->getActiveSheet()->getColumnDimension('J')->setWidth(24);
         $spreadsheet->getActiveSheet()->getColumnDimension('K')->setWidth(24);
         $spreadsheet->getActiveSheet()->getColumnDimension('L')->setWidth(24);
-        $spreadsheet->getActiveSheet()->getColumnDimension('M')->setWidth(24);
 
         $orders = Order::where('type', Order::EAT_FIT_SELECT)->where('is_active', true)->orderBy('size')->get();
-        $letters = ['D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'];
+        $letters = ['D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
         $n = 1;
         foreach ($orders as $key => $order){
             $select = $order->select()->whereDate('created_at', Carbon::today())->get();

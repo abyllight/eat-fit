@@ -145,30 +145,6 @@ export default {
                 ]
             },
             {
-                title: 'Лавка',
-                roles: ['admin'],
-                links: [
-                    {
-                        title: 'Брэнд',
-                        link: '/brands',
-                        icon: 'alpha-b-box',
-                        roles: ['admin', 'office']
-                    },
-                    {
-                        title: 'Категории',
-                        link: '/product-categories',
-                        icon: 'alpha-c-box',
-                        roles: ['admin', 'office']
-                    },
-                    {
-                        title: 'Продукты',
-                        link: '/products',
-                        icon: 'alpha-p-box',
-                        roles: ['admin', 'office']
-                    }
-                ]
-            },
-            {
                 title: 'Диетология',
                 roles: ['admin', 'diet'],
                 links: [
@@ -176,12 +152,6 @@ export default {
                         title: 'Селекты',
                         link: '/select',
                         icon: 'star',
-                        roles: ['admin', 'diet']
-                    },
-                    {
-                        title: 'Рационы',
-                        link: '/rations',
-                        icon: 'clock',
                         roles: ['admin', 'diet']
                     },
                     {
@@ -207,6 +177,60 @@ export default {
                         link: '/ingredients',
                         icon: 'circle',
                         roles: ['admin', 'diet']
+                    },
+                    {
+                        title: 'Рационы',
+                        link: '/rations',
+                        icon: 'clock',
+                        roles: ['admin', 'diet']
+                    },
+                ]
+            },
+            {
+                title: 'Лавка',
+                roles: ['admin'],
+                links: [
+                    {
+                        title: 'Заказы ВкусСити',
+                        link: '/shop-orders',
+                        icon: 'view-dashboard',
+                        roles: ['admin', 'office']
+                    },
+                    {
+                        title: 'Брэнд',
+                        link: '/brands',
+                        icon: 'alpha-b-box',
+                        roles: ['admin', 'office']
+                    },
+                    {
+                        title: 'Категории',
+                        link: '/product-categories',
+                        icon: 'alpha-c-box',
+                        roles: ['admin', 'office']
+                    },
+                    {
+                        title: 'Продукты',
+                        link: '/products',
+                        icon: 'alpha-p-box',
+                        roles: ['admin', 'office']
+                    },
+                    {
+                        title: 'Builder cat',
+                        link: '/b-categories',
+                        icon: 'alpha-b-box',
+                        roles: ['admin', 'office']
+                    },
+                    {
+                        title: 'Builder val',
+                        link: '/b-values',
+                        icon: 'alpha-b-box',
+                        roles: ['admin', 'office']
+                    },
+                    {
+                        title: 'Builder mix',
+                        link: '/b-mix',
+                        icon: 'alpha-b-box',
+                        roles: ['admin', 'office']
                     }
                 ]
             }

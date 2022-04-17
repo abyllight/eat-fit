@@ -167,6 +167,15 @@ const router = new VueRouter({
             component: () => import('./components/Admin/Promocodes')
         },
         {
+            path: '/shop-orders',
+            name: 'shop_orders',
+            meta: {
+                auth: true,
+                roles: ['admin', 'office']
+            },
+            component: () => import('./components/Shop/ShopOrders')
+        },
+        {
             path: '/products',
             name: 'products',
             meta: {
@@ -192,6 +201,33 @@ const router = new VueRouter({
                 roles: ['admin', 'office']
             },
             component: () => import('./components/Shop/ProductCategory')
+        },
+        {
+            path: '/b-categories',
+            name: 'b_categories',
+            meta: {
+                auth: true,
+                roles: ['admin', 'office']
+            },
+            component: () => import('./components/Shop/BCategories')
+        },
+        {
+            path: '/b-values',
+            name: 'b_values',
+            meta: {
+                auth: true,
+                roles: ['admin', 'office']
+            },
+            component: () => import('./components/Shop/BValues')
+        },
+        {
+            path: '/b-mix',
+            name: 'b_mix',
+            meta: {
+                auth: true,
+                roles: ['admin', 'office']
+            },
+            component: () => import('./components/Shop/BMixes')
         },
     ]
 })
