@@ -155,7 +155,9 @@ class PromocodeController extends Controller
         if ($promocode) {
             return response()->json([
                 'status' => true,
-                'msg' => 'Промокод применен'
+                'msg' => 'Промокод применен',
+                'type' => $promocode->type,
+                'val' => $promocode->sum
             ]);
         }
 
