@@ -171,7 +171,7 @@ class PromocodeController extends Controller
                 'status' => true,
                 'msg' => $promocode->msg,
                 'type' => $promocode->type,
-                'val' => $promocode->sum
+                'val' => (int)$promocode->sum
             ]);
         }
 
