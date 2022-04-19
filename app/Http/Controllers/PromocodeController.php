@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Promocode;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -31,6 +32,7 @@ class PromocodeController extends Controller
             'name' => 'required|unique:promocodes,name',
             'code' => 'required|unique:promocodes,code',
             'sum' => 'required',
+            'msg' => 'required',
             'date_from' => 'required|date|date_format:Y-m-d|after_or_equal:today',
             'date_to' => 'required|date|date_format:Y-m-d|after_or_equal:date_from',
         ]);
@@ -40,6 +42,7 @@ class PromocodeController extends Controller
         $promocode->code = $request->code;
         $promocode->type = $request->type;
         $promocode->sum = $request->sum;
+        $promocode->msg = $request->msg;
         $promocode->date_to = $request->date_to;
         $promocode->date_from = $request->date_from;
         $promocode->is_active = true;
@@ -64,6 +67,7 @@ class PromocodeController extends Controller
             'name' => 'required|unique:promocodes,name,' . $id,
             'code' => 'required|unique:promocodes,code,' . $id,
             'sum' => 'required',
+            'msg' => 'required',
             'date_from' => 'required|date|date_format:Y-m-d|after_or_equal:today',
             'date_to' => 'required|date|date_format:Y-m-d|after_or_equal:date_from',
         ]);
@@ -75,6 +79,7 @@ class PromocodeController extends Controller
             $promocode->code = $request->code;
             $promocode->type = $request->type;
             $promocode->sum = $request->sum;
+            $promocode->msg = $request->msg;
             $promocode->date_to = $request->date_to;
             $promocode->date_from = $request->date_from;
             $promocode->save();
@@ -152,10 +157,26 @@ class PromocodeController extends Controller
     {
         $promocode = Promocode::where('code', $promocode)->first();
 
+        if (!$promocode->is_active) {
+            return response()->json([
+                'status' => false,
+                'msg' => 'Промокод не найден'
+            ]);
+        }
+
         if ($promocode) {
+            $today = Carbon::yesterday();
+
+            if ($today->lt($promocode->date_from) || $today->gt($promocode->date_to)) {
+                return response()->json([
+                    'status' => false,
+                    'msg' => 'Промокод истек'
+                ]);
+            }
+
             return response()->json([
                 'status' => true,
-                'msg' => 'Промокод применен',
+                'msg' => $promocode->msg,
                 'type' => $promocode->type,
                 'val' => $promocode->sum
             ]);

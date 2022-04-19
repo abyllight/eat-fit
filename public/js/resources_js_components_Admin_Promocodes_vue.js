@@ -266,6 +266,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Promocodes',
   data: function data() {
@@ -328,7 +339,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         name: '',
         code: '',
         type: 0,
-        sum: '',
+        sum: 0,
+        msg: '',
         date_from: '',
         date_to: ''
       },
@@ -336,8 +348,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         id: 0,
         name: null,
         code: null,
-        sum: null,
+        sum: 0,
         type: 0,
+        msg: '',
         date_from: null,
         date_to: null
       },
@@ -346,6 +359,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   created: function created() {
     this.fetchPromocodes();
+    axios.get('/api/promocode/text').then(function (response) {
+      console.log(response);
+    })["catch"](function (error) {
+      console.log(error);
+    });
   },
   methods: {
     fetchPromocodes: function fetchPromocodes() {
@@ -478,6 +496,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           code: this.editedItem.code,
           sum: this.editedItem.sum,
           type: this.editedItem.type,
+          msg: this.editedItem.msg,
           date_from: this.editedItem.date_from,
           date_to: this.editedItem.date_to
         }
@@ -793,23 +812,52 @@ var render = function() {
                                       "v-col",
                                       { attrs: { cols: "12", sm: "6" } },
                                       [
+                                        _vm.editedItem.type !== 2
+                                          ? _c("v-text-field", {
+                                              attrs: {
+                                                label: "Значение",
+                                                "error-messages": _vm.errors.sum
+                                              },
+                                              model: {
+                                                value: _vm.editedItem.sum,
+                                                callback: function($$v) {
+                                                  _vm.$set(
+                                                    _vm.editedItem,
+                                                    "sum",
+                                                    typeof $$v === "string"
+                                                      ? $$v.trim()
+                                                      : $$v
+                                                  )
+                                                },
+                                                expression: "editedItem.sum"
+                                              }
+                                            })
+                                          : _vm._e()
+                                      ],
+                                      1
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "v-col",
+                                      { attrs: { cols: "12", sm: "12" } },
+                                      [
                                         _c("v-text-field", {
                                           attrs: {
-                                            label: "Значение",
-                                            "error-messages": _vm.errors.sum
+                                            label: "Текст",
+                                            "error-messages": _vm.errors.msg
                                           },
                                           model: {
-                                            value: _vm.editedItem.sum,
+                                            value: _vm.editedItem.msg,
                                             callback: function($$v) {
                                               _vm.$set(
                                                 _vm.editedItem,
-                                                "sum",
+                                                "msg",
                                                 typeof $$v === "string"
                                                   ? $$v.trim()
                                                   : $$v
                                               )
                                             },
-                                            expression: "editedItem.sum"
+                                            expression: "editedItem.msg"
                                           }
                                         })
                                       ],

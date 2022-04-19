@@ -83,9 +83,20 @@
                                         sm="6"
                                     >
                                         <v-text-field
+                                            v-if="editedItem.type !== 2"
                                             v-model.trim="editedItem.sum"
                                             label="Значение"
                                             :error-messages="errors.sum"
+                                        ></v-text-field>
+                                    </v-col>
+                                    <v-col
+                                        cols="12"
+                                        sm="12"
+                                    >
+                                        <v-text-field
+                                            v-model.trim="editedItem.msg"
+                                            label="Текст"
+                                            :error-messages="errors.msg"
                                         ></v-text-field>
                                     </v-col>
                                     <v-col
@@ -287,7 +298,8 @@ export default {
             name: '',
             code: '',
             type: 0,
-            sum: '',
+            sum: 0,
+            msg: '',
             date_from: '',
             date_to: ''
         },
@@ -295,8 +307,9 @@ export default {
             id: 0,
             name: null,
             code: null,
-            sum: null,
+            sum: 0,
             type: 0,
+            msg: '',
             date_from: null,
             date_to: null
         },
@@ -304,6 +317,14 @@ export default {
     }),
     created () {
         this.fetchPromocodes()
+
+        axios.get('/api/promocode/text')
+            .then(response => {
+                console.log(response)
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
     },
     methods: {
         async fetchPromocodes() {
@@ -415,6 +436,7 @@ export default {
                     code: this.editedItem.code,
                     sum: this.editedItem.sum,
                     type: this.editedItem.type,
+                    msg: this.editedItem.msg,
                     date_from: this.editedItem.date_from,
                     date_to: this.editedItem.date_to
                 }
