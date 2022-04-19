@@ -157,14 +157,15 @@ class PromocodeController extends Controller
     {
         $promocode = Promocode::where('code', $promocode)->first();
 
-        if (!$promocode->is_active) {
-            return response()->json([
-                'status' => false,
-                'msg' => 'Промокод не найден'
-            ]);
-        }
-
         if ($promocode) {
+
+            if (!$promocode->is_active) {
+                return response()->json([
+                    'status' => false,
+                    'msg' => 'Промокод не найден'
+                ]);
+            }
+
             $today = Carbon::yesterday();
 
             if ($today->lt($promocode->date_from) || $today->gt($promocode->date_to)) {
