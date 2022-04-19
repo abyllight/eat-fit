@@ -158,7 +158,7 @@ class PromocodeController extends Controller
         $promocode = Promocode::where('code', $promocode)->first();
 
         if ($promocode && $promocode->is_active) {
-            $today = Carbon::yesterday();
+            $today = Carbon::today();
 
             if ($today->lt($promocode->date_from) || $today->gt($promocode->date_to)) {
                 return response()->json([
