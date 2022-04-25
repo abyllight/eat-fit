@@ -22,7 +22,7 @@ class CuisineCollection extends JsonResource
             'name' => $this->name,
             'duty' => $this->is_on_duty,
             'left_rations' => $this->getLeftRations(),
-            'dishes' => DishCollection::collection($this->dishes->sortBy('ration_id'))
+            'dishes' => DishCollection::collection($this->getReqDishes())
         ];
     }
 }
