@@ -28,7 +28,7 @@ class Cuisine extends Model
             return $item['iiko_id'];
         }, $rations->toArray());
 
-        return $this->dishes()->whereIn('ration_id', $arr)->get();
+        return $this->dishes()->whereIn('ration_id', $arr)->get()->sortBy('ration_id');
     }
 
     public function select(): HasMany
