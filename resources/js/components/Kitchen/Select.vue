@@ -270,12 +270,14 @@
                                 <v-col sm="12" lg="8">
                                     <v-chip
                                         v-for="t in wishlist"
-                                        :key="t"
+                                        :key="t.wish"
                                         class="ma-2"
+                                        :color="wish_ids.includes(t.id) ? 'lime' : ''"
                                         close
+                                        @click="addWishToSelect(t.id)"
                                         @click:close="removeTag(t)"
                                     >
-                                        {{ t }}
+                                        {{ t.wish }}
                                     </v-chip>
                                 </v-col>
                             </v-row>
@@ -378,7 +380,7 @@
                                                     {{hasResultIncludeIngredient(ing.id) ? 'Убрать' : 'Вернуть'}}
                                                 </v-btn>
                                                 <v-btn
-                                                    v-if="hasResultIncludeIngredient(ing.id) || hasAnalog(ing.id)"
+                                                    v-if="!isDutyDishId"
                                                     x-small
                                                     @click="!hasAnalog(ing.id) ? showAnalogs(ing.id) : returnIngredient(ing.id)"
                                                     class="ml-2"
@@ -606,6 +608,7 @@
             blacklist: [],
             mix: [],
             wishlist: [],
+            wish_ids: [],
             tag: '',
             tags: [],
             cuisine: {},
@@ -626,6 +629,11 @@
             this.getCategories()
             this.getIngredients()
             this.getRations()
+        },
+        computed: {
+            isDutyDishId() {
+                return this.dishes[0].id === this.dish.id
+            }
         },
         methods: {
             async fetchOrdersFromAmo() {
@@ -732,9 +740,10 @@
             },
             openSettings(ration){
                 this.ration = ration
-                this.ration_id = ration.id
+                this.ration_id = ration.iiko_id
                 this.previous = this.select_previous.find(obj => obj.ration.id === ration.id) ?? {}
                 this.result = this.select_result.find(obj => obj.ration.id === ration.id) ?? {}
+                this.wish_ids = this.result.wishes
                 this.getDishesByRation(this.ration.iiko_id)
                 this.dialog = true
             },
@@ -792,7 +801,7 @@
                         tag: this.tag
                     })
                     .then(response => {
-                        this.wishlist.push(this.tag)
+                        this.getSelectDetailsByOrder(this.order.id)
                         this.tag = ''
                         this.$store.dispatch('showAlert', {
                             'isVisible': true,
@@ -810,10 +819,12 @@
                 axios
                     .post('/api/wishlist/remove', {
                         id: this.order.id,
-                        tag: tag
+                        tag: tag.wish
                     })
                     .then(response => {
                         this.wishlist = this.wishlist.filter(item => item !== tag)
+                        this.getSelectDetailsByOrder(this.order.id)
+
                         this.$store.dispatch('showAlert', {
                             'isVisible': true,
                             'msg': response.data.msg,
@@ -826,12 +837,27 @@
                         this.errors = error.response.data.errors
                     })
             },
+            addWishToSelect(id) {
+                if(Object.keys(this.result).length === 0) return
+
+                axios
+                    .post('/api/select/wish', {
+                        s_id: this.result.id,
+                        w_id: id
+                    })
+                    .then(response => {
+                        this.wish_ids = response.data.data
+                        this.getSelectDetailsByOrder(this.order.id)
+                    })
+                    .catch(error => {
+                        this.errors = error.response.data.errors
+                    })
+            },
             hasResultIncludeIngredient(id){
                 if (!this.result.ingredient_ids) return
                 return this.result.ingredient_ids.includes(id)
             },
             async getDishesByRation(id){
-                //console.log(id)
                 await axios
                     .get('/api/dishes/ration/'+id)
                     .then(response => {
@@ -857,7 +883,7 @@
                 axios
                     .post('/api/select/add/dish', {
                         select_id: this.result.id,
-                        ration_id: this.ration.iiko_id,
+                        ration_id: this.ration_id,
                         dish_id: this.dish.id
                     })
                     .then(response => {
@@ -870,6 +896,7 @@
                             })
                         }
                         this.result = response.data.data
+                        this.getSelectDetailsByOrder(this.order.id)
                     })
                     .catch(error => {
                         console.log(error)
@@ -1089,7 +1116,7 @@
                     .catch(error => {
                         console.log(error)
                     })
-            },
+            }
         }
     }
 </script>

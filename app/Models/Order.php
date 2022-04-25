@@ -191,7 +191,7 @@ class Order extends Model
                 $select = new Select();
                 $select->order_id = $this->id;
                 $select->cuisine_id = $cuisine->id;
-                $select->ration_id = $ration->id;
+                $select->ration_id = $ration->iiko_id;
                 $select->status = Select::START;
                 $select->save();
             }

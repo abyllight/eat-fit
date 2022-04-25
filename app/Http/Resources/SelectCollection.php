@@ -26,6 +26,7 @@ class SelectCollection extends JsonResource
             'ingredient_ids' => $this->getIngredientIds(),
             'ration' => $this->ration,
             'r_id' => $this->r_id,
+            'wishes' => $this->getWishIds(),
             'created_at' => $this->created_at->format('Y-m-d'),
             'description' => $this->description,
             'status' => $this->status,

@@ -115,6 +115,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('select/show/ingredient', [SelectController::class, 'showIngredient']);
     Route::post('select/hide/ingredient', [SelectController::class, 'hideIngredient']);
     Route::get('/select/export', [SelectController::class, 'export']);
+    Route::post('select/wish', [SelectController::class, 'addRemoveWish']);
     Route::get('/select/order/{id}', [SelectController::class, 'getSelectByOrder']);
 
     Route::resource('/categories', CategoryController::class)->except(['create', 'show', 'edit']);

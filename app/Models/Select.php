@@ -26,7 +26,7 @@ class Select extends Model
 
     public function ration()
     {
-        return $this->belongsTo(Ration::class, 'ration_id', 'id');
+        return $this->belongsTo(Ration::class, 'ration_id', 'iiko_id');
     }
 
     public function ingredients()
@@ -39,6 +39,17 @@ class Select extends Model
     {
         return $this->belongsTo(Dish::class, 'dish_id', 'id');
     }
+
+    public function wishes()
+    {
+        return $this->belongsToMany(Wishlist::class, 'select_wishes', 'select_id', 'wish_id');
+    }
+
+    public function getWishIds()
+    {
+        return array_map(function ($item){
+            return $item['id'];
+        }, $this->wishes()->get()->toArray());    }
 
     public function getIngredientIds()
     {

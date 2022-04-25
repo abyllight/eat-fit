@@ -146,6 +146,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Rations",
   data: function data() {
@@ -153,6 +165,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       rations: [],
       ration: {
         name: '',
+        code: '',
         is_required: false
       },
       errors: [],
@@ -246,7 +259,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.dialogDelete = false;
       this.edit = -1;
       this.ration = {
-        name: ''
+        name: '',
+        code: ''
       };
     },
     editItem: function editItem(ration) {
@@ -427,6 +441,12 @@ var render = function() {
                             _vm._v(" "),
                             _c("th", { staticClass: "text-left" }, [
                               _vm._v(
+                                "\n                            Code\n                        "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("th", { staticClass: "text-left" }, [
+                              _vm._v(
                                 "\n                            Действие\n                        "
                               )
                             ])
@@ -440,6 +460,8 @@ var render = function() {
                               _c("td", [_vm._v(_vm._s(index + 1))]),
                               _vm._v(" "),
                               _c("td", [_vm._v(_vm._s(item.name))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(item.code))]),
                               _vm._v(" "),
                               _c(
                                 "td",
@@ -638,6 +660,23 @@ var render = function() {
                                         _vm.$set(_vm.ration, "name", $$v)
                                       },
                                       expression: "ration.name"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("v-text-field", {
+                                    attrs: {
+                                      label: "Code",
+                                      "error-messages": _vm.errors.code,
+                                      outlined: "",
+                                      dense: "",
+                                      clearable: ""
+                                    },
+                                    model: {
+                                      value: _vm.ration.code,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.ration, "code", $$v)
+                                      },
+                                      expression: "ration.code"
                                     }
                                   }),
                                   _vm._v(" "),

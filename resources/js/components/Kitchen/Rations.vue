@@ -23,6 +23,9 @@
                                 Название
                             </th>
                             <th class="text-left">
+                                Code
+                            </th>
+                            <th class="text-left">
                                 Действие
                             </th>
                         </tr>
@@ -34,6 +37,7 @@
                         >
                             <td>{{ index + 1 }}</td>
                             <td>{{ item.name }}</td>
+                            <td>{{ item.code }}</td>
                             <td>
                                 <v-icon
                                     small
@@ -105,6 +109,14 @@
                                         dense
                                         clearable
                                     ></v-text-field>
+                                    <v-text-field
+                                        v-model="ration.code"
+                                        label="Code"
+                                        :error-messages="errors.code"
+                                        outlined
+                                        dense
+                                        clearable
+                                    ></v-text-field>
                                     <v-checkbox
                                         v-model="ration.is_required"
                                         :label="`Обязательный рацион: ${ration.is_required ? 'Да' : 'Нет'}`"
@@ -132,6 +144,7 @@ export default {
         rations: [],
         ration: {
             name: '',
+            code: '',
             is_required: false
         },
         errors: [],
@@ -209,7 +222,8 @@ export default {
             this.dialogDelete = false
             this.edit = -1
             this.ration = {
-                name: ''
+                name: '',
+                code: ''
             }
         },
         editItem(ration){

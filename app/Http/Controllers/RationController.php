@@ -23,11 +23,13 @@ class RationController extends Controller
     public function store(Request $request): JsonResponse
     {
         $request->validate([
-            'name' => 'required'
+            'name' => 'required',
+            'code' => 'required'
         ]);
 
         $ration = new Ration();
         $ration->name = $request->name;
+        $ration->code = $request->code;
         $ration->is_required = $request->is_required;
         $ration->save();
 
@@ -40,13 +42,14 @@ class RationController extends Controller
     public function update(Request $request, $id): JsonResponse
     {
         $request->validate([
-            'name' => 'required'
+            'name' => 'required',
+            'code' => 'required'
         ]);
 
         $ration = Ration::find($id);
 
         if ($ration){
-
+            $ration->code = $request->code;
             $ration->name = $request->name;
             $ration->is_required = $request->is_required;
             $ration->save();

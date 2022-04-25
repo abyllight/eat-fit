@@ -16,6 +16,26 @@
         <!--  Cuisines -->
         <v-row>
             <v-col>
+                <!--   Skeleton    -->
+                <div v-if="cuisines.length === 0" class="d-flex" style="gap: 20px">
+                    <v-skeleton-loader
+                        max-width="300"
+                        type="chip"
+                    ></v-skeleton-loader>
+                    <v-skeleton-loader
+                        max-width="300"
+                        type="chip"
+                    ></v-skeleton-loader>
+                    <v-skeleton-loader
+                        max-width="300"
+                        type="chip"
+                    ></v-skeleton-loader>
+                    <v-skeleton-loader
+                        max-width="300"
+                        type="chip"
+                    ></v-skeleton-loader>
+                </div>
+
                 <v-chip
                     v-for="(c, key) in cuisines"
                     :key="key"
@@ -30,6 +50,18 @@
                 </v-chip>
             </v-col>
         </v-row>
+
+        <div v-if="Object.keys(cuisine).length === 0" class="d-flex mt-10" style="gap: 20px">
+            <v-skeleton-loader
+                min-width="300"
+                type="card"
+            ></v-skeleton-loader>
+
+            <v-skeleton-loader
+                min-width="300"
+                type="card"
+            ></v-skeleton-loader>
+        </div>
 
         <!--  Cuisine Dish cards -->
         <v-row v-if="Object.keys(cuisine).length !== 0">

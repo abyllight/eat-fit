@@ -283,6 +283,38 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Cuisine',
   data: function data() {
@@ -767,36 +799,80 @@ var render = function() {
         [
           _c(
             "v-col",
-            _vm._l(_vm.cuisines, function(c, key) {
-              return _c(
-                "v-chip",
-                {
-                  key: key,
-                  staticClass: "ma-1",
-                  class: c.duty ? "green" : "",
-                  attrs: { disabled: _vm.disabled, small: "", dark: "" },
-                  on: {
-                    click: function($event) {
-                      return _vm.showDetails(c)
-                    }
-                  }
-                },
-                [
-                  _vm._v(
-                    "\n                " +
-                      _vm._s(key + 1) +
-                      ". " +
-                      _vm._s(c.name) +
-                      "\n            "
+            [
+              _vm.cuisines.length === 0
+                ? _c(
+                    "div",
+                    { staticClass: "d-flex", staticStyle: { gap: "20px" } },
+                    [
+                      _c("v-skeleton-loader", {
+                        attrs: { "max-width": "300", type: "chip" }
+                      }),
+                      _vm._v(" "),
+                      _c("v-skeleton-loader", {
+                        attrs: { "max-width": "300", type: "chip" }
+                      }),
+                      _vm._v(" "),
+                      _c("v-skeleton-loader", {
+                        attrs: { "max-width": "300", type: "chip" }
+                      }),
+                      _vm._v(" "),
+                      _c("v-skeleton-loader", {
+                        attrs: { "max-width": "300", type: "chip" }
+                      })
+                    ],
+                    1
                   )
-                ]
-              )
-            }),
-            1
+                : _vm._e(),
+              _vm._v(" "),
+              _vm._l(_vm.cuisines, function(c, key) {
+                return _c(
+                  "v-chip",
+                  {
+                    key: key,
+                    staticClass: "ma-1",
+                    class: c.duty ? "green" : "",
+                    attrs: { disabled: _vm.disabled, small: "", dark: "" },
+                    on: {
+                      click: function($event) {
+                        return _vm.showDetails(c)
+                      }
+                    }
+                  },
+                  [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(key + 1) +
+                        ". " +
+                        _vm._s(c.name) +
+                        "\n            "
+                    )
+                  ]
+                )
+              })
+            ],
+            2
           )
         ],
         1
       ),
+      _vm._v(" "),
+      Object.keys(_vm.cuisine).length === 0
+        ? _c(
+            "div",
+            { staticClass: "d-flex mt-10", staticStyle: { gap: "20px" } },
+            [
+              _c("v-skeleton-loader", {
+                attrs: { "min-width": "300", type: "card" }
+              }),
+              _vm._v(" "),
+              _c("v-skeleton-loader", {
+                attrs: { "min-width": "300", type: "card" }
+              })
+            ],
+            1
+          )
+        : _vm._e(),
       _vm._v(" "),
       Object.keys(_vm.cuisine).length !== 0
         ? _c(

@@ -8,7 +8,9 @@ use App\Models\Cuisine;
 use App\Models\Dish;
 use App\Models\Ingredient;
 use App\Models\Ration;
+use App\Models\Select;
 use App\Models\Week;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use function Matrix\trace;
@@ -87,6 +89,10 @@ class CuisineController extends Controller
         if ($duty){
             $duty->is_on_duty = true;
             $duty->save();
+
+            Select::whereDate('created_at', Carbon::today())->update([
+                'cuisine_id' => $duty->id
+            ]);
         }
 
         return response()->json(new CuisineCollection($duty));

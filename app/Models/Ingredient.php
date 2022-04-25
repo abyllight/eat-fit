@@ -42,7 +42,7 @@ class Ingredient extends Model
 
     public function selects()
     {
-        return $this->belongsToMany(Select::class, 'dish_ingredients', 'ingredient_id', 'select_id');
+        return $this->belongsToMany(Select::class, 'select_ingredients', 'ingredient_id', 'select_id');
     }
 
     public function is_custom()

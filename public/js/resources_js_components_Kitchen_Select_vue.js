@@ -607,6 +607,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -649,6 +651,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       blacklist: [],
       mix: [],
       wishlist: [],
+      wish_ids: [],
       tag: '',
       tags: [],
       cuisine: {},
@@ -670,6 +673,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     this.getCategories();
     this.getIngredients();
     this.getRations();
+  },
+  computed: {
+    isDutyDishId: function isDutyDishId() {
+      return this.dishes[0].id === this.dish.id;
+    }
   },
   methods: {
     fetchOrdersFromAmo: function fetchOrdersFromAmo() {
@@ -873,13 +881,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this$select_previous, _this$select_result$f;
 
       this.ration = ration;
-      this.ration_id = ration.id;
+      this.ration_id = ration.iiko_id;
       this.previous = (_this$select_previous = this.select_previous.find(function (obj) {
         return obj.ration.id === ration.id;
       })) !== null && _this$select_previous !== void 0 ? _this$select_previous : {};
       this.result = (_this$select_result$f = this.select_result.find(function (obj) {
         return obj.ration.id === ration.id;
       })) !== null && _this$select_result$f !== void 0 ? _this$select_result$f : {};
+      this.wish_ids = this.result.wishes;
       this.getDishesByRation(this.ration.iiko_id);
       this.dialog = true;
     },
@@ -938,7 +947,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         id: this.order.id,
         tag: this.tag
       }).then(function (response) {
-        _this11.wishlist.push(_this11.tag);
+        _this11.getSelectDetailsByOrder(_this11.order.id);
 
         _this11.tag = '';
 
@@ -959,11 +968,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/wishlist/remove', {
         id: this.order.id,
-        tag: tag
+        tag: tag.wish
       }).then(function (response) {
         _this12.wishlist = _this12.wishlist.filter(function (item) {
           return item !== tag;
         });
+
+        _this12.getSelectDetailsByOrder(_this12.order.id);
 
         _this12.$store.dispatch('showAlert', {
           'isVisible': true,
@@ -976,12 +987,27 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         _this12.errors = error.response.data.errors;
       });
     },
+    addWishToSelect: function addWishToSelect(id) {
+      var _this13 = this;
+
+      if (Object.keys(this.result).length === 0) return;
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/wish', {
+        s_id: this.result.id,
+        w_id: id
+      }).then(function (response) {
+        _this13.wish_ids = response.data.data;
+
+        _this13.getSelectDetailsByOrder(_this13.order.id);
+      })["catch"](function (error) {
+        _this13.errors = error.response.data.errors;
+      });
+    },
     hasResultIncludeIngredient: function hasResultIncludeIngredient(id) {
       if (!this.result.ingredient_ids) return;
       return this.result.ingredient_ids.includes(id);
     },
     getDishesByRation: function getDishesByRation(id) {
-      var _this13 = this;
+      var _this14 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee8() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee8$(_context8) {
@@ -990,18 +1016,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _context8.next = 2;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/dishes/ration/' + id).then(function (response) {
-                  _this13.dishes = response.data;
+                  _this14.dishes = response.data;
 
-                  if (_this13.dishes.length > 0) {
-                    _this13.dish = _this13.dishes.find(function (obj) {
-                      return obj.id === _this13.result.dish_id;
+                  if (_this14.dishes.length > 0) {
+                    _this14.dish = _this14.dishes.find(function (obj) {
+                      return obj.id === _this14.result.dish_id;
                     });
 
-                    if (!_this13.dish) {
-                      _this13.dish = _this13.dishes[0];
+                    if (!_this14.dish) {
+                      _this14.dish = _this14.dishes[0];
                     }
                   } else {
-                    _this13.dish.ingredients = [];
+                    _this14.dish.ingredients = [];
                   }
                 })["catch"](function (error) {
                   console.log(error);
@@ -1016,45 +1042,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     setDish: function setDish() {
-      var _this14 = this;
+      var _this15 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/add/dish', {
         select_id: this.result.id,
-        ration_id: this.ration.iiko_id,
+        ration_id: this.ration_id,
         dish_id: this.dish.id
-      }).then(function (response) {
-        if (!response.data.status) {
-          _this14.$store.dispatch('showAlert', {
-            'isVisible': true,
-            'msg': response.data.msg,
-            'color': 'error',
-            'type': 'error'
-          });
-        }
-
-        _this14.result = response.data.data;
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    },
-    getAnalogName: function getAnalogName(id) {
-      return this.result.ingredients.find(function (obj) {
-        return obj.pivot.analog_id === id;
-      }).name;
-    },
-    hasAnalog: function hasAnalog(id) {
-      if (!this.result.ingredient_ids) return;
-      var index = this.result.ingredients.findIndex(function (obj) {
-        return obj.pivot.analog_id === id;
-      });
-      return index >= 0;
-    },
-    addIngredient: function addIngredient(id) {
-      var _this15 = this;
-
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/add/ingredient', {
-        select_id: this.result.id,
-        ingredient_id: id
       }).then(function (response) {
         if (!response.data.status) {
           _this15.$store.dispatch('showAlert', {
@@ -1072,10 +1065,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         console.log(error);
       });
     },
-    removeIngredient: function removeIngredient(id) {
+    getAnalogName: function getAnalogName(id) {
+      return this.result.ingredients.find(function (obj) {
+        return obj.pivot.analog_id === id;
+      }).name;
+    },
+    hasAnalog: function hasAnalog(id) {
+      if (!this.result.ingredient_ids) return;
+      var index = this.result.ingredients.findIndex(function (obj) {
+        return obj.pivot.analog_id === id;
+      });
+      return index >= 0;
+    },
+    addIngredient: function addIngredient(id) {
       var _this16 = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/remove/ingredient', {
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/add/ingredient', {
         select_id: this.result.id,
         ingredient_id: id
       }).then(function (response) {
@@ -1095,6 +1100,29 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         console.log(error);
       });
     },
+    removeIngredient: function removeIngredient(id) {
+      var _this17 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/remove/ingredient', {
+        select_id: this.result.id,
+        ingredient_id: id
+      }).then(function (response) {
+        if (!response.data.status) {
+          _this17.$store.dispatch('showAlert', {
+            'isVisible': true,
+            'msg': response.data.msg,
+            'color': 'error',
+            'type': 'error'
+          });
+        }
+
+        _this17.result = response.data.data;
+
+        _this17.getSelectDetailsByOrder(_this17.order.id);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
     showAnalogs: function showAnalogs(id) {
       this.getCategoriesByIngredient(id);
       this.target_ingredient = id;
@@ -1106,7 +1134,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }).id;
     },
     replaceIngredient: function replaceIngredient(id) {
-      var _this17 = this;
+      var _this18 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/replace/ingredient', {
         select_id: this.result.id,
@@ -1114,18 +1142,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         analog_id: id
       }).then(function (response) {
         if (response.data.status) {
-          _this17.result = response.data.select;
+          _this18.result = response.data.select;
 
-          _this17.getSelectDetailsByOrder(_this17.order.id);
+          _this18.getSelectDetailsByOrder(_this18.order.id);
 
-          _this17.closeDialog2();
+          _this18.closeDialog2();
         }
       })["catch"](function (error) {
         console.log(error);
       });
     },
     returnIngredient: function returnIngredient(target_id) {
-      var _this18 = this;
+      var _this19 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/return/ingredient', {
         select_id: this.result.id,
@@ -1133,16 +1161,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         analog_id: this.getAnalogId(target_id)
       }).then(function (response) {
         if (response.data.status) {
-          _this18.result = response.data.select;
+          _this19.result = response.data.select;
 
-          _this18.getSelectDetailsByOrder(_this18.order.id);
+          _this19.getSelectDetailsByOrder(_this19.order.id);
         }
       })["catch"](function (error) {
         console.log(error);
       });
     },
     getCategoriesByIngredient: function getCategoriesByIngredient(id) {
-      var _this19 = this;
+      var _this20 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee9() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee9$(_context9) {
@@ -1151,7 +1179,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _context9.next = 2;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/categories/ingredient/' + id).then(function (response) {
-                  _this19.ingredient_categories = response.data;
+                  _this20.ingredient_categories = response.data;
                 })["catch"](function (error) {
                   console.log(error);
                 });
@@ -1208,11 +1236,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.dialog2 = false;
     },
     saveDetails: function saveDetails() {
-      var _this20 = this;
+      var _this21 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/add/details', this.result).then(function (response) {
-        _this20.result = response.data.data;
-        _this20.dialog3 = false;
+        _this21.result = response.data.data;
+        _this21.dialog3 = false;
       })["catch"](function (error) {
         console.log(error);
       });
@@ -1222,56 +1250,56 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.replaceIngredient(this.r1_val);
     },
     addExtra: function addExtra(id) {
-      var _this21 = this;
+      var _this22 = this;
 
       if (!id) return;
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/add/extra', {
         select_id: this.result.id,
         ingredient_id: id
       }).then(function (response) {
-        _this21.result = response.data.data;
+        _this22.result = response.data.data;
 
-        _this21.getSelectDetailsByOrder(_this21.order.id);
+        _this22.getSelectDetailsByOrder(_this22.order.id);
 
-        _this21.r2_val = null;
+        _this22.r2_val = null;
       })["catch"](function (error) {
         console.log(error);
       });
     },
     removeExtra: function removeExtra(id) {
-      var _this22 = this;
+      var _this23 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/remove/extra', {
         select_id: this.result.id,
         ingredient_id: id
       }).then(function (response) {
-        _this22.result = response.data.data;
+        _this23.result = response.data.data;
 
-        _this22.getSelectDetailsByOrder(_this22.order.id);
+        _this23.getSelectDetailsByOrder(_this23.order.id);
       })["catch"](function (error) {
         console.log(error);
       });
     },
     showIngredient: function showIngredient(id) {
-      var _this23 = this;
+      var _this24 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/show/ingredient', {
         select_id: this.result.id,
         ingredient_id: id
       }).then(function (response) {
-        _this23.result = response.data.data;
+        _this24.result = response.data.data;
       })["catch"](function (error) {
         console.log(error);
       });
     },
     hideIngredient: function hideIngredient(id) {
-      var _this24 = this;
+      var _this25 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/hide/ingredient', {
         select_id: this.result.id,
         ingredient_id: id
       }).then(function (response) {
-        _this24.result = response.data.data;
+        _this25.result = response.data.data;
       })["catch"](function (error) {
         console.log(error);
       });
@@ -2679,10 +2707,18 @@ var render = function() {
                                       return _c(
                                         "v-chip",
                                         {
-                                          key: t,
+                                          key: t.wish,
                                           staticClass: "ma-2",
-                                          attrs: { close: "" },
+                                          attrs: {
+                                            color: _vm.wish_ids.includes(t.id)
+                                              ? "lime"
+                                              : "",
+                                            close: ""
+                                          },
                                           on: {
+                                            click: function($event) {
+                                              return _vm.addWishToSelect(t.id)
+                                            },
                                             "click:close": function($event) {
                                               return _vm.removeTag(t)
                                             }
@@ -2691,7 +2727,7 @@ var render = function() {
                                         [
                                           _vm._v(
                                             "\n                                        " +
-                                              _vm._s(t) +
+                                              _vm._s(t.wish) +
                                               "\n                                    "
                                           )
                                         ]
@@ -3035,12 +3071,7 @@ var render = function() {
                                                                 )
                                                               : _vm._e(),
                                                             _vm._v(" "),
-                                                            _vm.hasResultIncludeIngredient(
-                                                              ing.id
-                                                            ) ||
-                                                            _vm.hasAnalog(
-                                                              ing.id
-                                                            )
+                                                            !_vm.isDutyDishId
                                                               ? _c(
                                                                   "v-btn",
                                                                   {

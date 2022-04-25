@@ -13,4 +13,9 @@ class Wishlist extends Model
     {
         return $this->belongsTo(Wishlist::class, 'order_id', 'id');
     }
+
+    public function selects()
+    {
+        return $this->belongsToMany(Select::class, 'select_wishes', 'wish_id', 'select_id');
+    }
 }

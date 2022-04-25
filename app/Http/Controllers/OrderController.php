@@ -10,6 +10,7 @@ use App\Models\Cuisine;
 use App\Models\Dish;
 use App\Models\Order;
 use App\Models\Select;
+use App\Models\SelectWish;
 use App\Models\Wishlist;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -532,6 +533,8 @@ class OrderController extends Controller
 
         if ($wishes){
             foreach ($wishes as $wish) {
+                $wish->selects()->detach();
+
                 $wish->delete();
             }
 

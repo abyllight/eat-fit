@@ -9,6 +9,8 @@ use App\Models\Ingredient;
 use App\Models\Order;
 use App\Models\Ration;
 use App\Models\Select;
+use App\Models\SelectWish;
+use App\Models\Wishlist;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -34,7 +36,7 @@ class SelectController extends Controller
 
         return response()->json([
             'blacklist' => $order->getBlackListIds(),
-            'wishlist' => $order->getWishes(),
+            'wishlist' => $order->wishlist,
             'result' => SelectCollection::collection($order->getResultSelect()),
             'previous' => SelectCollection::collection($order->getPreviousSelect())
         ]);
@@ -74,11 +76,10 @@ class SelectController extends Controller
         $select->dish_id = $request->dish_id;
         $select->dish_name = $dish->name;
         $select->description = null;
+        $select->status = Select::LITE;
 
-        if ($request->dish_id !== $duty_dish->id) {
+        if (!$duty_dish || $request->dish_id !== $duty_dish->id) {
             $select->status = Select::REPLACEMENT;
-        }else{
-            $select->status = Select::LITE;
         }
 
         $select->save();
@@ -378,6 +379,26 @@ class SelectController extends Controller
         ]);
     }
 
+    public function addRemoveWish(Request $request) {
+        $sel_wish = SelectWish::where('select_id', $request->s_id)->where('wish_id', $request->w_id)->first();
+
+        $select = Select::find($request->s_id);
+
+        if($sel_wish) {
+            $select->wishes()->wherePivot('wish_id', $request->w_id)->detach();
+        }else {
+            $new = new SelectWish();
+            $new->select_id = $request->s_id;
+            $new->wish_id = $request->w_id;
+            $new->save();
+        }
+
+        return response()->json([
+            'status' => true,
+            'data' => $select->getWishIds()
+        ]);
+    }
+
     public function generateCode()
     {
         $groups = Select::with('ingredients')
@@ -386,14 +407,24 @@ class SelectController extends Controller
             ->get()
             ->groupBy('ration_id');
 
+        $duty_cuisine = Cuisine::where('is_on_duty', true)->first();
+
         foreach ($groups as $group){
 
             $ids = [];
             //beautify
-            foreach ($group as $item){
+            foreach ($group as $item) {
+
+                $code = null;
+                $duty_dish = Dish::where('cuisine_id', $duty_cuisine->id)->where('ration_id', $item->ration_id)->first();
+
+                if ($item->dish_id === $duty_dish->id) {
+                    $code = '0';
+                }
+
                 $ids[] = [
                     'id'=> $item->id,
-                    'code' => null,
+                    'code' => $code,
                     'ids' => $item->getIngredientIds()
                 ];
             }
@@ -401,7 +432,7 @@ class SelectController extends Controller
             for ($i = 0; $i < count($ids); $i++){
 
                 if ($ids[$i]['code'] === null){
-                    $ids[$i]['code'] = $i;
+                    $ids[$i]['code'] = $i+1;
                 }else{
                     continue;
                 }
@@ -411,7 +442,7 @@ class SelectController extends Controller
                     $b = array_diff($ids[$j]['ids'], $ids[$i]['ids']);
 
                     if (count($a) === 0 && count($b) === 0){
-                        $ids[$j]['code'] = $i;
+                        $ids[$j]['code'] = $i+1;
                     }
                 }
             }
@@ -425,10 +456,12 @@ class SelectController extends Controller
 
     public function export(){
         $this->generateCode();
+
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
         $rations = Ration::where('is_required', true)->get()->toArray();
+
         $ration_names = array_map(function ($obj){
             return $obj['name'];
         }, $rations);
@@ -436,6 +469,7 @@ class SelectController extends Controller
         $arrayHeader = [
             ['#', 'Тэг', 'Клиент']
         ];
+
         array_push($arrayHeader[0], ...$ration_names);
 
         $sheet->fromArray($arrayHeader, NULL, 'A1');
@@ -468,7 +502,7 @@ class SelectController extends Controller
             ],
             'font' => [
                 'bold' => true,
-                'size' => 9
+                'size' => 10
             ],
         ];
 
@@ -480,11 +514,13 @@ class SelectController extends Controller
             ],
             'font' => [
                 'bold' => true,
-                'size' => 32
+                'size' => 20
             ],
         ];
 
-        $sheet->getStyle('A1:M1')->applyFromArray($blackStyleArray);
+        $letters = ['D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
+
+        $sheet->getStyle('A1:L1')->applyFromArray($blackStyleArray);
 
         //Row height
         $sheet->getRowDimension('1')->setRowHeight(40);
@@ -492,78 +528,72 @@ class SelectController extends Controller
         $spreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(5);
         $spreadsheet->getActiveSheet()->getColumnDimension('B')->setWidth(5);
         $spreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(16);
-        $spreadsheet->getActiveSheet()->getColumnDimension('D')->setWidth(24);
-        $spreadsheet->getActiveSheet()->getColumnDimension('E')->setWidth(24);
-        $spreadsheet->getActiveSheet()->getColumnDimension('F')->setWidth(24);
-        $spreadsheet->getActiveSheet()->getColumnDimension('G')->setWidth(24);
-        $spreadsheet->getActiveSheet()->getColumnDimension('H')->setWidth(24);
-        $spreadsheet->getActiveSheet()->getColumnDimension('I')->setWidth(24);
-        $spreadsheet->getActiveSheet()->getColumnDimension('J')->setWidth(24);
-        $spreadsheet->getActiveSheet()->getColumnDimension('K')->setWidth(24);
-        $spreadsheet->getActiveSheet()->getColumnDimension('L')->setWidth(24);
+
+        foreach ($letters as $letter) {
+            $spreadsheet->getActiveSheet()->getColumnDimension($letter)->setWidth(25);
+        }
 
         $orders = Order::where('type', Order::EAT_FIT_SELECT)->where('is_active', true)->orderBy('size')->get();
-        $letters = ['D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
         $n = 1;
+
         foreach ($orders as $key => $order){
             $select = $order->select()->whereDate('created_at', Carbon::today())->get();
 
             $n++;
-            $sheet->setCellValue('A' . $n, $key+1);
-            $sheet->mergeCells('A' . $n . ':A' . ($n + 2));
+            $sheet->setCellValue('A' . $n, $key + 1);
+            $sheet->mergeCells('A' . $n . ':A' . ($n + 3));
             $sheet->getStyle('A'. $n)->applyFromArray($blackStyleArray);
 
             $sheet->setCellValue('B' . $n, $order->getSize($order->size));
-            $sheet->mergeCells('B' . $n . ':B' . ($n + 2));
+            $sheet->mergeCells('B' . $n . ':B' . ($n + 3));
             $sheet->getStyle('B' . $n)->getFont()->setBold(true);
             $sheet->getStyle('B' . $n)->getFont()->setSize(15);
 
             $sheet->setCellValue('C' . $n, ($key+1).'/'.$order->name);
-            $sheet->mergeCells('C' . $n . ':C' . ($n + 2));
+            $sheet->mergeCells('C' . $n . ':C' . ($n + 3));
             $sheet->getStyle('C' . $n)->applyFromArray($center);
 
             foreach ($rations as $i => $r) {
                 $s = $select->where('ration_id', $r['iiko_id'])->first();
-                $content = '---';
+                $code_section = '---';
 
                 $sheet->setCellValue($letters[$i] . $n, ($key+1).'/'.$order->name.' - '.$order->getSize($order->size));
                 $sheet->getStyle($letters[$i] . $n)->applyFromArray($center);
 
                 if ($s){
                     if ($s->is_active && $s->status > 0){
-                        switch ($s->ration_id){
-                            case 1:
-                                $content = 'A-';
-                                break;
-                            case 2:
-                                $content = 'B-';
-                                break;
-                            case 3:
-                                $content = 'SUP-';
-                                break;
-                            case 4:
-                                $content = 'O-';
-                                break;
-                            case 5:
-                                $content = 'SAL-';
-                                break;
-                            case 6:
-                                $content = 'П-';
-                                break;
-                            case 7:
-                                $content = 'X-';
-                                break;
-                            case 8:
-                                $content = 'G-';
-                                break;
-                            case 9:
-                                $content = 'Y-';
-                                break;
-                            case 10:
-                                $content = 'Z-';
-                                break;
+
+                        $code_section = $r['code']. '-' . $s->code;
+
+                        if ($s->status === Select::LITE || $s->status === Select::WITHOUT) {
+                            $code_section = '0';
                         }
-                        $content .= $s->code;
+
+                        if ($s->status === Select::WITHOUT) {
+                            $dish = Dish::getDutyDishByRation($s->ration_id);
+                            $diff = array_diff($dish->getIngredientIds(), $s->getIngredientIds());
+                            $w = '';
+
+                            if ($diff){
+                                foreach ($diff as $id){
+                                    $ing = Ingredient::find($id);
+                                    $w.='/без '. $ing->name;
+                                }
+
+                                $sheet->setCellValue($letters[$i] . ($n+2), $w);
+                                $sheet->getStyle($letters[$i] . ($n+2))->applyFromArray($center);
+                            }
+
+                            if ($s->wishes) {
+                                $tags = '';
+                                foreach ($s->wishes as $wish) {
+                                    $tags.= $wish->wish. '/ ';
+                                }
+                                $sheet->setCellValue($letters[$i] . ($n+3), $tags);
+                                $sheet->getStyle($letters[$i] . ($n+3))->applyFromArray($center);
+                            }
+                        }
+
                         /*$content = $s->dish_name. "\n";
 
                         if ($s->status === Select::WITHOUT){
@@ -588,16 +618,8 @@ class SelectController extends Controller
                     }
                 }
 
-                $sheet->setCellValue($letters[$i] . ($n+1), $content);
+                $sheet->setCellValue($letters[$i] . ($n+1), $code_section);
                 $sheet->getStyle($letters[$i] . ($n+1))->applyFromArray($code);
-                if ($order->wishlist) {
-                    $tags = '';
-                    foreach ($order->wishlist as $wish) {
-                        $tags.= $wish->wish. '/ ';
-                    }
-                    $sheet->setCellValue($letters[$i] . ($n+2), $tags);
-                    $sheet->getStyle($letters[$i] . ($n+2))->applyFromArray($center);
-                }
 
                 /*if ($s->status === Select::REPLACEMENT || $s->status === Select::WITHOUT || $s->status === Select::LITE){
                     $sheet->getStyle($letters[$i] . ($n+1))
@@ -608,7 +630,7 @@ class SelectController extends Controller
             /*$sheet->setCellValue('D' . ($n+1), $order->order_name.' - '.$order->order_tag);
             $sheet->getStyle('D' . ($n+1))->applyFromArray($center);*/
 
-            $n+=2;
+            $n+=3;
         }
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

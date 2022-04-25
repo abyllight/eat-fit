@@ -10,7 +10,7 @@ class Ration extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'is_required'
+        'name', 'is_required', 'code'
     ];
 
     public function dishes()
