@@ -23,6 +23,12 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class SelectController extends Controller
 {
+    public function getSelectById($id) {
+        $select = Select::find($id);
+
+        return response()->json($select->ingredients);
+    }
+
     public function getSelectByOrder($order_id): JsonResponse
     {
         $order = Order::find($order_id);
@@ -452,6 +458,41 @@ class SelectController extends Controller
                 $item->save();
             }
         }
+    }
+
+    public function showList() {
+        $rations = Ration::where('is_required', true)->get();
+        $arr = [];
+
+        foreach ($rations as $key => $ration) {
+            $selects = Select::whereDate('created_at', Carbon::today())
+                ->where('ration_id', $ration->iiko_id)
+                ->where('code', '!=', null)
+                ->orderBy('ration_id')
+                ->get()
+                ->groupBy('code');
+
+            if ($selects->count() === 0) continue;
+
+            $arr[$key] = [
+                'ration' => $ration->name,
+                'items' => []
+            ];
+
+            foreach ($selects as $select) {
+                $arr[$key]['items'][] = [
+                    'code' => $ration->code . '-' . $select->first()->code,
+                    'name' => $select->first()->dish_name,
+                    'description' => $select->first()->description,
+                    'count' => $selects->count(),
+                    'id' => $select->first()->id,
+                    'status' => false
+                ];
+            }
+        }
+
+
+        return response()->json($arr);
     }
 
     public function export(){

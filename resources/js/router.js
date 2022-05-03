@@ -113,6 +113,15 @@ const router = new VueRouter({
             component: () => import('./components/Kitchen/Select')
         },
         {
+            path: '/select-list',
+            name: 'select_list',
+            meta: {
+                auth: true,
+                roles: ['admin', 'diet', 'kitchen']
+            },
+            component: () => import('./components/Kitchen/SelectList')
+        },
+        {
             path: '/rations',
             name: 'rations',
             meta: {

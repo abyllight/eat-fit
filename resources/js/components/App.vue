@@ -184,6 +184,12 @@ export default {
                         icon: 'clock',
                         roles: ['admin', 'diet']
                     },
+                    {
+                        title: 'Селекты Список',
+                        link: '/select-list',
+                        icon: 'format-list-numbered',
+                        roles: ['admin', 'diet', 'kitchen']
+                    }
                 ]
             },
             {
