@@ -26,12 +26,6 @@
                                 Рацион
                             </th>
                             <th class="text-left">
-                                Код
-                            </th>
-                            <th class="text-left">
-                                Цех
-                            </th>
-                            <th class="text-left">
                                 Ингредиенты
                             </th>
                             <th class="text-left">
@@ -47,8 +41,6 @@
                             <td>{{ index + 1 }}</td>
                             <td>{{ dish.name }}</td>
                             <td>{{ dish.ration.name }}</td>
-                            <td>{{ dish.code }}</td>
-                            <td>{{ dish.department.name }}</td>
                             <td>{{ dish.ingredient_ids.length }}</td>
                             <td>
                                 <v-icon
@@ -107,7 +99,7 @@
                                         :items="rations"
                                         v-model="dish.ration_id"
                                         item-text="name"
-                                        item-value="id"
+                                        item-value="iiko_id"
                                         label="Рацион"
                                         :error-messages="errors.ration_id"
                                         clearable
@@ -216,7 +208,7 @@ export default {
         },
         async getRations(){
             await axios
-                .get('/api/rations')
+                .get('/api/rations/required')
                 .then(response => {
                     this.rations = response.data
                 })

@@ -51,6 +51,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/my-orders/notify', [CourierController::class, 'notify']);
     Route::post('/my-orders/report', [CourierController::class, 'report']);
 
+    Route::get('/plus-one/{city_id}', [AdminController::class, 'plusOneList']);
+    Route::get('/beks', [AdminController::class, 'beks']);
+
     Route::get('/cities', [CityController::class, 'index']);
 
     Route::resource('roles', RoleController::class)->except(['create', 'show', 'edit']);
@@ -142,6 +145,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('builder-mix', BuilderMixController::class)->except(['create', 'show', 'edit']);
 
     Route::get('/customer-orders', [ShopOrderController::class, 'index']);
+
+    Route::get('/test-queue', [AdminController::class, 'plusOne']);
 
 });
 

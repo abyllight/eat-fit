@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk=self.webpackChunk||[]).push([[391],{9391:(e,t,s)=>{s.r(t),s.d(t,{default:()=>u});s(9669);const n={name:"Dashboard",created:function(){}};const u=(0,s(1900).Z)(n,(function(){var e=this,t=e.$createElement,s=e._self._c||t;return s("div",[s("h2",[e._v("Здравствуй, "+e._s(this.$store.state.auth.user.name)+"!")])])}),[],!1,null,null,null).exports}}]);

@@ -5,8 +5,8 @@ import auth from "./auth"
 
 Vue.use(Vuex)
 
-axios.defaults.baseURL = 'https://back.eatandfit.kz'
-//axios.defaults.baseURL = 'http://127.0.0.1:8000'
+//axios.defaults.baseURL = 'https://back.eatandfit.kz'
+axios.defaults.baseURL = 'http://127.0.0.1:8000'
 
 export default new Vuex.Store({
     modules: {

@@ -52,7 +52,7 @@ class Dish extends Model
 
     public function getDepartment()
     {
-        return Department::DEPARTMENTS[$this->department_id];
+        return $this->department_id ? Department::DEPARTMENTS[$this->department_id] : null;
     }
 
     public static function getDutyDishByRation($ration_id){

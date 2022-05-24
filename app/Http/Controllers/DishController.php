@@ -21,7 +21,7 @@ class DishController extends Controller
         $request->validate([
             'name' => 'required',
             'ration_id' => 'required',
-            'department_id' => 'required',
+            /*'department_id' => 'required',*/
             'ingredient_ids' => 'required'
         ]);
 

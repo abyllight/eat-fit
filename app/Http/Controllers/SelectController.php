@@ -602,13 +602,9 @@ class SelectController extends Controller
                 $sheet->getStyle($letters[$i] . $n)->applyFromArray($center);
 
                 if ($s){
-                    if ($s->is_active && $s->status > 0){
+                    if ($s->is_active && $s->status > 0) {
 
                         $code_section = $r['code']. '-' . $s->code;
-
-                        if ($s->status === Select::LITE || $s->status === Select::WITHOUT) {
-                            $code_section = '0';
-                        }
 
                         if ($s->status === Select::WITHOUT) {
                             $dish = Dish::getDutyDishByRation($s->ration_id);
@@ -624,15 +620,15 @@ class SelectController extends Controller
                                 $sheet->setCellValue($letters[$i] . ($n+2), $w);
                                 $sheet->getStyle($letters[$i] . ($n+2))->applyFromArray($center);
                             }
+                        }
 
-                            if ($s->wishes) {
-                                $tags = '';
-                                foreach ($s->wishes as $wish) {
-                                    $tags.= $wish->wish. '/ ';
-                                }
-                                $sheet->setCellValue($letters[$i] . ($n+3), $tags);
-                                $sheet->getStyle($letters[$i] . ($n+3))->applyFromArray($center);
+                        if ($s->wishes) {
+                            $tags = '';
+                            foreach ($s->wishes as $wish) {
+                                $tags.= $wish->wish. '/ ';
                             }
+                            $sheet->setCellValue($letters[$i] . ($n+3), $tags);
+                            $sheet->getStyle($letters[$i] . ($n+3))->applyFromArray($center);
                         }
 
                         /*$content = $s->dish_name. "\n";

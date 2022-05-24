@@ -105,7 +105,13 @@ export default {
                         link: '/promocodes',
                         icon: 'barcode-scan',
                         roles: ['admin']
-                    }
+                    },
+                    {
+                        title: '+1',
+                        link: '/plus-one',
+                        icon: 'account-star',
+                        roles: ['admin', 'office']
+                    },
                 ]
             },
             {

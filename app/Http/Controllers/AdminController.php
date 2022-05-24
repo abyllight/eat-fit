@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use AmoCRM\Client;
 use App\Http\Resources\CuisineCollection;
+use App\Jobs\PlusOne;
+use App\Models\Order;
 use App\Models\Week;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -14,13 +16,13 @@ class AdminController extends Controller
     {
         try {
             $amo = new Client(env('AMO_SUBDOMAIN'), env('AMO_LOGIN'), env('AMO_HASH'));
-
+            dd($amo->account->apiCurrent()['pipelines']);
             $success = $amo->lead->apiList([
                 'limit_rows' => 500,
                 'status' => 142,
                 'date_create' => [
-                    'from' => strtotime(Carbon::yesterday()), //strtotime(Carbon::yesterday())
-                    'to' => strtotime(Carbon::now()) //strtotime(Carbon::now())
+                    'from' => strtotime(Carbon::yesterday()),
+                    'to' => strtotime(Carbon::now())
                 ]
             ]);
 
@@ -30,7 +32,7 @@ class AdminController extends Controller
                 return response()->json('Success');
             }
             //стоимость курса 456321
-            foreach ($success as $item){
+            foreach ($success as $item) {
                 $course = null;
 
                 foreach ($item['custom_fields'] as $field) {
@@ -38,7 +40,7 @@ class AdminController extends Controller
                         $course = (int)$field["values"][0]["value"];
                     }
                 }
-                //dump($item['name'], $item['price'], $course);
+                //var_dump($item['name'], $item['price'], $course);
                 if($course != null || $course == 0) {
                     $lead = $amo->lead;
                     $lead['price'] = $course;
@@ -47,11 +49,15 @@ class AdminController extends Controller
             }
             return response()->json('Success');
         }catch (\AmoCRM\Exception $e){
-            return response()->json($e->getMessage());
+            return response()->json([
+                'code' => $e->getCode(),
+                'msg' => $e->getMessage()
+            ]);
         }
     }
 
-    public function getWeek(){
+    public function getWeek(): JsonResponse
+    {
         $week = Week::find(1);
 
         return response()->json([
@@ -64,5 +70,17 @@ class AdminController extends Controller
 
         $week->is_weekend = !$week->is_weekend;
         $week->save();
+    }
+
+    public function plusOneList($city_id): JsonResponse
+    {
+        $orders = Order::where('city_id', $city_id)->where('is_active', true)->get();
+
+        return response()->json($orders);
+    }
+
+    public function plusOne() {
+        PlusOne::dispatch();
+        dd('sent');
     }
 }

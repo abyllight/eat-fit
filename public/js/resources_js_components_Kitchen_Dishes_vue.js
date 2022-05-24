@@ -180,14 +180,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Dishes",
   data: function data() {
@@ -271,7 +263,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context3.prev = _context3.next) {
               case 0:
                 _context3.next = 2;
-                return axios.get('/api/rations').then(function (response) {
+                return axios.get('/api/rations/required').then(function (response) {
                   _this3.rations = response.data;
                 })["catch"](function (error) {
                   console.log(error);
@@ -530,18 +522,6 @@ var render = function() {
                             _vm._v(" "),
                             _c("th", { staticClass: "text-left" }, [
                               _vm._v(
-                                "\n                            Код\n                        "
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("th", { staticClass: "text-left" }, [
-                              _vm._v(
-                                "\n                            Цех\n                        "
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("th", { staticClass: "text-left" }, [
-                              _vm._v(
                                 "\n                            Ингредиенты\n                        "
                               )
                             ]),
@@ -563,10 +543,6 @@ var render = function() {
                               _c("td", [_vm._v(_vm._s(dish.name))]),
                               _vm._v(" "),
                               _c("td", [_vm._v(_vm._s(dish.ration.name))]),
-                              _vm._v(" "),
-                              _c("td", [_vm._v(_vm._s(dish.code))]),
-                              _vm._v(" "),
-                              _c("td", [_vm._v(_vm._s(dish.department.name))]),
                               _vm._v(" "),
                               _c("td", [
                                 _vm._v(_vm._s(dish.ingredient_ids.length))
@@ -698,7 +674,7 @@ var render = function() {
                                     attrs: {
                                       items: _vm.rations,
                                       "item-text": "name",
-                                      "item-value": "id",
+                                      "item-value": "iiko_id",
                                       label: "Рацион",
                                       "error-messages": _vm.errors.ration_id,
                                       clearable: "",

@@ -41,6 +41,15 @@ const router = new VueRouter({
             component: () => import('./components/Dashboard')
         },
         {
+            path: '/plus-one',
+            name: 'plus_one',
+            meta: {
+                auth: true,
+                roles: ['admin', 'office']
+            },
+            component: () => import('./components/Admin/PlusOne')
+        },
+        {
             path: '/my-orders',
             name: 'my_orders',
             meta: {

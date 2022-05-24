@@ -187,13 +187,26 @@ class Order extends Model
             $cuisine = Cuisine::where('is_on_duty', true)->first();
             $rations = Ration::where('is_required', true)->get();
 
-            foreach ($rations as $ration){
+            foreach ($rations as $ration) {
+
+                $duty_dish = Dish::where('cuisine_id', $cuisine->id)->where('ration_id', $ration->iiko_id)->first();
+
                 $select = new Select();
                 $select->order_id = $this->id;
                 $select->cuisine_id = $cuisine->id;
                 $select->ration_id = $ration->iiko_id;
-                $select->status = Select::START;
+
+                if ($duty_dish) {
+                    $select->dish_id = $duty_dish->id;
+                    $select->dish_name = $duty_dish->name;
+                    $select->status = Select::LITE;
+                }
+
                 $select->save();
+
+                if ($duty_dish) {
+                    $select->ingredients()->sync($duty_dish->getIngredientIds());
+                }
             }
 
             return $this->select()->whereDate('created_at', Carbon::today())->get()->sortBy('ration_id');

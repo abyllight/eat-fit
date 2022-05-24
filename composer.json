@@ -6,7 +6,10 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "ext-curl": "*",
+        "ext-libxml": "*",
         "ext-simplexml": "*",
+        "amocrm/amocrm-api-library": "^0.8.0",
         "dotzero/amocrm": "^0.3.29",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
@@ -14,9 +17,7 @@
         "laravel/framework": "^8.40",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
-        "phpoffice/phpspreadsheet": "^1.18",
-        "ext-curl": "*",
-        "ext-libxml": "*"
+        "phpoffice/phpspreadsheet": "^1.18"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
