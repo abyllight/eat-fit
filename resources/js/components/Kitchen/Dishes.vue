@@ -40,7 +40,7 @@
                         >
                             <td>{{ index + 1 }}</td>
                             <td>{{ dish.name }}</td>
-                            <td>{{ dish.ration.name }}</td>
+                            <td>{{ dish.ration ? dish.ration.name : '' }}</td>
                             <td>{{ dish.ingredient_ids.length }}</td>
                             <td>
                                 <v-icon
