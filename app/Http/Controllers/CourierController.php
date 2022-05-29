@@ -65,6 +65,7 @@ class CourierController extends Controller
                     }
                 }else{
                     $report = new Report();
+                    $report->city_id = $user->city_id;
                     $report->order_id = $order->id;
                     $report->courier_id = $user->id;
                     $report->notified_at = $now;
@@ -92,12 +93,13 @@ class CourierController extends Controller
 
     public function report(Request $request): JsonResponse
     {
+        $user = Auth::user();
         $order = Order::find($request->order_id);
         $now = Carbon::now();
 
         if ($order) {
             $founded_report = Report::where('order_id', $order->id)
-                ->where('courier_id', Auth::user()->id)
+                ->where('courier_id', $user->id)
                 ->whereDate('created_at', $now->toDateString())
                 ->first();
 
@@ -116,6 +118,7 @@ class CourierController extends Controller
             }else{
                 $new = new Report;
                 $new->order_id = $request->order_id;
+                $new->city_id = $user->city_id;
                 $new->courier_id = Auth::user()->id;
                 $new->report_status = $request->status;
                 $new->report_time_status = $this->getStatus($order->getTime(),$now);
