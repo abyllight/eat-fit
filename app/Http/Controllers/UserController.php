@@ -12,6 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -23,7 +24,9 @@ class UserController extends Controller
      */
     public function index(): JsonResponse
     {
-        return response()->json(UserCollection::collection(User::where('is_admin', false)->orderBy('name')->get()));
+        $user = Auth::user();
+        $users = User::where('is_admin', false)->where('city_id', $user->city_id)->orderBy('name')->get();
+        return response()->json(UserCollection::collection($users));
     }
 
     /**

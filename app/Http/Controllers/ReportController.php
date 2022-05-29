@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -15,8 +16,9 @@ class ReportController extends Controller
 {
     public function index(): JsonResponse
     {
-        $latest = Report::latest()->first() ? Report::latest()->first()->created_at->toDatestring() : Carbon::today()->toDateString();
-        $res = Report::whereDate('created_at', $latest)->get();
+        $user = Auth::user();
+        $latest = Report::where('city_id', $user->city_id)->latest()->first() ? Report::where('city_id', $user->city_id)->latest()->first()->created_at->toDatestring() : Carbon::today()->toDateString();
+        $res = Report::whereDate('created_at', $latest)->where('city_id', $user->city_id)->get();
         $reports = $this->reportsFormat($res);
 
         return response()->json([
@@ -27,7 +29,8 @@ class ReportController extends Controller
     }
 
     public function filter(Request $request){
-        $res = Report::whereDate('created_at', $request->date)->get();
+        $user = Auth::user();
+        $res = Report::whereDate('created_at', $request->date)->where('city_id', $user->city_id)->get();
         $reports = $this->reportsFormat($res);
 
         return response()->json([
@@ -69,7 +72,8 @@ class ReportController extends Controller
 
     public function export($date)
     {
-        $res = Report::whereDate('created_at', $date)->get();
+        $user = Auth::user();
+        $res = Report::whereDate('created_at', $date)->where('city_id', $user->city_id)->get();
         $reports = $this->reportsFormat($res);
         $n = 1;
 

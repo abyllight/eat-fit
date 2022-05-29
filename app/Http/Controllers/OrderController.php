@@ -15,19 +15,24 @@ use App\Models\Wishlist;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
     public function index(): JsonResponse
     {
-        $orders = OrderLogisticCollection::collection(Order::where('is_active', true)->orderBy('name')->get());
-        return response()->json($orders);
+        $user = Auth::user();
+        $orders = Order::where('is_active', true)->where('city_id', $user->city_id)->orderBy('name')->get();
+        $collection = OrderLogisticCollection::collection($orders);
+
+        return response()->json($collection);
     }
 
     public function store(Request $request){
         $request->validate([
             'type' => 'required',
+            'city_id' => 'required',
             'name' => 'required',
             'phone' => 'required',
             'yaddress1' => 'required',
@@ -39,6 +44,7 @@ class OrderController extends Controller
         $order->phone = $request->phone;
         $order->whatsapp = $request->whatsapp;
         $order->type = $request->type;
+        $order->city_id = $request->city_id;
         $order->size = $request->size;
         $order->day = $request->day;
         $order->course = $request->course;
@@ -98,6 +104,7 @@ class OrderController extends Controller
         $request->validate([
             'type' => 'required',
             'name' => 'required',
+            'city_id' => 'required',
             'phone' => 'required',
             'yaddress1' => 'required',
             'address1' => 'required'
@@ -107,6 +114,7 @@ class OrderController extends Controller
         $order->phone = $request->phone;
         $order->whatsapp = $request->whatsapp;
         $order->type = $request->type;
+        $order->city_id = $request->city_id;
         $order->size = $request->size;
         $order->day = $request->day;
         $order->course = $request->course;
@@ -156,7 +164,12 @@ class OrderController extends Controller
 
     public function getSelect(){
 
-        $orders = Order::where('type', Order::EAT_FIT_SELECT)->where('is_active', true)->orderBy('size')->get();
+        $user = Auth::user();
+        $orders = Order::where('type', Order::EAT_FIT_SELECT)
+            ->where('city_id', $user->city_id)
+            ->where('is_active', true)
+            ->orderBy('size')
+            ->get();
 
         $select = [
             'total' => $orders->count(),
@@ -266,6 +279,7 @@ class OrderController extends Controller
                 'name'      => $order['name'],
                 'type'      => 1,
                 'size'      => 1,
+                'city_id'   => 1,
                 'day'       => null,
                 'course'    => null,
                 'phone'     => null,
@@ -324,7 +338,19 @@ class OrderController extends Controller
                     case '321277': //Комм. (Кухня)
                         $fields['diet'] = $field["values"][0]["value"];
                         break;
+                    case '881669': //City
+                        $fields['city_id'] = $field["values"][0]["enum"];
+                        break;
                 }
+            }
+
+            switch ($fields['city_id']) {
+                case '977019': //Astana
+                    $fields['city_id'] = Order::ASTANA;
+                    break;
+                case '977021': //Select
+                    $fields['city_id'] = Order::ALMATY;
+                    break;
             }
 
             switch ($fields['type']) {
@@ -375,6 +401,7 @@ class OrderController extends Controller
                     'name'      => $fields['name'],
                     'type'      => $fields['type'],
                     'size'      => $fields['size'],
+                    'city_id'   => $fields['city_id'],
                     'day'       => $fields['day'],
                     'course'    => $fields['course'],
                     'has_bag'   => $fields['has_bag'],
@@ -417,6 +444,7 @@ class OrderController extends Controller
         $order->name     = $fields['name'];
         $order->type     = $fields['type'];
         $order->size     = $fields['size'];
+        $order->city_id  = $fields['city_id'];
         $order->phone    = $fields['phone'];
         $order->whatsapp = $fields['whatsapp'];
         $order->course   = $fields['course'];

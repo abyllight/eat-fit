@@ -16,7 +16,7 @@ class AdminController extends Controller
     {
         try {
             $amo = new Client(env('AMO_SUBDOMAIN'), env('AMO_LOGIN'), env('AMO_HASH'));
-            dd($amo->account->apiCurrent()['pipelines']);
+
             $success = $amo->lead->apiList([
                 'limit_rows' => 500,
                 'status' => 142,

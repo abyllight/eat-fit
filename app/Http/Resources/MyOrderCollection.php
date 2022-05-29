@@ -18,6 +18,7 @@ class MyOrderCollection extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'city' => $this->city_id,
             'phone' => $this->phone,
             'whatsapp' => $this->whatsapp,
             'tag' => $this->getTag($this->type, $this->size),

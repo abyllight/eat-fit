@@ -10,7 +10,7 @@ import axios from "axios";
 export default {
     name: "Dashboard",
     created() {
-
+        //axios.get('/api/webhook').then(response => {console.log(response)})
     }
 }
 </script>

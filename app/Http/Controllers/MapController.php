@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\Week;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MapController extends Controller
 {
@@ -14,6 +15,7 @@ class MapController extends Controller
 
     public function filter(Request $request): JsonResponse
     {
+        $user = Auth::user();
         $intervals = $request->intervals;
         $user_id = $request->user_id;
         $is_weekend = Week::isWeekend();
@@ -23,6 +25,7 @@ class MapController extends Controller
         $courier = $is_weekend ? 'courier2_id' : 'courier1_id';
 
         $query = Order::where('is_active', true)
+            ->where('city_id', $user->city_id)
             ->whereNotNull($lat)
             ->whereNotNull($lng)
             ->whereIn('interval', $intervals);
@@ -47,8 +50,9 @@ class MapController extends Controller
 
     public function geocode_type(bool $is_weekend): JsonResponse
     {
+        $user = Auth::user();
         $coords = $is_weekend ? 'lat2' : 'lat1';
-        $orders = Order::where('is_active', true)->where($coords, null)->get();
+        $orders = Order::where('is_active', true)->where('city_id', $user->city_id)->where($coords, null)->get();
 
         if (count($orders) === 0) {
             return response()->json([
@@ -101,13 +105,13 @@ class MapController extends Controller
     }
 
     public function setInterval(): JsonResponse {
-
-        Order::where('is_active', true)->update(['interval' => 0]);
+        $user = Auth::user();
+        Order::where('is_active', true)->where('city_id', $user->city_id)->update(['interval' => 0]);
 
         $is_weekend = Week::isWeekend();
 
         $time_val = $is_weekend ? 'time2' : 'time1';
-        $orders = Order::where('is_active', true)->orderBy($time_val)->get()->groupBy([$time_val]);
+        $orders = Order::where('is_active', true)->where('city_id', $user->city_id)->orderBy($time_val)->get()->groupBy([$time_val]);
 
         if (count($orders) === 0) {
             return response()->json([
@@ -167,7 +171,7 @@ class MapController extends Controller
 
         foreach ($checkint->groupBy('time') as $value) {
 
-            $orders = Order::where('is_active', true)->where($time_val, $value[0]['time'])->get();
+            $orders = Order::where('is_active', true)->where('city_id', $user->city_id)->where($time_val, $value[0]['time'])->get();
 
             foreach($orders as $val) {
 
@@ -175,7 +179,7 @@ class MapController extends Controller
 
                 foreach ($value as $i) {
 
-                    $uzhe = Order::where('is_active', true)->where('interval', $i['i'])->count();
+                    $uzhe = Order::where('is_active', true)->where('city_id', $user->city_id)->where('interval', $i['i'])->count();
 
                     $almost->push([
                         'i'   => $i['i'],
@@ -189,7 +193,7 @@ class MapController extends Controller
             }
         }
 
-        Order::where('is_active', true)->whereNull('interval')->update([
+        Order::where('is_active', true)->where('city_id', $user->city_id)->whereNull('interval')->update([
             'interval' => 0
         ]);
 
@@ -200,8 +204,9 @@ class MapController extends Controller
     }
 
     public function setCourier(Request $request) {
+        $user = Auth::user();
         $is_weekend = Week::isWeekend();
-        $position   = Order::max('position') ?? 0;
+        $position   = Order::where('city_id', $user->city_id)->max('position') ?? 0;
         $order      = Order::find($request->order_id);
         $courier_id = $is_weekend ? $order->courier2_id : $order->courier1_id;
         $c_id       = $request->courier_id;

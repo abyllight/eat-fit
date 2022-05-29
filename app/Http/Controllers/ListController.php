@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Week;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
@@ -16,10 +17,11 @@ class ListController extends Controller
 {
     public function getListStat(): JsonResponse
     {
+        $user = Auth::user();
         $is_week = Week::isWeek();
         $courier = $is_week ? 'courier1_id' : 'courier2_id';
-        $nb_assigned = Order::where('is_active', true)->where($courier, '>', 0)->count();
-        $total       = Order::where('is_active', true)->count();
+        $nb_assigned = Order::where('is_active', true)->where('city_id', $user->city_id)->where($courier, '>', 0)->count();
+        $total       = Order::where('is_active', true)->where('city_id', $user->city_id)->count();
 
         return response()->json([
             'total' => $total,
@@ -29,6 +31,7 @@ class ListController extends Controller
 
     public function sortList(Request $request)
     {
+        $user = Auth::user();
         $order_id = $request->order_id;
         $courier_id = $request->courier_id;
         $ids = $request->ids ?? [];
@@ -37,6 +40,7 @@ class ListController extends Controller
 
         if ($ids) {
             Order::where('is_active', true)
+                ->where('city_id', $user->city_id)
                 ->update([
                     'position' => null,
                     'courier_position' => null

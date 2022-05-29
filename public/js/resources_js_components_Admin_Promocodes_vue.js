@@ -359,11 +359,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   created: function created() {
     this.fetchPromocodes();
-    axios.get('/api/promocode/text').then(function (response) {
-      console.log(response);
-    })["catch"](function (error) {
-      console.log(error);
-    });
   },
   methods: {
     fetchPromocodes: function fetchPromocodes() {

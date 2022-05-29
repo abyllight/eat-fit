@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Auth;
 
 class Order extends Model
 {
@@ -67,6 +68,9 @@ class Order extends Model
     const L = 4;
     const XL = 5;
     const EAT = 6;
+
+    const ASTANA = 1;
+    const ALMATY = 2;
 
     const EAT_FIT_ARRAY = [self::EAT_FIT_LITE, self::EAT_FIT_SELECT, self::EAT_FIT_DETOX, self::EAT_FIT_GO];
 
@@ -227,7 +231,8 @@ class Order extends Model
 
     public static function getOrderByType(int $type)
     {
-        return self::where('is_active', true)->where('type', $type)->get();
+        $user = Auth::user();
+        return self::where('is_active', true)->where('type', $type)->where('city_id', $user->city_id)->get();
     }
 
     public static function getOrderByTypeAndSize(int $type, int $size)

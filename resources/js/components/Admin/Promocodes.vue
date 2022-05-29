@@ -317,14 +317,6 @@ export default {
     }),
     created () {
         this.fetchPromocodes()
-
-        axios.get('/api/promocode/text')
-            .then(response => {
-                console.log(response)
-            })
-            .catch(function (error) {
-                console.log(error)
-            })
     },
     methods: {
         async fetchPromocodes() {

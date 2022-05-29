@@ -19,6 +19,15 @@
                             <v-col sm="12" lg="4">
                                 <h4 class="mb-3">Анкета</h4>
                                 <v-select
+                                    v-model="city_id"
+                                    :items="cities"
+                                    item-text="name"
+                                    item-value="id"
+                                    label="Город"
+                                    outlined
+                                    :error-messages="errors.city_id"
+                                ></v-select>
+                                <v-select
                                     v-model="type"
                                     :items="products"
                                     item-text="name"
@@ -286,7 +295,7 @@
                                     Сохранить
                                 </v-btn>
                             </v-col>
-                            <v-col>
+                            <v-col v-if="id">
                                 <v-btn
                                     color="red"
                                     dark
@@ -365,6 +374,17 @@ export default {
                 name: 'EAT'
             }
         ],
+        cities: [
+            {
+                id: 1,
+                name: 'Астана'
+            },
+            {
+                id: 2,
+                name: 'Алматы'
+            }
+        ],
+        city_id: null,
         type: null,
         size: null,
         name: null,
@@ -415,6 +435,7 @@ export default {
                         }else{
                             let order = response.data.order
                             this.type = order.type
+                            this.city_id = order.city_id
                             this.size = order.size
                             this.name = order.name
                             this.phone = order.phone
@@ -444,12 +465,30 @@ export default {
                     })
         },
         close() {
+            this.name = null
+            this.city_id = null
+            this.phone = null
+            this.whatsapp = null
+            this.type = null
+            this.size = null
+            this.day = null
+            this.course = null
+            this.yaddress1 = null
+            this.yaddress2 = null
+            this.address1 = null
+            this.address2 = null
+            this.logistic = null
+            this.time1_start = null
+            this.time2_start = null
+            this.time1_end = null
+            this.time2_end = null
             this.errors = []
             this.$emit('close')
         },
         save(){
             let params = {
                 name: this.name,
+                city_id: this.city_id,
                 phone: this.phone,
                 whatsapp: this.whatsapp,
                 type: this.type,

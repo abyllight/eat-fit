@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -88,9 +89,11 @@ class User extends Authenticatable
 
     public static function getCouriers(): ResourceCollection
     {
+        $user = Auth::user();
+        $users = User::where('city_id', $user->city_id)->get();
         $couriers = [];
 
-        foreach (User::all() as $user) {
+        foreach ($users as $user) {
             foreach ($user->roles as $role) {
                 if ($role['slug'] === 'courier'){
                     $couriers[] = $user;
