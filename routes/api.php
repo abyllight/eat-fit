@@ -22,6 +22,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PromocodeController;
+use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\RationController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
@@ -52,7 +53,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/my-orders/report', [CourierController::class, 'report']);
 
     Route::get('/plus-one/{city_id}', [AdminController::class, 'plusOneList']);
-    Route::get('/beks', [AdminController::class, 'beks']);
 
     Route::get('/cities', [CityController::class, 'index']);
 
@@ -92,6 +92,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/reports/export/{date}', [ReportController::class, 'export']);
 
     Route::get('/cuisines', [CuisineController::class, 'index']);
+    Route::get('/cuisines/{id}', [CuisineController::class, 'show']);
     Route::get('/cuisine/duty', [CuisineController::class, 'getDutyCuisine']);
     Route::post('/cuisine/duty', [CuisineController::class, 'setCuisine']);
     Route::get('/cuisines/iiko', [CuisineController::class, 'fetchCuisines']);
@@ -148,6 +149,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/test-queue', [AdminController::class, 'plusOne']);
 
+    Route::get('/purchase-list', [PurchaseController::class, 'index']);
 });
 
 Route::get('/promocode/{promocode}', [PromocodeController::class, 'check']);

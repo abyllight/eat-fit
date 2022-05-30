@@ -149,6 +149,16 @@ const router = new VueRouter({
             component: () => import('./components/Kitchen/Cuisine')
         },
         {
+            path: '/cuisine-dishes/:id',
+            name: 'cuisine_dishes',
+            props: true,
+            meta: {
+                auth: true,
+                roles: ['admin', 'diet']
+            },
+            component: () => import('./components/Kitchen/CuisineDishes')
+        },
+        {
             path: '/dishes',
             name: 'dishes',
             meta: {
@@ -246,6 +256,15 @@ const router = new VueRouter({
                 roles: ['admin', 'office']
             },
             component: () => import('./components/Shop/BMixes')
+        },
+        {
+            path: '/purchase-list',
+            name: 'purchase_list',
+            meta: {
+                auth: true,
+                roles: ['admin', 'kitchen', 'purchase']
+            },
+            component: () => import('./components/Purchase/PurchaseList')
         },
     ]
 })

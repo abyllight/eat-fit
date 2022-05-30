@@ -184,8 +184,21 @@ export default {
         await this.fetchCouriers()
         await loadYmap(this.settings);
 
+        let cities = [
+            {
+                name: 'Astana',
+                coords: [51.1801, 71.44598]
+            },
+            {
+                name: 'Almaty',
+                coords: [43.237163, 76.945627]
+            }
+        ]
+
+        let city_id = this.$store.state.auth.user.city_id
+
         this.map = new ymaps.Map('map', {
-            center: [51.1801, 71.44598],
+            center: cities[city_id - 1].coords,
             zoom: 11
         })
 

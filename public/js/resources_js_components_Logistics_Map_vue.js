@@ -192,7 +192,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     var _this = this;
 
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-      var self;
+      var cities, city_id, self;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -205,8 +205,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               return (0,vue_yandex_maps__WEBPACK_IMPORTED_MODULE_1__.loadYmap)(_this.settings);
 
             case 4:
+              cities = [{
+                name: 'Astana',
+                coords: [51.1801, 71.44598]
+              }, {
+                name: 'Almaty',
+                coords: [43.237163, 76.945627]
+              }];
+              city_id = _this.$store.state.auth.user.city_id;
               _this.map = new ymaps.Map('map', {
-                center: [51.1801, 71.44598],
+                center: cities[city_id - 1].coords,
                 zoom: 11
               });
               _this.clusterer = new ymaps.Clusterer({
@@ -258,7 +266,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 }
               });
 
-            case 9:
+            case 11:
             case "end":
               return _context.stop();
           }

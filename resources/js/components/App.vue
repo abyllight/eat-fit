@@ -44,7 +44,7 @@
 
                   <v-list-item
                       v-for="link in group.links"
-                      :key="link.title"
+                      :key="link.link"
                       :to="link.link"
                       v-if="hasAccess(link.roles)"
                   >
@@ -147,6 +147,18 @@ export default {
                         link: '/reports',
                         icon: 'chart-bar',
                         roles: ['admin', 'logistic']
+                    }
+                ]
+            },
+            {
+                title: 'Закуп',
+                roles: ['admin', 'kitchen', 'purchase'],
+                links: [
+                    {
+                        title: 'Список',
+                        link: '/purchase-list',
+                        icon: 'format-list-numbered',
+                        roles: ['admin', 'kitchen', 'purchase']
                     }
                 ]
             },

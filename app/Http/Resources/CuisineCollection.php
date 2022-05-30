@@ -22,6 +22,8 @@ class CuisineCollection extends JsonResource
             'name' => $this->name,
             'duty' => $this->is_on_duty,
             'left_rations' => $this->getLeftRations(),
+            'position' => $this->position,
+            'week' => $this->week,
             'dishes' => DishCollection::collection($this->getReqDishes())
         ];
     }

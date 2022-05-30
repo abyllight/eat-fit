@@ -6,6 +6,7 @@ use App\Http\Resources\RationCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class Cuisine extends Model
 {
@@ -36,7 +37,8 @@ class Cuisine extends Model
         return $this->hasMany(Select::class, 'cuisine_id', 'id');
     }
 
-    public function getLeftRations() {
+    public function getLeftRations(): AnonymousResourceCollection
+    {
         $rations = Ration::where('is_required', true)->get();
 
         $dish_rations = $this->dishes->map(function ($item){

@@ -19,8 +19,25 @@ class CuisineController extends Controller
 {
     public function index(): JsonResponse
     {
-        $cuisines = Cuisine::orderBy('name')->get();
-        return response()->json(CuisineCollection::collection($cuisines));
+        $cuisines = Cuisine::orderBy('position')->get()->groupBy('week');
+        return response()->json($cuisines);
+    }
+
+    public function show($id): JsonResponse
+    {
+        $cuisine = Cuisine::find($id);
+
+        if (!$cuisine) {
+            return response()->json([
+                'status' => false,
+                'msg' => 'Cuisine not found'
+            ]);
+        }
+
+        return response()->json([
+            'status' => true,
+            'data' => new CuisineCollection($cuisine)
+        ]);
     }
 
     public function fetchCuisines(): JsonResponse
