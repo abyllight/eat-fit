@@ -157,9 +157,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Report',
@@ -940,12 +937,6 @@ var render = function() {
                                 _vm._v(" "),
                                 _c("th", { staticClass: "text-left" }, [
                                   _vm._v(
-                                    "\n                                Статус Еду\n                            "
-                                  )
-                                ]),
-                                _vm._v(" "),
-                                _c("th", { staticClass: "text-left" }, [
-                                  _vm._v(
                                     "\n                                Время Еду\n                            "
                                   )
                                 ])
@@ -1026,6 +1017,11 @@ var render = function() {
                                       _c(
                                         "td",
                                         [
+                                          _vm._v(
+                                            "\n                                 " +
+                                              _vm._s(item.notified_at) +
+                                              "\n                                 "
+                                          ),
                                           _c(
                                             "v-chip",
                                             {
@@ -1047,11 +1043,7 @@ var render = function() {
                                           )
                                         ],
                                         1
-                                      ),
-                                      _vm._v(" "),
-                                      _c("td", [
-                                        _vm._v(_vm._s(item.notified_at))
-                                      ])
+                                      )
                                     ]),
                                     _vm._v(" "),
                                     _c(

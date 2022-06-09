@@ -31,7 +31,7 @@ class PlusOne implements ShouldQueue
     public function handle()
     {
         $brand = New Brand();
-        $brand->name = 'New';
+        $brand->title = 'New';
         $brand->is_active = true;
         $brand->save();
 

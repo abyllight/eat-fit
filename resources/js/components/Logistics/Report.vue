@@ -88,9 +88,6 @@
                                    Время отчета
                                </th>
                                <th class="text-left">
-                                   Статус Еду
-                               </th>
-                               <th class="text-left">
                                    Время Еду
                                </th>
                            </tr>
@@ -123,6 +120,7 @@
                                     </v-chip>
                                 </td>
                                 <td>
+                                    {{ item.notified_at }}
                                     <v-chip
                                         label
                                         small
@@ -131,7 +129,6 @@
                                         {{ item.notification_status }}
                                     </v-chip>
                                 </td>
-                                <td>{{ item.notified_at }}</td>
                             </tr>
                             <tr class="grey lighten-3">
                                 <td colspan="10">{{item.comment}}</td>

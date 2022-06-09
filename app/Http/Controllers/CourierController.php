@@ -7,6 +7,7 @@ use App\Http\Resources\MyOrderCollection;
 use App\Http\Resources\OrderLogisticCollection;
 use App\Models\Courier;
 use App\Models\Order;
+use App\Models\Payment;
 use App\Models\Report;
 use App\Models\User;
 use App\Models\Week;
@@ -24,9 +25,12 @@ class CourierController extends Controller
 
         $orders = Order::where($courier, Auth::id())->where('is_active', true)->orderBy('courier_position')->get();
 
+        $payment_types = Auth::user()->city_id === Order::ASTANA ? Payment::ASTANA_PAYMENT_TYPES : Payment::ALMATY_PAYMENT_TYPES;
+
         return response()->json([
             'status' => true,
-            'data' => MyOrderCollection::collection($orders)
+            'data' => MyOrderCollection::collection($orders),
+            'payment_types' => $payment_types
         ]);
     }
 

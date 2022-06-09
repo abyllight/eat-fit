@@ -348,7 +348,7 @@ class OrderController extends Controller
                 case '977019': //Astana
                     $fields['city_id'] = Order::ASTANA;
                     break;
-                case '977021': //Select
+                case '977021': //Almaty
                     $fields['city_id'] = Order::ALMATY;
                     break;
             }

@@ -204,25 +204,7 @@ __webpack_require__.r(__webpack_exports__);
       comment: '',
       amount: null,
       payment_type: 'Без оплаты',
-      types: [{
-        name: 'Без оплаты',
-        val: 'Без оплаты'
-      }, {
-        name: 'Наличный расчет',
-        val: 'Наличный расчет'
-      }, {
-        name: 'POS-терминал ТОО',
-        val: 'POS-терминал ТОО'
-      }, {
-        name: 'POS-терминал КС',
-        val: 'POS-терминал КС'
-      }, {
-        name: 'POS-терминал Р',
-        val: 'POS-терминал Р'
-      }, {
-        name: 'Kaspi Amir',
-        val: 'Kaspi Amir'
-      }]
+      types: []
     };
   },
   created: function created() {
@@ -235,6 +217,7 @@ __webpack_require__.r(__webpack_exports__);
       axios.get('/api/my-orders').then(function (response) {
         if (response.data.status) {
           _this.orders = response.data.data;
+          _this.types = response.data.payment_types;
         }
       })["catch"](function (error) {
         console.log(error);
@@ -470,11 +453,7 @@ var render = function() {
                 _c("v-divider"),
                 _vm._v(" "),
                 _c("v-card-text", [
-                  _vm._v(
-                    "\n                " +
-                      _vm._s(order.address) +
-                      "\n            "
-                  )
+                  _c("strong", [_vm._v(_vm._s(order.address))])
                 ]),
                 _vm._v(" "),
                 _c(
@@ -711,7 +690,7 @@ var render = function() {
                           return _c("v-radio", {
                             key: type.name,
                             staticClass: "mb-2",
-                            attrs: { label: type.name, value: type.val }
+                            attrs: { label: type.name, value: type.name }
                           })
                         }),
                         1

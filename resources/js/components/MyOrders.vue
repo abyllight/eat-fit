@@ -34,7 +34,7 @@
                 </v-card-text>
                 <v-divider></v-divider>
                 <v-card-text>
-                    {{order.address}}
+                    <strong>{{order.address}}</strong>
                 </v-card-text>
                 <v-card-actions>
                     <v-btn
@@ -147,12 +147,12 @@
                             v-for="type in types"
                             :key="type.name"
                             :label="type.name"
-                            :value="type.val"
+                            :value="type.name"
                             class="mb-2"
                         ></v-radio>
                     </v-radio-group>
                     <v-text-field
-                        v-if="payment_type!=='Без оплаты'"
+                        v-if="payment_type !== 'Без оплаты'"
                         v-model="amount"
                         label="Сумма"
                         outlined
@@ -191,32 +191,7 @@ export default {
         comment: '',
         amount: null,
         payment_type: 'Без оплаты',
-        types: [
-            {
-                name: 'Без оплаты',
-                val: 'Без оплаты'
-            },
-            {
-                name: 'Наличный расчет',
-                val: 'Наличный расчет'
-            },
-            {
-                name: 'POS-терминал ТОО',
-                val: 'POS-терминал ТОО'
-            },
-            {
-                name: 'POS-терминал КС',
-                val: 'POS-терминал КС'
-            },
-            {
-                name: 'POS-терминал Р',
-                val: 'POS-терминал Р'
-            },
-            {
-                name: 'Kaspi Amir',
-                val: 'Kaspi Amir'
-            }
-        ]
+        types: []
     }),
     created() {
         this.fetchOrders()
@@ -228,6 +203,7 @@ export default {
                 .then(response => {
                     if (response.data.status){
                         this.orders = response.data.data
+                        this.types = response.data.payment_types
                     }
                 })
                 .catch(error => {

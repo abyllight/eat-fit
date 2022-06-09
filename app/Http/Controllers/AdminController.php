@@ -72,9 +72,9 @@ class AdminController extends Controller
         $week->save();
     }
 
-    public function plusOneList($city_id): JsonResponse
+    public function plusOneList(): JsonResponse
     {
-        $orders = Order::where('city_id', $city_id)->where('is_active', true)->get();
+        $orders = Order::where('is_active', true)->get();
 
         return response()->json($orders);
     }
