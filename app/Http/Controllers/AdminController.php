@@ -71,16 +71,4 @@ class AdminController extends Controller
         $week->is_weekend = !$week->is_weekend;
         $week->save();
     }
-
-    public function plusOneList(): JsonResponse
-    {
-        $orders = Order::where('is_active', true)->get();
-
-        return response()->json($orders);
-    }
-
-    public function plusOne() {
-        PlusOne::dispatch();
-        dd('sent');
-    }
 }

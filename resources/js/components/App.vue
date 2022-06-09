@@ -107,8 +107,8 @@ export default {
                         roles: ['admin']
                     },
                     {
-                        title: '+1',
-                        link: '/plus-one',
+                        title: 'Менеджер лидов',
+                        link: '/management',
                         icon: 'account-star',
                         roles: ['admin', 'office']
                     },

@@ -41,13 +41,13 @@ const router = new VueRouter({
             component: () => import('./components/Dashboard')
         },
         {
-            path: '/plus-one',
-            name: 'plus_one',
+            path: '/management',
+            name: 'management',
             meta: {
                 auth: true,
                 roles: ['admin', 'office']
             },
-            component: () => import('./components/Admin/PlusOne')
+            component: () => import('./components/Admin/Management')
         },
         {
             path: '/my-orders',

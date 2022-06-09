@@ -17,6 +17,7 @@ use App\Http\Controllers\DishController;
 use App\Http\Controllers\HelperController;
 use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\ListController;
+use App\Http\Controllers\ManagementController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductCategoryController;
@@ -52,7 +53,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/my-orders/notify', [CourierController::class, 'notify']);
     Route::post('/my-orders/report', [CourierController::class, 'report']);
 
-    Route::get('/plus-one/{city_id}', [AdminController::class, 'plusOneList']);
+    Route::get('/management', [ManagementController::class, 'index']);
+    Route::post('/management/plus-one', [ManagementController::class, 'plusOne']);
+    Route::post('/management/trial', [ManagementController::class, 'shiftTrial']);
+    Route::post('/management/work', [ManagementController::class, 'shiftWork']);
+
 
     Route::get('/cities', [CityController::class, 'index']);
 
@@ -146,8 +151,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('builder-mix', BuilderMixController::class)->except(['create', 'show', 'edit']);
 
     Route::get('/customer-orders', [ShopOrderController::class, 'index']);
-
-    Route::get('/test-queue', [AdminController::class, 'plusOne']);
 
     Route::get('/purchase-list', [PurchaseController::class, 'index']);
 });
