@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Ingredient extends Model
 {
@@ -26,6 +27,12 @@ class Ingredient extends Model
     public function categories()
     {
         return $this->belongsToMany(Category::class, 'category_ingredients', 'ingredient_id', 'category_id');
+    }
+
+    public function purchases(): BelongsToMany
+    {
+        return $this->belongsToMany(Purchase::class, 'purchase_ingredients', 'ingredient_id', 'purchase_id')
+            ->withPivot('left', 'total');
     }
 
     public function getCategoryIds()

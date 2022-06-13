@@ -56,7 +56,7 @@ class ManagementController extends Controller
                     $lead['status_id'] = 16567015;
                     $lead->apiUpdate((int) $value['id'], 'now');
 
-                }else if($day === 3 || $day === 11 || $day === 17 || $day === $course-1){
+                }else if(($day == 1 && $course >=2) || $day === 3 || $day === 11 || $day === 17 || $day === $course-1){
                     $day++;
                     $lead = $amo->lead;
                     $lead->addCustomField(328089, $day);
@@ -145,7 +145,7 @@ class ManagementController extends Controller
                 $lead->apiUpdate((int)$item['id'], 'now');
             }
 
-            $management = Management::whereDate('created_at', Carbon::now()->toDateString())->where('action', 2)->first();
+            $management = Management::whereDate('created_at', Carbon::now()->toDateString())->where('type', $type)->first();
 
             if(!$management){
                 $m = new Management();

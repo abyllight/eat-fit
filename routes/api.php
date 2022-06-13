@@ -58,7 +58,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/management/trial', [ManagementController::class, 'shiftTrial']);
     Route::post('/management/work', [ManagementController::class, 'shiftWork']);
 
-
     Route::get('/cities', [CityController::class, 'index']);
 
     Route::resource('roles', RoleController::class)->except(['create', 'show', 'edit']);
@@ -153,6 +152,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/customer-orders', [ShopOrderController::class, 'index']);
 
     Route::get('/purchase-list', [PurchaseController::class, 'index']);
+    Route::get('/purchase-list/calculate', [PurchaseController::class, 'calculateIngredients']);
+
 });
 
 Route::get('/promocode/{promocode}', [PromocodeController::class, 'check']);
