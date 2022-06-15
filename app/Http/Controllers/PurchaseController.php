@@ -24,9 +24,9 @@ class PurchaseController extends Controller
         $cuisine = Cuisine::where('is_on_duty', true)->first();
         $iiko = new IikoController();
         $token = $iiko->getAuthToken();
-        $link = '/resto/api/v2/entities/products/list?' . 'key=';
+        $link = '/resto/api/v2/entities/products/list?types=DISH&parentIds=' . $cuisine->iiko_id . '&key=';
         $dishes = $iiko->doRequest($token, $link);
-        dd($dishes);
+
         $today = Carbon::today()->format('Y-m-d');
 
         $rations = Ration::where('is_required', true)->get();
@@ -71,12 +71,12 @@ class PurchaseController extends Controller
                     continue;
                 }
 
-                $link = '/resto/api/v2/assemblyCharts/getTree?date=' . $today . '&productId=' . $dish['id'] . '&key=';
+                $link = '/resto/api/v2/assemblyCharts/getPrepared?date=' . $today . '&productId=' . $dish['id'] . '&key=';
                 $ingredients = $iiko->doRequest($token, $link);
-                dd($ingredients);
+
                 if (is_array($ingredients)) {
                     $ingredients = $ingredients['preparedCharts'][0]['items'];
-                    dd($ingredients);
+
                     $i = [
                         'r' => $first,
                         't' => $t

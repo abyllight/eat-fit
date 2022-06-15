@@ -82,7 +82,7 @@ class ManagementController extends Controller
 
             if(!$management){
                 $m = new Management();
-                $m->type = 1;
+                $m->type = Management::PLUS_TYPE;
                 $m->save();
             }
 
@@ -167,15 +167,17 @@ class ManagementController extends Controller
 
     public function shiftTrial(): JsonResponse
     {
-        $status = 16536847;
-        $type = 2;
+        $status = Management::TRIAL_STATUS;
+        $type = Management::TRIAL_TYPE;
+
         return $this->shift($status, $type);
     }
 
     public function shiftWork(): JsonResponse
     {
-        $status = 16566964;
-        $type = 3;
+        $status = Management::WORK_STATUS;
+        $type = Management::WORK_TYPE;
+
         return $this->shift($status, $type);
     }
 }

@@ -20,6 +20,7 @@ class CuisineCollection extends JsonResource
             'i_id' => $this->iiko_id,
             'i_name' => $this->iiko_name,
             'name' => $this->name,
+            'date' => $this->date,
             'duty' => $this->is_on_duty,
             'left_rations' => $this->getLeftRations(),
             'position' => $this->position,

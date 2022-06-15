@@ -19,8 +19,37 @@ class CuisineController extends Controller
 {
     public function index(): JsonResponse
     {
-        $cuisines = Cuisine::orderBy('position')->get()->groupBy('week');
-        return response()->json($cuisines);
+        $cuisines = Cuisine::orderBy('position')->get();
+        $tomorrow = Carbon::tomorrow()->toDateString();
+        $duty = Cuisine::where('is_on_duty', true)->first();
+        $n = 0;
+
+        foreach ($cuisines as $cuisine) {
+            if ($cuisine->is_on_duty) {
+                $cuisine->date = $tomorrow;
+            }else {
+                $res = $cuisine->position - $duty->position;
+
+                if ($res > 0) {
+                    $res = $res + $n;
+                }else {
+                    $res = abs($res) + $n + 26;
+                }
+
+                $date = Carbon::tomorrow()->addDays($res);
+
+                if ($date->isSunday()) {
+                    $date->addDay();
+                    $n++;
+                }
+
+                $cuisine->date = $date->toDateString();
+            }
+
+            $cuisine->save();
+        }
+
+        return response()->json($cuisines->groupBy('week'));
     }
 
     public function show($id): JsonResponse
@@ -100,7 +129,8 @@ class CuisineController extends Controller
 
         Cuisine::where('is_on_duty', true)
                 ->update([
-                    'is_on_duty' => false
+                    'is_on_duty' => false,
+                    'date' => null
                 ]);
 
         if ($duty){
@@ -113,6 +143,19 @@ class CuisineController extends Controller
         }
 
         return response()->json(new CuisineCollection($duty));
+    }
+
+    public function setDate(Request $request): JsonResponse
+    {
+        $cuisine = Cuisine::find($request->id);
+
+        $cuisine->date = $request->date;
+        $cuisine->save();
+
+        return response()->json([
+            'status' => true,
+            'msg' => 'Дата установлена!'
+        ]);
     }
 
     public function getDutyCuisine(): JsonResponse

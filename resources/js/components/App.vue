@@ -152,13 +152,37 @@ export default {
             },
             {
                 title: 'Закуп',
-                roles: ['admin', 'kitchen', 'purchase'],
+                roles: ['admin', 'purchase'],
                 links: [
                     {
-                        title: 'Список',
+                        title: 'Поставщики',
+                        link: '/providers',
+                        icon: 'format-list-numbered',
+                        roles: ['admin', 'purchase']
+                    },
+                    {
+                        title: 'Категории',
+                        link: '/p-categories',
+                        icon: 'format-list-numbered',
+                        roles: ['admin', 'purchase']
+                    }
+                ]
+            },
+            {
+                title: 'Кухня',
+                roles: ['admin', 'kitchen'],
+                links: [
+                    {
+                        title: 'Список для закупа',
                         link: '/purchase-list',
                         icon: 'format-list-numbered',
-                        roles: ['admin', 'kitchen', 'purchase']
+                        roles: ['admin', 'kitchen']
+                    },
+                    {
+                        title: 'Список Селекты',
+                        link: '/select-list',
+                        icon: 'format-list-numbered',
+                        roles: ['admin', 'kitchen']
                     }
                 ]
             },
@@ -201,12 +225,6 @@ export default {
                         link: '/rations',
                         icon: 'clock',
                         roles: ['admin', 'diet']
-                    },
-                    {
-                        title: 'Селекты Список',
-                        link: '/select-list',
-                        icon: 'format-list-numbered',
-                        roles: ['admin', 'diet', 'kitchen']
                     }
                 ]
             },

@@ -23,6 +23,8 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PromocodeController;
+use App\Http\Controllers\ProviderCategoryController;
+use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\RationController;
 use App\Http\Controllers\ReportController;
@@ -61,6 +63,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cities', [CityController::class, 'index']);
 
     Route::resource('roles', RoleController::class)->except(['create', 'show', 'edit']);
+    Route::resource('providers', ProviderController::class)->except(['create', 'show', 'edit']);
+    Route::resource('p-categories', ProviderCategoryController::class)->except(['create', 'show', 'edit']);
 
     Route::resource('users', UserController::class)->except(['create', 'show', 'edit']);
     Route::get('/couriers', [UserController::class, 'getCouriers']);
@@ -99,7 +103,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cuisines/{id}', [CuisineController::class, 'show']);
     Route::get('/cuisine/duty', [CuisineController::class, 'getDutyCuisine']);
     Route::post('/cuisine/duty', [CuisineController::class, 'setCuisine']);
-    Route::get('/cuisines/iiko', [CuisineController::class, 'fetchCuisines']);
+    Route::post('/cuisine/date', [CuisineController::class, 'setDate']);
+    Route::get('/cuisine/iiko', [CuisineController::class, 'fetchCuisines']);
     Route::get('/cuisines/{id}/dishes', [CuisineController::class, 'getDishesByCuisineId']);
     Route::get('cuisines/{id}/dishes/iiko', [CuisineController::class, 'fetchDishesByCuisineId']);
 

@@ -70,6 +70,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Management",
   data: function data() {
@@ -77,7 +91,10 @@ __webpack_require__.r(__webpack_exports__);
       plus: true,
       trial: true,
       work: true,
-      loading: false
+      loading: false,
+      prompt: false,
+      type: 1,
+      link: '/api/management/plus-one'
     };
   },
   mounted: function mounted() {
@@ -91,13 +108,15 @@ __webpack_require__.r(__webpack_exports__);
         _this.plus = res.data.plus;
         _this.trial = res.data.trial;
         _this.work = res.data.work;
-      })["catch"](function (err) {});
+      })["catch"](function (err) {
+        console.log(err);
+      });
     },
-    plusOne: function plusOne() {
+    doAction: function doAction() {
       var _this2 = this;
 
       this.loading = true;
-      axios.post('/api/management/plus-one').then(function (res) {
+      axios.post(this.link).then(function (res) {
         _this2.loading = false;
 
         _this2.$store.dispatch('showAlert', {
@@ -106,37 +125,29 @@ __webpack_require__.r(__webpack_exports__);
           color: 'success',
           type: 'success'
         });
-      })["catch"](function (err) {});
+
+        location.reload();
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    },
+    plusOne: function plusOne() {
+      this.link = '/api/management/plus-one';
+      this.type = 1;
+      this.prompt = true;
     },
     shiftTrial: function shiftTrial() {
-      var _this3 = this;
-
-      this.loading = true;
-      axios.post('/api/management/trial').then(function (res) {
-        _this3.loading = false;
-
-        _this3.$store.dispatch('showAlert', {
-          isVisible: true,
-          msg: res.data.msg,
-          color: 'success',
-          type: 'success'
-        });
-      })["catch"](function (err) {});
+      this.link = '/api/management/trial';
+      this.type = 2;
+      this.prompt = true;
     },
     shiftWork: function shiftWork() {
-      var _this4 = this;
-
-      this.loading = true;
-      axios.post('/api/management/work').then(function (res) {
-        _this4.loading = false;
-
-        _this4.$store.dispatch('showAlert', {
-          isVisible: true,
-          msg: res.data.msg,
-          color: 'success',
-          type: 'success'
-        });
-      })["catch"](function (err) {});
+      this.link = '/api/management/work';
+      this.type = 3;
+      this.prompt = true;
+    },
+    close: function close() {
+      this.prompt = false;
     }
   }
 });
@@ -310,6 +321,67 @@ var render = function() {
                         )
                       ])
                     : _vm._e()
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-row",
+        { attrs: { justify: "center" } },
+        [
+          _c(
+            "v-dialog",
+            {
+              attrs: { "max-width": "500px" },
+              model: {
+                value: _vm.prompt,
+                callback: function($$v) {
+                  _vm.prompt = $$v
+                },
+                expression: "prompt"
+              }
+            },
+            [
+              _c(
+                "v-card",
+                [
+                  _c("v-card-title", { staticClass: "text-h5" }, [
+                    _vm._v("Вы уверены, что хотите удалить роль?")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "v-card-actions",
+                    [
+                      _c("v-spacer"),
+                      _vm._v(" "),
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "blue darken-1", text: "" },
+                          on: { click: _vm.close }
+                        },
+                        [_vm._v("Отмена")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "blue darken-1", text: "" },
+                          on: { click: _vm.doAction }
+                        },
+                        [_vm._v("ДА")]
+                      ),
+                      _vm._v(" "),
+                      _c("v-spacer")
+                    ],
+                    1
+                  )
                 ],
                 1
               )

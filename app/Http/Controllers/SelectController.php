@@ -470,7 +470,7 @@ class SelectController extends Controller
                 ->where('code', '!=', null)
                 ->orderBy('ration_id')
                 ->get()
-                ->groupBy('code');
+                ->groupBy(['code']);
 
             if ($selects->count() === 0) continue;
 
@@ -484,13 +484,12 @@ class SelectController extends Controller
                     'code' => $ration->code . '-' . $select->first()->code,
                     'name' => $select->first()->dish_name,
                     'description' => $select->first()->description,
-                    'count' => $selects->count(),
+                    'count' => $select->count(),
                     'id' => $select->first()->id,
                     'status' => false
                 ];
             }
         }
-
 
         return response()->json($arr);
     }

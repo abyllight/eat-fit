@@ -575,7 +575,7 @@
 </template>
 <script>
     import axios from "axios";
-    import SelectModal from "./SelectModal";
+    import SelectModal from "../Kitchen/SelectModal";
     export default {
         name: 'Select',
         components: {SelectModal},

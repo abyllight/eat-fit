@@ -29,20 +29,22 @@
                     :color="c.is_on_duty ? 'green': 'grey'"
                 >
                     <v-card-title>{{c.position}}. {{c.name}}</v-card-title>
+                    <v-card-subtitle>{{c.date}}</v-card-subtitle>
                     <v-card-actions>
+                        <v-spacer></v-spacer>
                         <v-btn
+                            icon
                             color="white"
-                            text
-                            @click="goToCuisineDishes(c.id)"
+                            @click="setDuty(c.id)"
                         >
-                            Настроить
+                            <v-icon>mdi-star</v-icon>
                         </v-btn>
                         <v-btn
                             color="white"
-                            text
-                            @click="setDuty(c.id)"
+                            icon
+                            @click="goToCuisineDishes(c.id)"
                         >
-                            Назначить
+                            <v-icon>mdi-tune</v-icon>
                         </v-btn>
                     </v-card-actions>
                 </v-card>
@@ -57,7 +59,7 @@
             cuisines: [],
             btn_loading: false,
             loading: false,
-            disabled: false,
+            disabled: false
         }),
         created() {
             this.getCuisines()
@@ -92,7 +94,7 @@
                 this.btn_loading = true
                 this.disabled = true
                 await axios
-                    .get('/api/cuisines/iiko')
+                    .get('/api/cuisine/iiko')
                     .then(response => {
                         this.$store.dispatch('showAlert', {
                             'isVisible': true,
@@ -109,6 +111,22 @@
                         this.btn_loading = false
                         this.disabled = false
                     })
+            },
+            setDate(id) {
+                axios.post('/api/cuisine/date', {
+                    id: id,
+                    date: this.date
+                }).then(res => {
+                    this.$store.dispatch('showAlert', {
+                        isVisible: true,
+                        msg: res.data.msg,
+                        color: 'success',
+                        type: 'success'
+                    })
+                    this.getCuisines()
+                }).catch(err => {
+                    console.log(err)
+                })
             }
         }
     }

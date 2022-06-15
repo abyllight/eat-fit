@@ -68,6 +68,24 @@ const router = new VueRouter({
             component: () => import('./components/Admin/Roles')
         },
         {
+            path: '/providers',
+            name: 'providers',
+            meta: {
+                auth: true,
+                roles: ['admin', 'purchase']
+            },
+            component: () => import('./components/Purchase/Providers')
+        },
+        {
+            path: '/p-categories',
+            name: 'p_categories',
+            meta: {
+                auth: true,
+                roles: ['admin', 'purchase']
+            },
+            component: () => import('./components/Purchase/Categories')
+        },
+        {
             path: '/users',
             name: 'users',
             meta: {
@@ -119,7 +137,7 @@ const router = new VueRouter({
                 auth: true,
                 roles: ['admin', 'diet']
             },
-            component: () => import('./components/Kitchen/Select')
+            component: () => import('./components/Dietology/Select')
         },
         {
             path: '/select-list',
@@ -137,7 +155,7 @@ const router = new VueRouter({
                 auth: true,
                 roles: ['admin', 'diet']
             },
-            component: () => import('./components/Kitchen/Rations')
+            component: () => import('./components/Dietology/Rations')
         },
         {
             path: '/cuisines',
@@ -146,7 +164,7 @@ const router = new VueRouter({
                 auth: true,
                 roles: ['admin', 'diet']
             },
-            component: () => import('./components/Kitchen/Cuisine')
+            component: () => import('./components/Dietology/Cuisine')
         },
         {
             path: '/cuisine-dishes/:id',
@@ -156,7 +174,7 @@ const router = new VueRouter({
                 auth: true,
                 roles: ['admin', 'diet']
             },
-            component: () => import('./components/Kitchen/CuisineDishes')
+            component: () => import('./components/Dietology/CuisineDishes')
         },
         {
             path: '/dishes',
@@ -165,7 +183,7 @@ const router = new VueRouter({
                 auth: true,
                 roles: ['admin', 'diet']
             },
-            component: () => import('./components/Kitchen/Dishes')
+            component: () => import('./components/Dietology/Dishes')
         },
         {
             path: '/category',
@@ -174,7 +192,7 @@ const router = new VueRouter({
                 auth: true,
                 roles: ['admin', 'diet']
             },
-            component: () => import('./components/Kitchen/Category')
+            component: () => import('./components/Dietology/Category')
         },
         {
             path: '/ingredients',
@@ -183,7 +201,7 @@ const router = new VueRouter({
                 auth: true,
                 roles: ['admin', 'diet']
             },
-            component: () => import('./components/Kitchen/Ingredients')
+            component: () => import('./components/Dietology/Ingredients')
         },
         {
             path: '/promocodes',
@@ -264,7 +282,7 @@ const router = new VueRouter({
                 auth: true,
                 roles: ['admin', 'kitchen', 'purchase']
             },
-            component: () => import('./components/Purchase/PurchaseList')
+            component: () => import('./components/Kitchen/PurchaseList')
         },
     ]
 })

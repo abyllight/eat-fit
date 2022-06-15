@@ -20,7 +20,7 @@ class PurchaseCollection extends JsonResource
             'id'    => $this->id,
             'cuisine' => $this->cuisine->name,
             'date' => $this->date,
-            'ingredients' => PurchaseIngredientCollection::collection($this->ingredients)
+            'ingredients' => PurchaseIngredientCollection::collection($this->ingredients()->orderBy('name')->get())
         ];
     }
 }
