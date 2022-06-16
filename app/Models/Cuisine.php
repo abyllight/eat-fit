@@ -26,6 +26,11 @@ class Cuisine extends Model
         return $this->hasMany(Purchase::class, 'cuisine_id', 'id');
     }
 
+    public function sizes(): HasMany
+    {
+        return $this->hasMany(CuisineSize::class, 'cuisine_id', 'id');
+    }
+
     public function getReqDishes()
     {
         $rations = Ration::where('is_required', true)->get();

@@ -409,7 +409,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     'type': response.data.status ? 'success' : 'error'
                   });
 
-                  _this5.getCuisines();
+                  _this5.getCuisine();
                 })["catch"](function (error) {
                   console.log(error);
                 })["finally"](function () {

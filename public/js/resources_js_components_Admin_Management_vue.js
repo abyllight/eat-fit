@@ -88,10 +88,12 @@ __webpack_require__.r(__webpack_exports__);
   name: "Management",
   data: function data() {
     return {
-      plus: true,
-      trial: true,
-      work: true,
-      loading: false,
+      plus: null,
+      trial: null,
+      work: null,
+      plus_loading: false,
+      trial_loading: false,
+      work_loading: false,
       prompt: false,
       type: 1,
       link: '/api/management/plus-one'
@@ -115,10 +117,11 @@ __webpack_require__.r(__webpack_exports__);
     doAction: function doAction() {
       var _this2 = this;
 
-      this.loading = true;
+      this.prompt = false;
+      this.plus = true;
+      this.trial = true;
+      this.work = true;
       axios.post(this.link).then(function (res) {
-        _this2.loading = false;
-
         _this2.$store.dispatch('showAlert', {
           isVisible: true,
           msg: res.data.msg,
@@ -135,16 +138,19 @@ __webpack_require__.r(__webpack_exports__);
       this.link = '/api/management/plus-one';
       this.type = 1;
       this.prompt = true;
+      this.plus_loading = true;
     },
     shiftTrial: function shiftTrial() {
       this.link = '/api/management/trial';
       this.type = 2;
       this.prompt = true;
+      this.trial_loading = true;
     },
     shiftWork: function shiftWork() {
       this.link = '/api/management/work';
       this.type = 3;
       this.prompt = true;
+      this.work_loading = true;
     },
     close: function close() {
       this.prompt = false;
@@ -255,7 +261,7 @@ var render = function() {
                     disabled: _vm.plus,
                     color: "green",
                     dark: !_vm.plus,
-                    loading: _vm.loading
+                    loading: _vm.plus_loading
                   },
                   on: { click: _vm.plusOne }
                 },
@@ -280,7 +286,7 @@ var render = function() {
                     disabled: _vm.trial,
                     color: "indigo",
                     dark: !_vm.trial,
-                    loading: _vm.loading
+                    loading: _vm.trial_loading
                   },
                   on: { click: _vm.shiftTrial }
                 },
@@ -306,7 +312,7 @@ var render = function() {
                     disabled: _vm.work,
                     color: "indigo",
                     dark: !_vm.work,
-                    loading: _vm.loading
+                    loading: _vm.work_loading
                   },
                   on: { click: _vm.shiftWork }
                 },
@@ -352,7 +358,7 @@ var render = function() {
                 "v-card",
                 [
                   _c("v-card-title", { staticClass: "text-h5" }, [
-                    _vm._v("Вы уверены, что хотите удалить роль?")
+                    _vm._v("Вы уверены, что хотите продолжить действие?")
                   ]),
                   _vm._v(" "),
                   _c(

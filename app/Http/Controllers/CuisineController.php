@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\CuisineCollection;
 use App\Http\Resources\DishCollection;
 use App\Models\Cuisine;
+use App\Models\CuisineSize;
 use App\Models\Dish;
 use App\Models\Ingredient;
 use App\Models\Ration;
@@ -86,18 +87,36 @@ class CuisineController extends Controller
             'b8dcd03d-739b-4f31-8e84-2e246b2dfefc', //ukraine
             '42748484-97ee-4a00-9588-a1ad19001b0b', //jordan
             '33063b9d-903c-40c4-b108-821bd5410c67', //halloween
+            '19839d73-21c7-4725-8c14-581825e57e73' //fusion
         ];
 
         if (is_array($cuisines)) {
             foreach ($cuisines as $cuisine) {
                 if (substr($cuisine['name'], 0, 2) === '! ' && !in_array($cuisine['id'], $blacklist)) {
-                    Cuisine::updateOrCreate(
+                    $c = Cuisine::updateOrCreate(
                         ['iiko_id' => $cuisine['id']],
                         [
                             'iiko_name' => substr($cuisine['name'], 2),
                             'name' => substr($cuisine['name'], 2)
                         ]
                     );
+
+                    $l = '/resto/api/v2/entities/products/list?types=DISH&parentIds=' . $c->iiko_id . '&key=';
+                    $folders = $iiko->doRequest($token, $l);
+
+                    foreach ($folders as $folder) {
+                        $first = substr($folder['name'], 0, 1);
+
+                        if ($first === '!') {
+                            CuisineSize::updateOrCreate(
+                                ['iiko_id' => $folder['id']],
+                                [
+                                    'name' => $folder['name'],
+                                    'cuisine_id' => $c->id
+                                ]
+                            );
+                        }
+                    }
                 }
             }
         }else {
@@ -178,54 +197,33 @@ class CuisineController extends Controller
         $token = $iiko->getAuthToken();
 
         $cuisine = Cuisine::find($id);
+        $c = $cuisine->sizes->first();
+        $today = Carbon::today()->format('Y-m-d');
 
-        $link = '/resto/api/v2/entities/products/list?types=DISH&parentIds=' . $cuisine->iiko_id . '&key=';
+        $link = '/resto/api/v2/assemblyCharts/getTree?date=' . $today . '&productId=' . $c->iiko_id . '&key=';
         $dishes = $iiko->doRequest($token, $link);
-        $array = [];
 
-        $rations = Ration::where('is_required', true)->get();
+        foreach ($dishes['assemblyCharts'][0]['items'] as $dish) {
+            $l = '/resto/api/v2/entities/products/list?types=DISH&ids=' . $dish['productId'] . '&key=';
+            $d = $iiko->doRequest($token, $l);
 
-        $r_numbers = $rations->map(function ($r) {
-            return $r->iiko_id;
-        });
+            $first = substr($d[0]['name'], 0, 1);
+            $first = (int) $first;
+            $name = substr($d[0]['name'], 4);
 
-        if (is_array($dishes)){
-            foreach ($dishes as $dish) {
-                $first = substr($dish['name'], 0, 1);
+            $d = Dish::updateOrCreate(
+                ['ration_id' => $first, 'cuisine_id' => $cuisine->id],
+                [
+                    'iiko_name' => $name,
+                    'iiko_id' => $d[0]['id'],
+                    'is_custom' => false
+                ]
+            );
 
-                if (!is_numeric($first)){
-                    continue;
-                }
-
-                $first = (int)$first;
-
-                if (!in_array($first, $r_numbers->toArray())){
-                    continue;
-                }
-
-                if (!in_array($first, $array)) {
-                    $d = Dish::updateOrCreate(
-                        ['ration_id' => $first, 'cuisine_id' => $cuisine->id],
-                        [
-                            'iiko_name' => substr($dish['name'], 4),
-                            'iiko_id' => $dish['id'],
-                            'is_custom' => false
-                        ]
-                    );
-
-                    if (!$d->name){
-                        $d->name = $d->iiko_name;
-                        $d->save();
-                    }
-
-                    $array[] = $first;
-                }
+            if (!$d->name){
+                $d->name = $d->iiko_name;
+                $d->save();
             }
-        }else {
-            return response()->json([
-                'status' => false,
-                'msg' => $dishes. 'error'
-            ]);
         }
 
         return response()->json([

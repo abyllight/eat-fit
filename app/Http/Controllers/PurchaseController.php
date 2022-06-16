@@ -60,23 +60,24 @@ class PurchaseController extends Controller
 
                 $first = substr($dish['name'], 0, 1);
                 $t = substr($dish['name'], 2, 1);
-                if (!is_numeric($first)) {
+                /*if (is_numeric($first)) {
                     continue;
-                }
+                }*/
 
                 $first = (int)$first;
                 $t = (int)$t;
 
-                if (!in_array($first, $r_numbers->toArray())){
+                /*if (!in_array($first, $r_numbers->toArray())){
                     continue;
-                }
+                }*/
 
-                $link = '/resto/api/v2/assemblyCharts/getPrepared?date=' . $today . '&productId=' . $dish['id'] . '&key=';
+                $link = '/resto/api/v2/assemblyCharts/getTree?date=' . $today . '&productId=' . $dish['id'] . '&key=';
                 $ingredients = $iiko->doRequest($token, $link);
 
+                dd($dish, $ingredients);
                 if (is_array($ingredients)) {
                     $ingredients = $ingredients['preparedCharts'][0]['items'];
-
+                    dd($first, $t, $ingredients);
                     $i = [
                         'r' => $first,
                         't' => $t
@@ -90,10 +91,13 @@ class PurchaseController extends Controller
                         $count = $l;
                     }
 
-                    foreach ($ingredients as $ingredient) {
+                    foreach ($ingredients as $te => $ingredient) {
                         $ing = Ingredient::where('iiko_id', $ingredient['productId'])->first();
                         if (!$ing) continue;
 
+                        if ($te === 8) {
+                            dd($first,$dish,$ing, $ingredients);
+                        }
                         $i['items'][] = [
                             'id' => $ing->id,
                             'amount' => $ingredient['amount'],

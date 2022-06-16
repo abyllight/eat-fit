@@ -8,7 +8,7 @@
                     class="mr-10"
                     color="green"
                     :dark="!plus"
-                    :loading="loading"
+                    :loading="plus_loading"
                 >
                     +1
                     <v-icon
@@ -25,7 +25,7 @@
                     class="mr-10"
                     color="indigo"
                     :dark="!trial"
-                    :loading="loading"
+                    :loading="trial_loading"
                 >
                     Закрытие смены(Пробный)
                     <v-icon
@@ -41,7 +41,7 @@
                     @click="shiftWork"
                     color="indigo"
                     :dark="!work"
-                    :loading="loading"
+                    :loading="work_loading"
                 >
                     Закрытие смены(В работе)
                     <v-icon
@@ -58,7 +58,7 @@
         <v-row justify="center">
             <v-dialog v-model="prompt" max-width="500px">
                 <v-card>
-                    <v-card-title class="text-h5">Вы уверены, что хотите удалить роль?</v-card-title>
+                    <v-card-title class="text-h5">Вы уверены, что хотите продолжить действие?</v-card-title>
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn color="blue darken-1" text @click="close">Отмена</v-btn>
@@ -75,10 +75,12 @@
 export default {
     name: "Management",
     data: () => ({
-        plus: true,
-        trial: true,
-        work: true,
-        loading: false,
+        plus: null,
+        trial: null,
+        work: null,
+        plus_loading: false,
+        trial_loading: false,
+        work_loading: false,
         prompt: false,
         type: 1,
         link: '/api/management/plus-one'
@@ -98,12 +100,13 @@ export default {
             })
         },
         doAction() {
-            this.loading = true
+            this.prompt = false
+            this.plus = true
+            this.trial = true
+            this.work = true
 
             axios.post(this.link)
                 .then(res => {
-                    this.loading = false
-
                     this.$store.dispatch('showAlert', {
                         isVisible: true,
                         msg: res.data.msg,
@@ -120,16 +123,19 @@ export default {
             this.link = '/api/management/plus-one'
             this.type = 1
             this.prompt = true
+            this.plus_loading = true
         },
         shiftTrial() {
             this.link = '/api/management/trial'
             this.type = 2
             this.prompt = true
+            this.trial_loading = true
         },
         shiftWork() {
             this.link = '/api/management/work'
             this.type = 3
             this.prompt = true
+            this.work_loading = true
         },
         close() {
             this.prompt = false

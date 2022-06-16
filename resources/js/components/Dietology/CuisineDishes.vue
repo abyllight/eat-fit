@@ -328,7 +328,7 @@
                             'color': response.data.status ? 'green' : 'error',
                             'type': response.data.status ? 'success' : 'error',
                         })
-                        this.getCuisines()
+                        this.getCuisine()
                     })
                     .catch(error => {
                         console.log(error)
