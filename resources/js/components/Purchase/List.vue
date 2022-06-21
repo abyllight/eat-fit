@@ -62,7 +62,7 @@
                         <v-row>
                             <v-col>
                                 <v-select
-                                    v-model="provider"
+                                    v-model="provider.id"
                                     :items="item.providers"
                                     item-text="name"
                                     item-value="id"
@@ -93,7 +93,9 @@
                         <v-btn
                             color="blue darken-1"
                             text
-                            @click="sendMessage"
+                            :href="`https://api.whatsapp.com/send?phone=${provider.phone}&text=${encodeURIComponent(this.msg)}`"
+                            target="_blank"
+                            @click="modal = false"
                         >
                             Отправить
                         </v-btn>
@@ -113,7 +115,7 @@ export default {
         modal: false,
         item: {},
         msg: null,
-        provider: null
+        provider: {}
     }),
     mounted() {
         this.fetchIngredients()
@@ -129,15 +131,9 @@ export default {
         },
         openWhatsapp(i) {
             this.item = i
-            this.provider = i.providers[0].id
+            this.provider = i.providers[0]
             this.modal = true
             this.msg = i.name + ' - ' + i.diff
-        },
-        sendMessage() {
-
-        },
-        openModal() {
-
         },
         done(i) {
             axios.post('/api/purchase-list-kitchen/done', {

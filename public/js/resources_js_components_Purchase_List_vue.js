@@ -117,6 +117,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "List",
   data: function data() {
@@ -126,7 +128,7 @@ __webpack_require__.r(__webpack_exports__);
       modal: false,
       item: {},
       msg: null,
-      provider: null
+      provider: {}
     };
   },
   mounted: function mounted() {
@@ -144,12 +146,10 @@ __webpack_require__.r(__webpack_exports__);
     },
     openWhatsapp: function openWhatsapp(i) {
       this.item = i;
-      this.provider = i.providers[0].id;
+      this.provider = i.providers[0];
       this.modal = true;
       this.msg = i.name + ' - ' + i.diff;
     },
-    sendMessage: function sendMessage() {},
-    openModal: function openModal() {},
     done: function done(i) {
       var _this2 = this;
 
@@ -427,11 +427,11 @@ var render = function() {
                                   outlined: ""
                                 },
                                 model: {
-                                  value: _vm.provider,
+                                  value: _vm.provider.id,
                                   callback: function($$v) {
-                                    _vm.provider = $$v
+                                    _vm.$set(_vm.provider, "id", $$v)
                                   },
-                                  expression: "provider"
+                                  expression: "provider.id"
                                 }
                               }),
                               _vm._v(" "),
@@ -482,8 +482,21 @@ var render = function() {
                       _c(
                         "v-btn",
                         {
-                          attrs: { color: "blue darken-1", text: "" },
-                          on: { click: _vm.sendMessage }
+                          attrs: {
+                            color: "blue darken-1",
+                            text: "",
+                            href:
+                              "https://api.whatsapp.com/send?phone=" +
+                              _vm.provider.phone +
+                              "&text=" +
+                              encodeURIComponent(this.msg),
+                            target: "_blank"
+                          },
+                          on: {
+                            click: function($event) {
+                              _vm.modal = false
+                            }
+                          }
                         },
                         [
                           _vm._v(
