@@ -7,15 +7,19 @@ use App\Models\Cuisine;
 use App\Models\Ingredient;
 use App\Models\Order;
 use App\Models\Purchase;
-use App\Models\Ration;
+use App\Models\PurchaseIngredient;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PurchaseController extends Controller
 {
     public function index(): JsonResponse
     {
-        $purchase = Purchase::whereDate('date', Carbon::tomorrow())->first();
+        $cuisine = Cuisine::where('is_on_duty', true)->first();
+
+        $purchase = Purchase::whereDate('date', $cuisine->date)->first();
         return response()->json(new PurchaseCollection($purchase));
     }
 
@@ -24,120 +28,83 @@ class PurchaseController extends Controller
         $cuisine = Cuisine::where('is_on_duty', true)->first();
         $iiko = new IikoController();
         $token = $iiko->getAuthToken();
-        $link = '/resto/api/v2/entities/products/list?types=DISH&parentIds=' . $cuisine->iiko_id . '&key=';
-        $dishes = $iiko->doRequest($token, $link);
-
         $today = Carbon::today()->format('Y-m-d');
 
-        $rations = Ration::where('is_required', true)->get();
-        $r_numbers = $rations->map(function ($r) {
-            return $r->iiko_id;
-        });
-
-        $s = Order::where('is_active', true)->where('type', 1)->whereIn('size', [1, 2])->count();
-        $m = Order::where('is_active', true)->where('type', 1)->whereIn('size', [3])->count();
-        $l = Order::where('is_active', true)->where('type', 1)->whereIn('size', [4, 5])->count();
-
-        $purchase = Purchase::whereDate('date', Carbon::tomorrow())->first();
+        $purchase = Purchase::whereDate('date', $cuisine->date)->first();
 
         if(!$purchase) {
             $purchase = new Purchase();
             $purchase->cuisine_id = $cuisine->id;
-            $purchase->date = Carbon::tomorrow()->toDateString();
-        }else {
+            $purchase->date = $cuisine->date;
+        }elseif($purchase->cuisine_id !== $cuisine->id) {
             $purchase->cuisine_id = $cuisine->id;
+            $purchase->ingredients()->delete();
         }
 
-        $purchase->s = $s;
-        $purchase->m = $m;
-        $purchase->l = $l;
         $purchase->save();
+        $purchase->sizes()->delete();
 
-        $array = [];
+        PurchaseIngredient::where('purchase_id', $purchase->id)
+            ->update(['total' => 0]);
 
-        if (is_array($dishes)) {
-            foreach ($dishes as $dish) {
+        foreach ($cuisine->sizes as $size) {
+            $count = Order::where('is_active', true)
+                ->where('type', Order::EAT_FIT_LITE)
+                ->where('size', $size->type)
+                ->where('city_id', Auth::user()->city_id)
+                ->count();
 
-                $first = substr($dish['name'], 0, 1);
-                $t = substr($dish['name'], 2, 1);
-                /*if (is_numeric($first)) {
-                    continue;
-                }*/
+            $purchase->sizes()->create([
+                'type' => $size->type,
+                'name' => $size->name,
+                'total' => $count
+            ]);
 
-                $first = (int)$first;
-                $t = (int)$t;
+            $link = '/resto/api/v2/assemblyCharts/getPrepared?date=' . $today . '&productId=' . $size->iiko_id . '&key=';
+            $ingredients = $iiko->doRequest($token, $link);
 
-                /*if (!in_array($first, $r_numbers->toArray())){
-                    continue;
-                }*/
+            foreach ($ingredients['preparedCharts'][0]['items'] as $i) {
+                $ing = Ingredient::where('iiko_id', $i['productId'])->first();
+                if (!$ing) continue;
 
-                $link = '/resto/api/v2/assemblyCharts/getTree?date=' . $today . '&productId=' . $dish['id'] . '&key=';
-                $ingredients = $iiko->doRequest($token, $link);
+                $pi = PurchaseIngredient::where('purchase_id', $purchase->id)->where('ingredient_id', $ing->id)->first();
 
-                dd($dish, $ingredients);
-                if (is_array($ingredients)) {
-                    $ingredients = $ingredients['preparedCharts'][0]['items'];
-                    dd($first, $t, $ingredients);
-                    $i = [
-                        'r' => $first,
-                        't' => $t
-                    ];
+                $total = $i['amount'] * $count;
 
-                    if ($t === 1) {
-                        $count = $s;
-                    }elseif ($t === 2) {
-                        $count = $m;
-                    }else{
-                        $count = $l;
-                    }
-
-                    foreach ($ingredients as $te => $ingredient) {
-                        $ing = Ingredient::where('iiko_id', $ingredient['productId'])->first();
-                        if (!$ing) continue;
-
-                        if ($te === 8) {
-                            dd($first,$dish,$ing, $ingredients);
-                        }
-                        $i['items'][] = [
-                            'id' => $ing->id,
-                            'amount' => $ingredient['amount'],
-                            'count' => $ingredient['amount'] * $count
-                        ];
-                    }
-
-                    $array[] = $i;
+                if ($pi) {
+                    $pi->total = $pi->total + $total;
+                    $pi->save();
                 }else {
-                    return response()->json([
-                        'status' => false,
-                        'msg' => $ingredients. 'asds'
+                    $purchase->ingredients()->attach($ing->id, [
+                        'total' => $total
                     ]);
                 }
             }
-            $result = [];
-
-            foreach ($array as $item) {
-                foreach ($item['items'] as $v) {
-
-                    $index = array_search($v['id'], array_keys($result));
-
-                    if ($index) {
-                        $result[$v['id']]['total'] += $v['count'];
-                    }else {
-                        $result[$v['id']] = [
-                            'total' => $v['count']
-                        ];
-                    }
-
-                    $result[$v['id']]['total'] = round($result[$v['id']]['total'], 4);
-                }
-            }
-
-            $purchase->ingredients()->sync($result);
         }
-
         return response()->json([
             'status' => true,
             'msg' => 'Success!'
         ]);
+    }
+
+    public function enterLeftNumber(Request $request): JsonResponse
+    {
+        $pi = PurchaseIngredient::where('purchase_id', $request->p_id)->where('ingredient_id', $request->i_id)->first();
+
+        $pi->left = $request->left;
+        $pi->diff = $pi->total - $request->left;
+        $pi->save();
+
+        return response()->json([
+            'status' => true,
+            'msg' => 'Остаток сохранен'
+        ]);
+    }
+
+    public function done(Request $request) {
+        $pi = PurchaseIngredient::where('purchase_id', $request->p_id)->where('ingredient_id', $request->i_id)->first();
+
+        $pi->done =! $pi->done;
+        $pi->save();
     }
 }

@@ -117,13 +117,24 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         label: 'Имя',
         type: 'v-text-field',
         value: null
+      }, {
+        model: 'ingredients',
+        label: 'Состав',
+        type: 'v-autocomplete',
+        chips: true,
+        multiple: true,
+        item_name: 'name',
+        items: [],
+        value: null
       }],
-      link: '/api/pcategories',
-      is_edit: false
+      link: '/api/p-categories',
+      is_edit: false,
+      ingredients: []
     };
   },
   mounted: function mounted() {
     this.fetchPCategories();
+    this.getIngredients();
   },
   methods: {
     fetchPCategories: function fetchPCategories() {
@@ -137,6 +148,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _context.next = 2;
                 return axios.get('/api/p-categories').then(function (response) {
                   _this.items = response.data;
+                  console.log(_this.items);
                 })["catch"](function (error) {
                   console.log(error);
                 })["finally"](function () {
@@ -149,6 +161,30 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             }
           }
         }, _callee);
+      }))();
+    },
+    getIngredients: function getIngredients() {
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return axios.get('/api/ingredients').then(function (response) {
+                  _this2.ingredients = response.data;
+                  _this2.models[1].items = response.data;
+                })["catch"](function (error) {
+                  console.log(error);
+                });
+
+              case 2:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
       }))();
     },
     create: function create() {

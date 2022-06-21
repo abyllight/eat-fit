@@ -37,7 +37,8 @@ class ProviderController extends Controller
         $request->validate([
             'name' => 'required',
             'phone' => 'required|min:11',
-            'city_id' => 'required'
+            'city_id' => 'required',
+            'categories' => 'required'
         ]);
 
         $item = new Provider();
@@ -48,6 +49,8 @@ class ProviderController extends Controller
         $item->description = $request->description;
 
         $item->save();
+
+        $item->categories()->sync($request->categories);
 
         return response()->json([
             'status' => true,
@@ -69,7 +72,8 @@ class ProviderController extends Controller
         $request->validate([
             'name' => 'required',
             'phone' => 'required|min:11',
-            'city_id' => 'required'
+            'city_id' => 'required',
+            'categories' => 'required'
         ]);
 
         $item = Provider::find($id);
@@ -88,6 +92,8 @@ class ProviderController extends Controller
         $item->description = $request->description;
 
         $item->save();
+
+        $item->categories()->sync($request->categories);
 
         return response()->json([
             'status' => true,

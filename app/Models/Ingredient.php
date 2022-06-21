@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Ingredient extends Model
 {
@@ -29,13 +30,18 @@ class Ingredient extends Model
         return $this->belongsToMany(Category::class, 'category_ingredients', 'ingredient_id', 'category_id');
     }
 
+    public function p_categories(): BelongsToMany
+    {
+        return $this->belongsToMany(PCategory::class, 'p_category_ingredients', 'ingredient_id', 'p_category_id');
+    }
+
     public function purchases(): BelongsToMany
     {
         return $this->belongsToMany(Purchase::class, 'purchase_ingredients', 'ingredient_id', 'purchase_id')
             ->withPivot('left', 'total');
     }
 
-    public function getCategoryIds()
+    public function getCategoryIds(): array
     {
         return array_map(function ($item){
             return $item['id'];

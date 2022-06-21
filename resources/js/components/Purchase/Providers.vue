@@ -82,6 +82,7 @@ export default {
             { text: 'Действия', value: 'actions', sortable: false },
         ],
         items: [],
+        categories: [],
         id: null,
         roles: [],
         cities: [],
@@ -119,6 +120,16 @@ export default {
                 type: 'v-textarea',
                 value: null
             },
+            {
+                model: 'categories',
+                label: 'Категории',
+                type: 'v-autocomplete',
+                chips: true,
+                multiple: true,
+                item_name: 'name',
+                items: [],
+                value: null
+            },
         ],
         link: '/api/providers',
         is_edit: false
@@ -126,6 +137,7 @@ export default {
     mounted() {
         this.fetchProviders()
         this.fetchCities()
+        this.fetchPCategories()
     },
     methods: {
         async fetchProviders() {
@@ -133,6 +145,18 @@ export default {
                 .get('/api/providers')
                 .then(response => {
                     this.items = response.data
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+                .finally(() => (this.loading = false))
+        },
+        async fetchPCategories() {
+            await axios
+                .get('/api/p-categories')
+                .then(response => {
+                    this.categories = response.data
+                    this.models[5].items = response.data
                 })
                 .catch(error => {
                     console.log(error)

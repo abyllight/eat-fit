@@ -6,16 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class CuisineSize extends Model
+class PurchaseSize extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
-        'name', 'cuisine_id', 'iiko_id', 'type'
+        'name', 'type', 'total'
     ];
 
-    public function cuisine(): BelongsTo
+    use HasFactory;
+
+    public function purchase(): BelongsTo
     {
-        return $this->belongsTo(Cuisine::class, 'cuisine_id', 'id');
+        return $this->belongsTo(Purchase::class, 'purchase_id', 'id');
     }
 }

@@ -56,12 +56,71 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "PurchaseList",
   data: function data() {
     return {
       purchase: {},
-      loading: false
+      loading: false,
+      modal: false,
+      item: {},
+      left: null
     };
   },
   mounted: function mounted() {
@@ -71,8 +130,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     fetchIngredients: function fetchIngredients() {
       var _this = this;
 
-      axios.get('/api/purchase-list').then(function (response) {
+      axios.get('/api/purchase-list-kitchen').then(function (response) {
         _this.purchase = response.data;
+        console.log(_this.purchase);
       })["catch"](function (error) {
         console.log(error);
       });
@@ -87,7 +147,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _this2.loading = true;
                 _context.next = 3;
-                return axios.get('/api/purchase-list/calculate').then(function (res) {
+                return axios.get('/api/purchase-list-kitchen/calculate').then(function (res) {
                   _this2.$store.dispatch('showAlert', {
                     isVisible: true,
                     msg: res.data.msg,
@@ -107,6 +167,34 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }, _callee);
       }))();
+    },
+    openModal: function openModal(item) {
+      this.modal = true;
+      this.item = item;
+      this.left = item.left;
+    },
+    save: function save() {
+      var _this3 = this;
+
+      axios.post('/api/purchase-list-kitchen/left', {
+        i_id: this.item.id,
+        p_id: this.purchase.id,
+        left: this.left
+      }).then(function (res) {
+        _this3.$store.dispatch('showAlert', {
+          isVisible: true,
+          msg: res.data.msg,
+          color: 'success',
+          type: 'success'
+        });
+
+        _this3.modal = false;
+        _this3.item = {};
+
+        _this3.fetchIngredients();
+      })["catch"](function (err) {
+        console.log(err);
+      });
     }
   }
 });
@@ -203,88 +291,218 @@ var render = function() {
       _c(
         "v-row",
         [
+          _c("v-col", { attrs: { cols: "12" } }, [
+            _c(
+              "div",
+              {
+                staticClass: "d-flex align-center justify-space-between mb-10"
+              },
+              [
+                _c("h1", {}, [
+                  _vm._v(
+                    _vm._s(_vm.purchase.cuisine) +
+                      " - " +
+                      _vm._s(_vm.purchase.date)
+                  )
+                ]),
+                _vm._v(" "),
+                _c(
+                  "v-btn",
+                  {
+                    attrs: {
+                      color: "primary",
+                      loading: _vm.loading,
+                      disabled: _vm.loading
+                    },
+                    on: { click: _vm.calculatePurchase }
+                  },
+                  [_vm._v("\n                    Get\n                ")]
+                )
+              ],
+              1
+            )
+          ])
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-row",
+        [
           _c(
             "v-col",
-            { attrs: { cols: "12", md: "10" } },
-            [
-              _c(
-                "div",
+            { attrs: { cols: "12" } },
+            _vm._l(_vm.purchase.ingredients, function(i, key) {
+              return _c(
+                "v-card",
                 {
-                  staticClass: "d-flex align-center justify-space-between mb-10"
+                  key: i.id,
+                  staticClass: "mb-4",
+                  attrs: { color: !i.diff ? "grey lighten-1" : "" },
+                  on: {
+                    click: function($event) {
+                      return _vm.openModal(i)
+                    }
+                  }
                 },
                 [
-                  _c("h1", {}, [
-                    _vm._v(
-                      _vm._s(_vm.purchase.cuisine) +
-                        " - " +
-                        _vm._s(_vm.purchase.date)
-                    )
-                  ]),
-                  _vm._v(" "),
                   _c(
-                    "v-btn",
-                    {
-                      attrs: {
-                        color: "primary",
-                        loading: _vm.loading,
-                        disabled: _vm.loading
-                      },
-                      on: { click: _vm.calculatePurchase }
-                    },
-                    [_vm._v("\n                    Get\n                ")]
+                    "v-card-text",
+                    [
+                      _c(
+                        "v-row",
+                        [
+                          _c("v-col", { attrs: { cols: "12", md: "6" } }, [
+                            _c("h3", [
+                              _vm._v(_vm._s(key + 1) + ". " + _vm._s(i.name))
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("v-col", { attrs: { cols: "12", md: "2" } }, [
+                            _c("h5", { staticClass: "text-uppercase" }, [
+                              _vm._v("Остаток:")
+                            ]),
+                            _vm._v(" "),
+                            _c("strong", { staticClass: "blue--text" }, [
+                              _vm._v(_vm._s(i.left))
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("v-col", { attrs: { cols: "12", md: "2" } }, [
+                            _c("h5", { staticClass: "text-uppercase" }, [
+                              _vm._v("Итого:")
+                            ]),
+                            _vm._v(" "),
+                            _c("strong", { staticClass: "red--text" }, [
+                              _vm._v(_vm._s(i.total))
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("v-col", { attrs: { cols: "12", md: "2" } }, [
+                            _c("h5", { staticClass: "text-uppercase" }, [
+                              _vm._v("Нужно взять:")
+                            ]),
+                            _vm._v(" "),
+                            _c("strong", { staticClass: "green--text" }, [
+                              _vm._v(_vm._s(i.diff))
+                            ])
+                          ])
+                        ],
+                        1
+                      )
+                    ],
+                    1
                   )
                 ],
                 1
-              ),
-              _vm._v(" "),
-              _vm._l(_vm.purchase.ingredients, function(i, key) {
-                return _c(
-                  "v-sheet",
-                  {
-                    key: i.id,
-                    staticClass: "mb-8 px-4",
-                    attrs: { rounded: "", color: "grey lighten-3" }
-                  },
-                  [
-                    _c(
-                      "v-row",
-                      { attrs: { align: "center" } },
-                      [
-                        _c("v-col", [
-                          _vm._v(
-                            "\n                        " +
-                              _vm._s(key + 1) +
-                              ". " +
-                              _vm._s(i.name) +
-                              "\n                    "
+              )
+            }),
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-row",
+        { attrs: { justify: "center" } },
+        [
+          _c(
+            "v-dialog",
+            {
+              attrs: { scrollable: "", "max-width": "500px" },
+              model: {
+                value: _vm.modal,
+                callback: function($$v) {
+                  _vm.modal = $$v
+                },
+                expression: "modal"
+              }
+            },
+            [
+              _c(
+                "v-card",
+                [
+                  _c("v-card-title", [_vm._v(_vm._s(_vm.item.name))]),
+                  _vm._v(" "),
+                  _c("v-divider"),
+                  _vm._v(" "),
+                  _c(
+                    "v-card-text",
+                    [
+                      _c(
+                        "v-row",
+                        [
+                          _c(
+                            "v-col",
+                            [
+                              _c("v-text-field", {
+                                staticClass: "mt-5",
+                                attrs: {
+                                  outlined: "",
+                                  clearable: "",
+                                  type: "number"
+                                },
+                                model: {
+                                  value: _vm.left,
+                                  callback: function($$v) {
+                                    _vm.left = $$v
+                                  },
+                                  expression: "left"
+                                }
+                              })
+                            ],
+                            1
                           )
-                        ]),
-                        _vm._v(" "),
-                        _c(
-                          "v-col",
-                          { attrs: { cols: "2" } },
-                          [
-                            _c("v-text-field", {
-                              attrs: { type: "number", clearable: "" }
-                            })
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c("v-col", { attrs: { cols: "2" } }, [
-                          _c("strong", { staticClass: "ml-4" }, [
-                            _vm._v(_vm._s(i.total))
-                          ])
-                        ])
-                      ],
-                      1
-                    )
-                  ],
-                  1
-                )
-              })
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c("v-divider"),
+                  _vm._v(" "),
+                  _c(
+                    "v-card-actions",
+                    [
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "blue darken-1", text: "" },
+                          on: {
+                            click: function($event) {
+                              _vm.modal = false
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        Закрыть\n                    "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "blue darken-1", text: "" },
+                          on: { click: _vm.save }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        Сохранить\n                    "
+                          )
+                        ]
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
             ],
-            2
+            1
           )
         ],
         1

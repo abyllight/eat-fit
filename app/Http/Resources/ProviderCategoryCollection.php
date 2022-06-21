@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProviderCollection extends JsonResource
+class ProviderCategoryCollection extends JsonResource
 {
     /**
      * Transform the resource collection into an array.
@@ -21,12 +21,8 @@ class ProviderCollection extends JsonResource
             'id'       => $this->id,
             'name'     => $this->name,
             'city_id'  => $this->city_id,
-            'city'     => City::getCity($this->city_id),
-            'phone'    => User::beautifyMobile($this->phone),
-            'address'  => $this->address,
-            'description' => $this->description,
-            'categories' => $this->categories,
-            'category_ids' => $this->getCategoryIds()
+            'ingredients' => $this->ingredients,
+            'ingredient_ids' => $this->getIngredientIds()
         ];
     }
 }

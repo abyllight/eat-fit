@@ -116,6 +116,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         sortable: false
       }],
       items: [],
+      categories: [],
       id: null,
       roles: [],
       cities: [],
@@ -147,6 +148,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         label: 'Описание',
         type: 'v-textarea',
         value: null
+      }, {
+        model: 'categories',
+        label: 'Категории',
+        type: 'v-autocomplete',
+        chips: true,
+        multiple: true,
+        item_name: 'name',
+        items: [],
+        value: null
       }],
       link: '/api/providers',
       is_edit: false
@@ -155,6 +165,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   mounted: function mounted() {
     this.fetchProviders();
     this.fetchCities();
+    this.fetchPCategories();
   },
   methods: {
     fetchProviders: function fetchProviders() {
@@ -182,7 +193,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee);
       }))();
     },
-    fetchCities: function fetchCities() {
+    fetchPCategories: function fetchPCategories() {
       var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
@@ -191,11 +202,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.next = 2;
-                return axios.get('/api/cities').then(function (response) {
-                  _this2.roles = response.data;
-                  _this2.models[2].items = response.data;
+                return axios.get('/api/p-categories').then(function (response) {
+                  _this2.categories = response.data;
+                  _this2.models[5].items = response.data;
                 })["catch"](function (error) {
                   console.log(error);
+                })["finally"](function () {
+                  return _this2.loading = false;
                 });
 
               case 2:
@@ -204,6 +217,30 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             }
           }
         }, _callee2);
+      }))();
+    },
+    fetchCities: function fetchCities() {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.next = 2;
+                return axios.get('/api/cities').then(function (response) {
+                  _this3.roles = response.data;
+                  _this3.models[2].items = response.data;
+                })["catch"](function (error) {
+                  console.log(error);
+                });
+
+              case 2:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
       }))();
     },
     create: function create() {

@@ -156,9 +156,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/customer-orders', [ShopOrderController::class, 'index']);
 
-    Route::get('/purchase-list', [PurchaseController::class, 'index']);
-    Route::get('/purchase-list/calculate', [PurchaseController::class, 'calculateIngredients']);
-
+    Route::get('/purchase-list-kitchen', [PurchaseController::class, 'index']);
+    Route::get('/purchase-list-kitchen/calculate', [PurchaseController::class, 'calculateIngredients']);
+    Route::post('/purchase-list-kitchen/left', [PurchaseController::class, 'enterLeftNumber']);
+    Route::post('/purchase-list-kitchen/done', [PurchaseController::class, 'done']);
 });
 
 Route::get('/promocode/{promocode}', [PromocodeController::class, 'check']);

@@ -8,6 +8,7 @@ use App\Models\Cuisine;
 use App\Models\CuisineSize;
 use App\Models\Dish;
 use App\Models\Ingredient;
+use App\Models\Order;
 use App\Models\Ration;
 use App\Models\Select;
 use App\Models\Week;
@@ -108,11 +109,32 @@ class CuisineController extends Controller
                         $first = substr($folder['name'], 0, 1);
 
                         if ($first === '!') {
+                            $explode = explode(' ', $folder['name']);
+
+                            switch ($explode[2]) {
+                                case 'XS':
+                                    $type = Order::XS;
+                                    break;
+                                case 'S':
+                                    $type = Order::S;
+                                    break;
+                                case 'M':
+                                    $type = Order::M;
+                                    break;
+                                case 'L':
+                                    $type = Order::L;
+                                    break;
+                                default:
+                                    $type = Order::XL;
+                                    break;
+                            }
+
                             CuisineSize::updateOrCreate(
                                 ['iiko_id' => $folder['id']],
                                 [
                                     'name' => $folder['name'],
-                                    'cuisine_id' => $c->id
+                                    'cuisine_id' => $c->id,
+                                    'type' => $type
                                 ]
                             );
                         }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProviderCategoryCollection;
 use App\Models\PCategory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class ProviderCategoryController extends Controller
     public function index(): JsonResponse
     {
         $categories = PCategory::where('city_id',  Auth::user()->city_id)->get();
-        return response()->json($categories);
+        return response()->json(ProviderCategoryCollection::collection($categories));
     }
 
     /**
@@ -29,7 +30,8 @@ class ProviderCategoryController extends Controller
     public function store(Request $request): JsonResponse
     {
         $request->validate([
-            'name' => 'required'
+            'name' => 'required',
+            'ingredients' => 'required'
         ]);
 
         $item = new PCategory();
@@ -37,6 +39,8 @@ class ProviderCategoryController extends Controller
         $item->city_id = Auth::user()->city_id;
 
         $item->save();
+
+        $item->ingredients()->sync($request->ingredients);
 
         return response()->json([
             'status' => true,
@@ -54,7 +58,8 @@ class ProviderCategoryController extends Controller
     public function update(Request $request, int $id): JsonResponse
     {
         $request->validate([
-            'name' => 'required'
+            'name' => 'required',
+            'ingredients' => 'required'
         ]);
 
         $item = PCategory::find($id);
@@ -70,6 +75,8 @@ class ProviderCategoryController extends Controller
         $item->city_id = Auth::user()->city_id;
 
         $item->save();
+
+        $item->ingredients()->sync($request->ingredients);
 
         return response()->json([
             'status' => true,
@@ -94,6 +101,7 @@ class ProviderCategoryController extends Controller
             ]);
         }
 
+        $item->ingredients()->detach();
         $item->delete();
 
         return response()->json([

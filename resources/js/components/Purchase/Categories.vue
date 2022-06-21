@@ -89,13 +89,25 @@ export default {
                 label: 'Имя',
                 type: 'v-text-field',
                 value: null
-            }
+            },
+            {
+                model: 'ingredients',
+                label: 'Состав',
+                type: 'v-autocomplete',
+                chips: true,
+                multiple: true,
+                item_name: 'name',
+                items: [],
+                value: null
+            },
         ],
-        link: '/api/pcategories',
-        is_edit: false
+        link: '/api/p-categories',
+        is_edit: false,
+        ingredients: []
     }),
     mounted() {
         this.fetchPCategories()
+        this.getIngredients()
     },
     methods: {
         async fetchPCategories() {
@@ -103,11 +115,23 @@ export default {
                 .get('/api/p-categories')
                 .then(response => {
                     this.items = response.data
+                    console.log(this.items)
                 })
                 .catch(error => {
                     console.log(error)
                 })
                 .finally(() => (this.loading = false))
+        },
+        async getIngredients(){
+            await axios
+                .get('/api/ingredients')
+                .then(response => {
+                    this.ingredients = response.data
+                    this.models[1].items = response.data
+                })
+                .catch(error => {
+                    console.log(error)
+                })
         },
         create(){
             this.dialog = true

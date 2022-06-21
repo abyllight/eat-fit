@@ -155,17 +155,23 @@ export default {
                 roles: ['admin', 'purchase'],
                 links: [
                     {
-                        title: 'Поставщики',
-                        link: '/providers',
-                        icon: 'format-list-numbered',
+                        title: 'Категории',
+                        link: '/p-categories',
+                        icon: 'animation',
                         roles: ['admin', 'purchase']
                     },
                     {
-                        title: 'Категории',
-                        link: '/p-categories',
+                        title: 'Поставщики',
+                        link: '/providers',
+                        icon: 'account-box',
+                        roles: ['admin', 'purchase']
+                    },
+                    {
+                        title: 'Список для закупа',
+                        link: '/purchase-list',
                         icon: 'format-list-numbered',
                         roles: ['admin', 'purchase']
-                    }
+                    },
                 ]
             },
             {
@@ -174,14 +180,14 @@ export default {
                 links: [
                     {
                         title: 'Список для закупа',
-                        link: '/purchase-list',
+                        link: '/purchase-list-kitchen',
                         icon: 'format-list-numbered',
                         roles: ['admin', 'kitchen']
                     },
                     {
                         title: 'Список Селекты',
                         link: '/select-list',
-                        icon: 'format-list-numbered',
+                        icon: 'view-grid',
                         roles: ['admin', 'kitchen']
                     }
                 ]

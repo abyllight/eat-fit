@@ -1,36 +1,92 @@
 <template>
     <div>
         <v-row>
-            <v-col cols="12" md="10">
+            <v-col cols="12">
                 <div class="d-flex align-center justify-space-between mb-10">
                     <h1 class="">{{purchase.cuisine}} - {{purchase.date}}</h1>
                     <v-btn color="primary" @click="calculatePurchase" :loading="loading" :disabled="loading">
                         Get
                     </v-btn>
                 </div>
-                <v-sheet
+            </v-col>
+        </v-row>
+
+        <v-row>
+            <v-col cols="12">
+                <v-card
                     v-for="(i, key) in purchase.ingredients"
                     :key="i.id"
-                    class="mb-8 px-4"
-                    rounded
-                    color="grey lighten-3"
+                    class="mb-4"
+                    @click="openModal(i)"
+                    :color="!i.diff ? 'grey lighten-1' : ''"
                 >
-                    <v-row align="center">
-                        <v-col>
-                            {{key+1}}. {{i.name}}
-                        </v-col>
-                        <v-col cols="2">
-                            <v-text-field
-                                type="number"
-                                clearable
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="2">
-                            <strong class="ml-4">{{i.total}}</strong>
-                        </v-col>
-                    </v-row>
-                </v-sheet>
+                    <v-card-text>
+                        <v-row>
+                            <v-col cols="12" md="6">
+                                <h3>{{key+1}}. {{i.name}}</h3>
+                            </v-col>
+                            <v-col cols="12" md="2">
+                                <h5 class="text-uppercase">Остаток:</h5>
+                                <strong class="blue--text">{{i.left}}</strong>
+                            </v-col>
+                            <v-col cols="12" md="2">
+                                <h5 class="text-uppercase">Итого:</h5>
+                                <strong class="red--text">{{i.total}}</strong>
+                            </v-col>
+                            <v-col cols="12" md="2">
+                                <h5 class="text-uppercase">Нужно взять:</h5>
+                                <strong class="green--text">{{i.diff}}</strong>
+                            </v-col>
+                        </v-row>
+                    </v-card-text>
+                </v-card>
             </v-col>
+        </v-row>
+
+        <v-row justify="center">
+            <v-dialog
+                v-model="modal"
+                scrollable
+                max-width="500px"
+            >
+                <v-card>
+                    <v-card-title>{{item.name}}</v-card-title>
+                    <v-divider></v-divider>
+
+                    <v-card-text>
+                        <v-row>
+                            <v-col>
+                                <v-text-field
+                                    v-model="left"
+                                    outlined
+                                    clearable
+                                    class="mt-5"
+                                    type="number"
+                                >
+                                </v-text-field>
+                            </v-col>
+                        </v-row>
+                    </v-card-text>
+
+                    <v-divider></v-divider>
+                    <v-card-actions>
+                        <v-btn
+                            color="blue darken-1"
+                            text
+                            @click="modal = false"
+                        >
+                            Закрыть
+                        </v-btn>
+                        <v-btn
+                            color="blue darken-1"
+                            text
+                            @click="save"
+                        >
+                            Сохранить
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
         </v-row>
     </div>
 </template>
@@ -40,23 +96,27 @@ export default {
     name: "PurchaseList",
     data: () => ({
         purchase: {},
-        loading: false
+        loading: false,
+        modal: false,
+        item: {},
+        left: null
     }),
     mounted() {
         this.fetchIngredients()
     },
     methods: {
         fetchIngredients() {
-            axios.get('/api/purchase-list')
+            axios.get('/api/purchase-list-kitchen')
                 .then(response => {
                     this.purchase = response.data
+                    console.log(this.purchase)
                 }).catch(error => {
                     console.log(error)
             })
         },
         async calculatePurchase() {
             this.loading = true
-            await axios.get('/api/purchase-list/calculate')
+            await axios.get('/api/purchase-list-kitchen/calculate')
                 .then(res => {
                     this.$store.dispatch('showAlert', {
                         isVisible: true,
@@ -68,6 +128,31 @@ export default {
                     this.fetchIngredients()
                 })
                 .catch(err => {})
+        },
+        openModal(item) {
+            this.modal = true
+            this.item = item
+            this.left = item.left
+        },
+        save() {
+            axios.post('/api/purchase-list-kitchen/left', {
+                i_id: this.item.id,
+                p_id: this.purchase.id,
+                left: this.left
+            }).then(res => {
+                this.$store.dispatch('showAlert', {
+                    isVisible: true,
+                    msg: res.data.msg,
+                    color: 'success',
+                    type: 'success'
+                })
+
+                this.modal = false
+                this.item = {}
+                this.fetchIngredients()
+            }).catch(err => {
+                console.log(err)
+            })
         }
     }
 }

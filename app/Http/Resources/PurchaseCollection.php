@@ -17,9 +17,9 @@ class PurchaseCollection extends JsonResource
     public function toArray($request): array
     {
         return [
-            'id'    => $this->id,
-            'cuisine' => $this->cuisine->name,
-            'date' => $this->date,
+            'id'          => $this->id,
+            'cuisine'     => $this->cuisine->name,
+            'date'        => $this->date,
             'ingredients' => PurchaseIngredientCollection::collection($this->ingredients()->orderBy('name')->get())
         ];
     }

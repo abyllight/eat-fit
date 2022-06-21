@@ -86,6 +86,15 @@ const router = new VueRouter({
             component: () => import('./components/Purchase/Categories')
         },
         {
+            path: '/purchase-list',
+            name: 'purchase_list',
+            meta: {
+                auth: true,
+                roles: ['admin', 'purchase']
+            },
+            component: () => import('./components/Purchase/List')
+        },
+        {
             path: '/users',
             name: 'users',
             meta: {
@@ -276,11 +285,11 @@ const router = new VueRouter({
             component: () => import('./components/Shop/BMixes')
         },
         {
-            path: '/purchase-list',
-            name: 'purchase_list',
+            path: '/purchase-list-kitchen',
+            name: 'purchase_list_kitchen',
             meta: {
                 auth: true,
-                roles: ['admin', 'kitchen', 'purchase']
+                roles: ['admin', 'kitchen']
             },
             component: () => import('./components/Kitchen/PurchaseList')
         },
