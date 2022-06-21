@@ -25,7 +25,7 @@ class ProviderCollection extends JsonResource
             'phone'    => User::beautifyMobile($this->phone),
             'address'  => $this->address,
             'description' => $this->description,
-            'categories' => $this->categories,
+            'categories' => $this->getCategoryIds(),
             'category_ids' => $this->getCategoryIds()
         ];
     }

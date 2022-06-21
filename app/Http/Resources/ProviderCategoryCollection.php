@@ -21,7 +21,7 @@ class ProviderCategoryCollection extends JsonResource
             'id'       => $this->id,
             'name'     => $this->name,
             'city_id'  => $this->city_id,
-            'ingredients' => $this->ingredients,
+            'ingredients' => $this->getIngredientIds(),
             'ingredient_ids' => $this->getIngredientIds()
         ];
     }

@@ -148,7 +148,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _context.next = 2;
                 return axios.get('/api/p-categories').then(function (response) {
                   _this.items = response.data;
-                  console.log(_this.items);
                 })["catch"](function (error) {
                   console.log(error);
                 })["finally"](function () {
