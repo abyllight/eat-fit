@@ -112,6 +112,79 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "PurchaseList",
   data: function data() {
@@ -120,11 +193,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       loading: false,
       modal: false,
       item: {},
-      left: null
+      left: null,
+      dialog: false,
+      ingredients: [],
+      chosen: []
     };
   },
   mounted: function mounted() {
     this.fetchIngredients();
+    this.getIngredients();
   },
   methods: {
     fetchIngredients: function fetchIngredients() {
@@ -132,12 +209,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       axios.get('/api/purchase-list-kitchen').then(function (response) {
         _this.purchase = response.data;
-        console.log(_this.purchase);
       })["catch"](function (error) {
         console.log(error);
       });
     },
-    calculatePurchase: function calculatePurchase() {
+    getIngredients: function getIngredients() {
       var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
@@ -145,27 +221,50 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _this2.loading = true;
-                _context.next = 3;
+                _context.next = 2;
+                return axios.get('/api/ingredients').then(function (response) {
+                  _this2.ingredients = response.data;
+                })["catch"](function (error) {
+                  console.log(error);
+                });
+
+              case 2:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
+    calculatePurchase: function calculatePurchase() {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _this3.loading = true;
+                _context2.next = 3;
                 return axios.get('/api/purchase-list-kitchen/calculate').then(function (res) {
-                  _this2.$store.dispatch('showAlert', {
+                  _this3.$store.dispatch('showAlert', {
                     isVisible: true,
                     msg: res.data.msg,
                     color: 'success',
                     type: 'success'
                   });
 
-                  _this2.loading = false;
+                  _this3.loading = false;
 
-                  _this2.fetchIngredients();
+                  _this3.fetchIngredients();
                 })["catch"](function (err) {});
 
               case 3:
               case "end":
-                return _context.stop();
+                return _context2.stop();
             }
           }
-        }, _callee);
+        }, _callee2);
       }))();
     },
     openModal: function openModal(item) {
@@ -174,24 +273,51 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.left = item.left;
     },
     save: function save() {
-      var _this3 = this;
+      var _this4 = this;
 
       axios.post('/api/purchase-list-kitchen/left', {
         i_id: this.item.id,
         p_id: this.purchase.id,
         left: this.left
       }).then(function (res) {
-        _this3.$store.dispatch('showAlert', {
+        _this4.$store.dispatch('showAlert', {
           isVisible: true,
           msg: res.data.msg,
           color: 'success',
           type: 'success'
         });
 
-        _this3.modal = false;
-        _this3.item = {};
+        _this4.modal = false;
+        _this4.item = {};
 
-        _this3.fetchIngredients();
+        _this4.fetchIngredients();
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    },
+    addIngredients: function addIngredients() {
+      var _this5 = this;
+
+      axios.post('/api/purchase-list-kitchen/set/ingredients', {
+        p_id: this.purchase.id,
+        ingredients: this.chosen
+      }).then(function (res) {
+        console.log(res);
+        _this5.dialog = false;
+
+        _this5.fetchIngredients();
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    },
+    removeIngredient: function removeIngredient(id) {
+      var _this6 = this;
+
+      axios.post('/api/purchase-list-kitchen/remove/ingredient', {
+        p_id: this.purchase.id,
+        i_id: id
+      }).then(function (res) {
+        _this6.fetchIngredients();
       })["catch"](function (err) {
         console.log(err);
       });
@@ -327,81 +453,128 @@ var render = function() {
       ),
       _vm._v(" "),
       _c(
-        "v-row",
-        [
-          _c(
-            "v-col",
-            { attrs: { cols: "12" } },
-            _vm._l(_vm.purchase.ingredients, function(i, key) {
-              return _c(
-                "v-card",
-                {
-                  key: i.id,
-                  staticClass: "mb-4",
-                  attrs: { color: !i.diff ? "grey lighten-1" : "" },
-                  on: {
-                    click: function($event) {
-                      return _vm.openModal(i)
-                    }
-                  }
-                },
-                [
-                  _c(
-                    "v-card-text",
-                    [
-                      _c(
-                        "v-row",
-                        [
-                          _c("v-col", { attrs: { cols: "12", md: "6" } }, [
-                            _c("h3", [
-                              _vm._v(_vm._s(key + 1) + ". " + _vm._s(i.name))
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c("v-col", { attrs: { cols: "12", md: "2" } }, [
-                            _c("h5", { staticClass: "text-uppercase" }, [
-                              _vm._v("Остаток:")
-                            ]),
-                            _vm._v(" "),
-                            _c("strong", { staticClass: "blue--text" }, [
-                              _vm._v(_vm._s(i.left))
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c("v-col", { attrs: { cols: "12", md: "2" } }, [
-                            _c("h5", { staticClass: "text-uppercase" }, [
-                              _vm._v("Итого:")
-                            ]),
-                            _vm._v(" "),
-                            _c("strong", { staticClass: "red--text" }, [
-                              _vm._v(_vm._s(i.total))
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c("v-col", { attrs: { cols: "12", md: "2" } }, [
-                            _c("h5", { staticClass: "text-uppercase" }, [
-                              _vm._v("Нужно взять:")
-                            ]),
-                            _vm._v(" "),
-                            _c("strong", { staticClass: "green--text" }, [
-                              _vm._v(_vm._s(i.diff))
-                            ])
-                          ])
-                        ],
-                        1
-                      )
-                    ],
-                    1
-                  )
-                ],
-                1
-              )
-            }),
-            1
-          )
-        ],
+        "v-btn",
+        {
+          attrs: {
+            color: "pink",
+            dark: "",
+            fixed: "",
+            bottom: "",
+            right: "",
+            fab: ""
+          },
+          on: {
+            click: function($event) {
+              _vm.dialog = true
+            }
+          }
+        },
+        [_c("v-icon", [_vm._v("mdi-plus")])],
         1
       ),
+      _vm._v(" "),
+      _vm._l(_vm.purchase.ingredients, function(i, key) {
+        return _c(
+          "v-row",
+          { key: i.id },
+          [
+            _c(
+              "v-col",
+              [
+                i.is_custom
+                  ? _c(
+                      "v-btn",
+                      {
+                        attrs: { icon: "", color: "red" },
+                        on: {
+                          click: function($event) {
+                            return _vm.removeIngredient(i.id)
+                          }
+                        }
+                      },
+                      [_c("v-icon", [_vm._v("mdi-close")])],
+                      1
+                    )
+                  : _vm._e()
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "v-col",
+              { attrs: { cols: "11" } },
+              [
+                _c(
+                  "v-card",
+                  {
+                    staticClass: "mb-4",
+                    attrs: { color: !i.diff ? "grey lighten-1" : "" },
+                    on: {
+                      click: function($event) {
+                        return _vm.openModal(i)
+                      }
+                    }
+                  },
+                  [
+                    _c(
+                      "v-card-text",
+                      [
+                        _c(
+                          "v-row",
+                          [
+                            _c("v-col", { attrs: { cols: "12", md: "6" } }, [
+                              _c("h3", [
+                                _vm._v(_vm._s(key + 1) + ". " + _vm._s(i.name))
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("v-col", { attrs: { cols: "12", md: "2" } }, [
+                              _c("h5", { staticClass: "text-uppercase" }, [
+                                _vm._v("Остаток:")
+                              ]),
+                              _vm._v(" "),
+                              _c("strong", { staticClass: "blue--text" }, [
+                                _vm._v(_vm._s(i.left))
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("v-col", { attrs: { cols: "12", md: "2" } }, [
+                              _c("h5", { staticClass: "text-uppercase" }, [
+                                _vm._v("Итого:")
+                              ]),
+                              _vm._v(" "),
+                              i.left
+                                ? _c("strong", { staticClass: "red--text" }, [
+                                    _vm._v(_vm._s(i.total))
+                                  ])
+                                : _vm._e()
+                            ]),
+                            _vm._v(" "),
+                            _c("v-col", { attrs: { cols: "12", md: "2" } }, [
+                              _c("h5", { staticClass: "text-uppercase" }, [
+                                _vm._v("Нужно взять:")
+                              ]),
+                              _vm._v(" "),
+                              _c("strong", { staticClass: "green--text" }, [
+                                _vm._v(_vm._s(i.diff))
+                              ])
+                            ])
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    )
+                  ],
+                  1
+                )
+              ],
+              1
+            )
+          ],
+          1
+        )
+      }),
       _vm._v(" "),
       _c(
         "v-row",
@@ -506,9 +679,122 @@ var render = function() {
           )
         ],
         1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-row",
+        { attrs: { justify: "center" } },
+        [
+          _c(
+            "v-dialog",
+            {
+              attrs: { scrollable: "", persistent: "", "max-width": "500px" },
+              model: {
+                value: _vm.dialog,
+                callback: function($$v) {
+                  _vm.dialog = $$v
+                },
+                expression: "dialog"
+              }
+            },
+            [
+              _c(
+                "v-card",
+                [
+                  _c("v-card-title", [_vm._v("Добавить ингредиенты")]),
+                  _vm._v(" "),
+                  _c("v-divider"),
+                  _vm._v(" "),
+                  _c(
+                    "v-card-text",
+                    [
+                      _c(
+                        "v-row",
+                        [
+                          _c(
+                            "v-col",
+                            [
+                              _c("v-autocomplete", {
+                                staticClass: "mt-5",
+                                attrs: {
+                                  items: _vm.ingredients,
+                                  "item-value": "id",
+                                  "item-text": "name",
+                                  outlined: "",
+                                  clearable: "",
+                                  multiple: "",
+                                  chips: ""
+                                },
+                                model: {
+                                  value: _vm.chosen,
+                                  callback: function($$v) {
+                                    _vm.chosen = $$v
+                                  },
+                                  expression: "chosen"
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c("v-divider"),
+                  _vm._v(" "),
+                  _c(
+                    "v-card-actions",
+                    [
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "blue darken-1", text: "" },
+                          on: {
+                            click: function($event) {
+                              _vm.dialog = false
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        Закрыть\n                    "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: {
+                            color: "blue darken-1",
+                            text: "",
+                            disabled: _vm.chosen.length === 0
+                          },
+                          on: { click: _vm.addIngredients }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        Добавить\n                    "
+                          )
+                        ]
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
       )
     ],
-    1
+    2
   )
 }
 var staticRenderFns = []

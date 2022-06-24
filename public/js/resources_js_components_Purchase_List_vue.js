@@ -305,7 +305,12 @@ var render = function() {
                   [
                     _c(
                       "v-card",
-                      { attrs: { disabled: i.done === 1 } },
+                      {
+                        attrs: {
+                          disabled: i.done === 1,
+                          color: i.done === 1 ? "grey" : ""
+                        }
+                      },
                       [
                         _c(
                           "v-card-text",

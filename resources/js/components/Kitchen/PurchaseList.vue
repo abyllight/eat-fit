@@ -10,12 +10,33 @@
                 </div>
             </v-col>
         </v-row>
-
-        <v-row>
-            <v-col cols="12">
+        <v-btn
+            color="pink"
+            dark
+            fixed
+            bottom
+            right
+            fab
+            @click="dialog = true"
+        >
+            <v-icon>mdi-plus</v-icon>
+        </v-btn>
+        <v-row
+            v-for="(i, key) in purchase.ingredients"
+            :key="i.id"
+        >
+            <v-col>
+                <v-btn
+                    v-if="i.is_custom"
+                    icon
+                    color="red"
+                    @click="removeIngredient(i.id)"
+                >
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
+            </v-col>
+            <v-col cols="11">
                 <v-card
-                    v-for="(i, key) in purchase.ingredients"
-                    :key="i.id"
                     class="mb-4"
                     @click="openModal(i)"
                     :color="!i.diff ? 'grey lighten-1' : ''"
@@ -31,7 +52,7 @@
                             </v-col>
                             <v-col cols="12" md="2">
                                 <h5 class="text-uppercase">Итого:</h5>
-                                <strong class="red--text">{{i.total}}</strong>
+                                <strong v-if="i.left" class="red--text">{{i.total}}</strong>
                             </v-col>
                             <v-col cols="12" md="2">
                                 <h5 class="text-uppercase">Нужно взять:</h5>
@@ -88,6 +109,58 @@
                 </v-card>
             </v-dialog>
         </v-row>
+
+        <v-row justify="center">
+            <v-dialog
+                v-model="dialog"
+                scrollable
+                persistent
+                max-width="500px"
+            >
+                <v-card>
+                    <v-card-title>Добавить ингредиенты</v-card-title>
+                    <v-divider></v-divider>
+
+                    <v-card-text>
+                        <v-row>
+                            <v-col>
+                                <v-autocomplete
+                                    v-model="chosen"
+                                    :items="ingredients"
+                                    item-value="id"
+                                    item-text="name"
+                                    outlined
+                                    clearable
+                                    multiple
+                                    chips
+                                    class="mt-5"
+                                >
+                                </v-autocomplete>
+                            </v-col>
+                        </v-row>
+                    </v-card-text>
+
+                    <v-divider></v-divider>
+                    <v-card-actions>
+                        <v-btn
+                            color="blue darken-1"
+                            text
+                            @click="dialog = false"
+                        >
+                            Закрыть
+                        </v-btn>
+                        <v-btn
+                            color="blue darken-1"
+                            text
+                            @click="addIngredients"
+                            :disabled="chosen.length === 0"
+                        >
+                            Добавить
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </v-row>
     </div>
 </template>
 
@@ -99,20 +172,33 @@ export default {
         loading: false,
         modal: false,
         item: {},
-        left: null
+        left: null,
+        dialog: false,
+        ingredients: [],
+        chosen: []
     }),
     mounted() {
         this.fetchIngredients()
+        this.getIngredients()
     },
     methods: {
         fetchIngredients() {
             axios.get('/api/purchase-list-kitchen')
                 .then(response => {
                     this.purchase = response.data
-                    console.log(this.purchase)
                 }).catch(error => {
                     console.log(error)
             })
+        },
+        async getIngredients(){
+            await axios
+                .get('/api/ingredients')
+                .then(response => {
+                    this.ingredients = response.data
+                })
+                .catch(error => {
+                    console.log(error)
+                })
         },
         async calculatePurchase() {
             this.loading = true
@@ -153,6 +239,32 @@ export default {
             }).catch(err => {
                 console.log(err)
             })
+        },
+        addIngredients() {
+            axios.post('/api/purchase-list-kitchen/set/ingredients', {
+                p_id: this.purchase.id,
+                ingredients: this.chosen
+            })
+                .then(res => {
+                    console.log(res)
+                    this.dialog = false
+                    this.fetchIngredients()
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+        removeIngredient(id) {
+            axios.post('/api/purchase-list-kitchen/remove/ingredient', {
+                p_id: this.purchase.id,
+                i_id: id
+            })
+                .then(res => {
+                    this.fetchIngredients()
+                })
+                .catch(err => {
+                    console.log(err)
+                })
         }
     }
 }

@@ -160,6 +160,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/purchase-list-kitchen/calculate', [PurchaseController::class, 'calculateIngredients']);
     Route::post('/purchase-list-kitchen/left', [PurchaseController::class, 'enterLeftNumber']);
     Route::post('/purchase-list-kitchen/done', [PurchaseController::class, 'done']);
+    Route::post('/purchase-list-kitchen/set/ingredients', [PurchaseController::class, 'setIngredients']);
+    Route::post('/purchase-list-kitchen/remove/ingredient', [PurchaseController::class, 'removeIngredient']);
 });
 
 Route::get('/promocode/{promocode}', [PromocodeController::class, 'check']);

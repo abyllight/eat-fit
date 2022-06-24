@@ -107,4 +107,18 @@ class PurchaseController extends Controller
         $pi->done =! $pi->done;
         $pi->save();
     }
+
+    public function setIngredients(Request $request) {
+        $p = Purchase::find($request->p_id);
+        foreach ($request->ingredients as $ingredient) {
+            if (!$p->ingredients->contains($ingredient)) {
+                $p->ingredients()->attach($ingredient, ['is_custom' => true]);
+            }
+        }
+    }
+
+    public function removeIngredient(Request $request) {
+        $p = Purchase::find($request->p_id);
+        $p->ingredients()->detach($request->i_id);
+    }
 }

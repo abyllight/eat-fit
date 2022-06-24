@@ -18,7 +18,7 @@
                 ></v-checkbox>
             </v-col>
             <v-col cols="11">
-                <v-card :disabled="i.done === 1">
+                <v-card :disabled="i.done === 1" :color="i.done === 1 ? 'grey' : ''">
                     <v-card-text>
                         <v-row>
                             <v-col cols="12" md="6">

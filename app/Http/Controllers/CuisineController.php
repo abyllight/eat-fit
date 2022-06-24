@@ -9,6 +9,7 @@ use App\Models\CuisineSize;
 use App\Models\Dish;
 use App\Models\Ingredient;
 use App\Models\Order;
+use App\Models\Purchase;
 use App\Models\Ration;
 use App\Models\Select;
 use App\Models\Week;
@@ -175,12 +176,25 @@ class CuisineController extends Controller
                 ]);
 
         if ($duty){
+            $duty->date = Carbon::tomorrow()->toDateString();
             $duty->is_on_duty = true;
             $duty->save();
 
             Select::whereDate('created_at', Carbon::today())->update([
                 'cuisine_id' => $duty->id
             ]);
+
+            $purchase = Purchase::where('date', $duty->date)->first();
+
+            if ($purchase) {
+                $purchase->cuisine_id = $duty->id;
+                $purchase->save();
+            }else{
+                $p = new Purchase();
+                $p->cuisine_id = $duty->id;
+                $p->date = $duty->date;
+                $p->save();
+            }
         }
 
         return response()->json(new CuisineCollection($duty));
