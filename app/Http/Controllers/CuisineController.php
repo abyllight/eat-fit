@@ -211,7 +211,6 @@ class CuisineController extends Controller
         if ($purchase) {
             if ($purchase->cuisine_id !== $cuisine->id) {
                 $purchase->ingredients()->detach();
-                $purchase->sizes()->detach();
             }
             $purchase->cuisine_id = $cuisine->id;
             $purchase->save();
