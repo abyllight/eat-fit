@@ -43,18 +43,23 @@
                 >
                     <v-card-text>
                         <v-row>
-                            <v-col cols="12" md="6">
+                            <v-col cols="12" md="4">
                                 <h3>{{key+1}}. {{i.name}}</h3>
+                                <p>{{i.amount}}</p>
                             </v-col>
-                            <v-col cols="12" md="2">
+                            <v-col cols="6" md="2">
                                 <h5 class="text-uppercase">Остаток:</h5>
                                 <strong class="blue--text">{{i.left}}</strong>
                             </v-col>
-                            <v-col cols="12" md="2">
-                                <h5 class="text-uppercase">Итого:</h5>
-                                <strong v-if="i.left" class="red--text">{{i.total}}</strong>
+                            <v-col cols="6" md="2">
+                                <h5 class="text-uppercase">Экстра:</h5>
+                                <strong class="blue--text">{{i.extra}}</strong>
                             </v-col>
-                            <v-col cols="12" md="2">
+                            <v-col cols="6" md="2">
+                                <h5 class="text-uppercase">Итого:</h5>
+                                <strong v-if="i.left!=null" class="red--text">{{i.total}}</strong>
+                            </v-col>
+                            <v-col cols="6" md="2" class="elevation-3 blue-grey lighten-5">
                                 <h5 class="text-uppercase">Нужно взять:</h5>
                                 <strong class="green--text">{{i.diff}}</strong>
                             </v-col>
@@ -83,6 +88,20 @@
                                     clearable
                                     class="mt-5"
                                     type="number"
+                                    label="Остаток"
+                                >
+                                </v-text-field>
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col>
+                                <v-text-field
+                                    v-model="extra"
+                                    outlined
+                                    clearable
+                                    class="mt-5"
+                                    type="number"
+                                    label="Экстра"
                                 >
                                 </v-text-field>
                             </v-col>
@@ -173,6 +192,7 @@ export default {
         modal: false,
         item: {},
         left: null,
+        extra: null,
         dialog: false,
         ingredients: [],
         chosen: []
@@ -219,12 +239,14 @@ export default {
             this.modal = true
             this.item = item
             this.left = item.left
+            this.extra = item.extra
         },
         save() {
             axios.post('/api/purchase-list-kitchen/left', {
                 i_id: this.item.id,
                 p_id: this.purchase.id,
-                left: this.left
+                left: this.left,
+                extra: this.extra
             }).then(res => {
                 this.$store.dispatch('showAlert', {
                     isVisible: true,
@@ -246,7 +268,6 @@ export default {
                 ingredients: this.chosen
             })
                 .then(res => {
-                    console.log(res)
                     this.dialog = false
                     this.fetchIngredients()
                 })

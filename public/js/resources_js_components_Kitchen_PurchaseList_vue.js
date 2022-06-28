@@ -185,6 +185,25 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "PurchaseList",
   data: function data() {
@@ -194,6 +213,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       modal: false,
       item: {},
       left: null,
+      extra: null,
       dialog: false,
       ingredients: [],
       chosen: []
@@ -271,6 +291,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.modal = true;
       this.item = item;
       this.left = item.left;
+      this.extra = item.extra;
     },
     save: function save() {
       var _this4 = this;
@@ -278,7 +299,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       axios.post('/api/purchase-list-kitchen/left', {
         i_id: this.item.id,
         p_id: this.purchase.id,
-        left: this.left
+        left: this.left,
+        extra: this.extra
       }).then(function (res) {
         _this4.$store.dispatch('showAlert', {
           isVisible: true,
@@ -302,7 +324,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         p_id: this.purchase.id,
         ingredients: this.chosen
       }).then(function (res) {
-        console.log(res);
         _this5.dialog = false;
 
         _this5.fetchIngredients();
@@ -522,13 +543,15 @@ var render = function() {
                         _c(
                           "v-row",
                           [
-                            _c("v-col", { attrs: { cols: "12", md: "6" } }, [
+                            _c("v-col", { attrs: { cols: "12", md: "4" } }, [
                               _c("h3", [
                                 _vm._v(_vm._s(key + 1) + ". " + _vm._s(i.name))
-                              ])
+                              ]),
+                              _vm._v(" "),
+                              _c("p", [_vm._v(_vm._s(i.amount))])
                             ]),
                             _vm._v(" "),
-                            _c("v-col", { attrs: { cols: "12", md: "2" } }, [
+                            _c("v-col", { attrs: { cols: "6", md: "2" } }, [
                               _c("h5", { staticClass: "text-uppercase" }, [
                                 _vm._v("Остаток:")
                               ]),
@@ -538,27 +561,44 @@ var render = function() {
                               ])
                             ]),
                             _vm._v(" "),
-                            _c("v-col", { attrs: { cols: "12", md: "2" } }, [
+                            _c("v-col", { attrs: { cols: "6", md: "2" } }, [
+                              _c("h5", { staticClass: "text-uppercase" }, [
+                                _vm._v("Экстра:")
+                              ]),
+                              _vm._v(" "),
+                              _c("strong", { staticClass: "blue--text" }, [
+                                _vm._v(_vm._s(i.extra))
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("v-col", { attrs: { cols: "6", md: "2" } }, [
                               _c("h5", { staticClass: "text-uppercase" }, [
                                 _vm._v("Итого:")
                               ]),
                               _vm._v(" "),
-                              i.left
+                              i.left != null
                                 ? _c("strong", { staticClass: "red--text" }, [
                                     _vm._v(_vm._s(i.total))
                                   ])
                                 : _vm._e()
                             ]),
                             _vm._v(" "),
-                            _c("v-col", { attrs: { cols: "12", md: "2" } }, [
-                              _c("h5", { staticClass: "text-uppercase" }, [
-                                _vm._v("Нужно взять:")
-                              ]),
-                              _vm._v(" "),
-                              _c("strong", { staticClass: "green--text" }, [
-                                _vm._v(_vm._s(i.diff))
-                              ])
-                            ])
+                            _c(
+                              "v-col",
+                              {
+                                staticClass: "elevation-3 blue-grey lighten-5",
+                                attrs: { cols: "6", md: "2" }
+                              },
+                              [
+                                _c("h5", { staticClass: "text-uppercase" }, [
+                                  _vm._v("Нужно взять:")
+                                ]),
+                                _vm._v(" "),
+                                _c("strong", { staticClass: "green--text" }, [
+                                  _vm._v(_vm._s(i.diff))
+                                ])
+                              ]
+                            )
                           ],
                           1
                         )
@@ -614,7 +654,8 @@ var render = function() {
                                 attrs: {
                                   outlined: "",
                                   clearable: "",
-                                  type: "number"
+                                  type: "number",
+                                  label: "Остаток"
                                 },
                                 model: {
                                   value: _vm.left,
@@ -622,6 +663,35 @@ var render = function() {
                                     _vm.left = $$v
                                   },
                                   expression: "left"
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-row",
+                        [
+                          _c(
+                            "v-col",
+                            [
+                              _c("v-text-field", {
+                                staticClass: "mt-5",
+                                attrs: {
+                                  outlined: "",
+                                  clearable: "",
+                                  type: "number",
+                                  label: "Экстра"
+                                },
+                                model: {
+                                  value: _vm.extra,
+                                  callback: function($$v) {
+                                    _vm.extra = $$v
+                                  },
+                                  expression: "extra"
                                 }
                               })
                             ],

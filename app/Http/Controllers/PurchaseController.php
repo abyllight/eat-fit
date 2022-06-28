@@ -52,7 +52,7 @@ class PurchaseController extends Controller
         $purchase->sizes()->delete();
 
         PurchaseIngredient::where('purchase_id', $purchase->id)
-            ->update(['total' => 0]);
+            ->update(['total' => 0, 'amount' => null]);
 
         foreach ($cuisine->sizes as $size) {
             $count = Order::where('is_active', true)
@@ -80,10 +80,12 @@ class PurchaseController extends Controller
 
                 if ($pi) {
                     $pi->total = $pi->total + $total;
+                    $pi->amount = $i['amount'];
                     $pi->save();
                 }else {
                     $purchase->ingredients()->attach($ing->id, [
-                        'total' => $total
+                        'total' => $total,
+                        'amount' => $i['amount']
                     ]);
                 }
             }
@@ -98,8 +100,13 @@ class PurchaseController extends Controller
     {
         $pi = PurchaseIngredient::where('purchase_id', $request->p_id)->where('ingredient_id', $request->i_id)->first();
 
+        $pi->diff = null;
         $pi->left = $request->left;
-        $pi->diff = $pi->total - $request->left;
+        if ($pi->total > $request->left) {
+            $pi->diff = $pi->total - $request->left;
+        }
+        $pi->diff += $request->extra;
+        $pi->extra = $request->extra;
         $pi->save();
 
         return response()->json([

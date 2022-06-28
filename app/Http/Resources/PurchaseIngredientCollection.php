@@ -38,7 +38,9 @@ class PurchaseIngredientCollection extends JsonResource
             'diff' => $this->pivot->diff,
             'total' => $this->pivot->total,
             'done' => $this->pivot->done,
+            'amount' => $this->pivot->amount,
             'is_custom' => $this->pivot->is_custom,
+            'extra' => $this->pivot->extra,
             'deleted' => $this->pivot->deleted,
             'categories' => $this->categories,
             'providers' => $array
