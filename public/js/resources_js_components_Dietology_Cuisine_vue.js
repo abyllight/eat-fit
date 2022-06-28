@@ -73,6 +73,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Cuisine',
   data: function data() {
@@ -164,12 +171,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee2);
       }))();
     },
-    setDate: function setDate(id) {
+    setPurchase: function setPurchase(id) {
       var _this4 = this;
 
-      axios.post('/api/cuisine/date', {
-        id: id,
-        date: this.date
+      axios.post('/api/cuisine/purchase', {
+        id: id
       }).then(function (res) {
         _this4.$store.dispatch('showAlert', {
           isVisible: true,
@@ -312,14 +318,30 @@ var render = function() {
                   {
                     key: c.name,
                     staticClass: "mb-3",
-                    attrs: { color: c.is_on_duty ? "green" : "grey" }
+                    attrs: {
+                      color: c.is_on_duty
+                        ? "green"
+                        : c.purchase_duty
+                        ? "amber"
+                        : "grey"
+                    }
                   },
                   [
                     _c("v-card-title", [
                       _vm._v(_vm._s(c.position) + ". " + _vm._s(c.name))
                     ]),
                     _vm._v(" "),
-                    _c("v-card-subtitle", [_vm._v(_vm._s(c.date))]),
+                    _c("v-card-subtitle", [
+                      _vm._v(
+                        _vm._s(
+                          c.is_on_duty
+                            ? c.date
+                            : c.purchase_duty
+                            ? c.purchase_date
+                            : ""
+                        )
+                      )
+                    ]),
                     _vm._v(" "),
                     _c(
                       "v-card-actions",
@@ -337,6 +359,20 @@ var render = function() {
                             }
                           },
                           [_c("v-icon", [_vm._v("mdi-star")])],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "v-btn",
+                          {
+                            attrs: { icon: "", color: "white" },
+                            on: {
+                              click: function($event) {
+                                return _vm.setPurchase(c.id)
+                              }
+                            }
+                          },
+                          [_c("v-icon", [_vm._v("mdi-cart")])],
                           1
                         ),
                         _vm._v(" "),

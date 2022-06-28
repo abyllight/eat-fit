@@ -103,7 +103,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cuisines/{id}', [CuisineController::class, 'show']);
     Route::get('/cuisine/duty', [CuisineController::class, 'getDutyCuisine']);
     Route::post('/cuisine/duty', [CuisineController::class, 'setCuisine']);
-    Route::post('/cuisine/date', [CuisineController::class, 'setDate']);
+    Route::post('/cuisine/purchase', [CuisineController::class, 'setPurchase']);
     Route::get('/cuisine/iiko', [CuisineController::class, 'fetchCuisines']);
     Route::get('/cuisines/{id}/dishes', [CuisineController::class, 'getDishesByCuisineId']);
     Route::get('cuisines/{id}/dishes/iiko', [CuisineController::class, 'fetchDishesByCuisineId']);

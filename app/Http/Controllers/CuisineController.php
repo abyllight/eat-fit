@@ -23,7 +23,7 @@ class CuisineController extends Controller
     public function index(): JsonResponse
     {
         $cuisines = Cuisine::orderBy('position')->get();
-        $tomorrow = Carbon::tomorrow()->toDateString();
+        /*$tomorrow = Carbon::tomorrow()->toDateString();
         $duty = Cuisine::where('is_on_duty', true)->first();
         $n = 0;
 
@@ -50,7 +50,7 @@ class CuisineController extends Controller
             }
 
             $cuisine->save();
-        }
+        }*/
 
         return response()->json($cuisines->groupBy('week'));
     }
@@ -178,34 +178,48 @@ class CuisineController extends Controller
         if ($duty){
             $duty->date = Carbon::tomorrow()->toDateString();
             $duty->is_on_duty = true;
+            $duty->purchase_date = null;
+            $duty->purchase_duty = false;
             $duty->save();
 
             Select::whereDate('created_at', Carbon::today())->update([
                 'cuisine_id' => $duty->id
             ]);
-
-            $purchase = Purchase::where('date', $duty->date)->first();
-
-            if ($purchase) {
-                $purchase->cuisine_id = $duty->id;
-                $purchase->save();
-            }else{
-                $p = new Purchase();
-                $p->cuisine_id = $duty->id;
-                $p->date = $duty->date;
-                $p->save();
-            }
         }
 
         return response()->json(new CuisineCollection($duty));
     }
 
-    public function setDate(Request $request): JsonResponse
+    public function setPurchase(Request $request): JsonResponse
     {
+        Cuisine::where('purchase_duty', true)
+            ->update([
+                'purchase_duty' => false,
+                'purchase_date' => null
+            ]);
+
         $cuisine = Cuisine::find($request->id);
 
-        $cuisine->date = $request->date;
+        $cuisine->purchase_date = Carbon::tomorrow()->addDay();
+        $cuisine->purchase_duty = true;
+        $cuisine->is_on_duty = false;
+        $cuisine->date = null;
         $cuisine->save();
+
+        $purchase = Purchase::where('date', $cuisine->purchase_date)->first();
+
+        if ($purchase) {
+            if ($purchase->cuisine_id !== $cuisine->id) {
+                $purchase->ingredients()->detach();
+            }
+            $purchase->cuisine_id = $cuisine->id;
+            $purchase->save();
+        }else{
+            $p = new Purchase();
+            $p->cuisine_id = $cuisine->id;
+            $p->date = $cuisine->purchase_date;
+            $p->save();
+        }
 
         return response()->json([
             'status' => true,

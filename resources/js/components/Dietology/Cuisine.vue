@@ -26,10 +26,10 @@
                     v-for="c in group"
                     :key="c.name"
                     class="mb-3"
-                    :color="c.is_on_duty ? 'green': 'grey'"
+                    :color="c.is_on_duty ? 'green' : c.purchase_duty ? 'amber' : 'grey'"
                 >
                     <v-card-title>{{c.position}}. {{c.name}}</v-card-title>
-                    <v-card-subtitle>{{c.date}}</v-card-subtitle>
+                    <v-card-subtitle>{{c.is_on_duty ? c.date : c.purchase_duty ? c.purchase_date : ''}}</v-card-subtitle>
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn
@@ -38,6 +38,13 @@
                             @click="setDuty(c.id)"
                         >
                             <v-icon>mdi-star</v-icon>
+                        </v-btn>
+                        <v-btn
+                            icon
+                            color="white"
+                            @click="setPurchase(c.id)"
+                        >
+                            <v-icon>mdi-cart</v-icon>
                         </v-btn>
                         <v-btn
                             color="white"
@@ -112,10 +119,9 @@
                         this.disabled = false
                     })
             },
-            setDate(id) {
-                axios.post('/api/cuisine/date', {
-                    id: id,
-                    date: this.date
+            setPurchase(id) {
+                axios.post('/api/cuisine/purchase', {
+                    id: id
                 }).then(res => {
                     this.$store.dispatch('showAlert', {
                         isVisible: true,

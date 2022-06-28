@@ -20,6 +20,7 @@ export default new Vuex.Store({
             type: 'error'
         }
     },
+
     mutations: {
         SET_ALERT(state, alertData) {
             state.alert = alertData

@@ -17,25 +17,32 @@ class PurchaseController extends Controller
 {
     public function index(): JsonResponse
     {
-        $cuisine = Cuisine::where('is_on_duty', true)->first();
+        $collection = [];
+        $cuisine = Cuisine::where('purchase_duty', true)->first();
 
-        $purchase = Purchase::whereDate('date', $cuisine->date)->first();
-        return response()->json(new PurchaseCollection($purchase));
+        if ($cuisine) {
+            $purchase = Purchase::whereDate('date', $cuisine->purchase_date)->first();
+            if ($purchase) {
+                $collection = new PurchaseCollection($purchase);
+            }
+        }
+
+        return response()->json($collection);
     }
 
     public function calculateIngredients(): JsonResponse
     {
-        $cuisine = Cuisine::where('is_on_duty', true)->first();
+        $cuisine = Cuisine::where('purchase_duty', true)->first();
         $iiko = new IikoController();
         $token = $iiko->getAuthToken();
         $today = Carbon::today()->format('Y-m-d');
 
-        $purchase = Purchase::whereDate('date', $cuisine->date)->first();
+        $purchase = Purchase::whereDate('date', $cuisine->purchase_date)->first();
 
         if(!$purchase) {
             $purchase = new Purchase();
             $purchase->cuisine_id = $cuisine->id;
-            $purchase->date = $cuisine->date;
+            $purchase->date = $cuisine->purchase_date;
         }elseif($purchase->cuisine_id !== $cuisine->id) {
             $purchase->cuisine_id = $cuisine->id;
             $purchase->ingredients()->delete();
