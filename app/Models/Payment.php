@@ -26,7 +26,7 @@ class Payment extends Model
             'name' => 'POS-терминал Р'
         ],
         [
-            'name' => 'Kaspi Amir'
+            'name' => 'Kaspi'
         ]
     ];
 
