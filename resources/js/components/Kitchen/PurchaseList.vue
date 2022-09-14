@@ -45,7 +45,6 @@
                         <v-row>
                             <v-col cols="12" md="4">
                                 <h3>{{key+1}}. {{i.name}}</h3>
-                                <p>{{i.amount}}</p>
                             </v-col>
                             <v-col cols="6" md="2">
                                 <h5 class="text-uppercase">Остаток:</h5>

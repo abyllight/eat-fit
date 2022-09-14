@@ -158,6 +158,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Rations",
   data: function data() {
@@ -166,16 +181,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       ration: {
         name: '',
         code: '',
-        is_required: false
+        is_required: false,
+        department_id: null
       },
       errors: [],
       edit: -1,
       dialog: false,
-      dialogDelete: false
+      dialogDelete: false,
+      departments: []
     };
   },
   mounted: function mounted() {
     this.getRations();
+    this.getDepartments();
   },
   methods: {
     getRations: function getRations() {
@@ -201,6 +219,29 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee);
       }))();
     },
+    getDepartments: function getDepartments() {
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return axios.get('/api/departments').then(function (response) {
+                  _this2.departments = response.data;
+                })["catch"](function (error) {
+                  console.log(error);
+                });
+
+              case 2:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    },
     action: function action() {
       if (this.edit === 1) {
         this.update();
@@ -209,32 +250,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
     },
     store: function store() {
-      var _this2 = this;
-
-      axios.post('/api/rations', this.ration).then(function (response) {
-        if (response.data.status) {
-          _this2.$store.dispatch('showAlert', {
-            'isVisible': true,
-            'msg': response.data.msg,
-            'color': 'green',
-            'type': 'success'
-          });
-
-          _this2.close();
-
-          _this2.getRations();
-        } else {
-          _this2.errors = response.data.errors;
-        }
-      })["catch"](function (error) {
-        console.log(error);
-        _this2.errors = error.response.data.errors;
-      });
-    },
-    update: function update() {
       var _this3 = this;
 
-      axios.patch('/api/rations/' + this.ration.id, this.ration).then(function (response) {
+      axios.post('/api/rations', this.ration).then(function (response) {
         if (response.data.status) {
           _this3.$store.dispatch('showAlert', {
             'isVisible': true,
@@ -252,6 +270,29 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       })["catch"](function (error) {
         console.log(error);
         _this3.errors = error.response.data.errors;
+      });
+    },
+    update: function update() {
+      var _this4 = this;
+
+      axios.patch('/api/rations/' + this.ration.id, this.ration).then(function (response) {
+        if (response.data.status) {
+          _this4.$store.dispatch('showAlert', {
+            'isVisible': true,
+            'msg': response.data.msg,
+            'color': 'green',
+            'type': 'success'
+          });
+
+          _this4.close();
+
+          _this4.getRations();
+        } else {
+          _this4.errors = response.data.errors;
+        }
+      })["catch"](function (error) {
+        console.log(error);
+        _this4.errors = error.response.data.errors;
       });
     },
     close: function close() {
@@ -273,26 +314,26 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.dialogDelete = true;
     },
     deleteConfirm: function deleteConfirm() {
-      var _this4 = this;
+      var _this5 = this;
 
       axios["delete"]('/api/rations/' + this.ration.id).then(function (response) {
         if (response.data.status) {
-          _this4.$store.dispatch('showAlert', {
+          _this5.$store.dispatch('showAlert', {
             'isVisible': true,
             'msg': response.data.msg,
             'color': 'green',
             'type': 'success'
           });
 
-          _this4.close();
+          _this5.close();
 
-          _this4.getRations();
+          _this5.getRations();
         } else {
-          _this4.errors = response.data.errors;
+          _this5.errors = response.data.errors;
         }
       })["catch"](function (error) {
         console.log(error);
-        _this4.errors = error.response.data.errors;
+        _this5.errors = error.response.data.errors;
       });
     }
   }
@@ -447,6 +488,12 @@ var render = function() {
                             _vm._v(" "),
                             _c("th", { staticClass: "text-left" }, [
                               _vm._v(
+                                "\n                            Цех\n                        "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("th", { staticClass: "text-left" }, [
+                              _vm._v(
                                 "\n                            Действие\n                        "
                               )
                             ])
@@ -462,6 +509,8 @@ var render = function() {
                               _c("td", [_vm._v(_vm._s(item.name))]),
                               _vm._v(" "),
                               _c("td", [_vm._v(_vm._s(item.code))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(item.department))]),
                               _vm._v(" "),
                               _c(
                                 "td",
@@ -677,6 +726,31 @@ var render = function() {
                                         _vm.$set(_vm.ration, "code", $$v)
                                       },
                                       expression: "ration.code"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("v-select", {
+                                    attrs: {
+                                      items: _vm.departments,
+                                      "item-text": "name",
+                                      "item-value": "id",
+                                      label: "Цех",
+                                      "error-messages":
+                                        _vm.errors.department_id,
+                                      outlined: "",
+                                      dense: "",
+                                      clearable: ""
+                                    },
+                                    model: {
+                                      value: _vm.ration.department_id,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.ration,
+                                          "department_id",
+                                          $$v
+                                        )
+                                      },
+                                      expression: "ration.department_id"
                                     }
                                   }),
                                   _vm._v(" "),

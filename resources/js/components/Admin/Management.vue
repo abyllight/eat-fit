@@ -19,6 +19,27 @@
                         mdi-check
                     </v-icon>
                 </v-btn>
+            </v-col>
+            <v-col>
+                <v-btn
+                    :disabled="saturday"
+                    @click="plusOneSaturday"
+                    class="mr-10"
+                    color="green"
+                    :dark="!saturday"
+                    :loading="saturday_loading"
+                >
+                    +1 суббота
+                    <v-icon
+                        v-if="saturday"
+                        right
+                        dark
+                    >
+                        mdi-check
+                    </v-icon>
+                </v-btn>
+            </v-col>
+            <v-col>
                 <v-btn
                     :disabled="trial"
                     @click="shiftTrial"
@@ -36,6 +57,8 @@
                         mdi-check
                     </v-icon>
                 </v-btn>
+            </v-col>
+            <v-col>
                 <v-btn
                     :disabled="work"
                     @click="shiftWork"
@@ -76,9 +99,11 @@ export default {
     name: "Management",
     data: () => ({
         plus: null,
+        saturday: null,
         trial: null,
         work: null,
         plus_loading: false,
+        saturday_loading: false,
         trial_loading: false,
         work_loading: false,
         prompt: false,
@@ -104,6 +129,7 @@ export default {
             this.plus = true
             this.trial = true
             this.work = true
+            this.saturday = true
 
             axios.post(this.link)
                 .then(res => {
@@ -114,7 +140,7 @@ export default {
                         type: 'success'
                     })
 
-                    location.reload()
+                    //location.reload()
                 }).catch(err => {
                     console.log(err)
             })
@@ -124,6 +150,12 @@ export default {
             this.type = 1
             this.prompt = true
             this.plus_loading = true
+        },
+        plusOneSaturday() {
+            this.link = '/api/management/plus-one-saturday'
+            this.type = 4
+            this.prompt = true
+            this.saturday_loading = true
         },
         shiftTrial() {
             this.link = '/api/management/trial'

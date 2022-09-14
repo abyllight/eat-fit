@@ -22,4 +22,8 @@ class Ration extends Model
     {
         return $this->hasMany(Select::class, 'ration_id', 'id');
     }
+
+    public function department() {
+        return is_numeric($this->department_id) ? Department::DEPARTMENTS[$this->department_id]['name'] : null;
+    }
 }

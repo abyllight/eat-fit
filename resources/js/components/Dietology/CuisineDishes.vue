@@ -9,29 +9,18 @@
                 </v-btn>
             </v-col>
         </v-row>
+
         <!--  Cuisine Dish cards -->
-        <v-row v-if="Object.keys(cuisine).length !== 0">
+        <v-row>
             <v-col sm="12" md="6">
                 <!-- Cuisine name and controls -->
                 <v-card
-                    :color="cuisine.duty ? 'light-green lighten-3' : 'grey lighten-3'"
+                    :loading="loading"
                     :disabled="disabled"
-                    :loading="disabled"
+                    class="blue-grey lighten-4"
                 >
                     <v-card-title>{{ cuisine.name }}</v-card-title>
                     <v-card-actions>
-                        <v-btn
-                            text
-                            @click="setCuisine(cuisine.id)"
-                        >
-                            <v-icon
-                                dark
-                                left
-                            >
-                                mdi-checkbox-marked-circle
-                            </v-icon>
-                            Назначить
-                        </v-btn>
                         <v-btn
                             text
                             @click="fetchDishesByCuisineId(cuisine.id)"
@@ -42,30 +31,18 @@
                             >
                                 mdi-refresh
                             </v-icon>
-                            Блюда
-                        </v-btn>
-                        <v-btn
-                            text
-                            @click="fetchIngredients(cuisine.id)"
-                        >
-                            <v-icon
-                                dark
-                                left
-                            >
-                                mdi-refresh
-                            </v-icon>
-                            Ингредиенты
+                            Получить блюда
                         </v-btn>
                     </v-card-actions>
                 </v-card>
 
                 <!--  Dish list -->
                 <v-card
+                    v-if="dishes.length > 0"
                     class="mt-4"
                     :disabled="disabled"
-                    :loading="loading"
                 >
-                    <v-list v-if="cuisine">
+                    <v-list>
                         <v-list-item
                             v-for="(dish, index) in dishes"
                             :key="dish.id"
@@ -73,7 +50,9 @@
                         >
                             <v-list-item-content>
                                 <v-list-item-title>{{index+1}}. {{dish.name}}</v-list-item-title>
-                                <v-list-item-subtitle v-if="dish.ration"><span class="font-weight-bold">[{{dish.ration.name}}] {{dish.i_name}}</span></v-list-item-subtitle>
+                                <v-list-item-subtitle v-if="dish.ration">
+                                    <span class="font-weight-bold">[{{dish.ration.name}}] {{dish.i_name}}</span>
+                                </v-list-item-subtitle>
                             </v-list-item-content>
                             <v-list-item-action>
                                 <v-btn icon @click="editDish(dish)">
@@ -89,6 +68,7 @@
                     v-for="item in left_rations"
                     :key="item.id"
                     class="mt-4"
+                    :disabled="disabled"
                 >
                     <v-card-title>{{item.name}}</v-card-title>
                     <v-card-actions>
@@ -103,19 +83,33 @@
                     </v-card-actions>
                 </v-card>
             </v-col>
-            <v-col sm="12" md="6">
+
+            <v-col v-if="dish" sm="12" md="6">
                 <v-card
-                    v-if="dish"
                     :disabled="disabled"
                     :loading="loading"
                 >
                     <v-card-title>{{ dish.name }}</v-card-title>
+                    <v-card-actions>
+                        <v-btn
+                            color="green"
+                            text
+                            @click="fetchIngredientsByDishId(dish.id)"
+                        >
+                            <v-icon
+                                dark
+                                left
+                            >
+                                mdi-refresh
+                            </v-icon>
+                            Получить ингредиенты
+                        </v-btn>
+                    </v-card-actions>
                 </v-card>
                 <v-card
-                    v-if="dish"
+                    v-if="dish.ingredients.length > 0"
                     class="mt-4"
                     :disabled="disabled"
-                    :loading="loading"
                 >
                     <v-list>
                         <v-list-item
@@ -186,14 +180,6 @@
                                         dense
                                         clearable
                                     ></v-text-field>
-                                    <v-text-field
-                                        v-model="dish.code"
-                                        label="Код"
-                                        :error-messages="errors.code"
-                                        outlined
-                                        dense
-                                        clearable
-                                    ></v-text-field>
                                     <v-select
                                         v-model="dish.ration_id"
                                         :items="all_rations"
@@ -237,7 +223,7 @@
                     </v-card-text>
                 </v-card>
             </v-dialog>
-        </v-row>
+        </v-row>-->
     </div>
 </template>
 <script>
@@ -260,15 +246,16 @@
                 is_custom: false
             },
             dishes: [],
-            btn_loading: false,
             loading: false,
             disabled: false,
             dialog: false,
-            errors: []
+            dialogSm: false,
+            errors: [],
+            targetDish: {}
         }),
         mounted() {
             this.getCuisine()
-            this.getIngredients()
+            //this.getIngredients()
             this.getDepartments()
             this.getAllRations()
         },
@@ -316,11 +303,12 @@
                         console.log(error)
                     })
             },
-            async fetchCuisines() {
-                this.btn_loading = true
+            async fetchDishesByCuisineId(id) {
                 this.disabled = true
+                this.loading = true
+
                 await axios
-                    .get('/api/cuisines/iiko')
+                    .get('/api/cuisines/'+id+'/dishes/iiko')
                     .then(response => {
                         this.$store.dispatch('showAlert', {
                             'isVisible': true,
@@ -334,33 +322,11 @@
                         console.log(error)
                     })
                     .finally(() => {
-                        this.btn_loading = false
                         this.disabled = false
+                        this.loading = false
                     })
             },
-            async fetchDishesByCuisineId(id) {
-                this.btn_loading = true
-                this.disabled = true
-                await axios
-                    .get('/api/cuisines/'+id+'/dishes/iiko')
-                    .then(response => {
-                        this.$store.dispatch('showAlert', {
-                            'isVisible': true,
-                            'msg': response.data.msg,
-                            'color': response.data.status ? 'green' : 'error',
-                            'type': response.data.status ? 'success' : 'error',
-                        })
-                        this.getCuisines()
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
-                    .finally(() => {
-                        this.btn_loading = false
-                        this.disabled = false
-                    })
-            },
-            async fetchIngredients(id) {
+            async fetchIngredientsByDishId(id) {
                 this.disabled = true
                 this.loading = true
                 await axios
@@ -372,7 +338,7 @@
                             'color': response.status ? 'green' : 'error',
                             'type': response.status ? 'success' : 'error',
                         })
-                        location.reload()
+                        this.getCuisine()
                     })
                     .catch(error => {
                         console.log(error)
@@ -382,31 +348,12 @@
                         this.loading = false
                     })
             },
-            async setCuisine(id){
-                await axios
-                    .post('/api/cuisine/duty', {
-                        id: id
-                    })
-                    .then(response => {
-                        this.cuisine = response.data
-                        this.getCuisine()
-
-                        this.$store.dispatch('showAlert', {
-                            'isVisible': true,
-                            'msg': response.data.name,
-                            'color': 'green',
-                            'type': 'success'
-                        })
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
-            },
             setDish(dish) {
                 this.dish = dish
             },
             close(){
                 this.dialog = false
+                this.dialogSm = false
                 this.dish = {
                     id: null,
                     name: '',
@@ -417,6 +364,12 @@
                     ingredients: [],
                     is_custom: false
                 }
+                this.ingredients = []
+                this.targetDish = {}
+            },
+            editOfficialDish(dish) {
+                this.dish = dish
+                this.dialogSm = true
             },
             editDish(dish) {
                 this.dish = dish
@@ -488,6 +441,22 @@
                     ration: ration
                 }
                 this.dialog = true
+            },
+            updateOfficialDish() {
+                axios.patch('/api/dishes/'+this.dish.id, this.dish)
+                    .then(res => {
+                        this.$store.dispatch('showAlert', {
+                            'isVisible': true,
+                            'msg': res.data.msg,
+                            'color': 'green',
+                            'type': 'success'
+                        })
+
+                        this.close()
+                        this.getCuisine()
+                    }).catch(err => {
+                        this.errors = err.response.data.errors
+                    })
             }
         }
     }

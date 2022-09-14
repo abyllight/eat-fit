@@ -28,8 +28,8 @@ class DishController extends Controller
         $dish = new Dish();
         $dish->name = $request->name;
         $dish->ration_id = $request->ration_id;
-        $dish->code = $request->code;
-        //$dish->department_id = $request->department_id;
+        //$dish->code = $request->code;
+        $dish->department_id = $request->department_id;
         $dish->description = $request->description;
         $dish->cuisine_id = $request->has('cuisine_id') ? $request->cuisine_id : 0;
         $dish->is_custom = $request->has('is_custom') ? $request->is_custom : true;
@@ -48,9 +48,9 @@ class DishController extends Controller
         $request->validate([
             'name' => 'required',
             'ration_id' => 'required',
-            //'department_id' => 'required',
+            'department_id' => 'required',
             //'code' => 'required',
-            'ingredient_ids' => 'required'
+            //'ingredient_ids' => 'required'
         ]);
 
         $dish = Dish::find($id);
@@ -58,14 +58,16 @@ class DishController extends Controller
         if($dish) {
             $dish->name = $request->name;
             $dish->ration_id = $request->ration_id;
-            $dish->code = $request->code;
-            //$dish->department_id = $request->department_id;
+            //$dish->code = $request->code;
+            $dish->department_id = $request->department_id;
             $dish->description = $request->description;
-            $dish->cuisine_id = $request->has('cuisine_id') ? $request->cuisine_id : 0;
+            $dish->cuisine_id = $request->cuisine_id;
 
             $dish->save();
 
-            $dish->custom_ingredients()->sync($request->ingredient_ids);
+            if ($request->ingredient_ids) {
+                $dish->custom_ingredients()->sync($request->ingredient_ids);
+            }
 
             return response()->json([
                 'status' => true,

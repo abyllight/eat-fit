@@ -24,12 +24,14 @@ class RationController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'code' => 'required'
+            'code' => 'required',
+            'department_id' => 'required'
         ]);
 
         $ration = new Ration();
         $ration->name = $request->name;
         $ration->code = $request->code;
+        $ration->department_id = $request->department_id;
         $ration->is_required = $request->is_required;
         $ration->save();
 
@@ -43,13 +45,15 @@ class RationController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'code' => 'required'
+            'code' => 'required',
+            'department_id' => 'required'
         ]);
 
         $ration = Ration::find($id);
 
         if ($ration){
             $ration->code = $request->code;
+            $ration->department_id = $request->department_id;
             $ration->name = $request->name;
             $ration->is_required = $request->is_required;
             $ration->save();

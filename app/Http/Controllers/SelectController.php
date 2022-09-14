@@ -424,7 +424,7 @@ class SelectController extends Controller
                 $code = null;
                 $duty_dish = Dish::where('cuisine_id', $duty_cuisine->id)->where('ration_id', $item->ration_id)->first();
 
-                if ($item->dish_id === $duty_dish->id) {
+                if ($duty_dish && $item->dish_id === $duty_dish->id) {
                     $code = '0';
                 }
 
@@ -460,7 +460,8 @@ class SelectController extends Controller
         }
     }
 
-    public function showList() {
+    public function selectRations(): JsonResponse
+    {
         $rations = Ration::where('is_required', true)->get();
         $arr = [];
 
@@ -475,20 +476,36 @@ class SelectController extends Controller
             if ($selects->count() === 0) continue;
 
             $arr[$key] = [
+                'ration_id' => $ration->id,
                 'ration' => $ration->name,
                 'items' => []
             ];
+        }
 
-            foreach ($selects as $select) {
-                $arr[$key]['items'][] = [
-                    'code' => $ration->code . '-' . $select->first()->code,
-                    'name' => $select->first()->dish_name,
-                    'description' => $select->first()->description,
-                    'count' => $select->count(),
-                    'id' => $select->first()->id,
-                    'status' => false
-                ];
-            }
+        return response()->json($arr);
+    }
+
+    public function getSelectStickersByRation($id): JsonResponse
+    {
+        $ration = Ration::find($id);
+        $arr = [];
+
+        $selects = Select::whereDate('created_at', Carbon::today())
+            ->where('ration_id', $ration->iiko_id)
+            ->where('code', '!=', null)
+            ->orderBy('ration_id')
+            ->get()
+            ->groupBy(['code']);
+
+        foreach ($selects as $select) {
+            $arr[] = [
+                'code' => $ration->code . '-' . $select->first()->code,
+                'name' => $select->first()->dish_name,
+                'description' => $select->first()->description,
+                'count' => $select->count(),
+                'id' => $select->first()->id,
+                'status' => false
+            ];
         }
 
         return response()->json($arr);

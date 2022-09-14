@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Dish extends Model
 {
@@ -12,6 +13,11 @@ class Dish extends Model
     protected $fillable = [
         'iiko_id', 'iiko_name', 'code', 'name', 'ration_id', 'department_id', 'cuisine_id', 'description', 'is_custom'
     ];
+
+    public function sizes(): HasMany
+    {
+        return $this->hasMany(DishSize::class, 'dish_id', 'id');
+    }
 
     public function cuisine()
     {

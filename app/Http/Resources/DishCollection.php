@@ -20,9 +20,9 @@ class DishCollection extends JsonResource
             'i_name' => $this->iiko_name,
             'cuisine_id' => $this->cuisine_id,
             'name' => $this->name,
-            'code' => $this->code,
-            /*'department_id' => $this->department_id,
-            'department' => $this->getDepartment(),*/
+            //'code' => $this->code,
+            'department_id' => $this->department_id,
+            'department' => $this->getDepartment(),
             'ration' => $this->ration ?? null,
             'ration_id' => $this->ration_id,
             'position' => $this->ration ? $this->ration->position : null,

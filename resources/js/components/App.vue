@@ -185,8 +185,8 @@ export default {
                         roles: ['admin', 'kitchen']
                     },
                     {
-                        title: 'Список Селекты',
-                        link: '/select-list',
+                        title: 'Стикеры',
+                        link: '/select-rations',
                         icon: 'view-grid',
                         roles: ['admin', 'kitchen']
                     }

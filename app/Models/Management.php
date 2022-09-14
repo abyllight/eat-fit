@@ -9,10 +9,13 @@ class Management extends Model
 {
     use HasFactory;
 
-    public const TRIAL_STATUS = 16536847;
-    public const WORK_STATUS = 16566964;
+    public const TRIAL_STATUS = 16536847; // Пробная доставка
+    public const WORK_STATUS = 16566964; // В работе
+    public const PLUS_ONE_STATUS = 27248140; // Доставлено
+    public const PLUS_ONE_SATURDAY_STATUS = 50754262; // Субботу x2v2
 
     public const PLUS_TYPE = 1;
     public const TRIAL_TYPE = 2;
     public const WORK_TYPE = 3;
+    public const PLUS_SATURDAY_TYPE = 4;
 }

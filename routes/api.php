@@ -56,7 +56,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/my-orders/report', [CourierController::class, 'report']);
 
     Route::get('/management', [ManagementController::class, 'index']);
-    Route::post('/management/plus-one', [ManagementController::class, 'plusOne']);
+    Route::post('/management/plus-one', [ManagementController::class, 'plusOneMain']);
+    Route::post('/management/plus-one-saturday', [ManagementController::class, 'plusOneSaturday']);
     Route::post('/management/trial', [ManagementController::class, 'shiftTrial']);
     Route::post('/management/work', [ManagementController::class, 'shiftWork']);
 
@@ -128,9 +129,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('select/show/ingredient', [SelectController::class, 'showIngredient']);
     Route::post('select/hide/ingredient', [SelectController::class, 'hideIngredient']);
     Route::get('/select/export', [SelectController::class, 'export']);
+    Route::get('/select/generate-code', [SelectController::class, 'generateCode']);
     Route::post('select/wish', [SelectController::class, 'addRemoveWish']);
     Route::get('/select/order/{id}', [SelectController::class, 'getSelectByOrder']);
-    Route::get('/select/list', [SelectController::class, 'showList']);
+    Route::get('/select/rations', [SelectController::class, 'selectRations']);
+    Route::get('/select/stickers/{id}', [SelectController::class, 'getSelectStickersByRation']);
     Route::get('/select/{id}', [SelectController::class, 'getSelectById']);
 
     Route::resource('/categories', CategoryController::class)->except(['create', 'show', 'edit']);
@@ -142,7 +145,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::resource('rations', RationController::class)->except(['create', 'show', 'edit']);
-    Route::get('/rations/required/{id}', [RationController::class, 'getRequired']);
     Route::get('/rations/required', [RationController::class, 'getRequiredRations']);
 
     Route::resource('promocodes', PromocodeController::class)->except(['create', 'show', 'edit']);

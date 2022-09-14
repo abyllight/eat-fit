@@ -84,14 +84,39 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Management",
   data: function data() {
     return {
       plus: null,
+      saturday: null,
       trial: null,
       work: null,
       plus_loading: false,
+      saturday_loading: false,
       trial_loading: false,
       work_loading: false,
       prompt: false,
@@ -121,15 +146,15 @@ __webpack_require__.r(__webpack_exports__);
       this.plus = true;
       this.trial = true;
       this.work = true;
+      this.saturday = true;
       axios.post(this.link).then(function (res) {
         _this2.$store.dispatch('showAlert', {
           isVisible: true,
           msg: res.data.msg,
           color: 'success',
           type: 'success'
-        });
+        }); //location.reload()
 
-        location.reload();
       })["catch"](function (err) {
         console.log(err);
       });
@@ -139,6 +164,12 @@ __webpack_require__.r(__webpack_exports__);
       this.type = 1;
       this.prompt = true;
       this.plus_loading = true;
+    },
+    plusOneSaturday: function plusOneSaturday() {
+      this.link = '/api/management/plus-one-saturday';
+      this.type = 4;
+      this.prompt = true;
+      this.saturday_loading = true;
     },
     shiftTrial: function shiftTrial() {
       this.link = '/api/management/trial';
@@ -276,8 +307,45 @@ var render = function() {
                     : _vm._e()
                 ],
                 1
-              ),
-              _vm._v(" "),
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "v-col",
+            [
+              _c(
+                "v-btn",
+                {
+                  staticClass: "mr-10",
+                  attrs: {
+                    disabled: _vm.saturday,
+                    color: "green",
+                    dark: !_vm.saturday,
+                    loading: _vm.saturday_loading
+                  },
+                  on: { click: _vm.plusOneSaturday }
+                },
+                [
+                  _vm._v("\n                +1 суббота\n                "),
+                  _vm.saturday
+                    ? _c("v-icon", { attrs: { right: "", dark: "" } }, [
+                        _vm._v(
+                          "\n                    mdi-check\n                "
+                        )
+                      ])
+                    : _vm._e()
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "v-col",
+            [
               _c(
                 "v-btn",
                 {
@@ -303,8 +371,14 @@ var render = function() {
                     : _vm._e()
                 ],
                 1
-              ),
-              _vm._v(" "),
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "v-col",
+            [
               _c(
                 "v-btn",
                 {

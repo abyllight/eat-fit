@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\IngredientCollection;
+use App\Models\Cuisine;
 use App\Models\Dish;
+use App\Models\DishIngredient;
+use App\Models\DishIngredientSize;
 use App\Models\Ingredient;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -22,39 +25,85 @@ class IngredientController extends Controller
         $iiko = new IikoController();
         $token = $iiko->getAuthToken();
 
-        $dishes = Dish::where('cuisine_id', $id)->where('iiko_id','!=', null)->orderBy('ration_id')->get();
+        $dish = Dish::find($id);
+
+        if (!$dish) {
+            return response()->json([
+                'status' => false,
+                'msg' => 'Dish not found'
+            ]);
+        }
+
         $today = Carbon::today()->format('Y-m-d');
 
-        foreach ($dishes as $dish){
-            $link = '/resto/api/v2/assemblyCharts/getPrepared?date='.$today.'&productId=' . $dish->iiko_id . '&key=';
+        foreach ($dish->sizes as $key => $size) {
+            $link = '/resto/api/v2/assemblyCharts/getPrepared?date='.$today.'&productId=' . $size->iiko_id . '&key=';
             $ingredients = $iiko->doRequest($token, $link);
 
             if (is_array($ingredients)) {
                 $ingredients = $ingredients['preparedCharts'][0]['items'];
-                $ings = [];
+
+                DishIngredient::where('dish_id', $dish->id)->update([
+                    'is_original' => false
+                ]);
+
                 foreach ($ingredients as $ingredient) {
                     $link2 = '/resto/api/v2/entities/products/list?types=GOODS&ids=' . $ingredient['productId'] . '&key=';
                     $goods = $iiko->doRequest($token, $link2);
 
                     if ($goods) {
-                        $i = Ingredient::updateOrCreate(
-                            ['iiko_id' => $goods[0]['id']],
-                            ['iiko_name' => $goods[0]['name']]
-                        );
+                        $i = Ingredient::where('iiko_id', $goods[0]['id'])->first();
 
-                        if (!$i->name){
-                            $i->name = $i->iiko_name;
+                        if ($key === 0) {
+                            if ($i) {
+                                $i->iiko_name = $goods[0]['name'];
+
+                                if (!$i->name) {
+                                    $i->name = $goods[0]['name'];
+                                }
+
+                            }else {
+                                $i = new Ingredient();
+                                $i->iiko_id = $goods[0]['id'];
+                                $i->iiko_name = $goods[0]['name'];
+                            }
+
                             $i->save();
                         }
 
-                        $ings[] = $i->id;
+                        $di = DishIngredient::where('dish_id', $dish->id)->where('ingredient_id', $i->id)->first();
+
+                        if ($di) {
+                            $di->is_original = true;
+                        }else {
+                            $di = new DishIngredient();
+                            $di->dish_id = $dish->id;
+                            $di->ingredient_id = $i->id;
+                        }
+
+                        $di->save();
+
+                        DishIngredientSize::updateOrCreate(
+                            ['di_id' => $di->id, 'size' => $size->size],
+                            ['amount' => $ingredient['amount']]
+                        );
                     }
                 }
-                $dish->iiko_ingredients()->sync($ings);
+
+                $dis = DishIngredient::where('dish_id', $dish->id)
+                    ->where('is_original', false)
+                    ->get();
+
+                foreach ($dis as $item) {
+                    if ($item->sizes) {
+                        $item->sizes()->delete();
+                    }
+                    $item->delete();
+                }
             }else {
                 return response()->json([
                     'status' => false,
-                    'msg' => $ingredients. 'asds'
+                    'msg' => $ingredients. ' error'
                 ]);
             }
         }

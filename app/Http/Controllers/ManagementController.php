@@ -24,18 +24,17 @@ class ManagementController extends Controller
         ]);
     }
 
-    public function plusOne(): JsonResponse
+    public function plusOne(int $status, int $type, bool $has_extra = false): array
     {
-        dd('');
         try {
             $amo = new Client(env('AMO_SUBDOMAIN'), env('AMO_LOGIN'), env('AMO_HASH'));
 
-            $delivered = $amo->lead->apiList([
+            $array = $amo->lead->apiList([
                 'limit_rows' => 500,
-                'status' => 27248140, //Delivered
+                'status' => $status
             ]);
 
-            foreach ($delivered as $value) {
+            foreach ($array as $value) {
 
                 $day = 0;
                 $course = 0;
@@ -51,16 +50,13 @@ class ManagementController extends Controller
                     }
                 }
 
-                if($day >= $course) {
-                    $lead = $amo->lead;
-                    $lead['status_id'] = 16567015;
-                    $lead->apiUpdate((int) $value['id'], 'now');
+                $lead = $amo->lead;
 
+                if($day >= $course) {
+                    $lead['status_id'] = 16567015; // Обратная связь
                 }else if(($day == 1 && $course >=2) || $day === 3 || $day === 11 || $day === 17 || $day === $course-1){
                     $day++;
-                    $lead = $amo->lead;
                     $lead->addCustomField(328089, $day);
-                    $lead->apiUpdate((int) $value['id'], 'now');
 
                     $task = $amo->task;
                     $task['element_id'] = $value['id'];
@@ -72,29 +68,87 @@ class ManagementController extends Controller
                     $task->apiAdd();
                 }else {
                     $day++;
-                    $lead = $amo->lead;
                     $lead->addCustomField(328089, $day);
-                    $lead->apiUpdate((int)$value['id'], 'now');
                 }
+
+                if ($has_extra) {
+                    $budget = (int)$value['price'];
+                    $otrabotano = null;
+
+                    foreach ($value['custom_fields'] as $field){
+                        if ($field['id'] === 495367) { //Отработано
+                            $otrabotano = (int)$field["values"][0]["value"];
+                        }
+                    }
+
+                    if ($otrabotano != null){
+                        $otrabotano += $budget;
+
+                        $lead->addCustomField(495367,
+                            $otrabotano
+                        );
+                    }else{
+                        $lead->addCustomField(495367,
+                            $budget
+                        );
+                    }
+                }
+
+                $lead->apiUpdate((int)$value['id'], 'now');
             }
 
-            $management = Management::whereDate('created_at', Carbon::now()->toDateString())->where('type', 1)->first();
+            $management = Management::whereDate('created_at', Carbon::now()->toDateString())->where('type', $type)->first();
 
             if(!$management){
                 $m = new Management();
-                $m->type = Management::PLUS_TYPE;
+                $m->type = $type;
                 $m->save();
             }
 
-            return response()->json([
+            return [
                 'status' => true
-            ]);
+            ];
         } catch(Exception $e){
-            return response()->json([
+            return [
                 'status' => false,
                 'msg' => $e->getCode() . '. ' . $e->getMessage()
+            ];
+        }
+    }
+
+    public function plusOneMain(): JsonResponse
+    {
+        dd('exit');
+        $result = $this->plusOne(Management::PLUS_ONE_STATUS, Management::PLUS_TYPE, false);
+
+        if (!$result['status']) {
+            return response()->json([
+                'status' => false,
+                'msg' => $result['msg']
             ]);
         }
+
+        return response()->json([
+            'status' => true,
+            'msg' => 'Success'
+        ]);
+    }
+
+    public function plusOneSaturday(): JsonResponse
+    {
+        $result = $this->plusOne(Management::PLUS_ONE_SATURDAY_STATUS, Management::PLUS_SATURDAY_TYPE, true);
+
+        if (!$result['status']) {
+            return response()->json([
+                'status' => false,
+                'msg' => $result['msg']
+            ]);
+        }
+
+        return response()->json([
+            'status' => true,
+            'msg' => 'Success'
+        ]);
     }
 
     public function shift(int $status, int $type): JsonResponse
@@ -114,7 +168,7 @@ class ManagementController extends Controller
                 $order = Order::where('amo_id', $item['id'])->orderBy('created_at','desc')->first();
 
                 foreach ($item['custom_fields'] as $field){
-                    if ($field['id'] === 495367){
+                    if ($field['id'] === 495367){ //Отработано
                         $otrabotano = (int)$field["values"][0]["value"];
                     }
                 }

@@ -20,6 +20,8 @@ class RationCollection extends JsonResource
             'name' => $this->name,
             'code' => $this->code,
             'iiko_id' => $this->iiko_id,
+            'department_id' => $this->department_id,
+            'department' => $this->department(),
             'is_required' => $this->is_required
         ];
     }

@@ -7,6 +7,8 @@ use App\Http\Resources\DishCollection;
 use App\Models\Cuisine;
 use App\Models\CuisineSize;
 use App\Models\Dish;
+use App\Models\DishIngredient;
+use App\Models\DishSize;
 use App\Models\Ingredient;
 use App\Models\Order;
 use App\Models\Purchase;
@@ -89,7 +91,6 @@ class CuisineController extends Controller
             'b8dcd03d-739b-4f31-8e84-2e246b2dfefc', //ukraine
             '42748484-97ee-4a00-9588-a1ad19001b0b', //jordan
             '33063b9d-903c-40c4-b108-821bd5410c67', //halloween
-            '19839d73-21c7-4725-8c14-581825e57e73' //fusion
         ];
 
         if (is_array($cuisines)) {
@@ -151,14 +152,6 @@ class CuisineController extends Controller
 
         $iiko->logout($token);
 
-        $cuisines = Cuisine::where('is_on_duty', true)->first();
-
-        if (!$cuisines) {
-            $duty = Cuisine::find(1);
-            $duty->is_on_duty = true;
-            $duty->save();
-        }
-
         return response()->json([
             'status' => true,
             'msg' => 'Кухни получены'
@@ -169,22 +162,25 @@ class CuisineController extends Controller
     {
         $duty = Cuisine::find($request->id);
 
-        Cuisine::where('is_on_duty', true)
+        if ($duty->is_on_duty) {
+            $duty->date = Carbon::tomorrow()->toDateString();
+            $duty->save();
+        }else {
+            Cuisine::where('is_on_duty', true)
                 ->update([
                     'is_on_duty' => false,
                     'date' => null
                 ]);
 
-        if ($duty){
-            $duty->date = Carbon::tomorrow()->toDateString();
-            $duty->is_on_duty = true;
-            $duty->purchase_date = null;
-            $duty->purchase_duty = false;
-            $duty->save();
+            if ($duty) {
+                $duty->date = Carbon::tomorrow()->toDateString();
+                $duty->is_on_duty = true;
+                $duty->purchase_date = null;
+                $duty->purchase_duty = false;
+                $duty->save();
 
-            Select::whereDate('created_at', Carbon::today())->update([
-                'cuisine_id' => $duty->id
-            ]);
+                Select::whereDate('created_at', Carbon::today())->delete();
+            }
         }
 
         return response()->json(new CuisineCollection($duty));
@@ -202,8 +198,6 @@ class CuisineController extends Controller
 
         $cuisine->purchase_date = Carbon::tomorrow()->addDay();
         $cuisine->purchase_duty = true;
-        $cuisine->is_on_duty = false;
-        $cuisine->date = null;
         $cuisine->save();
 
         $purchase = Purchase::where('date', $cuisine->purchase_date)->first();
@@ -235,7 +229,6 @@ class CuisineController extends Controller
     public function getDishesByCuisineId($id): JsonResponse
     {
         $cuisine = Cuisine::find($id);
-
         $dishes = DishCollection::collection($cuisine->dishes->sortBy('ration_id'));
 
         return response()->json($dishes);
@@ -247,32 +240,41 @@ class CuisineController extends Controller
         $token = $iiko->getAuthToken();
 
         $cuisine = Cuisine::find($id);
-        $c = $cuisine->sizes->first();
+
         $today = Carbon::today()->format('Y-m-d');
 
-        $link = '/resto/api/v2/assemblyCharts/getTree?date=' . $today . '&productId=' . $c->iiko_id . '&key=';
-        $dishes = $iiko->doRequest($token, $link);
+        foreach ($cuisine->sizes as $size) {
+            $link = '/resto/api/v2/assemblyCharts/getAssembled?date=' . $today . '&productId=' . $size->iiko_id . '&key=';
+            $dishes = $iiko->doRequest($token, $link);
 
-        foreach ($dishes['assemblyCharts'][0]['items'] as $dish) {
-            $l = '/resto/api/v2/entities/products/list?types=DISH&ids=' . $dish['productId'] . '&key=';
-            $d = $iiko->doRequest($token, $l);
+            foreach ($dishes['assemblyCharts'][0]['items'] as $dish) {
 
-            $first = substr($d[0]['name'], 0, 1);
-            $first = (int) $first;
-            $name = substr($d[0]['name'], 4);
+                $l = '/resto/api/v2/entities/products/list?types=DISH&ids=' . $dish['productId'] . '&key=';
+                $d = $iiko->doRequest($token, $l);
 
-            $d = Dish::updateOrCreate(
-                ['ration_id' => $first, 'cuisine_id' => $cuisine->id],
-                [
-                    'iiko_name' => $name,
-                    'iiko_id' => $d[0]['id'],
-                    'is_custom' => false
-                ]
-            );
+                $first = substr($d[0]['name'], 0, 1);
+                $first = (int) $first;
+                $name = substr($d[0]['name'], 4);
 
-            if (!$d->name){
-                $d->name = $d->iiko_name;
-                $d->save();
+                $ddd = Dish::updateOrCreate(
+                    ['ration_id' => $first, 'cuisine_id' => $cuisine->id],
+                    [
+                        'iiko_name' => $name,
+                        'iiko_id' => $d[0]['id']
+                    ]
+                );
+
+                if (!$ddd->name){
+                    $ddd->name = $ddd->iiko_name;
+                    $ddd->save();
+                }
+
+                DishSize::updateOrCreate(
+                    ['dish_id' => $ddd->id, 'size' => $size->type],
+                    [
+                        'iiko_id' => $dish['productId']
+                    ]
+                );
             }
         }
 

@@ -149,13 +149,23 @@ const router = new VueRouter({
             component: () => import('./components/Dietology/Select')
         },
         {
-            path: '/select-list',
-            name: 'select_list',
+            path: '/select-rations',
+            name: 'select-rations',
             meta: {
                 auth: true,
                 roles: ['admin', 'diet', 'kitchen']
             },
-            component: () => import('./components/Kitchen/SelectList')
+            component: () => import('./components/Kitchen/SelectRations')
+        },
+        {
+            path: '/stickers/:id',
+            name: 'stickers',
+            props: true,
+            meta: {
+                auth: true,
+                roles: ['admin', 'diet', 'kitchen']
+            },
+            component: () => import('./components/Kitchen/Stickers')
         },
         {
             path: '/rations',

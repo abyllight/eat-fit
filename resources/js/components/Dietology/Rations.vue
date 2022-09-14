@@ -26,6 +26,9 @@
                                 Code
                             </th>
                             <th class="text-left">
+                                Цех
+                            </th>
+                            <th class="text-left">
                                 Действие
                             </th>
                         </tr>
@@ -38,6 +41,7 @@
                             <td>{{ index + 1 }}</td>
                             <td>{{ item.name }}</td>
                             <td>{{ item.code }}</td>
+                            <td>{{ item.department }}</td>
                             <td>
                                 <v-icon
                                     small
@@ -117,6 +121,17 @@
                                         dense
                                         clearable
                                     ></v-text-field>
+                                    <v-select
+                                        v-model="ration.department_id"
+                                        :items="departments"
+                                        item-text="name"
+                                        item-value="id"
+                                        label="Цех"
+                                        :error-messages="errors.department_id"
+                                        outlined
+                                        dense
+                                        clearable
+                                    ></v-select>
                                     <v-checkbox
                                         v-model="ration.is_required"
                                         :label="`Обязательный рацион: ${ration.is_required ? 'Да' : 'Нет'}`"
@@ -145,15 +160,18 @@ export default {
         ration: {
             name: '',
             code: '',
-            is_required: false
+            is_required: false,
+            department_id: null
         },
         errors: [],
         edit: -1,
         dialog: false,
         dialogDelete: false,
+        departments: []
     }),
     mounted() {
         this.getRations()
+        this.getDepartments()
     },
     methods: {
         async getRations(){
@@ -161,6 +179,16 @@ export default {
                 .get('/api/rations')
                 .then(response => {
                     this.rations = response.data
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
+        async getDepartments(){
+            await axios
+                .get('/api/departments')
+                .then(response => {
+                    this.departments = response.data
                 })
                 .catch(error => {
                     console.log(error)

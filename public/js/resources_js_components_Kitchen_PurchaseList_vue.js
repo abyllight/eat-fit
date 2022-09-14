@@ -203,7 +203,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "PurchaseList",
   data: function data() {
@@ -546,9 +545,7 @@ var render = function() {
                             _c("v-col", { attrs: { cols: "12", md: "4" } }, [
                               _c("h3", [
                                 _vm._v(_vm._s(key + 1) + ". " + _vm._s(i.name))
-                              ]),
-                              _vm._v(" "),
-                              _c("p", [_vm._v(_vm._s(i.amount))])
+                              ])
                             ]),
                             _vm._v(" "),
                             _c("v-col", { attrs: { cols: "6", md: "2" } }, [
