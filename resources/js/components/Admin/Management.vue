@@ -140,7 +140,7 @@ export default {
                         type: 'success'
                     })
 
-                    //location.reload()
+                    location.reload()
                 }).catch(err => {
                     console.log(err)
             })
