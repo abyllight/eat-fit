@@ -133,12 +133,12 @@ class ManagementController extends Controller
                     );
                 }
 
-                if($order && $order->user) {
+                if($order && $order->courier) {
                     $lead->addCustomField(489499,
-                        $order->user->phone
+                        $order->courier->phone
                     );
                     $lead->addCustomField(489497,
-                        $order->user->name
+                        $order->courier->name
                     );
                 }
 
