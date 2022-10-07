@@ -105,15 +105,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cuisine/duty', [CuisineController::class, 'getDutyCuisine']);
     Route::post('/cuisine/duty', [CuisineController::class, 'setCuisine']);
     Route::post('/cuisine/purchase', [CuisineController::class, 'setPurchase']);
-    Route::get('/cuisine/iiko', [CuisineController::class, 'fetchCuisines']);
+    Route::get('/cuisine/iiko', [CuisineController::class, 'fetchCuisinesFromIiko']);
     Route::get('/cuisines/{id}/dishes', [CuisineController::class, 'getDishesByCuisineId']);
-    Route::get('cuisines/{id}/dishes/iiko', [CuisineController::class, 'fetchDishesByCuisineId']);
 
     Route::resource('dishes', DishController::class)->except(['create', 'show', 'edit']);
     Route::get('dishes/ration/{id}', [DishController::class, 'getDishesByRation']);
     Route::get('dishes/rations/', [DishController::class, 'getDishesByRations']);
     Route::get('dishes/iiko', [DishController::class, 'fetchDishes']);
     Route::get('dishes/cuisine/{id}', [DishController::class, 'getDishesByCuisine']);
+    Route::get('dishes/iiko/cuisine/{id}', [DishController::class, 'fetchDishesByCuisineId']);
 
     Route::get('departments', [DepartmentController::class, 'index']);
 
@@ -145,7 +145,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::resource('rations', RationController::class)->except(['create', 'show', 'edit']);
-    Route::get('/rations/required', [RationController::class, 'getRequiredRations']);
 
     Route::resource('promocodes', PromocodeController::class)->except(['create', 'show', 'edit']);
     Route::post('/promocode/{promocode}/activate', [PromocodeController::class, 'activate']);

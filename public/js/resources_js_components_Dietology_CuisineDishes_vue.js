@@ -388,7 +388,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _this5.disabled = true;
                 _this5.loading = true;
                 _context5.next = 4;
-                return axios.get('/api/cuisines/' + id + '/dishes/iiko').then(function (response) {
+                return axios.get('/api/dishes/iiko/cuisine/' + id).then(function (response) {
                   _this5.$store.dispatch('showAlert', {
                     'isVisible': true,
                     'msg': response.data.msg,
@@ -412,7 +412,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee5);
       }))();
     },
-    fetchIngredientsByDishId: function fetchIngredientsByDishId(id) {
+    fetchIngredientsByCuisine: function fetchIngredientsByCuisine() {
       var _this6 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee6() {
@@ -423,7 +423,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _this6.disabled = true;
                 _this6.loading = true;
                 _context6.next = 4;
-                return axios.get('/api/ingredients/iiko/' + id).then(function (response) {
+                return axios.get('/api/ingredients/iiko/' + _this6.id).then(function (response) {
                   _this6.$store.dispatch('showAlert', {
                     'isVisible': true,
                     'msg': response.data.msg,
@@ -715,6 +715,25 @@ var render = function() {
                           )
                         ],
                         1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { text: "" },
+                          on: { click: _vm.fetchIngredientsByCuisine }
+                        },
+                        [
+                          _c("v-icon", { attrs: { dark: "", left: "" } }, [
+                            _vm._v(
+                              "\n                            mdi-refresh\n                        "
+                            )
+                          ]),
+                          _vm._v(
+                            "\n                        Получить ингредиенты\n                    "
+                          )
+                        ],
+                        1
                       )
                     ],
                     1
@@ -858,40 +877,7 @@ var render = function() {
                   _c(
                     "v-card",
                     { attrs: { disabled: _vm.disabled, loading: _vm.loading } },
-                    [
-                      _c("v-card-title", [_vm._v(_vm._s(_vm.dish.name))]),
-                      _vm._v(" "),
-                      _c(
-                        "v-card-actions",
-                        [
-                          _c(
-                            "v-btn",
-                            {
-                              attrs: { color: "green", text: "" },
-                              on: {
-                                click: function($event) {
-                                  return _vm.fetchIngredientsByDishId(
-                                    _vm.dish.id
-                                  )
-                                }
-                              }
-                            },
-                            [
-                              _c("v-icon", { attrs: { dark: "", left: "" } }, [
-                                _vm._v(
-                                  "\n                            mdi-refresh\n                        "
-                                )
-                              ]),
-                              _vm._v(
-                                "\n                        Получить ингредиенты\n                    "
-                              )
-                            ],
-                            1
-                          )
-                        ],
-                        1
-                      )
-                    ],
+                    [_c("v-card-title", [_vm._v(_vm._s(_vm.dish.name))])],
                     1
                   ),
                   _vm._v(" "),
@@ -914,10 +900,13 @@ var render = function() {
                                     "v-list-item-content",
                                     [
                                       _c("v-list-item-title", [
+                                        _c("strong", [
+                                          _vm._v(_vm._s(index + 1) + ".")
+                                        ]),
                                         _vm._v(
-                                          _vm._s(index + 1) +
-                                            ". " +
-                                            _vm._s(ing.name)
+                                          " " +
+                                            _vm._s(ing.name) +
+                                            "\n                            "
                                         )
                                       ])
                                     ],
@@ -1174,8 +1163,7 @@ var render = function() {
           )
         ],
         1
-      ),
-      _vm._v("-->\n")
+      )
     ],
     1
   )

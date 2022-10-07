@@ -26,6 +26,9 @@
                                 Code
                             </th>
                             <th class="text-left">
+                                Iiko №
+                            </th>
+                            <th class="text-left">
                                 Цех
                             </th>
                             <th class="text-left">
@@ -38,9 +41,12 @@
                             v-for="(item, index) in rations"
                             :key="item.id"
                         >
-                            <td>{{ index + 1 }}</td>
+                            <td>
+                                <strong>{{ index + 1 }}</strong>
+                            </td>
                             <td>{{ item.name }}</td>
                             <td>{{ item.code }}</td>
+                            <td>{{ item.iiko_id }}</td>
                             <td>{{ item.department }}</td>
                             <td>
                                 <v-icon
@@ -51,7 +57,6 @@
                                     mdi-pencil
                                 </v-icon>
                                 <v-icon
-                                    v-if="!item.is_required"
                                     small
                                     @click="deleteItem(item)"
                                 >
@@ -121,6 +126,15 @@
                                         dense
                                         clearable
                                     ></v-text-field>
+                                    <v-text-field
+                                        v-model="ration.iiko_id"
+                                        label="Iiko #"
+                                        :error-messages="errors.iiko_id"
+                                        outlined
+                                        type="number"
+                                        dense
+                                        clearable
+                                    ></v-text-field>
                                     <v-select
                                         v-model="ration.department_id"
                                         :items="departments"
@@ -132,10 +146,6 @@
                                         dense
                                         clearable
                                     ></v-select>
-                                    <v-checkbox
-                                        v-model="ration.is_required"
-                                        :label="`Обязательный рацион: ${ration.is_required ? 'Да' : 'Нет'}`"
-                                    ></v-checkbox>
                                     <v-btn
                                         color="primary"
                                         @click="action"
@@ -160,6 +170,7 @@ export default {
         ration: {
             name: '',
             code: '',
+            iiko_id: null,
             is_required: false,
             department_id: null
         },
@@ -251,7 +262,10 @@ export default {
             this.edit = -1
             this.ration = {
                 name: '',
-                code: ''
+                code: '',
+                iiko_id: null,
+                is_required: false,
+                department_id: null
             }
         },
         editItem(ration){

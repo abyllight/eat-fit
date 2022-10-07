@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Dish extends Model
@@ -24,19 +25,9 @@ class Dish extends Model
         return $this->belongsTo(Cuisine::class, 'cuisine_id', 'id');
     }
 
-    public function iiko_ingredients()
+    public function ingredients(): BelongsToMany
     {
         return $this->belongsToMany(Ingredient::class, 'dish_ingredients', 'dish_id', 'ingredient_id');
-    }
-
-    public function custom_ingredients()
-    {
-        return $this->belongsToMany(Ingredient::class, 'custom_dish_ingredients', 'dish_id', 'ingredient_id');
-    }
-
-    public function ingredients()
-    {
-        return $this->custom_ingredients()->count() > 0 ? $this->custom_ingredients() : $this->iiko_ingredients();
     }
 
     public function getIngredientIds()
@@ -48,7 +39,7 @@ class Dish extends Model
 
     public function ration()
     {
-        return $this->belongsTo(Ration::class, 'ration_id', 'iiko_id');
+        return $this->belongsTo(Ration::class, 'ration_id', 'id');
     }
 
     public function selects()

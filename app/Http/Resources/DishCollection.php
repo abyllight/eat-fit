@@ -20,16 +20,15 @@ class DishCollection extends JsonResource
             'i_name' => $this->iiko_name,
             'cuisine_id' => $this->cuisine_id,
             'name' => $this->name,
-            //'code' => $this->code,
             'department_id' => $this->department_id,
             'department' => $this->getDepartment(),
-            'ration' => $this->ration ?? null,
+            'ration' => $this->ration,
             'ration_id' => $this->ration_id,
             'position' => $this->ration ? $this->ration->position : null,
             'is_custom' => $this->is_custom,
             'ingredient_ids' => $this->getIngredientIds(),
             'ingredients' => IngredientCollection::collection($this->ingredients->sortBy('name')),
-            'i_ingredients' => IngredientCollection::collection($this->iiko_ingredients->sortBy('name')),
+            //'i_ingredients' => IngredientCollection::collection($this->iiko_ingredients->sortBy('name')),
             'description' => $this->description
         ];
     }

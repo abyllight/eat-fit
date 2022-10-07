@@ -13,14 +13,27 @@ class ManagementController extends Controller
 {
     public function index(): JsonResponse
     {
-        $plus = Management::whereDate('created_at', Carbon::now()->toDateString())->where('type', 1)->exists();
-        $trial = Management::whereDate('created_at', Carbon::now()->toDateString())->where('type', 2)->exists();
-        $work = Management::whereDate('created_at', Carbon::now()->toDateString())->where('type', 3)->exists();
+        $plus = Management::whereDate('created_at', Carbon::now()->toDateString())
+            ->where('type', Management::PLUS_TYPE)
+            ->exists();
+
+        $saturday = Management::whereDate('created_at', Carbon::now()->toDateString())
+            ->where('type', Management::PLUS_SATURDAY_TYPE)
+            ->exists();
+
+        $trial = Management::whereDate('created_at', Carbon::now()->toDateString())
+            ->where('type', Management::TRIAL_TYPE)
+            ->exists();
+
+        $work = Management::whereDate('created_at', Carbon::now()->toDateString())
+            ->where('type', Management::WORK_TYPE)
+            ->exists();
 
         return response()->json([
             'plus' => $plus,
             'trial' => $trial,
-            'work' => $work
+            'work' => $work,
+            'saturday' => $saturday
         ]);
     }
 
@@ -54,7 +67,7 @@ class ManagementController extends Controller
 
                 if($day >= $course) {
                     $lead['status_id'] = 16567015; // Обратная связь
-                }else if(($day == 1 && $course >=2) || $day === 3 || $day === 11 || $day === 17 || $day === $course-1){
+                }else if(($day == 1 && $course >=2) || $day === 7 || $day === 14 || $day === 20){
                     $day++;
                     $lead->addCustomField(328089, $day);
 
@@ -118,7 +131,6 @@ class ManagementController extends Controller
 
     public function plusOneMain(): JsonResponse
     {
-        dd('exit');
         $result = $this->plusOne(Management::PLUS_ONE_STATUS, Management::PLUS_TYPE, false);
 
         if (!$result['status']) {

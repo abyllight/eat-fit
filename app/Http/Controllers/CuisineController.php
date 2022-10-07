@@ -74,7 +74,7 @@ class CuisineController extends Controller
         ]);
     }
 
-    public function fetchCuisines(): JsonResponse
+    public function fetchCuisinesFromIiko(): JsonResponse
     {
         $iiko = new IikoController();
         $token = $iiko->getAuthToken();
@@ -232,55 +232,5 @@ class CuisineController extends Controller
         $dishes = DishCollection::collection($cuisine->dishes->sortBy('ration_id'));
 
         return response()->json($dishes);
-    }
-
-    public function fetchDishesByCuisineId($id): JsonResponse
-    {
-        $iiko = new IikoController();
-        $token = $iiko->getAuthToken();
-
-        $cuisine = Cuisine::find($id);
-
-        $today = Carbon::today()->format('Y-m-d');
-
-        foreach ($cuisine->sizes as $size) {
-            $link = '/resto/api/v2/assemblyCharts/getAssembled?date=' . $today . '&productId=' . $size->iiko_id . '&key=';
-            $dishes = $iiko->doRequest($token, $link);
-
-            foreach ($dishes['assemblyCharts'][0]['items'] as $dish) {
-
-                $l = '/resto/api/v2/entities/products/list?types=DISH&ids=' . $dish['productId'] . '&key=';
-                $d = $iiko->doRequest($token, $l);
-
-                $first = substr($d[0]['name'], 0, 1);
-                $first = (int) $first;
-                $name = substr($d[0]['name'], 4);
-
-                $ddd = Dish::updateOrCreate(
-                    ['ration_id' => $first, 'cuisine_id' => $cuisine->id],
-                    [
-                        'iiko_name' => $name,
-                        'iiko_id' => $d[0]['id']
-                    ]
-                );
-
-                if (!$ddd->name){
-                    $ddd->name = $ddd->iiko_name;
-                    $ddd->save();
-                }
-
-                DishSize::updateOrCreate(
-                    ['dish_id' => $ddd->id, 'size' => $size->type],
-                    [
-                        'iiko_id' => $dish['productId']
-                    ]
-                );
-            }
-        }
-
-        return response()->json([
-            'status' => true,
-            'msg' => 'Блюда получены'
-        ]);
     }
 }

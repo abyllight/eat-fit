@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class Cuisine extends Model
 {
@@ -31,23 +32,12 @@ class Cuisine extends Model
         return $this->hasMany(CuisineSize::class, 'cuisine_id', 'id');
     }
 
-    public function getReqDishes()
-    {
-        $rations = Ration::where('is_required', true)->get();
-
-        $arr = array_map(function ($item) {
-            return $item['iiko_id'];
-        }, $rations->toArray());
-
-        return $this->dishes()->whereIn('ration_id', $arr)->get()->sortBy('ration_id');
-    }
-
     public function select(): HasMany
     {
         return $this->hasMany(Select::class, 'cuisine_id', 'id');
     }
 
-    public function getLeftRations(): AnonymousResourceCollection
+    /*public function getLeftRations(): ResourceCollection
     {
         $rations = Ration::where('is_required', true)->get();
 
@@ -58,5 +48,5 @@ class Cuisine extends Model
         $diff = $rations->diff($dish_rations);
 
         return RationCollection::collection($diff);
-    }
+    }*/
 }

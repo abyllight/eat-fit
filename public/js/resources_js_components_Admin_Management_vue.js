@@ -135,6 +135,7 @@ __webpack_require__.r(__webpack_exports__);
         _this.plus = res.data.plus;
         _this.trial = res.data.trial;
         _this.work = res.data.work;
+        _this.saturday = res.data.saturday;
       })["catch"](function (err) {
         console.log(err);
       });
@@ -153,8 +154,9 @@ __webpack_require__.r(__webpack_exports__);
           msg: res.data.msg,
           color: 'success',
           type: 'success'
-        }); //location.reload()
+        });
 
+        location.reload();
       })["catch"](function (err) {
         console.log(err);
       });

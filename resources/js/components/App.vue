@@ -197,12 +197,6 @@ export default {
                 roles: ['admin', 'diet'],
                 links: [
                     {
-                        title: 'Селекты',
-                        link: '/select',
-                        icon: 'star',
-                        roles: ['admin', 'diet']
-                    },
-                    {
                         title: 'Кухни мира',
                         link: '/cuisines',
                         icon: 'earth',
@@ -230,6 +224,12 @@ export default {
                         title: 'Рационы',
                         link: '/rations',
                         icon: 'clock',
+                        roles: ['admin', 'diet']
+                    },
+                    {
+                        title: 'Селекты',
+                        link: '/select',
+                        icon: 'star',
                         roles: ['admin', 'diet']
                     }
                 ]

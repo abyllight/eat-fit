@@ -33,6 +33,19 @@
                             </v-icon>
                             Получить блюда
                         </v-btn>
+
+                        <v-btn
+                            text
+                            @click="fetchIngredientsByCuisine"
+                        >
+                            <v-icon
+                                dark
+                                left
+                            >
+                                mdi-refresh
+                            </v-icon>
+                            Получить ингредиенты
+                        </v-btn>
                     </v-card-actions>
                 </v-card>
 
@@ -90,21 +103,6 @@
                     :loading="loading"
                 >
                     <v-card-title>{{ dish.name }}</v-card-title>
-                    <v-card-actions>
-                        <v-btn
-                            color="green"
-                            text
-                            @click="fetchIngredientsByDishId(dish.id)"
-                        >
-                            <v-icon
-                                dark
-                                left
-                            >
-                                mdi-refresh
-                            </v-icon>
-                            Получить ингредиенты
-                        </v-btn>
-                    </v-card-actions>
                 </v-card>
                 <v-card
                     v-if="dish.ingredients.length > 0"
@@ -117,7 +115,9 @@
                             :key="ing.id"
                         >
                             <v-list-item-content>
-                                <v-list-item-title>{{index+1}}. {{ing.name}}</v-list-item-title>
+                                <v-list-item-title>
+                                    <strong>{{index+1}}.</strong> {{ing.name}}
+                                </v-list-item-title>
                             </v-list-item-content>
                         </v-list-item>
                     </v-list>
@@ -223,7 +223,7 @@
                     </v-card-text>
                 </v-card>
             </v-dialog>
-        </v-row>-->
+        </v-row>
     </div>
 </template>
 <script>
@@ -308,7 +308,7 @@
                 this.loading = true
 
                 await axios
-                    .get('/api/cuisines/'+id+'/dishes/iiko')
+                    .get('/api/dishes/iiko/cuisine/'+id)
                     .then(response => {
                         this.$store.dispatch('showAlert', {
                             'isVisible': true,
@@ -326,11 +326,11 @@
                         this.loading = false
                     })
             },
-            async fetchIngredientsByDishId(id) {
+            async fetchIngredientsByCuisine() {
                 this.disabled = true
                 this.loading = true
                 await axios
-                    .get('/api/ingredients/iiko/'+id)
+                    .get('/api/ingredients/iiko/'+this.id)
                     .then(response => {
                         this.$store.dispatch('showAlert', {
                             'isVisible': true,

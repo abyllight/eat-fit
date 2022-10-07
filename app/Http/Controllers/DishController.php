@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Resources\DishCollection;
 use App\Models\Cuisine;
 use App\Models\Dish;
+use App\Models\DishSize;
 use App\Models\Ration;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -98,6 +100,57 @@ class DishController extends Controller
         return response()->json([
             'status' => false,
             'msg' => 'Dish not found'
+        ]);
+    }
+
+    public function fetchDishesByCuisineId($id): JsonResponse
+    {
+        $iiko = new IikoController();
+        $token = $iiko->getAuthToken();
+
+        $cuisine = Cuisine::find($id);
+        $c = $cuisine->sizes->first();
+
+        $today = Carbon::today()->format('Y-m-d');
+
+        $link = '/resto/api/v2/assemblyCharts/getAssembled?date=' . $today . '&productId=' . $c->iiko_id . '&key=';
+        $dishes = $iiko->doRequest($token, $link);
+
+        foreach ($dishes['assemblyCharts'][0]['items'] as $dish) {
+
+            $l = '/resto/api/v2/entities/products/list?types=DISH&ids=' . $dish['productId'] . '&key=';
+            $response = $iiko->doRequest($token, $l);
+
+            $first = substr($response[0]['name'], 0, 1);
+            $first = (int) $first;
+            $name = substr($response[0]['name'], 4);
+
+            $r = Ration::where('iiko_id', $first)->first();
+
+            if (!$r) {
+                return response()->json([
+                    'status' => false,
+                    'msg' => 'Нет рациона с iiko № = ' . $first
+                ]);
+            }
+
+            $d = Dish::updateOrCreate(
+                ['ration_id' => $r->id, 'cuisine_id' => $cuisine->id],
+                [
+                    'iiko_name' => $name,
+                    'iiko_id' => $response[0]['id']
+                ]
+            );
+
+            if (!$d->name){
+                $d->name = $d->iiko_name;
+                $d->save();
+            }
+        }
+
+        return response()->json([
+            'status' => true,
+            'msg' => 'Блюда получены'
         ]);
     }
 

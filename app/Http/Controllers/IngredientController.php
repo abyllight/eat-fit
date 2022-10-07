@@ -24,81 +24,57 @@ class IngredientController extends Controller
     {
         $iiko = new IikoController();
         $token = $iiko->getAuthToken();
+        $today = Carbon::today()->format('Y-m-d');
 
-        $dish = Dish::find($id);
+        $cuisine = Cuisine::find($id);
 
-        if (!$dish) {
+        if (!$cuisine) {
             return response()->json([
                 'status' => false,
-                'msg' => 'Dish not found'
+                'msg' => 'Cuisine not found'
             ]);
         }
 
-        $today = Carbon::today()->format('Y-m-d');
+        $dishes = $cuisine->dishes;
 
-        foreach ($dish->sizes as $key => $size) {
-            $link = '/resto/api/v2/assemblyCharts/getPrepared?date='.$today.'&productId=' . $size->iiko_id . '&key=';
+        if (!$dishes) {
+            return response()->json([
+                'status' => false,
+                'msg' => 'Cuisine has no dishes'
+            ]);
+        }
+
+        foreach ($dishes as $dish) {
+            $link = '/resto/api/v2/assemblyCharts/getPrepared?date='.$today.'&productId=' . $dish->iiko_id . '&key=';
             $ingredients = $iiko->doRequest($token, $link);
 
             if (is_array($ingredients)) {
                 $ingredients = $ingredients['preparedCharts'][0]['items'];
 
-                DishIngredient::where('dish_id', $dish->id)->update([
-                    'is_original' => false
-                ]);
+                DishIngredient::where('dish_id', $dish->id)->update(['is_original' => false]);
 
                 foreach ($ingredients as $ingredient) {
                     $link2 = '/resto/api/v2/entities/products/list?types=GOODS&ids=' . $ingredient['productId'] . '&key=';
                     $goods = $iiko->doRequest($token, $link2);
 
                     if ($goods) {
-                        $i = Ingredient::where('iiko_id', $goods[0]['id'])->first();
+                        $i = Ingredient::updateOrCreate(
+                            ['iiko_id' => $goods[0]['id']],
+                            ['iiko_name' => $goods[0]['name']]
+                        );
 
-                        if ($key === 0) {
-                            if ($i) {
-                                $i->iiko_name = $goods[0]['name'];
-
-                                if (!$i->name) {
-                                    $i->name = $goods[0]['name'];
-                                }
-
-                            }else {
-                                $i = new Ingredient();
-                                $i->iiko_id = $goods[0]['id'];
-                                $i->iiko_name = $goods[0]['name'];
-                            }
-
+                        if (!$i->name) {
+                            $i->name = $goods[0]['name'];
                             $i->save();
                         }
 
-                        $di = DishIngredient::where('dish_id', $dish->id)->where('ingredient_id', $i->id)->first();
-
-                        if ($di) {
-                            $di->is_original = true;
-                        }else {
-                            $di = new DishIngredient();
-                            $di->dish_id = $dish->id;
-                            $di->ingredient_id = $i->id;
-                        }
-
-                        $di->save();
-
-                        DishIngredientSize::updateOrCreate(
-                            ['di_id' => $di->id, 'size' => $size->size],
-                            ['amount' => $ingredient['amount']]
+                        DishIngredient::updateOrCreate(
+                            [
+                                'dish_id' => $dish->id,
+                                'ingredient_id' => $i->id
+                            ]
                         );
                     }
-                }
-
-                $dis = DishIngredient::where('dish_id', $dish->id)
-                    ->where('is_original', false)
-                    ->get();
-
-                foreach ($dis as $item) {
-                    if ($item->sizes) {
-                        $item->sizes()->delete();
-                    }
-                    $item->delete();
                 }
             }else {
                 return response()->json([

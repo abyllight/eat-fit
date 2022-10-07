@@ -12,6 +12,8 @@ class DishIngredient extends Model
 
     public $timestamps = false;
 
+    protected $fillable = ['dish_id', 'ingredient_id', 'is_original', 'is_custom'];
+
     public function sizes(): HasMany
     {
         return $this->hasMany(DishIngredientSize::class, 'di_id', 'id');

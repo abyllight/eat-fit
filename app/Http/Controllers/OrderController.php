@@ -391,7 +391,7 @@ class OrderController extends Controller
 
             $fields['has_bag'] = strpos($fields['logistic'], 'ланчбэг') !== false;
 
-            $existing_order = Order::where('amo_id', $fields['amo_id'])->orWhere('name', $fields['name'])->first();
+            $existing_order = Order::where('amo_id', $fields['amo_id'])->first();
 
             if ($existing_order) {
                 $this->updateOrder($existing_order, $fields);

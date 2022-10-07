@@ -173,6 +173,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Rations",
   data: function data() {
@@ -181,6 +191,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       ration: {
         name: '',
         code: '',
+        iiko_id: null,
         is_required: false,
         department_id: null
       },
@@ -301,7 +312,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.edit = -1;
       this.ration = {
         name: '',
-        code: ''
+        code: '',
+        iiko_id: null,
+        is_required: false,
+        department_id: null
       };
     },
     editItem: function editItem(ration) {
@@ -488,6 +502,12 @@ var render = function() {
                             _vm._v(" "),
                             _c("th", { staticClass: "text-left" }, [
                               _vm._v(
+                                "\n                            Iiko №\n                        "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("th", { staticClass: "text-left" }, [
+                              _vm._v(
                                 "\n                            Цех\n                        "
                               )
                             ]),
@@ -504,11 +524,15 @@ var render = function() {
                           "tbody",
                           _vm._l(_vm.rations, function(item, index) {
                             return _c("tr", { key: item.id }, [
-                              _c("td", [_vm._v(_vm._s(index + 1))]),
+                              _c("td", [
+                                _c("strong", [_vm._v(_vm._s(index + 1))])
+                              ]),
                               _vm._v(" "),
                               _c("td", [_vm._v(_vm._s(item.name))]),
                               _vm._v(" "),
                               _c("td", [_vm._v(_vm._s(item.code))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(item.iiko_id))]),
                               _vm._v(" "),
                               _c("td", [_vm._v(_vm._s(item.department))]),
                               _vm._v(" "),
@@ -533,24 +557,22 @@ var render = function() {
                                     ]
                                   ),
                                   _vm._v(" "),
-                                  !item.is_required
-                                    ? _c(
-                                        "v-icon",
-                                        {
-                                          attrs: { small: "" },
-                                          on: {
-                                            click: function($event) {
-                                              return _vm.deleteItem(item)
-                                            }
-                                          }
-                                        },
-                                        [
-                                          _vm._v(
-                                            "\n                                mdi-delete\n                            "
-                                          )
-                                        ]
+                                  _c(
+                                    "v-icon",
+                                    {
+                                      attrs: { small: "" },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.deleteItem(item)
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                                mdi-delete\n                            "
                                       )
-                                    : _vm._e()
+                                    ]
+                                  )
                                 ],
                                 1
                               )
@@ -729,6 +751,24 @@ var render = function() {
                                     }
                                   }),
                                   _vm._v(" "),
+                                  _c("v-text-field", {
+                                    attrs: {
+                                      label: "Iiko #",
+                                      "error-messages": _vm.errors.iiko_id,
+                                      outlined: "",
+                                      type: "number",
+                                      dense: "",
+                                      clearable: ""
+                                    },
+                                    model: {
+                                      value: _vm.ration.iiko_id,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.ration, "iiko_id", $$v)
+                                      },
+                                      expression: "ration.iiko_id"
+                                    }
+                                  }),
+                                  _vm._v(" "),
                                   _c("v-select", {
                                     attrs: {
                                       items: _vm.departments,
@@ -751,21 +791,6 @@ var render = function() {
                                         )
                                       },
                                       expression: "ration.department_id"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("v-checkbox", {
-                                    attrs: {
-                                      label:
-                                        "Обязательный рацион: " +
-                                        (_vm.ration.is_required ? "Да" : "Нет")
-                                    },
-                                    model: {
-                                      value: _vm.ration.is_required,
-                                      callback: function($$v) {
-                                        _vm.$set(_vm.ration, "is_required", $$v)
-                                      },
-                                      expression: "ration.is_required"
                                     }
                                   }),
                                   _vm._v(" "),
