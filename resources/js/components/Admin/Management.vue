@@ -120,7 +120,7 @@ export default {
                     this.plus = res.data.plus
                     this.trial = res.data.trial
                     this.work = res.data.work
-                    this.saturday = res.data.saturday
+                    //this.saturday = res.data.saturday
                 }).catch(err => {
                     console.log(err)
             })
