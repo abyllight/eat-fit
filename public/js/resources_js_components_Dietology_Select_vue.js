@@ -609,6 +609,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -721,7 +723,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _this2.loading = true;
                 _context2.next = 3;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/orders/select').then(function (response) {
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/orders/select/all').then(function (response) {
                   _this2.orders = response.data.orders;
                   _this2.select_stat = response.data.stat;
                 })["catch"](function (error) {
@@ -800,7 +802,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context5.prev = _context5.next) {
               case 0:
                 _context5.next = 2;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/rations/required').then(function (response) {
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/rations').then(function (response) {
                   _this5.rations = response.data;
                 })["catch"](function (error) {
                   console.log(error);
@@ -881,7 +883,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this$select_previous, _this$select_result$f;
 
       this.ration = ration;
-      this.ration_id = ration.iiko_id;
+      this.ration_id = ration.id;
       this.previous = (_this$select_previous = this.select_previous.find(function (obj) {
         return obj.ration.id === ration.id;
       })) !== null && _this$select_previous !== void 0 ? _this$select_previous : {};
@@ -889,7 +891,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         return obj.ration.id === ration.id;
       })) !== null && _this$select_result$f !== void 0 ? _this$select_result$f : {};
       this.wish_ids = this.result.wishes;
-      this.getDishesByRation(this.ration.iiko_id);
+      this.getDishesByRation(this.ration_id);
       this.dialog = true;
     },
     activateDeactivate: function activateDeactivate(id) {
@@ -2320,6 +2322,10 @@ var render = function() {
                                 _vm._v(_vm._s(result.dish_name))
                               ]),
                               _vm._v(" "),
+                              _c("v-card-text", [
+                                _vm._v(_vm._s(result.description))
+                              ]),
+                              _vm._v(" "),
                               _c(
                                 "v-card-actions",
                                 [
@@ -2707,7 +2713,7 @@ var render = function() {
                                       return _c(
                                         "v-chip",
                                         {
-                                          key: t.wish,
+                                          key: t.id,
                                           staticClass: "ma-2",
                                           attrs: {
                                             color: _vm.wish_ids.includes(t.id)
@@ -2866,7 +2872,7 @@ var render = function() {
                                                   items: _vm.rations,
                                                   dense: "",
                                                   "item-text": "name",
-                                                  "item-value": "iiko_id",
+                                                  "item-value": "id",
                                                   outlined: "",
                                                   label: "Рационы"
                                                 },
@@ -3071,7 +3077,9 @@ var render = function() {
                                                                 )
                                                               : _vm._e(),
                                                             _vm._v(" "),
-                                                            !_vm.isDutyDishId
+                                                            _vm.mix.includes(
+                                                              ing.id
+                                                            )
                                                               ? _c(
                                                                   "v-btn",
                                                                   {
@@ -3274,7 +3282,7 @@ var render = function() {
                                                     _c(
                                                       "v-row",
                                                       [
-                                                        ing.pivot.editable
+                                                        ing.pivot.is_editable
                                                           ? _c(
                                                               "v-col",
                                                               [

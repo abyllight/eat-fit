@@ -99,19 +99,12 @@
                                         :items="rations"
                                         v-model="dish.ration_id"
                                         item-text="name"
-                                        item-value="iiko_id"
+                                        item-value="id"
                                         label="Рацион"
                                         :error-messages="errors.ration_id"
                                         clearable
                                         outlined
                                     ></v-select>
-                                    <v-text-field
-                                        v-model="dish.code"
-                                        label="Code"
-                                        :error-messages="errors.code"
-                                        outlined
-                                        clearable
-                                    ></v-text-field>
                                     <v-select
                                         :items="departments"
                                         v-model="dish.department_id"
@@ -170,7 +163,8 @@ export default {
             description: '',
             department: null,
             code: '',
-            ingredients: []
+            ingredients: [],
+            is_custom: true
         },
         ingredients: [],
         departments: [],
@@ -208,7 +202,7 @@ export default {
         },
         async getRations(){
             await axios
-                .get('/api/rations/required')
+                .get('/api/rations')
                 .then(response => {
                     this.rations = response.data
                 })

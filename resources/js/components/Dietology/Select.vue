@@ -116,6 +116,8 @@
                         >
                             <v-card-title>{{result.ration.name}}</v-card-title>
                             <v-card-subtitle>{{result.dish_name}}</v-card-subtitle>
+
+                            <v-card-text>{{result.description}}</v-card-text>
                             <v-card-actions>
                                 <v-btn
                                     v-if="result.is_active"
@@ -270,7 +272,7 @@
                                 <v-col sm="12" lg="8">
                                     <v-chip
                                         v-for="t in wishlist"
-                                        :key="t.wish"
+                                        :key="t.id"
                                         class="ma-2"
                                         :color="wish_ids.includes(t.id) ? 'lime' : ''"
                                         close
@@ -324,7 +326,7 @@
                                                 @change="getDishesByRation(ration_id)"
                                                 dense
                                                 item-text="name"
-                                                item-value="iiko_id"
+                                                item-value="id"
                                                 outlined
                                                 label="Рационы"
                                             ></v-select>
@@ -380,7 +382,7 @@
                                                     {{hasResultIncludeIngredient(ing.id) ? 'Убрать' : 'Вернуть'}}
                                                 </v-btn>
                                                 <v-btn
-                                                    v-if="!isDutyDishId"
+                                                    v-if="mix.includes(ing.id)"
                                                     x-small
                                                     @click="!hasAnalog(ing.id) ? showAnalogs(ing.id) : returnIngredient(ing.id)"
                                                     class="ml-2"
@@ -443,7 +445,7 @@
                                                         @click="ing.pivot.is_visible ? hideIngredient(ing.id) : showIngredient(ing.id)"
                                                     >{{ing.pivot.is_visible ? 'не показывать' : 'показывать'}}</v-btn>
                                                 </v-col>-->
-                                                <v-col v-if="ing.pivot.editable">
+                                                <v-col v-if="ing.pivot.is_editable">
                                                     <v-btn x-small @click="removeExtra(ing.id)">убрать</v-btn>
                                                 </v-col>
                                             </v-row>
@@ -656,7 +658,7 @@
             async getOrders() {
                 this.loading = true
                 await axios
-                    .get('/api/orders/select')
+                    .get('/api/orders/select/all')
                     .then(response => {
                         this.orders = response.data.orders
                         this.select_stat = response.data.stat
@@ -694,7 +696,7 @@
             },
             async getRations(){
                 await axios
-                    .get('/api/rations/required')
+                    .get('/api/rations')
                     .then(response => {
                         this.rations = response.data
                     })
@@ -740,11 +742,11 @@
             },
             openSettings(ration){
                 this.ration = ration
-                this.ration_id = ration.iiko_id
+                this.ration_id = ration.id
                 this.previous = this.select_previous.find(obj => obj.ration.id === ration.id) ?? {}
                 this.result = this.select_result.find(obj => obj.ration.id === ration.id) ?? {}
                 this.wish_ids = this.result.wishes
-                this.getDishesByRation(this.ration.iiko_id)
+                this.getDishesByRation(this.ration_id)
                 this.dialog = true
             },
             activateDeactivate(id){

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\DishCollection;
 use App\Models\Cuisine;
 use App\Models\Dish;
+use App\Models\DishIngredient;
 use App\Models\DishSize;
 use App\Models\Ration;
 use Carbon\Carbon;
@@ -16,6 +17,11 @@ class DishController extends Controller
     public function index(): JsonResponse
     {
         return response()->json(DishCollection::collection(Dish::where('is_custom', true)->orderBy('ration_id')->orderBy('name')->get()));
+    }
+
+    public function show($id): JsonResponse
+    {
+        return response()->json(new DishCollection(Dish::find($id)));
     }
 
     public function store(Request $request): JsonResponse
@@ -37,7 +43,7 @@ class DishController extends Controller
         $dish->is_custom = $request->has('is_custom') ? $request->is_custom : true;
         $dish->save();
 
-        $dish->custom_ingredients()->sync($request->ingredient_ids);
+        $dish->ingredients()->sync($request->ingredient_ids);
 
         return response()->json([
             'status' => true,
@@ -51,8 +57,7 @@ class DishController extends Controller
             'name' => 'required',
             'ration_id' => 'required',
             'department_id' => 'required',
-            //'code' => 'required',
-            //'ingredient_ids' => 'required'
+            'ingredient_ids' => 'required'
         ]);
 
         $dish = Dish::find($id);
@@ -60,7 +65,6 @@ class DishController extends Controller
         if($dish) {
             $dish->name = $request->name;
             $dish->ration_id = $request->ration_id;
-            //$dish->code = $request->code;
             $dish->department_id = $request->department_id;
             $dish->description = $request->description;
             $dish->cuisine_id = $request->cuisine_id;
@@ -68,7 +72,18 @@ class DishController extends Controller
             $dish->save();
 
             if ($request->ingredient_ids) {
-                $dish->custom_ingredients()->sync($request->ingredient_ids);
+
+                if (!$request->is_custom) {
+                    DishIngredient::where('dish_id', $dish->id)->update(['is_visible' => false]);
+
+                    foreach ($request->ingredient_ids as $ingredient) {
+                        $di = DishIngredient::where('dish_id', $dish->id)->where('ingredient_id', $ingredient)->first();
+                        $di->is_visible = true;
+                        $di->save();
+                    }
+                }else {
+                    $dish->ingredients()->sync($request->ingredient_ids);
+                }
             }
 
             return response()->json([

@@ -196,6 +196,30 @@ const router = new VueRouter({
             component: () => import('./components/Dietology/CuisineDishes')
         },
         {
+            path: '/cuisine-dishes/:id/edit',
+            name: 'cuisine_dishes_edit',
+            props: true,
+            meta: {
+                auth: true,
+                roles: ['admin', 'diet']
+            },
+            component: () => import('./components/Dietology/CuisineDishesEdit')
+        },
+        {
+            path: '/cuisine-dishes/:id/:r_id/create',
+            name: 'cuisine_dishes_create',
+            props: (route) => {
+                const id = parseInt(route.params.id)
+                const r_id = parseInt(route.params.r_id)
+                return {id, r_id}
+            },
+            meta: {
+                auth: true,
+                roles: ['admin', 'diet']
+            },
+            component: () => import('./components/Dietology/CuisineDishesCreate')
+        },
+        {
             path: '/dishes',
             name: 'dishes',
             meta: {
@@ -203,6 +227,24 @@ const router = new VueRouter({
                 roles: ['admin', 'diet']
             },
             component: () => import('./components/Dietology/Dishes')
+        },
+        {
+            path: '/dishes/:id/edit',
+            name: 'dish_edit',
+            meta: {
+                auth: true,
+                roles: ['admin', 'diet']
+            },
+            component: () => import('./components/Dietology/DishEdit')
+        },
+        {
+            path: '/dish/create',
+            name: 'dish_create',
+            meta: {
+                auth: true,
+                roles: ['admin', 'diet']
+            },
+            component: () => import('./components/Dietology/DishCreate')
         },
         {
             path: '/category',

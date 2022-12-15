@@ -12,7 +12,7 @@ class DishIngredient extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['dish_id', 'ingredient_id', 'is_original', 'is_custom'];
+    protected $fillable = ['dish_id', 'ingredient_id', 'is_original', 'is_visible'];
 
     public function sizes(): HasMany
     {

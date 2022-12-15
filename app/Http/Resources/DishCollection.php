@@ -17,8 +17,8 @@ class DishCollection extends JsonResource
     {
         return [
             'id' => $this->id,
-            'i_name' => $this->iiko_name,
             'cuisine_id' => $this->cuisine_id,
+            'i_name' => $this->iiko_name,
             'name' => $this->name,
             'department_id' => $this->department_id,
             'department' => $this->getDepartment(),
@@ -27,8 +27,8 @@ class DishCollection extends JsonResource
             'position' => $this->ration ? $this->ration->position : null,
             'is_custom' => $this->is_custom,
             'ingredient_ids' => $this->getIngredientIds(),
-            'ingredients' => IngredientCollection::collection($this->ingredients->sortBy('name')),
-            //'i_ingredients' => IngredientCollection::collection($this->iiko_ingredients->sortBy('name')),
+            'ingredients' => IngredientCollection::collection($this->getVisibleIngredients()),
+            'original_ingredients' => IngredientCollection::collection($this->getOriginalIngredients()),
             'description' => $this->description
         ];
     }

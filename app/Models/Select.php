@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class Select extends Model
 {
@@ -26,13 +27,13 @@ class Select extends Model
 
     public function ration()
     {
-        return $this->belongsTo(Ration::class, 'ration_id', 'iiko_id');
+        return $this->belongsTo(Ration::class, 'ration_id', 'id');
     }
 
     public function ingredients()
     {
         return $this->belongsToMany(Ingredient::class, 'select_ingredients', 'select_id', 'ingredient_id')
-                ->withPivot('analog_id', 'editable', 'is_visible');
+                ->withPivot('analog_id', 'is_editable', 'is_visible');
     }
 
     public function dish()
@@ -51,11 +52,9 @@ class Select extends Model
             return $item['id'];
         }, $this->wishes()->get()->toArray());    }
 
-    public function getIngredientIds()
+    public function getIngredientIds(): Collection
     {
-        return array_map(function ($item){
-            return $item['id'];
-        }, $this->ingredients()->get()->toArray());
+        return $this->ingredients()->pluck('id');
     }
 
     public function getStatusColor(): string

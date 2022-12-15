@@ -18,6 +18,7 @@ class CreateCuisineSizesTable extends Migration
             $table->integer('cuisine_id');
             $table->string('name');
             $table->string('iiko_id');
+            $table->string('type')->nullable();
             $table->timestamps();
         });
     }

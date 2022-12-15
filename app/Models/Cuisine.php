@@ -37,9 +37,9 @@ class Cuisine extends Model
         return $this->hasMany(Select::class, 'cuisine_id', 'id');
     }
 
-    /*public function getLeftRations(): ResourceCollection
+    public function getLeftRations(): ResourceCollection
     {
-        $rations = Ration::where('is_required', true)->get();
+        $rations = Ration::all();
 
         $dish_rations = $this->dishes->map(function ($item){
             return $item->ration;
@@ -48,5 +48,5 @@ class Cuisine extends Model
         $diff = $rations->diff($dish_rations);
 
         return RationCollection::collection($diff);
-    }*/
+    }
 }

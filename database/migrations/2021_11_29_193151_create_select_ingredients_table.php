@@ -16,6 +16,9 @@ class CreateSelectIngredientsTable extends Migration
         Schema::create('select_ingredients', function (Blueprint $table) {
             $table->unsignedInteger('select_id');
             $table->unsignedInteger('ingredient_id');
+            $table->integer('analog_id')->nullable();
+            $table->boolean('is_editable')->default(false);
+            $table->boolean('is_visible')->default(true);
             $table->timestamps();
         });
     }

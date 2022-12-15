@@ -77,6 +77,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/orders/stat', [OrderController::class, 'getOrderStat']);
 
     Route::get('/orders/select', [OrderController::class, 'getSelect']);
+    Route::get('/orders/select/all', [OrderController::class, 'getSelectAll']);
     Route::get('/orders/{order}/previous/select/ration/{ration}', [OrderController::class, 'getPreviousOrderSelectByRation']);
     Route::get('/orders/{order}/today/select/ration/{ration}', [OrderController::class, 'getOrderSelectByRation']);
 
@@ -108,7 +109,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cuisine/iiko', [CuisineController::class, 'fetchCuisinesFromIiko']);
     Route::get('/cuisines/{id}/dishes', [CuisineController::class, 'getDishesByCuisineId']);
 
-    Route::resource('dishes', DishController::class)->except(['create', 'show', 'edit']);
+    Route::resource('dishes', DishController::class)->except(['create', 'edit']);
     Route::get('dishes/ration/{id}', [DishController::class, 'getDishesByRation']);
     Route::get('dishes/rations/', [DishController::class, 'getDishesByRations']);
     Route::get('dishes/iiko', [DishController::class, 'fetchDishes']);

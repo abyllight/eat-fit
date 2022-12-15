@@ -472,7 +472,7 @@ var render = function() {
         [
           _c(
             "v-col",
-            { attrs: { cols: "12", md: "6" } },
+            { attrs: { cols: "12" } },
             [
               _c("v-simple-table", {
                 scopedSlots: _vm._u([

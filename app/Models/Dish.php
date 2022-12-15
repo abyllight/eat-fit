@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -27,14 +28,27 @@ class Dish extends Model
 
     public function ingredients(): BelongsToMany
     {
-        return $this->belongsToMany(Ingredient::class, 'dish_ingredients', 'dish_id', 'ingredient_id');
+        return $this->belongsToMany(
+            Ingredient::class,
+            'dish_ingredients',
+            'dish_id',
+            'ingredient_id'
+        );
     }
 
-    public function getIngredientIds()
+    public function getVisibleIngredients(): Collection
     {
-        return array_map(function ($item){
-            return $item['id'];
-        }, $this->ingredients()->get()->toArray());
+        return $this->ingredients()->where('is_visible', true)->get()->sortBy('name');
+    }
+
+    public function getIngredientIds(): \Illuminate\Support\Collection
+    {
+        return $this->getVisibleIngredients()->pluck('id');
+    }
+
+    public function getOriginalIngredients(): Collection
+    {
+        return $this->ingredients()->where('is_original', true)->get()->sortBy('name');
     }
 
     public function ration()

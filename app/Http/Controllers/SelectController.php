@@ -254,7 +254,7 @@ class SelectController extends Controller
     public function hasRemovedIngredients(Select $select): bool
     {
         $dish = Dish::where('cuisine_id', $select->cuisine_id)->where('ration_id', $select->ration_id)->first();
-        $diff = array_diff($dish->getIngredientIds(), $select->getIngredientIds());
+        $diff = $dish->getIngredientIds()->diff($select->getIngredientIds());
         return count($diff) > 0;
     }
 
@@ -290,7 +290,7 @@ class SelectController extends Controller
             ]);
         }
 
-        $select->ingredients()->attach($request->ingredient_id, ['editable' => true]);
+        $select->ingredients()->attach($request->ingredient_id, ['is_editable' => true]);
 
         /*if ($select->status === Select::LITE || $select->status === Select::WITHOUT) {
             $select->status = Select::REPLACEMENT;
@@ -462,12 +462,12 @@ class SelectController extends Controller
 
     public function selectRations(): JsonResponse
     {
-        $rations = Ration::where('is_required', true)->get();
+        $rations = Ration::all();
         $arr = [];
 
         foreach ($rations as $key => $ration) {
             $selects = Select::whereDate('created_at', Carbon::today())
-                ->where('ration_id', $ration->iiko_id)
+                ->where('ration_id', $ration->id)
                 ->where('code', '!=', null)
                 ->orderBy('ration_id')
                 ->get()
@@ -491,7 +491,7 @@ class SelectController extends Controller
         $arr = [];
 
         $selects = Select::whereDate('created_at', Carbon::today())
-            ->where('ration_id', $ration->iiko_id)
+            ->where('ration_id', $ration->id)
             ->where('code', '!=', null)
             ->orderBy('ration_id')
             ->get()
@@ -517,7 +517,7 @@ class SelectController extends Controller
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
-        $rations = Ration::where('is_required', true)->get()->toArray();
+        $rations = Ration::all()->toArray();
 
         $ration_names = array_map(function ($obj){
             return $obj['name'];
@@ -575,9 +575,9 @@ class SelectController extends Controller
             ],
         ];
 
-        $letters = ['D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
+        $letters = ['D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'];
 
-        $sheet->getStyle('A1:L1')->applyFromArray($blackStyleArray);
+        $sheet->getStyle('A1:M1')->applyFromArray($blackStyleArray);
 
         //Row height
         $sheet->getRowDimension('1')->setRowHeight(40);
@@ -611,7 +611,7 @@ class SelectController extends Controller
             $sheet->getStyle('C' . $n)->applyFromArray($center);
 
             foreach ($rations as $i => $r) {
-                $s = $select->where('ration_id', $r['iiko_id'])->first();
+                $s = $select->where('ration_id', $r['id'])->first();
                 $code_section = '---';
 
                 $sheet->setCellValue($letters[$i] . $n, ($key+1).'/'.$order->name.' - '.$order->getSize($order->size));
@@ -624,7 +624,7 @@ class SelectController extends Controller
 
                         if ($s->status === Select::WITHOUT) {
                             $dish = Dish::getDutyDishByRation($s->ration_id);
-                            $diff = array_diff($dish->getIngredientIds(), $s->getIngredientIds());
+                            $diff = $dish->getIngredientIds()->diff($s->getIngredientIds());
                             $w = '';
 
                             if ($diff){

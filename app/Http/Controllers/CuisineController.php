@@ -25,6 +25,13 @@ class CuisineController extends Controller
     public function index(): JsonResponse
     {
         $cuisines = Cuisine::orderBy('position')->get();
+
+        $duty = Cuisine::where('is_on_duty', true)->first();
+        if (!$duty) {
+            $duty = Cuisine::first();
+            $duty->is_on_duty = true;
+            $duty->save();
+        }
         /*$tomorrow = Carbon::tomorrow()->toDateString();
         $duty = Cuisine::where('is_on_duty', true)->first();
         $n = 0;

@@ -20,8 +20,10 @@ class CreateSelectsTable extends Migration
             $table->integer('ration_id');
             $table->integer('dish_id')->nullable();
             $table->integer('dish_name')->nullable();
+            $table->string('code')->nullable();
             $table->integer('status')->default(0);
             $table->longText('description')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

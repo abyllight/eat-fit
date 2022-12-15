@@ -16,6 +16,9 @@ class CreateRationsTable extends Migration
         Schema::create('rations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->integer('iiko_id');
+            $table->string('code')->nullable();
+            $table->integer('department_id')->nullable();
             $table->boolean('is_extra')->default(false);
             $table->timestamps();
         });

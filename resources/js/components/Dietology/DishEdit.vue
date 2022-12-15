@@ -6,13 +6,13 @@
                     color="primary"
                     @click="dialog=true"
                 >
-                    Добавить рацион
+                    Добавить блюдо
                 </v-btn>
             </v-col>
         </v-row>
         <v-row>
             <v-col cols="12">
-                <v-simple-table>
+                <v-simple-table dense>
                     <template v-slot:default>
                         <thead>
                         <tr>
@@ -23,60 +23,38 @@
                                 Название
                             </th>
                             <th class="text-left">
-                                Code
+                                Рацион
                             </th>
                             <th class="text-left">
-                                Iiko №
+                                Ингредиенты
                             </th>
                             <th class="text-left">
-                                Цех
-                            </th>
-                            <th class="text-left">
-                                Действие
+                                Actions
                             </th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr
-                            v-for="(item, index) in rations"
-                            :key="item.id"
+                            v-for="(dish, index) in dishes"
+                            :key="dish.id"
                         >
-                            <td>
-                                <strong>{{ index + 1 }}</strong>
-                            </td>
-                            <td>{{ item.name }}</td>
-                            <td>{{ item.code }}</td>
-                            <td>{{ item.iiko_id }}</td>
-                            <td>{{ item.department }}</td>
+                            <td>{{ index + 1 }}</td>
+                            <td>{{ dish.name }}</td>
+                            <td>{{ dish.ration ? dish.ration.name : '' }}</td>
+                            <td>{{ dish.ingredient_ids.length }}</td>
                             <td>
                                 <v-icon
                                     small
                                     class="mr-2"
-                                    @click="editItem(item)"
+                                    @click="editItem(dish)"
                                 >
                                     mdi-pencil
                                 </v-icon>
-                                <v-icon
-                                    small
-                                    @click="deleteItem(item)"
-                                >
-                                    mdi-delete
-                                </v-icon></td>
+                            </td>
                         </tr>
                         </tbody>
                     </template>
                 </v-simple-table>
-                <v-dialog v-model="dialogDelete" max-width="500px">
-                    <v-card>
-                        <v-card-title class="text-h5">Вы уверены?</v-card-title>
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn color="blue darken-1" text @click="dialogDelete=false">Отмена</v-btn>
-                            <v-btn color="blue darken-1" text @click="deleteConfirm">Да</v-btn>
-                            <v-spacer></v-spacer>
-                        </v-card-actions>
-                    </v-card>
-                </v-dialog>
             </v-col>
         </v-row>
         <v-row justify="center">
@@ -98,7 +76,7 @@
                         >
                             <v-icon>mdi-close</v-icon>
                         </v-btn>
-                        <v-toolbar-title>Рацион</v-toolbar-title>
+                        <v-toolbar-title>Блюдо</v-toolbar-title>
                     </v-toolbar>
                     <v-card-title>
                         <span class="text-h5"> {{ edit === 1 ? 'Редактировать' : 'Добавить' }}</span>
@@ -111,41 +89,60 @@
                                     lg="4"
                                 >
                                     <v-text-field
-                                        v-model="ration.name"
+                                        v-model="dish.name"
                                         label="Название"
                                         :error-messages="errors.name"
                                         outlined
-                                        dense
-                                        clearable
-                                    ></v-text-field>
-                                    <v-text-field
-                                        v-model="ration.code"
-                                        label="Code"
-                                        :error-messages="errors.code"
-                                        outlined
-                                        dense
-                                        clearable
-                                    ></v-text-field>
-                                    <v-text-field
-                                        v-model="ration.iiko_id"
-                                        label="Iiko #"
-                                        :error-messages="errors.iiko_id"
-                                        outlined
-                                        type="number"
-                                        dense
                                         clearable
                                     ></v-text-field>
                                     <v-select
-                                        v-model="ration.department_id"
+                                        :items="rations"
+                                        v-model="dish.ration_id"
+                                        item-text="name"
+                                        item-value="iiko_id"
+                                        label="Рацион"
+                                        :error-messages="errors.ration_id"
+                                        clearable
+                                        outlined
+                                    ></v-select>
+                                    <v-text-field
+                                        v-model="dish.code"
+                                        label="Code"
+                                        :error-messages="errors.code"
+                                        outlined
+                                        clearable
+                                    ></v-text-field>
+                                    <v-select
                                         :items="departments"
+                                        v-model="dish.department_id"
                                         item-text="name"
                                         item-value="id"
                                         label="Цех"
                                         :error-messages="errors.department_id"
-                                        outlined
-                                        dense
                                         clearable
+                                        outlined
                                     ></v-select>
+                                    <v-textarea
+                                        v-model="dish.description"
+                                        outlined
+                                        clearable
+                                        label="Доп. инфо"
+                                    ></v-textarea>
+                                </v-col>
+                                <v-col sm="12" lg="8">
+                                    <v-autocomplete
+                                        v-model="dish.ingredient_ids"
+                                        :items="ingredients"
+                                        item-text="name"
+                                        item-value="id"
+                                        :error-messages="errors.ingredient_ids"
+                                        clearable
+                                        outlined
+                                        small-chips
+                                        label="Ингредиенты"
+                                        multiple
+                                    ></v-autocomplete>
+
                                     <v-btn
                                         color="primary"
                                         @click="action"
@@ -164,30 +161,54 @@
 
 <script>
 export default {
-    name: "Rations",
+    name: "Dishes",
     data: () => ({
-        rations: [],
-        ration: {
+        dishes: [],
+        dish: {
             name: '',
+            time: 0,
+            description: '',
+            department: null,
             code: '',
-            iiko_id: null,
-            is_required: false,
-            department_id: null
+            ingredients: []
         },
+        ingredients: [],
+        departments: [],
+        rations: [],
         errors: [],
         edit: -1,
-        dialog: false,
-        dialogDelete: false,
-        departments: []
+        dialog: false
     }),
     mounted() {
+        this.getDishes()
+        this.getIngredients()
         this.getRations()
         this.getDepartments()
     },
     methods: {
+        async getDishes(){
+            await axios
+                .get('/api/dishes')
+                .then(response => {
+                    this.dishes = response.data
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
+        async getIngredients(){
+            await axios
+                .get('/api/ingredients')
+                .then(response => {
+                    this.ingredients = response.data
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
         async getRations(){
             await axios
-                .get('/api/rations')
+                .get('/api/rations/required')
                 .then(response => {
                     this.rations = response.data
                 })
@@ -214,7 +235,7 @@ export default {
         },
         store(){
             axios
-                .post('/api/rations', this.ration)
+                .post('/api/dishes', this.dish)
                 .then(response => {
                     if(response.data.status){
                         this.$store.dispatch('showAlert', {
@@ -224,7 +245,7 @@ export default {
                             'type': 'success'
                         })
                         this.close()
-                        this.getRations()
+                        this.getDishes()
                     }else{
                         this.errors = response.data.errors
                     }
@@ -236,7 +257,7 @@ export default {
         },
         update(){
             axios
-                .patch('/api/rations/'+this.ration.id, this.ration)
+                .patch('/api/dishes/'+this.dish.id, this.dish)
                 .then(response => {
                     if(response.data.status){
                         this.$store.dispatch('showAlert', {
@@ -246,7 +267,7 @@ export default {
                             'type': 'success'
                         })
                         this.close()
-                        this.getRations()
+                        this.getDishes()
                     }else{
                         this.errors = response.data.errors
                     }
@@ -258,46 +279,19 @@ export default {
         },
         close(){
             this.dialog = false
-            this.dialogDelete = false
             this.edit = -1
-            this.ration = {
+            this.dish = {
                 name: '',
-                code: '',
-                iiko_id: null,
-                is_required: false,
-                department_id: null
+                ration_id: 0,
+                description: '',
+                ingredient_ids: []
             }
+            this.errors = []
         },
-        editItem(ration){
+        editItem(dish){
             this.edit = 1
-            this.ration = ration
+            this.dish = dish
             this.dialog = true
-        },
-        deleteItem(ration){
-            this.ration = ration
-            this.dialogDelete = true
-        },
-        deleteConfirm(){
-            axios
-                .delete('/api/rations/'+this.ration.id)
-                .then(response => {
-                    if(response.data.status){
-                        this.$store.dispatch('showAlert', {
-                            'isVisible': true,
-                            'msg': response.data.msg,
-                            'color': 'green',
-                            'type': 'success'
-                        })
-                        this.close()
-                        this.getRations()
-                    }else{
-                        this.errors = response.data.errors
-                    }
-                })
-                .catch(error => {
-                    console.log(error)
-                    this.errors = error.response.data.errors
-                })
         }
     }
 }

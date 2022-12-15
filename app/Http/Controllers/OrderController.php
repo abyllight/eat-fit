@@ -162,11 +162,34 @@ class OrderController extends Controller
         ]);
     }
 
-    public function getSelect(){
-
+    public function getSelect(): JsonResponse
+    {
         $user = Auth::user();
         $orders = Order::where('type', Order::EAT_FIT_SELECT)
             ->where('city_id', $user->city_id)
+            ->where('is_active', true)
+            ->orderBy('size')
+            ->get();
+
+        $select = [
+            'total' => $orders->count(),
+            'xs'    => $orders->where('size', Order::XS)->count(),
+            's'     => $orders->where('size', Order::S)->count(),
+            'm'     => $orders->where('size', Order::M)->count(),
+            'l'     => $orders->where('size', Order::L)->count(),
+            'xl'    => $orders->where('size', Order::XL)->count()
+        ];
+
+        return response()->json([
+            'status' => true,
+            'orders' => OrderSelectCollection::collection($orders),
+            'stat' => $select
+        ]);
+    }
+
+    public function getSelectAll(): JsonResponse
+    {
+        $orders = Order::where('type', Order::EAT_FIT_SELECT)
             ->where('is_active', true)
             ->orderBy('size')
             ->get();
@@ -366,6 +389,11 @@ class OrderController extends Controller
                 case '833911': //FitGo
                     $fields['type'] = Order::EAT_FIT_GO;
                     break;
+            }
+
+            //subbota x2v2 50754262
+            if ($order['status_id'] === 50754262) {
+                $fields['type'] = Order::EAT_FIT_SATURDAY;
             }
 
             switch ($fields['size']) {

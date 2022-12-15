@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -59,6 +60,7 @@ class Order extends Model
     const EAT_FIT_SELECT = 2;
     const EAT_FIT_DETOX = 3;
     const EAT_FIT_GO = 4;
+    const EAT_FIT_SATURDAY = 7;
     const EAT_CHILL = 5;
     const CAKES = 6;
 
@@ -72,9 +74,9 @@ class Order extends Model
     const ASTANA = 1;
     const ALMATY = 2;
 
-    const EAT_FIT_ARRAY = [self::EAT_FIT_LITE, self::EAT_FIT_SELECT, self::EAT_FIT_DETOX, self::EAT_FIT_GO];
+    const EAT_FIT_ARRAY = [self::EAT_FIT_LITE, self::EAT_FIT_SELECT, self::EAT_FIT_DETOX, self::EAT_FIT_GO, self::EAT_FIT_SATURDAY];
 
-    const TYPES = ['LITE', 'SELECT', 'DETOX', 'GO', 'CHILL', 'CAKES'];
+    const TYPES = ['LITE', 'SELECT', 'DETOX', 'GO', 'CHILL', 'CAKES', 'СУББОТА'];
 
     const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'EAT'];
 
@@ -184,21 +186,26 @@ class Order extends Model
         return $this->select()->whereDate('created_at', Carbon::yesterday())->get();
     }
 
-    public function getResultSelect(){
+    public function getResultSelect(): Collection
+    {
         $result = $this->select()->whereDate('created_at', Carbon::today())->get()->sortBy('ration_id');
 
         if ($result->count() === 0){
             $cuisine = Cuisine::where('is_on_duty', true)->first();
-            $rations = Ration::where('is_required', true)->get();
+
+            if (!$cuisine) {
+                $cuisine = Cuisine::first();
+            }
+
+            $rations = Ration::all();
 
             foreach ($rations as $ration) {
-
-                $duty_dish = Dish::where('cuisine_id', $cuisine->id)->where('ration_id', $ration->iiko_id)->first();
+                $duty_dish = Dish::where('cuisine_id', $cuisine->id)->where('ration_id', $ration->id)->first();
 
                 $select = new Select();
                 $select->order_id = $this->id;
                 $select->cuisine_id = $cuisine->id;
-                $select->ration_id = $ration->iiko_id;
+                $select->ration_id = $ration->id;
 
                 if ($duty_dish) {
                     $select->dish_id = $duty_dish->id;
@@ -259,6 +266,9 @@ class Order extends Model
             case Order::CAKES:
                 $color = 'pink';
                 break;
+            case Order::EAT_FIT_SATURDAY:
+                $color = 'red';
+                break;
         }
 
         return $color;
@@ -282,6 +292,9 @@ class Order extends Model
                 break;
             case Order::CAKES:
                 $color = 'EC407A';
+                break;
+            case Order::EAT_FIT_SATURDAY:
+                $color = 'EF9A9A';
                 break;
         }
 

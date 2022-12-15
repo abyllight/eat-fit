@@ -147,113 +147,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'CuisineDishes',
   props: ['id'],
   data: function data() {
     return {
-      ingredients: [],
-      departments: [],
       left_rations: [],
       all_rations: [],
       cuisine: {},
@@ -276,9 +174,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     };
   },
   mounted: function mounted() {
-    this.getCuisine(); //this.getIngredients()
-
-    this.getDepartments();
+    this.getCuisine();
     this.getAllRations();
   },
   methods: {
@@ -308,7 +204,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee);
       }))();
     },
-    getIngredients: function getIngredients() {
+    getAllRations: function getAllRations() {
       var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
@@ -317,8 +213,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.next = 2;
-                return axios.get('/api/ingredients').then(function (response) {
-                  _this2.ingredients = response.data;
+                return axios.get('/api/rations').then(function (response) {
+                  _this2.all_rations = response.data;
                 })["catch"](function (error) {
                   console.log(error);
                 });
@@ -331,7 +227,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee2);
       }))();
     },
-    getDepartments: function getDepartments() {
+    fetchDishesByCuisineId: function fetchDishesByCuisineId(id) {
       var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
@@ -339,14 +235,26 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _context3.next = 2;
-                return axios.get('/api/departments').then(function (response) {
-                  _this3.departments = response.data;
+                _this3.disabled = true;
+                _this3.loading = true;
+                _context3.next = 4;
+                return axios.get('/api/dishes/iiko/cuisine/' + id).then(function (response) {
+                  _this3.$store.dispatch('showAlert', {
+                    'isVisible': true,
+                    'msg': response.data.msg,
+                    'color': response.data.status ? 'green' : 'error',
+                    'type': response.data.status ? 'success' : 'error'
+                  });
+
+                  _this3.getCuisine();
                 })["catch"](function (error) {
                   console.log(error);
+                })["finally"](function () {
+                  _this3.disabled = false;
+                  _this3.loading = false;
                 });
 
-              case 2:
+              case 4:
               case "end":
                 return _context3.stop();
             }
@@ -354,7 +262,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee3);
       }))();
     },
-    getAllRations: function getAllRations() {
+    fetchIngredientsByCuisine: function fetchIngredientsByCuisine() {
       var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
@@ -362,14 +270,26 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                _context4.next = 2;
-                return axios.get('/api/rations/required').then(function (response) {
-                  _this4.all_rations = response.data;
+                _this4.disabled = true;
+                _this4.loading = true;
+                _context4.next = 4;
+                return axios.get('/api/ingredients/iiko/' + _this4.id).then(function (response) {
+                  _this4.$store.dispatch('showAlert', {
+                    'isVisible': true,
+                    'msg': response.data.msg,
+                    'color': response.status ? 'green' : 'error',
+                    'type': response.status ? 'success' : 'error'
+                  });
+
+                  _this4.getCuisine();
                 })["catch"](function (error) {
                   console.log(error);
+                })["finally"](function () {
+                  _this4.disabled = false;
+                  _this4.loading = false;
                 });
 
-              case 2:
+              case 4:
               case "end":
                 return _context4.stop();
             }
@@ -377,186 +297,24 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee4);
       }))();
     },
-    fetchDishesByCuisineId: function fetchDishesByCuisineId(id) {
-      var _this5 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
-          while (1) {
-            switch (_context5.prev = _context5.next) {
-              case 0:
-                _this5.disabled = true;
-                _this5.loading = true;
-                _context5.next = 4;
-                return axios.get('/api/dishes/iiko/cuisine/' + id).then(function (response) {
-                  _this5.$store.dispatch('showAlert', {
-                    'isVisible': true,
-                    'msg': response.data.msg,
-                    'color': response.data.status ? 'green' : 'error',
-                    'type': response.data.status ? 'success' : 'error'
-                  });
-
-                  _this5.getCuisine();
-                })["catch"](function (error) {
-                  console.log(error);
-                })["finally"](function () {
-                  _this5.disabled = false;
-                  _this5.loading = false;
-                });
-
-              case 4:
-              case "end":
-                return _context5.stop();
-            }
-          }
-        }, _callee5);
-      }))();
-    },
-    fetchIngredientsByCuisine: function fetchIngredientsByCuisine() {
-      var _this6 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee6() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee6$(_context6) {
-          while (1) {
-            switch (_context6.prev = _context6.next) {
-              case 0:
-                _this6.disabled = true;
-                _this6.loading = true;
-                _context6.next = 4;
-                return axios.get('/api/ingredients/iiko/' + _this6.id).then(function (response) {
-                  _this6.$store.dispatch('showAlert', {
-                    'isVisible': true,
-                    'msg': response.data.msg,
-                    'color': response.status ? 'green' : 'error',
-                    'type': response.status ? 'success' : 'error'
-                  });
-
-                  _this6.getCuisine();
-                })["catch"](function (error) {
-                  console.log(error);
-                })["finally"](function () {
-                  _this6.disabled = false;
-                  _this6.loading = false;
-                });
-
-              case 4:
-              case "end":
-                return _context6.stop();
-            }
-          }
-        }, _callee6);
-      }))();
-    },
     setDish: function setDish(dish) {
       this.dish = dish;
     },
-    close: function close() {
-      this.dialog = false;
-      this.dialogSm = false;
-      this.dish = {
-        id: null,
-        name: '',
-        cuisine_id: 0,
-        ration_id: 0,
-        code: '',
-        department_id: null,
-        ingredients: [],
-        is_custom: false
-      };
-      this.ingredients = [];
-      this.targetDish = {};
-    },
-    editOfficialDish: function editOfficialDish(dish) {
-      this.dish = dish;
-      this.dialogSm = true;
-    },
-    editDish: function editDish(dish) {
-      this.dish = dish;
-      this.dialog = true;
-    },
-    save: function save() {
-      if (this.dish.id === null) {
-        this.create();
-      } else {
-        this.update();
-      }
-    },
-    update: function update() {
-      var _this7 = this;
-
-      axios.patch('/api/dishes/' + this.dish.id, this.dish).then(function (response) {
-        _this7.$store.dispatch('showAlert', {
-          'isVisible': true,
-          'msg': response.data.msg,
-          'color': 'green',
-          'type': 'success'
-        });
-
-        if (response.data.status) {
-          _this7.dialog = false;
-
-          _this7.getCuisine();
-        } else {
-          _this7.errors = response.data.errors;
+    editDish: function editDish(id) {
+      this.$router.push({
+        name: 'cuisine_dishes_edit',
+        params: {
+          id: id
         }
-      })["catch"](function (error) {
-        console.log(error);
-        _this7.errors = error.response.data.errors;
       });
     },
-    create: function create() {
-      var _this8 = this;
-
-      axios.post('/api/dishes', this.dish).then(function (response) {
-        _this8.$store.dispatch('showAlert', {
-          'isVisible': true,
-          'msg': response.data.msg,
-          'color': 'green',
-          'type': 'success'
-        });
-
-        if (response.data.status) {
-          _this8.dialog = false;
-
-          _this8.getCuisine();
-        } else {
-          _this8.errors = response.data.errors;
+    addDish: function addDish(id) {
+      this.$router.push({
+        name: 'cuisine_dishes_create',
+        params: {
+          id: this.cuisine.id,
+          r_id: id
         }
-      })["catch"](function (error) {
-        console.log(error);
-        _this8.errors = error.response.data.errors;
-      });
-    },
-    addDish: function addDish(ration) {
-      this.dish = {
-        id: null,
-        name: '',
-        cuisine_id: this.cuisine.id,
-        ration_id: ration.iiko_id,
-        code: '',
-        department_id: 0,
-        ingredients: [],
-        is_custom: false,
-        ration: ration
-      };
-      this.dialog = true;
-    },
-    updateOfficialDish: function updateOfficialDish() {
-      var _this9 = this;
-
-      axios.patch('/api/dishes/' + this.dish.id, this.dish).then(function (res) {
-        _this9.$store.dispatch('showAlert', {
-          'isVisible': true,
-          'msg': res.data.msg,
-          'color': 'green',
-          'type': 'success'
-        });
-
-        _this9.close();
-
-        _this9.getCuisine();
-      })["catch"](function (err) {
-        _this9.errors = err.response.data.errors;
       });
     }
   }
@@ -801,7 +559,7 @@ var render = function() {
                                       attrs: { icon: "" },
                                       on: {
                                         click: function($event) {
-                                          return _vm.editDish(dish)
+                                          return _vm.editDish(dish.id)
                                         }
                                       }
                                     },
@@ -848,7 +606,7 @@ var render = function() {
                             attrs: { text: "", rounded: "", outlined: "" },
                             on: {
                               click: function($event) {
-                                return _vm.addDish(item)
+                                return _vm.addDish(item.id)
                               }
                             }
                           },
@@ -926,241 +684,6 @@ var render = function() {
                 1
               )
             : _vm._e()
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "v-row",
-        { attrs: { justify: "center" } },
-        [
-          _c(
-            "v-dialog",
-            {
-              attrs: {
-                fullscreen: "",
-                "hide-overlay": "",
-                transition: "dialog-bottom-transition"
-              },
-              model: {
-                value: _vm.dialog,
-                callback: function($$v) {
-                  _vm.dialog = $$v
-                },
-                expression: "dialog"
-              }
-            },
-            [
-              _c(
-                "v-card",
-                [
-                  _c(
-                    "v-toolbar",
-                    { attrs: { dark: "", color: "primary" } },
-                    [
-                      _c(
-                        "v-btn",
-                        {
-                          attrs: { icon: "", dark: "" },
-                          on: { click: _vm.close }
-                        },
-                        [_c("v-icon", [_vm._v("mdi-close")])],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c("v-toolbar-title", [_vm._v("Блюдо")])
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "v-card-text",
-                    [
-                      _c(
-                        "v-container",
-                        { attrs: { fluid: "" } },
-                        [
-                          _vm.dish
-                            ? _c(
-                                "v-row",
-                                [
-                                  _vm.dish.i_name
-                                    ? _c(
-                                        "v-col",
-                                        { attrs: { sm: "12", lg: "4" } },
-                                        [
-                                          _c("h3", [
-                                            _vm._v(_vm._s(_vm.dish.i_name))
-                                          ]),
-                                          _vm._v(" "),
-                                          _vm._l(
-                                            _vm.dish.i_ingredients,
-                                            function(item, key) {
-                                              return _c(
-                                                "v-list-item",
-                                                {
-                                                  key: item.id,
-                                                  class: !_vm.dish.ingredient_ids.includes(
-                                                    item.id
-                                                  )
-                                                    ? "yellow lighten-3"
-                                                    : "",
-                                                  attrs: { dense: "" }
-                                                },
-                                                [
-                                                  _c(
-                                                    "v-list-item-content",
-                                                    [
-                                                      _c("v-list-item-title", [
-                                                        _vm._v(
-                                                          _vm._s(key + 1) +
-                                                            ". " +
-                                                            _vm._s(item.name)
-                                                        )
-                                                      ])
-                                                    ],
-                                                    1
-                                                  )
-                                                ],
-                                                1
-                                              )
-                                            }
-                                          )
-                                        ],
-                                        2
-                                      )
-                                    : _vm._e(),
-                                  _vm._v(" "),
-                                  _c(
-                                    "v-col",
-                                    { attrs: { sm: "12", lg: "8" } },
-                                    [
-                                      _c("h2", { staticClass: "mb-5" }, [
-                                        _vm._v(
-                                          _vm._s(
-                                            _vm.dish.ration
-                                              ? _vm.dish.ration.name
-                                              : ""
-                                          )
-                                        )
-                                      ]),
-                                      _vm._v(" "),
-                                      _c("v-text-field", {
-                                        attrs: {
-                                          label: "Название",
-                                          "error-messages": _vm.errors.name,
-                                          outlined: "",
-                                          dense: "",
-                                          clearable: ""
-                                        },
-                                        model: {
-                                          value: _vm.dish.name,
-                                          callback: function($$v) {
-                                            _vm.$set(_vm.dish, "name", $$v)
-                                          },
-                                          expression: "dish.name"
-                                        }
-                                      }),
-                                      _vm._v(" "),
-                                      _c("v-select", {
-                                        attrs: {
-                                          items: _vm.all_rations,
-                                          dense: "",
-                                          "item-text": "name",
-                                          "item-value": "iiko_id",
-                                          outlined: "",
-                                          label: "Рационы"
-                                        },
-                                        model: {
-                                          value: _vm.dish.ration_id,
-                                          callback: function($$v) {
-                                            _vm.$set(_vm.dish, "ration_id", $$v)
-                                          },
-                                          expression: "dish.ration_id"
-                                        }
-                                      }),
-                                      _vm._v(" "),
-                                      _c("v-autocomplete", {
-                                        attrs: {
-                                          items: _vm.departments,
-                                          "item-text": "name",
-                                          "item-value": "id",
-                                          clearable: "",
-                                          outlined: "",
-                                          label: "Цех",
-                                          "error-messages":
-                                            _vm.errors.department_id
-                                        },
-                                        model: {
-                                          value: _vm.dish.department_id,
-                                          callback: function($$v) {
-                                            _vm.$set(
-                                              _vm.dish,
-                                              "department_id",
-                                              $$v
-                                            )
-                                          },
-                                          expression: "dish.department_id"
-                                        }
-                                      }),
-                                      _vm._v(" "),
-                                      _c("v-autocomplete", {
-                                        attrs: {
-                                          items: _vm.ingredients,
-                                          "item-text": "name",
-                                          "item-value": "id",
-                                          clearable: "",
-                                          outlined: "",
-                                          "small-chips": "",
-                                          label: "Ингредиенты",
-                                          "error-messages":
-                                            _vm.errors.ingredient_ids,
-                                          multiple: ""
-                                        },
-                                        model: {
-                                          value: _vm.dish.ingredient_ids,
-                                          callback: function($$v) {
-                                            _vm.$set(
-                                              _vm.dish,
-                                              "ingredient_ids",
-                                              $$v
-                                            )
-                                          },
-                                          expression: "dish.ingredient_ids"
-                                        }
-                                      }),
-                                      _vm._v(" "),
-                                      _c(
-                                        "v-btn",
-                                        {
-                                          attrs: { color: "primary" },
-                                          on: { click: _vm.save }
-                                        },
-                                        [
-                                          _vm._v(
-                                            "\n                                    Сохранить\n                                "
-                                          )
-                                        ]
-                                      )
-                                    ],
-                                    1
-                                  )
-                                ],
-                                1
-                              )
-                            : _vm._e()
-                        ],
-                        1
-                      )
-                    ],
-                    1
-                  )
-                ],
-                1
-              )
-            ],
-            1
-          )
         ],
         1
       )

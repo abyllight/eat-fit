@@ -17,6 +17,8 @@ class CreateDishIngredientsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('dish_id');
             $table->unsignedInteger('ingredient_id');
+            $table->boolean('is_original')->default(false);
+            $table->boolean('is_visible')->default(true);
         });
     }
 

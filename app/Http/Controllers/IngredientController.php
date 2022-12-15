@@ -72,7 +72,7 @@ class IngredientController extends Controller
                             [
                                 'dish_id' => $dish->id,
                                 'ingredient_id' => $i->id
-                            ]
+                            ], ['is_original' => true]
                         );
                     }
                 }
