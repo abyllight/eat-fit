@@ -32,6 +32,9 @@
                                 Цех
                             </th>
                             <th class="text-left">
+                                Посуда
+                            </th>
+                            <th class="text-left">
                                 Действие
                             </th>
                         </tr>
@@ -48,6 +51,9 @@
                             <td>{{ item.code }}</td>
                             <td>{{ item.iiko_id }}</td>
                             <td>{{ item.department }}</td>
+                            <td>
+                                <img :src="item.tableware_img" width="100"/>
+                            </td>
                             <td>
                                 <v-icon
                                     small
@@ -146,6 +152,17 @@
                                         dense
                                         clearable
                                     ></v-select>
+                                    <v-select
+                                        v-model="ration.tableware_id"
+                                        :items="tablewares"
+                                        item-text="name"
+                                        item-value="id"
+                                        label="Посуда"
+                                        :error-messages="errors.tableware_id"
+                                        outlined
+                                        dense
+                                        clearable
+                                    ></v-select>
                                     <v-btn
                                         color="primary"
                                         @click="action"
@@ -172,17 +189,20 @@ export default {
             code: '',
             iiko_id: null,
             is_required: false,
-            department_id: null
+            department_id: null,
+            tableware_id: null
         },
         errors: [],
         edit: -1,
         dialog: false,
         dialogDelete: false,
-        departments: []
+        departments: [],
+        tablewares: []
     }),
     mounted() {
         this.getRations()
         this.getDepartments()
+        this.getTablewares()
     },
     methods: {
         async getRations(){
@@ -200,6 +220,16 @@ export default {
                 .get('/api/departments')
                 .then(response => {
                     this.departments = response.data
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
+        async getTablewares(){
+            await axios
+                .get('/api/tableware')
+                .then(response => {
+                    this.tablewares = response.data.data
                 })
                 .catch(error => {
                     console.log(error)

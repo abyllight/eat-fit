@@ -15,7 +15,7 @@ class Purchase extends Model
     public function ingredients(): BelongsToMany
     {
         return $this->belongsToMany(Ingredient::class, 'purchase_ingredients', 'purchase_id', 'ingredient_id')
-            ->withPivot('left', 'total', 'diff', 'done', 'extra', 'amount', 'deleted', 'is_custom');
+            ->withPivot('left', 'total', 'diff', 'is_done', 'extra', 'amount', 'is_deleted', 'is_custom');
     }
 
     public function cuisine(): BelongsTo

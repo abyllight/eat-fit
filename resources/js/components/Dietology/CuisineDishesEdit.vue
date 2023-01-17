@@ -71,9 +71,11 @@
                     :error-messages="errors.ingredient_ids"
                     multiple
                 ></v-autocomplete>
+                <tiptap-vuetify v-model="dish.description" :extensions="extensions"></tiptap-vuetify>
                 <v-btn
                     color="primary"
                     @click="update"
+                    class="mt-5"
                 >
                     Сохранить
                 </v-btn>
@@ -82,8 +84,11 @@
     </div>
 </template>
 <script>
+    import { TiptapVuetify, Heading, Bold, Italic, Strike, Image, Underline, Code, Paragraph, BulletList, OrderedList, ListItem, Link, Blockquote, HardBreak, HorizontalRule, History } from 'tiptap-vuetify'
+
     export default {
         name: 'CuisineDishesEdit',
+        components: { TiptapVuetify },
         props: ['id'],
         data: () => ({
             ingredients: [],
@@ -96,13 +101,35 @@
                 ration_id: 0,
                 code: '',
                 department_id: 0,
-                ingredients: []
+                ingredients: [],
+                description: null
             },
             dishes: [],
             loading: false,
             disabled: false,
-            errors: []
-
+            errors: [],
+            extensions: [
+                History,
+                Blockquote,
+                Link,
+                Underline,
+                Strike,
+                Italic,
+                Image,
+                ListItem,
+                BulletList,
+                OrderedList,
+                [Heading, {
+                    options: {
+                        levels: [1, 2, 3]
+                    }
+                }],
+                Bold,
+                Code,
+                HorizontalRule,
+                Paragraph,
+                HardBreak
+            ]
         }),
         created() {
             this.getDish()

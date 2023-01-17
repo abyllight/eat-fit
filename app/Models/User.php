@@ -108,6 +108,10 @@ class User extends Authenticatable
         return $this->hasMany(Report::class, 'courier_id', 'id');
     }
 
+    public function groups(){
+        return $this->hasMany(UserGroup::class, 'user_id', 'id');
+    }
+
     public static function beautifyMobile($v): string
     {
         if (!$v) {

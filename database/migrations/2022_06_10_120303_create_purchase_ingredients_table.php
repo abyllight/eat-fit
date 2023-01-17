@@ -17,8 +17,13 @@ class CreatePurchaseIngredientsTable extends Migration
             $table->id();
             $table->integer('purchase_id')->unsigned()->nullable()->index();
             $table->integer('ingredient_id')->unsigned()->nullable()->index();
-            $table->integer('left');
-            $table->integer('total');
+            $table->boolean('is_done')->default(false);
+            $table->boolean('is_custom')->default(false);
+            $table->boolean('is_deleted')->default(false);
+            $table->double('left');
+            $table->double('diff');
+            $table->double('total');
+            $table->double('extra');
             $table->timestamps();
         });
     }

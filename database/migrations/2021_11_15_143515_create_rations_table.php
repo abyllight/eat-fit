@@ -19,6 +19,7 @@ class CreateRationsTable extends Migration
             $table->integer('iiko_id');
             $table->string('code')->nullable();
             $table->integer('department_id')->nullable();
+            $table->integer('tableware_id')->nullable();
             $table->boolean('is_extra')->default(false);
             $table->timestamps();
         });

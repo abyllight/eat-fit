@@ -118,7 +118,7 @@ class PurchaseController extends Controller
     public function done(Request $request) {
         $pi = PurchaseIngredient::where('purchase_id', $request->p_id)->where('ingredient_id', $request->i_id)->first();
 
-        $pi->done =! $pi->done;
+        $pi->is_done =! $pi->is_done;
         $pi->save();
     }
 

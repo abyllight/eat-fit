@@ -6,13 +6,13 @@
                     color="primary"
                     @click="dialog=true"
                 >
-                    Добавить блюдо
+                    Добавить посуду
                 </v-btn>
             </v-col>
         </v-row>
         <v-row>
             <v-col cols="12">
-                <v-simple-table dense>
+                <v-simple-table>
                     <template v-slot:default>
                         <thead>
                         <tr>
@@ -20,41 +20,59 @@
                                 #
                             </th>
                             <th class="text-left">
+                                Image
+                            </th>
+                            <th class="text-left">
                                 Название
                             </th>
                             <th class="text-left">
-                                Рацион
+                                Размер
                             </th>
                             <th class="text-left">
-                                Ингредиенты
-                            </th>
-                            <th class="text-left">
-                                Actions
+                                Действие
                             </th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr
-                            v-for="(dish, index) in dishes"
-                            :key="dish.id"
+                            v-for="(item, index) in items"
+                            :key="item.id"
                         >
-                            <td>{{ index + 1 }}</td>
-                            <td>{{ dish.name }}</td>
-                            <td>{{ dish.ration ? dish.ration.name : '' }}</td>
-                            <td>{{ dish.ingredient_ids.length }}</td>
+                            <td>
+                                <strong>{{ index + 1 }}</strong>
+                            </td>
+                            <td><img :src="'/storage/'+item.img" width="100"/></td>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.size }}</td>
                             <td>
                                 <v-icon
                                     small
                                     class="mr-2"
-                                    @click="editItem(dish)"
+                                    @click="editItem(item)"
                                 >
                                     mdi-pencil
                                 </v-icon>
-                            </td>
+                                <v-icon
+                                    small
+                                    @click="deleteItem(item)"
+                                >
+                                    mdi-delete
+                                </v-icon></td>
                         </tr>
                         </tbody>
                     </template>
                 </v-simple-table>
+                <v-dialog v-model="dialogDelete" max-width="500px">
+                    <v-card>
+                        <v-card-title class="text-h5">Вы уверены?</v-card-title>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue darken-1" text @click="dialogDelete=false">Отмена</v-btn>
+                            <v-btn color="blue darken-1" text @click="deleteConfirm">Да</v-btn>
+                            <v-spacer></v-spacer>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
             </v-col>
         </v-row>
         <v-row justify="center">
@@ -76,7 +94,7 @@
                         >
                             <v-icon>mdi-close</v-icon>
                         </v-btn>
-                        <v-toolbar-title>Блюдо</v-toolbar-title>
+                        <v-toolbar-title>Посуда</v-toolbar-title>
                     </v-toolbar>
                     <v-card-title>
                         <span class="text-h5"> {{ edit === 1 ? 'Редактировать' : 'Добавить' }}</span>
@@ -89,60 +107,27 @@
                                     lg="4"
                                 >
                                     <v-text-field
-                                        v-model="dish.name"
+                                        v-model="item.name"
                                         label="Название"
                                         :error-messages="errors.name"
                                         outlined
+                                        dense
                                         clearable
                                     ></v-text-field>
-                                    <v-select
-                                        :items="rations"
-                                        v-model="dish.ration_id"
-                                        item-text="name"
-                                        item-value="iiko_id"
-                                        label="Рацион"
-                                        :error-messages="errors.ration_id"
-                                        clearable
-                                        outlined
-                                    ></v-select>
                                     <v-text-field
-                                        v-model="dish.code"
-                                        label="Code"
-                                        :error-messages="errors.code"
+                                        v-model="item.size"
+                                        label="Размер"
+                                        :error-messages="errors.size"
                                         outlined
+                                        dense
                                         clearable
                                     ></v-text-field>
-                                    <v-select
-                                        :items="departments"
-                                        v-model="dish.department_id"
-                                        item-text="name"
-                                        item-value="id"
-                                        label="Цех"
-                                        :error-messages="errors.department_id"
-                                        clearable
+                                    <v-file-input
+                                        v-model="item.img"
+                                        label="Изображение"
                                         outlined
-                                    ></v-select>
-                                    <v-textarea
-                                        v-model="dish.description"
-                                        outlined
-                                        clearable
-                                        label="Доп. инфо"
-                                    ></v-textarea>
-                                </v-col>
-                                <v-col sm="12" lg="8">
-                                    <v-autocomplete
-                                        v-model="dish.ingredient_ids"
-                                        :items="ingredients"
-                                        item-text="name"
-                                        item-value="id"
-                                        :error-messages="errors.ingredient_ids"
-                                        clearable
-                                        outlined
-                                        small-chips
-                                        label="Ингредиенты"
-                                        multiple
-                                    ></v-autocomplete>
-
+                                        dense
+                                    ></v-file-input>
                                     <v-btn
                                         color="primary"
                                         @click="action"
@@ -161,66 +146,29 @@
 
 <script>
 export default {
-    name: "Dishes",
+    name: "Tableware",
     data: () => ({
-        dishes: [],
-        dish: {
-            name: '',
-            time: 0,
-            description: '',
-            department: null,
-            code: '',
-            ingredients: []
+        items: [],
+        item: {
+            id: null,
+            name: null,
+            size: null,
+            img: null
         },
-        ingredients: [],
-        departments: [],
-        rations: [],
         errors: [],
         edit: -1,
-        dialog: false
+        dialog: false,
+        dialogDelete: false
     }),
     mounted() {
-        this.getDishes()
-        this.getIngredients()
-        this.getRations()
-        this.getDepartments()
+        this.getTablewares()
     },
     methods: {
-        async getDishes(){
+        async getTablewares(){
             await axios
-                .get('/api/dishes')
+                .get('/api/tableware')
                 .then(response => {
-                    this.dishes = response.data
-                })
-                .catch(error => {
-                    console.log(error)
-                })
-        },
-        async getIngredients(){
-            await axios
-                .get('/api/ingredients')
-                .then(response => {
-                    this.ingredients = response.data
-                })
-                .catch(error => {
-                    console.log(error)
-                })
-        },
-        async getRations(){
-            await axios
-                .get('/api/rations/required')
-                .then(response => {
-                    this.rations = response.data
-                })
-                .catch(error => {
-                    console.log(error)
-                })
-        },
-        async getDepartments(){
-            await axios
-                .get('/api/departments')
-                .then(response => {
-                    this.departments = response.data
+                    this.items = response.data.data
                 })
                 .catch(error => {
                     console.log(error)
@@ -233,9 +181,21 @@ export default {
                 this.store()
             }
         },
-        store(){
-            axios
-                .post('/api/dishes', this.dish)
+        store() {
+            let dataForm = new FormData()
+            dataForm.append('name', this.item.name)
+            dataForm.append('size', this.item.size)
+            dataForm.append('img', this.item.img)
+            dataForm.append('_method', 'POST');
+
+            axios({
+                method: 'POST',
+                url: '/api/tableware',
+                data: dataForm,
+                headers: {
+                    'content-type': 'multipart/form-data'
+                }
+            })
                 .then(response => {
                     if(response.data.status){
                         this.$store.dispatch('showAlert', {
@@ -245,7 +205,7 @@ export default {
                             'type': 'success'
                         })
                         this.close()
-                        this.getDishes()
+                        this.getTablewares()
                     }else{
                         this.errors = response.data.errors
                     }
@@ -256,8 +216,20 @@ export default {
                 })
         },
         update(){
-            axios
-                .patch('/api/dishes/'+this.dish.id, this.dish)
+            let dataForm = new FormData()
+            dataForm.append('name', this.item.name)
+            dataForm.append('size', this.item.size)
+            dataForm.append('img', this.item.img)
+            dataForm.append('_method', 'POST');
+
+            axios({
+                method: 'POST',
+                url: '/api/tableware/'+this.item.id,
+                data: dataForm,
+                headers: {
+                    'content-type': 'multipart/form-data'
+                }
+            })
                 .then(response => {
                     if(response.data.status){
                         this.$store.dispatch('showAlert', {
@@ -267,7 +239,47 @@ export default {
                             'type': 'success'
                         })
                         this.close()
-                        this.getDishes()
+                        this.getTablewares()
+                    }else{
+                        this.errors = response.data.errors
+                    }
+                })
+                .catch(error => {
+                    this.errors = error.response.data.errors
+                })
+        },
+        close(){
+            this.dialog = false
+            this.dialogDelete = false
+            this.edit = -1
+            this.item = {
+                name: '',
+                size: '',
+                img: null
+            }
+        },
+        editItem(item){
+            this.edit = 1
+            this.item = item
+            this.dialog = true
+        },
+        deleteItem(item){
+            this.item = item
+            this.dialogDelete = true
+        },
+        deleteConfirm(){
+            axios
+                .delete('/api/tableware/'+this.item.id)
+                .then(response => {
+                    if(response.data.status){
+                        this.$store.dispatch('showAlert', {
+                            'isVisible': true,
+                            'msg': response.data.msg,
+                            'color': 'green',
+                            'type': 'success'
+                        })
+                        this.close()
+                        this.getTablewares()
                     }else{
                         this.errors = response.data.errors
                     }
@@ -276,22 +288,6 @@ export default {
                     console.log(error)
                     this.errors = error.response.data.errors
                 })
-        },
-        close(){
-            this.dialog = false
-            this.edit = -1
-            this.dish = {
-                name: '',
-                ration_id: 0,
-                description: '',
-                ingredient_ids: []
-            }
-            this.errors = []
-        },
-        editItem(dish){
-            this.edit = 1
-            this.dish = dish
-            this.dialog = true
         }
     }
 }

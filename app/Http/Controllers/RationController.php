@@ -29,7 +29,7 @@ class RationController extends Controller
         $ration->code = $request->code;
         $ration->iiko_id = $request->iiko_id;
         $ration->department_id = $request->department_id;
-        //$ration->is_required = $request->is_required;
+        $ration->tableware_id = $request->tableware_id;
         $ration->save();
 
         return response()->json([
@@ -54,7 +54,7 @@ class RationController extends Controller
             $ration->department_id = $request->department_id;
             $ration->name = $request->name;
             $ration->iiko_id = $request->iiko_id;
-            //$ration->is_required = $request->is_required;
+            $ration->tableware_id = $request->tableware_id;
             $ration->save();
 
             return response()->json([

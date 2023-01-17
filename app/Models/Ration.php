@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Ration extends Model
 {
@@ -25,5 +26,10 @@ class Ration extends Model
 
     public function department() {
         return is_numeric($this->department_id) ? Department::DEPARTMENTS[$this->department_id]['name'] : null;
+    }
+
+    public function tableware(): BelongsTo
+    {
+        return $this->belongsTo(TableWare::class, 'tableware_id', 'id');
     }
 }

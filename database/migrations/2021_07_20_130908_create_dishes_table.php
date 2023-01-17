@@ -24,6 +24,7 @@ class CreateDishesTable extends Migration
             $table->integer('department_id')->default(0);
             $table->integer('cuisine_id')->default(0);
             $table->longText('description')->nullable();
+            $table->string('file')->nullable();
             $table->boolean('is_custom')->default(false);
             $table->timestamps();
         });

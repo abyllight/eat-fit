@@ -145,8 +145,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'CuisineDishes',
   props: ['id'],
@@ -415,17 +413,9 @@ var render = function() {
           _c(
             "v-col",
             [
-              _c(
-                "v-btn",
-                {
-                  on: {
-                    click: function($event) {
-                      return _vm.$router.back()
-                    }
-                  }
-                },
-                [_vm._v("\n                Назад к кухням мира\n            ")]
-              )
+              _c("v-btn", { attrs: { to: "/cuisines" } }, [
+                _vm._v("\n                Назад к кухням мира\n            ")
+              ])
             ],
             1
           )
@@ -469,7 +459,7 @@ var render = function() {
                             )
                           ]),
                           _vm._v(
-                            "\n                        Получить блюда\n                    "
+                            "\n                        блюда\n                    "
                           )
                         ],
                         1
@@ -488,7 +478,7 @@ var render = function() {
                             )
                           ]),
                           _vm._v(
-                            "\n                        Получить ингредиенты\n                    "
+                            "\n                        ингредиенты\n                    "
                           )
                         ],
                         1

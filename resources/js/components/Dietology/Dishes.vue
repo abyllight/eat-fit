@@ -86,7 +86,7 @@
                             <v-row>
                                 <v-col
                                     sm="12"
-                                    lg="4"
+                                    lg="6"
                                 >
                                     <v-text-field
                                         v-model="dish.name"
@@ -115,14 +115,9 @@
                                         clearable
                                         outlined
                                     ></v-select>
-                                    <v-textarea
-                                        v-model="dish.description"
-                                        outlined
-                                        clearable
-                                        label="Доп. инфо"
-                                    ></v-textarea>
+                                    <tiptap-vuetify v-model="dish.description" :extensions="extensions"></tiptap-vuetify>
                                 </v-col>
-                                <v-col sm="12" lg="8">
+                                <v-col sm="12" lg="6">
                                     <v-autocomplete
                                         v-model="dish.ingredient_ids"
                                         :items="ingredients"
@@ -153,8 +148,11 @@
 </template>
 
 <script>
+import { TiptapVuetify, Heading, Bold, Italic, Strike, Underline, Code, Paragraph, BulletList, OrderedList, ListItem, Link, Blockquote, HardBreak, HorizontalRule, History } from 'tiptap-vuetify'
+
 export default {
     name: "Dishes",
+    components: { TiptapVuetify },
     data: () => ({
         dishes: [],
         dish: {
@@ -171,7 +169,28 @@ export default {
         rations: [],
         errors: [],
         edit: -1,
-        dialog: false
+        dialog: false,
+        extensions: [
+            History,
+            Blockquote,
+            Link,
+            Underline,
+            Strike,
+            Italic,
+            ListItem,
+            BulletList,
+            OrderedList,
+            [Heading, {
+                options: {
+                    levels: [1, 2, 3]
+                }
+            }],
+            Bold,
+            Code,
+            HorizontalRule,
+            Paragraph,
+            HardBreak
+        ]
     }),
     mounted() {
         this.getDishes()

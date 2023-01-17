@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -9,6 +10,8 @@ use Illuminate\Support\Collection;
 class Select extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['order_id', 'cuisine_id', 'ration_id', 'dish_id', 'dish_name', 'status'];
 
     const START = 0;
     const REPLACEMENT = 2;
@@ -41,25 +44,39 @@ class Select extends Model
         return $this->belongsTo(Dish::class, 'dish_id', 'id');
     }
 
+    public function group() {
+        return $this->belongsTo(UserGroup::class, 'group_id', 'id');
+    }
+
     public function wishes()
     {
         return $this->belongsToMany(Wishlist::class, 'select_wishes', 'select_id', 'wish_id');
     }
 
+    public function selected_wishes()
+    {
+        return $this->wishes()->pluck('id');
+    }
+
+    public function tableware() {
+        return $this->belongsTo(TableWare::class, 'tableware_id', 'id');
+    }
+
     public function getWishIds()
     {
-        return array_map(function ($item){
+        return array_map(function ($item) {
             return $item['id'];
-        }, $this->wishes()->get()->toArray());    }
+        }, $this->wishes()->get()->toArray());
+    }
 
-    public function getIngredientIds(): Collection
+    public function getIngredientIds()
     {
-        return $this->ingredients()->pluck('id');
+        return $this->ingredients()->pluck('id')->toArray();
     }
 
     public function getStatusColor(): string
     {
-        $color = '';
+        $color = 'lime lighten-2';
 
         if (!$this->is_active) {
             return 'grey';
@@ -67,8 +84,6 @@ class Select extends Model
 
         if ($this->status === self::REPLACEMENT){
             $color = 'red lighten-3';
-        }else if ($this->status === self::LITE || $this->status === self::WITHOUT){
-            $color = 'lime lighten-2';
         }
 
         return $color;
@@ -85,5 +100,61 @@ class Select extends Model
         }
 
         return $color;
+    }
+
+    public static function generateCode()
+    {
+        $groups = Select::with('ingredients')
+            ->whereDate('created_at', Carbon::today())
+            ->where('dish_id', '!=', null)
+            ->get()
+            ->groupBy('ration_id');
+
+        $duty_cuisine = Cuisine::where('is_on_duty', true)->first();
+
+        foreach ($groups as $group){
+
+            $ids = [];
+            //beautify
+            foreach ($group as $item) {
+                $code = null;
+                $duty_dish = Dish::where('cuisine_id', $duty_cuisine->id)->where('ration_id', $item->ration_id)->first();
+
+                /*if ($duty_dish && $item->dish_id === $duty_dish->id) {
+                    $code = '0';
+                }*/
+
+                $ids[] = [
+                    'id'=> $item->id,
+                    'code' => $code,
+                    'ids' => $item->getIngredientIds()
+                ];
+            }
+
+            for ($i = 0; $i < count($ids); $i++){
+
+                if ($ids[$i]['code'] === null){
+                    $ids[$i]['code'] = $i+1;
+                }else{
+                    continue;
+                }
+
+                for ($j = $i+1; $j < count($ids); $j++){
+                    $a = array_diff($ids[$i]['ids'], $ids[$j]['ids']);
+                    $b = array_diff($ids[$j]['ids'], $ids[$i]['ids']);
+
+                    if (count($a) === 0 && count($b) === 0){
+                        $ids[$j]['code'] = $i+1;
+                    }
+                }
+            }
+
+            foreach ($group as $key => $item){
+                $ration = Ration::find($item->ration_id);
+
+                $item->code = $ration->code . '-' . $ids[$key]['code'];
+                $item->save();
+            }
+        }
     }
 }

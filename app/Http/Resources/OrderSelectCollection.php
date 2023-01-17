@@ -20,7 +20,6 @@ class OrderSelectCollection extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'tag' => $this->getTag($this->type, $this->size),
-            'size' => $this->getSize($this->size),
             'diet' => $this->diet,
             'diet_old' => $this->diet_old,
             //'blacklist' => $this->getBlacklistIds(),

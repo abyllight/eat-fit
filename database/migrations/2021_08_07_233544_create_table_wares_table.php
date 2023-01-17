@@ -18,7 +18,7 @@ class CreateTableWaresTable extends Migration
             $table->string('name');
             $table->integer('type')->default(0);
             $table->string('img');
-            $table->integer('size');
+            $table->string('size');
             $table->timestamps();
         });
     }

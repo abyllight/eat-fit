@@ -2,36 +2,67 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\OrderSelectCollection;
 use App\Http\Resources\SelectCollection;
-use App\Models\Cuisine;
 use App\Models\Dish;
 use App\Models\Ingredient;
 use App\Models\Order;
 use App\Models\Ration;
 use App\Models\Select;
 use App\Models\SelectWish;
-use App\Models\Wishlist;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use PhpOffice\PhpSpreadsheet\RichText\RichText;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
-use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class SelectController extends Controller
 {
+    public function index() {
+        $selects = Select::whereDate('created_at', Carbon::today())->get();
+        Select::generateCode();
+        return SelectCollection::collection($selects)->collection->sortBy('ration_id')->groupBy('order_id');
+    }
     public function getSelectById($id) {
         $select = Select::find($id);
 
         return response()->json($select->ingredients);
     }
 
-    public function getSelectByOrder($order_id): JsonResponse
+    public function getSelectByOrder($id): JsonResponse
     {
-        $order = Order::find($order_id);
+        $select = Select::find($id);
+
+        if (!$select){
+            return response()->json([
+                'status' => false,
+                'msg' => 'Select not found'
+            ]);
+        }
+
+        $order = $select->order;
+        $previous = Select::where('ration_id', $select->ration_id)->whereDate('created_at', Carbon::yesterday())->first();
+
+        if ($previous) {
+            $previous = new SelectCollection($previous);
+        }else {
+            $previous = [];
+        }
+
+        return response()->json([
+            'order' => new OrderSelectCollection($order),
+            'blacklist' => $order->getBlackListIds(),
+            'wishlist' => $order->wishlist,
+            'result' => new SelectCollection($select),
+            'previous' => $previous
+        ]);
+    }
+
+    public function getSelectsByOrder($id): JsonResponse
+    {
+        $order = Order::find($id);
 
         if (!$order){
             return response()->json([
@@ -39,7 +70,6 @@ class SelectController extends Controller
                 'msg' => 'Order not found'
             ]);
         }
-
         return response()->json([
             'blacklist' => $order->getBlackListIds(),
             'wishlist' => $order->wishlist,
@@ -48,46 +78,102 @@ class SelectController extends Controller
         ]);
     }
 
+    public function setDone($id) {
+        $select = Select::find($id);
+
+        $select->done =! $select->done;
+        $select->save();
+
+        return response()->json(new SelectCollection($select));
+    }
+
+    public function resetResult(Request $request) {
+
+        $selects = Select::whereDate('created_at', Carbon::today())->where('order_id', $request->id)->get();
+
+        foreach ($selects as $select) {
+            $select->ingredients()->detach();
+            $select->wishes()->detach();
+            $select->delete();
+        }
+
+        return response()->json([
+            'status' => true,
+            'msg' => 'Success',
+            'data' => []
+        ]);
+    }
+
+    public function setTableware(Request $request) {
+        $select = Select::where('order_id', $request->order_id)
+            ->where('cuisine_id', $request->cuisine_id)
+            ->where('ration_id', $request->ration_id)
+            ->whereDate('created_at', Carbon::today())
+            ->first();
+
+        $dish = Dish::find($request->dish_id);
+        $ration = Ration::find($request->ration_id);
+
+        if (!$select) {
+            $select = new Select();
+            $select->order_id = $request->order_id;
+            $select->cuisine_id = $request->cuisine_id;
+            $select->ration_id = $ration->id;
+            $select->dep_id = $ration->department_id;
+            $select->status = Select::REPLACEMENT;
+        }
+
+        $select->dish_id = $request->dish_id;
+        $select->dish_name = $dish->name;
+        $select->tableware_id = $request->tableware_id;
+        $select->save();
+
+        $select->ingredients()->sync($dish->getIngredientIds());
+
+        return response()->json([
+            'status' => true,
+            'msg' => 'Success',
+            'data' => new SelectCollection($select)
+        ]);
+    }
+
     public function setDishToSelect(Request $request): JsonResponse
     {
         $dish = Dish::find($request->dish_id);
-        $cuisine = Cuisine::where('is_on_duty', true)->first();
-        $select = Select::find($request->select_id);
 
-        if (!$dish){
+        if (!$dish) {
             return response()->json([
                 'status' => false,
                 'msg' => 'Dish not found'
             ]);
         }
-/*
-        if (!$request->has('select_id')){
+
+        $select = Select::where('order_id', $request->order_id)
+            ->where('cuisine_id', $request->cuisine_id)
+            ->where('ration_id', $request->ration_id)
+            ->whereDate('created_at', Carbon::today())
+            ->first();
+
+        $ration = Ration::find($request->ration_id);
+        $duty_dish = Dish::where('cuisine_id', $request->cuisine_id)->where('ration_id', $request->ration_id)->first();
+
+        if (!$select) {
             $select = new Select();
             $select->order_id = $request->order_id;
-            $select->cuisine_id = $cuisine->id;
+            $select->cuisine_id = $request->cuisine_id;
             $select->ration_id = $request->ration_id;
-        }else{
-            $select = Select::find($request->select_id);
-
-            if (!$select){
-                return response()->json([
-                    'status' => false,
-                    'msg' => 'Select not found'
-                ]);
-            }
-        }*/
-        $duty_dish = Dish::where('cuisine_id', $cuisine->id)->where('ration_id', $request->ration_id)->first();
-
-        //$select->r_id = $request->r_id;
-        $select->dish_id = $request->dish_id;
-        $select->dish_name = $dish->name;
-        $select->description = null;
-        $select->status = Select::LITE;
+            $select->dep_id = $ration->department_id;
+        }
 
         if (!$duty_dish || $request->dish_id !== $duty_dish->id) {
             $select->status = Select::REPLACEMENT;
+        }else {
+            $select->status = Select::LITE;
         }
 
+        $select->dish_id = $request->dish_id;
+        $select->dish_name = $dish->name;
+        $select->tableware_id = $ration->tableware_id;
         $select->save();
 
         $select->ingredients()->sync($dish->getIngredientIds());
@@ -156,22 +242,37 @@ class SelectController extends Controller
         ]);
     }
 
-    public function removeIngredientFromSelect(Request $request){
-        $select = Select::find($request->select_id);
+    public function removeIngredientFromSelect(Request $request): JsonResponse
+    {
+        $select = Select::where('order_id', $request->order_id)
+            ->where('cuisine_id', $request->cuisine_id)
+            ->where('ration_id', $request->ration_id)
+            ->whereDate('created_at', Carbon::today())
+            ->first();
 
-        if (!$select){
-            return response()->json([
-                'status' => false,
-                'msg' => 'Select not found'
-            ]);
+        $dish = Dish::find($request->dish_id);
+
+        if (!$select) {
+            $ration = Ration::find($request->id);
+
+            $select = new Select();
+            $select->order_id = $request->order_id;
+            $select->cuisine_id = $request->cuisine_id;
+            $select->ration_id = $request->ration_id;
+            $select->dish_id = $request->dish_id;
+            $select->dish_name = $dish->name;
+            $select->dep_id = $ration->department_id;
+
+            $select->ingredients()->sync($dish->getIngredientIds());
         }
-
-        $select->ingredients()->detach($request->ingredient_id);
 
         if ($select->status === Select::LITE){
             $select->status = Select::WITHOUT;
-            $select->save();
         }
+
+        $select->save();
+
+        $select->ingredients()->detach($request->ingredient_id);
 
         return response()->json([
             'status' => true,
@@ -181,21 +282,32 @@ class SelectController extends Controller
     }
 
     public function replaceIngredientFromSelect(Request $request){
-        $select = Select::find($request->select_id);
+        $select = Select::where('order_id', $request->order_id)
+            ->where('cuisine_id', $request->cuisine_id)
+            ->where('ration_id', $request->ration_id)
+            ->whereDate('created_at', Carbon::today())
+            ->first();
+
+        $dish = Dish::find($request->dish_id);
 
         if (!$select){
-            return response()->json([
-                'status' => false,
-                'msg' => 'Select not found'
-            ]);
+            $ration = Ration::find($request->id);
+
+            $select = new Select();
+            $select->order_id = $request->order_id;
+            $select->cuisine_id = $request->cuisine_id;
+            $select->ration_id = $request->ration_id;
+            $select->dep_id = $ration->department_id;
+            $select->dish_id = $request->dish_id;
+            $select->dish_name = $dish->name;
+            $select->status = Select::REPLACEMENT;
+            $select->save();
+
+            $select->ingredients()->sync($dish->getIngredientIds());
         }
 
         $select->ingredients()->detach($request->ingredient_id);
         $select->ingredients()->attach([$request->analog_id => ['analog_id' => $request->ingredient_id]]);
-
-        $select->status = Select::REPLACEMENT;
-
-        $select->save();
 
         return response()->json([
             'status' => true,
@@ -270,6 +382,11 @@ class SelectController extends Controller
 
         $select->is_active = !$select->is_active;
         $select->save();
+
+        return response()->json([
+            'status' => true,
+            'msg' => 'OK'
+        ]);
     }
 
     public function addExtraIngredient(Request $request){
@@ -386,18 +503,47 @@ class SelectController extends Controller
     }
 
     public function addRemoveWish(Request $request) {
-        $sel_wish = SelectWish::where('select_id', $request->s_id)->where('wish_id', $request->w_id)->first();
+        $select = Select::where('order_id', $request->order_id)
+            ->where('cuisine_id', $request->cuisine_id)
+            ->where('ration_id', $request->ration_id)
+            ->whereDate('created_at', Carbon::today())
+            ->first();
 
-        $select = Select::find($request->s_id);
+        $ration = Ration::find($request->ration_id);
 
-        if($sel_wish) {
-            $select->wishes()->wherePivot('wish_id', $request->w_id)->detach();
+        if ($select) {
+            $sel_wish = SelectWish::where('select_id', $select->id)->where('wish_id', $request->w_id)->first();
+
+            if ($sel_wish) {
+                $select->wishes()->wherePivot('wish_id', $request->w_id)->detach();
+
+                return response()->json([
+                    'status' => true,
+                    'data' => $select->getWishIds()
+                ]);
+            }
         }else {
-            $new = new SelectWish();
-            $new->select_id = $request->s_id;
-            $new->wish_id = $request->w_id;
-            $new->save();
+            $dish = Dish::find($request->dish_id);
+            $ration = Ration::find($request->id);
+
+            $select = new Select();
+            $select->order_id = $request->order_id;
+            $select->cuisine_id = $request->cuisine_id;
+            $select->ration_id = $request->ration_id;
+            $select->dep_id = $ration->department_id;
+            $select->dish_id = $request->dish_id;
+            $select->dish_name = $dish->name;
+            $select->status = Select::LITE;
+            $select->tableware_id = $ration->tableware_id;
+            $select->save();
+
+            $select->ingredients()->sync($dish->getIngredientIds());
         }
+
+        $new = new SelectWish();
+        $new->select_id = $select->id;
+        $new->wish_id = $request->w_id;
+        $new->save();
 
         return response()->json([
             'status' => true,
@@ -407,57 +553,7 @@ class SelectController extends Controller
 
     public function generateCode()
     {
-        $groups = Select::with('ingredients')
-            ->whereDate('created_at', Carbon::today())
-            ->where('dish_id', '!=', null)
-            ->get()
-            ->groupBy('ration_id');
-
-        $duty_cuisine = Cuisine::where('is_on_duty', true)->first();
-
-        foreach ($groups as $group){
-
-            $ids = [];
-            //beautify
-            foreach ($group as $item) {
-
-                $code = null;
-                $duty_dish = Dish::where('cuisine_id', $duty_cuisine->id)->where('ration_id', $item->ration_id)->first();
-
-                if ($duty_dish && $item->dish_id === $duty_dish->id) {
-                    $code = '0';
-                }
-
-                $ids[] = [
-                    'id'=> $item->id,
-                    'code' => $code,
-                    'ids' => $item->getIngredientIds()
-                ];
-            }
-
-            for ($i = 0; $i < count($ids); $i++){
-
-                if ($ids[$i]['code'] === null){
-                    $ids[$i]['code'] = $i+1;
-                }else{
-                    continue;
-                }
-
-                for ($j = $i+1; $j < count($ids); $j++){
-                    $a = array_diff($ids[$i]['ids'], $ids[$j]['ids']);
-                    $b = array_diff($ids[$j]['ids'], $ids[$i]['ids']);
-
-                    if (count($a) === 0 && count($b) === 0){
-                        $ids[$j]['code'] = $i+1;
-                    }
-                }
-            }
-
-            foreach ($group as $key => $item){
-                $item->code = $ids[$key]['code'];
-                $item->save();
-            }
-        }
+        Select::generateCode();
     }
 
     public function selectRations(): JsonResponse
@@ -511,8 +607,21 @@ class SelectController extends Controller
         return response()->json($arr);
     }
 
+    public function getMessage($id) {
+        $msg = '';
+        $selects = Select::whereDate('created_at', Carbon::today())->where('order_id', $id)->get();
+
+        foreach ($selects as $select) {
+            $ration = Ration::find($select->ration_id);
+
+            $msg .= $ration->name . ': ' . $select->dish_name . ' ';
+        }
+
+        return $msg;
+    }
+
     public function export(){
-        $this->generateCode();
+        Select::generateCode();
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -593,7 +702,7 @@ class SelectController extends Controller
         $orders = Order::where('type', Order::EAT_FIT_SELECT)->where('is_active', true)->orderBy('size')->get();
         $n = 1;
 
-        foreach ($orders as $key => $order){
+        foreach ($orders as $key => $order) {
             $select = $order->select()->whereDate('created_at', Carbon::today())->get();
 
             $n++;
@@ -620,7 +729,7 @@ class SelectController extends Controller
                 if ($s){
                     if ($s->is_active && $s->status > 0) {
 
-                        $code_section = $r['code']. '-' . $s->code;
+                        $code_section = $s->code;
 
                         if ($s->status === Select::WITHOUT) {
                             $dish = Dish::getDutyDishByRation($s->ration_id);

@@ -2,9 +2,7 @@
     <div>
         <v-row>
             <v-col>
-                <v-btn
-                    @click="$router.back()"
-                >
+                <v-btn to="/cuisines">
                     Назад к кухням мира
                 </v-btn>
             </v-col>
@@ -31,7 +29,7 @@
                             >
                                 mdi-refresh
                             </v-icon>
-                            Получить блюда
+                            блюда
                         </v-btn>
 
                         <v-btn
@@ -44,7 +42,7 @@
                             >
                                 mdi-refresh
                             </v-icon>
-                            Получить ингредиенты
+                            ингредиенты
                         </v-btn>
                     </v-card-actions>
                 </v-card>

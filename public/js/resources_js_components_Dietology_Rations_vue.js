@@ -183,6 +183,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Rations",
   data: function data() {
@@ -193,18 +210,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         code: '',
         iiko_id: null,
         is_required: false,
-        department_id: null
+        department_id: null,
+        tableware_id: null
       },
       errors: [],
       edit: -1,
       dialog: false,
       dialogDelete: false,
-      departments: []
+      departments: [],
+      tablewares: []
     };
   },
   mounted: function mounted() {
     this.getRations();
     this.getDepartments();
+    this.getTablewares();
   },
   methods: {
     getRations: function getRations() {
@@ -253,6 +273,29 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee2);
       }))();
     },
+    getTablewares: function getTablewares() {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.next = 2;
+                return axios.get('/api/tableware').then(function (response) {
+                  _this3.tablewares = response.data.data;
+                })["catch"](function (error) {
+                  console.log(error);
+                });
+
+              case 2:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
+    },
     action: function action() {
       if (this.edit === 1) {
         this.update();
@@ -261,32 +304,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
     },
     store: function store() {
-      var _this3 = this;
-
-      axios.post('/api/rations', this.ration).then(function (response) {
-        if (response.data.status) {
-          _this3.$store.dispatch('showAlert', {
-            'isVisible': true,
-            'msg': response.data.msg,
-            'color': 'green',
-            'type': 'success'
-          });
-
-          _this3.close();
-
-          _this3.getRations();
-        } else {
-          _this3.errors = response.data.errors;
-        }
-      })["catch"](function (error) {
-        console.log(error);
-        _this3.errors = error.response.data.errors;
-      });
-    },
-    update: function update() {
       var _this4 = this;
 
-      axios.patch('/api/rations/' + this.ration.id, this.ration).then(function (response) {
+      axios.post('/api/rations', this.ration).then(function (response) {
         if (response.data.status) {
           _this4.$store.dispatch('showAlert', {
             'isVisible': true,
@@ -304,6 +324,29 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       })["catch"](function (error) {
         console.log(error);
         _this4.errors = error.response.data.errors;
+      });
+    },
+    update: function update() {
+      var _this5 = this;
+
+      axios.patch('/api/rations/' + this.ration.id, this.ration).then(function (response) {
+        if (response.data.status) {
+          _this5.$store.dispatch('showAlert', {
+            'isVisible': true,
+            'msg': response.data.msg,
+            'color': 'green',
+            'type': 'success'
+          });
+
+          _this5.close();
+
+          _this5.getRations();
+        } else {
+          _this5.errors = response.data.errors;
+        }
+      })["catch"](function (error) {
+        console.log(error);
+        _this5.errors = error.response.data.errors;
       });
     },
     close: function close() {
@@ -328,26 +371,26 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.dialogDelete = true;
     },
     deleteConfirm: function deleteConfirm() {
-      var _this5 = this;
+      var _this6 = this;
 
       axios["delete"]('/api/rations/' + this.ration.id).then(function (response) {
         if (response.data.status) {
-          _this5.$store.dispatch('showAlert', {
+          _this6.$store.dispatch('showAlert', {
             'isVisible': true,
             'msg': response.data.msg,
             'color': 'green',
             'type': 'success'
           });
 
-          _this5.close();
+          _this6.close();
 
-          _this5.getRations();
+          _this6.getRations();
         } else {
-          _this5.errors = response.data.errors;
+          _this6.errors = response.data.errors;
         }
       })["catch"](function (error) {
         console.log(error);
-        _this5.errors = error.response.data.errors;
+        _this6.errors = error.response.data.errors;
       });
     }
   }
@@ -514,6 +557,12 @@ var render = function() {
                             _vm._v(" "),
                             _c("th", { staticClass: "text-left" }, [
                               _vm._v(
+                                "\n                            Посуда\n                        "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("th", { staticClass: "text-left" }, [
+                              _vm._v(
                                 "\n                            Действие\n                        "
                               )
                             ])
@@ -535,6 +584,15 @@ var render = function() {
                               _c("td", [_vm._v(_vm._s(item.iiko_id))]),
                               _vm._v(" "),
                               _c("td", [_vm._v(_vm._s(item.department))]),
+                              _vm._v(" "),
+                              _c("td", [
+                                _c("img", {
+                                  attrs: {
+                                    src: item.tableware_img,
+                                    width: "100"
+                                  }
+                                })
+                              ]),
                               _vm._v(" "),
                               _c(
                                 "td",
@@ -791,6 +849,30 @@ var render = function() {
                                         )
                                       },
                                       expression: "ration.department_id"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("v-select", {
+                                    attrs: {
+                                      items: _vm.tablewares,
+                                      "item-text": "name",
+                                      "item-value": "id",
+                                      label: "Посуда",
+                                      "error-messages": _vm.errors.tableware_id,
+                                      outlined: "",
+                                      dense: "",
+                                      clearable: ""
+                                    },
+                                    model: {
+                                      value: _vm.ration.tableware_id,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.ration,
+                                          "tableware_id",
+                                          $$v
+                                        )
+                                      },
+                                      expression: "ration.tableware_id"
                                     }
                                   }),
                                   _vm._v(" "),

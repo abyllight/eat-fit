@@ -190,7 +190,7 @@ class Order extends Model
     {
         $result = $this->select()->whereDate('created_at', Carbon::today())->get()->sortBy('ration_id');
 
-        if ($result->count() === 0){
+        if ($result->count() === 0) {
             $cuisine = Cuisine::where('is_on_duty', true)->first();
 
             if (!$cuisine) {
@@ -206,6 +206,8 @@ class Order extends Model
                 $select->order_id = $this->id;
                 $select->cuisine_id = $cuisine->id;
                 $select->ration_id = $ration->id;
+                $select->dep_id = $ration->department_id;
+                $select->tableware_id = $ration->tableware_id;
 
                 if ($duty_dish) {
                     $select->dish_id = $duty_dish->id;

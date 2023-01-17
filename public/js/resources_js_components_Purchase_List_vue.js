@@ -119,6 +119,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "List",
   data: function data() {
@@ -288,11 +290,11 @@ var render = function() {
                         }
                       },
                       model: {
-                        value: i.done,
+                        value: i.is_done,
                         callback: function($$v) {
-                          _vm.$set(i, "done", $$v)
+                          _vm.$set(i, "is_done", $$v)
                         },
-                        expression: "i.done"
+                        expression: "i.is_done"
                       }
                     })
                   ],
@@ -307,8 +309,8 @@ var render = function() {
                       "v-card",
                       {
                         attrs: {
-                          disabled: i.done === 1,
-                          color: i.done === 1 ? "grey" : ""
+                          disabled: i.is_done === 1,
+                          color: i.is_done === 1 ? "grey lighten-1" : ""
                         }
                       },
                       [
@@ -335,9 +337,7 @@ var render = function() {
                                     _vm._v("Нужно взять:")
                                   ]),
                                   _vm._v(" "),
-                                  _c("strong", { staticClass: "green--text" }, [
-                                    _vm._v(_vm._s(i.diff))
-                                  ])
+                                  _c("h2", {}, [_vm._v(_vm._s(i.diff))])
                                 ]),
                                 _vm._v(" "),
                                 i.providers.length > 0

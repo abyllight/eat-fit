@@ -80,6 +80,66 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Cuisine',
   data: function data() {
@@ -87,7 +147,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       cuisines: [],
       btn_loading: false,
       loading: false,
-      disabled: false
+      disabled: false,
+      dialog: false,
+      cuisine: {},
+      file: null
     };
   },
   created: function created() {
@@ -185,6 +248,39 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         });
 
         _this4.getCuisines();
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    },
+    openFile: function openFile(cuisine) {
+      this.cuisine = cuisine;
+      this.dialog = true;
+    },
+    saveFile: function saveFile() {
+      var _this5 = this;
+
+      var dataForm = new FormData();
+      dataForm.append('file', this.file);
+      dataForm.append('_method', 'POST');
+      axios({
+        method: 'POST',
+        url: '/api/cuisine/' + this.cuisine.id + '/file',
+        data: dataForm,
+        headers: {
+          'content-type': 'multipart/form-data'
+        }
+      }).then(function (res) {
+        _this5.$store.dispatch('showAlert', {
+          isVisible: true,
+          msg: res.data.msg,
+          color: 'success',
+          type: 'success'
+        });
+
+        _this5.dialog = false;
+        _this5.file = null;
+
+        _this5.getCuisines();
       })["catch"](function (err) {
         console.log(err);
       });
@@ -346,6 +442,20 @@ var render = function() {
                     _c(
                       "v-card-actions",
                       [
+                        _c(
+                          "v-btn",
+                          {
+                            attrs: { color: "white", icon: "" },
+                            on: {
+                              click: function($event) {
+                                return _vm.openFile(c)
+                              }
+                            }
+                          },
+                          [_c("v-icon", [_vm._v("mdi-file")])],
+                          1
+                        ),
+                        _vm._v(" "),
                         _c("v-spacer"),
                         _vm._v(" "),
                         _c(
@@ -400,6 +510,119 @@ var render = function() {
             2
           )
         }),
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-row",
+        { attrs: { justify: "center" } },
+        [
+          _c(
+            "v-dialog",
+            {
+              attrs: { persistent: "", "max-width": "480" },
+              model: {
+                value: _vm.dialog,
+                callback: function($$v) {
+                  _vm.dialog = $$v
+                },
+                expression: "dialog"
+              }
+            },
+            [
+              _c(
+                "v-card",
+                [
+                  _c("v-card-title", { staticClass: "text-h5 mb-4" }, [
+                    _vm._v(
+                      "\n                    Файл для " +
+                        _vm._s(_vm.cuisine.name) +
+                        "\n                "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "v-card-text",
+                    { staticClass: "mb-0 pb-0" },
+                    [
+                      _vm.cuisine.file
+                        ? _c(
+                            "a",
+                            {
+                              attrs: {
+                                href: /storage/ + _vm.cuisine.file,
+                                target: "_blank"
+                              }
+                            },
+                            [
+                              _vm._v(
+                                "\n                        " +
+                                  _vm._s(_vm.cuisine.file) +
+                                  "\n                    "
+                              )
+                            ]
+                          )
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _c("v-file-input", {
+                        staticClass: "mt-4",
+                        attrs: { label: "File input", outlined: "", dense: "" },
+                        model: {
+                          value: _vm.file,
+                          callback: function($$v) {
+                            _vm.file = $$v
+                          },
+                          expression: "file"
+                        }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-card-actions",
+                    [
+                      _c("v-spacer"),
+                      _vm._v(" "),
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "red", text: "" },
+                          on: {
+                            click: function($event) {
+                              _vm.dialog = false
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        Закрыть\n                    "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "green darken-1", text: "" },
+                          on: { click: _vm.saveFile }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        Сохранить\n                    "
+                          )
+                        ]
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
         1
       )
     ],

@@ -21,6 +21,7 @@
         "vue-template-compiler": "^2.6.14"
     },
     "dependencies": {
+        "tiptap-vuetify": "^2.24.0",
         "v-mask": "^2.3.0",
         "vue": "^2.6.14",
         "vue-router": "^3.5.2",

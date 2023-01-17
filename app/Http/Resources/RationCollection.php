@@ -21,7 +21,9 @@ class RationCollection extends JsonResource
             'code' => $this->code,
             'iiko_id' => $this->iiko_id,
             'department_id' => $this->department_id,
+            'tableware_id' => $this->tableware_id,
             'department' => $this->department(),
+            'tableware_img' => $this->tableware_id ? '/storage/'.$this->tableware->img : '',
             'is_required' => $this->is_required
         ];
     }

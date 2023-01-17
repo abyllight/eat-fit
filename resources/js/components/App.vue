@@ -179,14 +179,26 @@ export default {
                 roles: ['admin', 'kitchen'],
                 links: [
                     {
+                        title: 'Марат',
+                        link: '/marat',
+                        icon: 'format-list-numbered',
+                        roles: ['admin', 'kitchen']
+                    },
+                    {
                         title: 'Список для закупа',
                         link: '/purchase-list-kitchen',
                         icon: 'format-list-numbered',
                         roles: ['admin', 'kitchen']
                     },
                     {
-                        title: 'Стикеры',
-                        link: '/select-rations',
+                        title: 'Раскладка',
+                        link: '/grid',
+                        icon: 'view-grid',
+                        roles: ['admin', 'kitchen']
+                    },
+                    {
+                        title: 'Селекты',
+                        link: '/cards',
                         icon: 'view-grid',
                         roles: ['admin', 'kitchen']
                     }
@@ -217,6 +229,12 @@ export default {
                     {
                         title: 'Ингредиенты',
                         link: '/ingredients',
+                        icon: 'circle',
+                        roles: ['admin', 'diet']
+                    },
+                    {
+                        title: 'Посуды',
+                        link: '/tableware',
                         icon: 'circle',
                         roles: ['admin', 'diet']
                     },

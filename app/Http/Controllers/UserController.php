@@ -51,6 +51,7 @@ class UserController extends Controller
         $user->name = $request->name;
         $user->phone = $request->phone;
         $user->city_id = $request->city_id;
+        $user->kd_id = $request->department_id;
         $user->password = Hash::make($request->password);
         $user->save();
 
@@ -92,6 +93,7 @@ class UserController extends Controller
             $user->name = $request->name;
             $user->phone = $request->phone;
             $user->city_id = $request->city_id;
+            $user->kd_id = $request->department_id;
 
             if ($request->password) {
                 $user->password = Hash::make($request->password);

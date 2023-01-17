@@ -10,6 +10,7 @@
                 </div>
             </v-col>
         </v-row>
+
         <v-btn
             color="pink"
             dark
@@ -21,6 +22,7 @@
         >
             <v-icon>mdi-plus</v-icon>
         </v-btn>
+
         <v-row
             v-for="(i, key) in purchase.ingredients"
             :key="i.id"

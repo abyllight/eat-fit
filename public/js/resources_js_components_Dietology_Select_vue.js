@@ -16,18 +16,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _Kitchen_SelectModal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Kitchen/SelectModal */ "./resources/js/components/Kitchen/SelectModal.vue");
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
+/* harmony import */ var _Stat_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Stat.vue */ "./resources/js/components/Dietology/Stat.vue");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -192,430 +181,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Select',
   components: {
+    Stat: _Stat_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
     SelectModal: _Kitchen_SelectModal__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
   data: function data() {
@@ -623,7 +195,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       amo_loading: false,
       orders: [],
       order: {},
-      select_stat: [],
+      select_stat: {},
       itemsPerPage: 300,
       search: '',
       headers: [{
@@ -635,46 +207,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }, {
         text: 'Тэг',
         value: 'tag'
+      }, {
+        text: 'WA',
+        value: 'actions'
       }],
+      select_result: [],
       loading: true,
       select_loading: false,
-      dialog: false,
-      dialog2: false,
-      dialog3: false,
-      ingredients: [],
-      categories: [],
-      dishes: [],
-      dish: {},
-      rations: [],
-      select_previous: [],
-      select_result: [],
-      previous: {},
-      result: {},
-      blacklist: [],
-      mix: [],
-      wishlist: [],
-      wish_ids: [],
-      tag: '',
-      tags: [],
       cuisine: {},
-      ration: {},
-      applied_categories: [],
-      ration_id: null,
-      ingredient_categories: [],
-      chosen_category: {},
-      chosen_ingredient: {},
-      target_ingredient: null,
-      errors: [],
-      r1_val: null,
-      r2_val: null
+      isSelect: true
     };
   },
   created: function created() {
-    this.getOrders();
+    this.getSelect();
     this.getCuisine();
-    this.getCategories();
-    this.getIngredients();
-    this.getRations();
+    this.generateCode();
   },
   computed: {
     isDutyDishId: function isDutyDishId() {
@@ -713,7 +260,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee);
       }))();
     },
-    getOrders: function getOrders() {
+    getCuisine: function getCuisine() {
       var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
@@ -721,11 +268,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _this2.loading = true;
-                _context2.next = 3;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/orders/select/all').then(function (response) {
-                  _this2.orders = response.data.orders;
-                  _this2.select_stat = response.data.stat;
+                _context2.next = 2;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/cuisine/duty').then(function (response) {
+                  _this2.cuisine = response.data.cuisine;
                 })["catch"](function (error) {
                   _this2.loading = false;
 
@@ -735,11 +280,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     'color': 'error',
                     'type': 'error'
                   });
-                })["finally"](function () {
-                  return _this2.loading = false;
                 });
 
-              case 3:
+              case 2:
               case "end":
                 return _context2.stop();
             }
@@ -747,7 +290,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee2);
       }))();
     },
-    getIngredients: function getIngredients() {
+    generateCode: function generateCode() {
+      axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/select/generate-code');
+    },
+    showOrderDetails: function showOrderDetails(order) {
+      this.order = order;
+      this.getSelectDetailsByOrder(order.id);
+    },
+    getSelectDetailsByOrder: function getSelectDetailsByOrder(id) {
       var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
@@ -755,14 +305,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _context3.next = 2;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/ingredients').then(function (response) {
-                  _this3.ingredients = response.data;
+                _this3.select_loading = true;
+                _context3.next = 3;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/selects/order/' + id).then(function (response) {
+                  _this3.select_previous = response.data.previous;
+                  _this3.select_result = response.data.result;
+                  _this3.blacklist = response.data.blacklist;
+                  _this3.mix = response.data.blacklist;
+                  _this3.wishlist = response.data.wishlist;
+                  _this3.select_loading = false;
                 })["catch"](function (error) {
                   console.log(error);
                 });
 
-              case 2:
+              case 3:
               case "end":
                 return _context3.stop();
             }
@@ -770,8 +326,28 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee3);
       }))();
     },
-    getCategories: function getCategories() {
+    openSettings: function openSettings(id, r_id) {
+      this.$router.push({
+        name: 'select-details',
+        params: {
+          id: id,
+          r_id: r_id
+        }
+      });
+    },
+    activateDeactivate: function activateDeactivate(id) {
       var _this4 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/activate-deactivate', {
+        select_id: id
+      }).then(function (response) {
+        _this4.getSelectDetailsByOrder(_this4.order.id);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    getDishesByRation: function getDishesByRation(id) {
+      var _this5 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
@@ -779,8 +355,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context4.prev = _context4.next) {
               case 0:
                 _context4.next = 2;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/categories').then(function (response) {
-                  _this4.categories = response.data;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/dishes/ration/' + id).then(function (response) {
+                  _this5.dishes = response.data;
+
+                  if (_this5.dishes.length > 0) {
+                    _this5.dish = _this5.dishes.find(function (obj) {
+                      return obj.id === _this5.result.dish_id;
+                    });
+
+                    if (!_this5.dish) {
+                      _this5.dish = _this5.dishes[0];
+                    }
+                  } else {
+                    _this5.dish.ingredients = [];
+                  }
                 })["catch"](function (error) {
                   console.log(error);
                 });
@@ -793,407 +381,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee4);
       }))();
     },
-    getRations: function getRations() {
-      var _this5 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
-          while (1) {
-            switch (_context5.prev = _context5.next) {
-              case 0:
-                _context5.next = 2;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/rations').then(function (response) {
-                  _this5.rations = response.data;
-                })["catch"](function (error) {
-                  console.log(error);
-                });
-
-              case 2:
-              case "end":
-                return _context5.stop();
-            }
-          }
-        }, _callee5);
-      }))();
-    },
-    getCuisine: function getCuisine() {
-      var _this6 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee6() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee6$(_context6) {
-          while (1) {
-            switch (_context6.prev = _context6.next) {
-              case 0:
-                _context6.next = 2;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/cuisine/duty').then(function (response) {
-                  _this6.cuisine = response.data;
-                })["catch"](function (error) {
-                  _this6.loading = false;
-
-                  _this6.$store.dispatch('showAlert', {
-                    'isVisible': true,
-                    'msg': error.message,
-                    'color': 'error',
-                    'type': 'error'
-                  });
-                });
-
-              case 2:
-              case "end":
-                return _context6.stop();
-            }
-          }
-        }, _callee6);
-      }))();
-    },
-    showOrderDetails: function showOrderDetails(order) {
-      this.order = order;
-      this.getSelectDetailsByOrder(order.id);
-    },
-    getSelectDetailsByOrder: function getSelectDetailsByOrder(id) {
-      var _this7 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee7() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee7$(_context7) {
-          while (1) {
-            switch (_context7.prev = _context7.next) {
-              case 0:
-                _this7.select_loading = true;
-                _context7.next = 3;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/select/order/' + id).then(function (response) {
-                  _this7.select_previous = response.data.previous;
-                  _this7.select_result = response.data.result;
-                  _this7.blacklist = response.data.blacklist;
-                  _this7.mix = response.data.blacklist;
-                  _this7.wishlist = response.data.wishlist;
-                  _this7.select_loading = false;
-                })["catch"](function (error) {
-                  console.log(error);
-                });
-
-              case 3:
-              case "end":
-                return _context7.stop();
-            }
-          }
-        }, _callee7);
-      }))();
-    },
-    openSettings: function openSettings(ration) {
-      var _this$select_previous, _this$select_result$f;
-
-      this.ration = ration;
-      this.ration_id = ration.id;
-      this.previous = (_this$select_previous = this.select_previous.find(function (obj) {
-        return obj.ration.id === ration.id;
-      })) !== null && _this$select_previous !== void 0 ? _this$select_previous : {};
-      this.result = (_this$select_result$f = this.select_result.find(function (obj) {
-        return obj.ration.id === ration.id;
-      })) !== null && _this$select_result$f !== void 0 ? _this$select_result$f : {};
-      this.wish_ids = this.result.wishes;
-      this.getDishesByRation(this.ration_id);
-      this.dialog = true;
-    },
-    activateDeactivate: function activateDeactivate(id) {
-      var _this8 = this;
-
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/activate-deactivate', {
-        select_id: id
-      }).then(function (response) {
-        _this8.getSelectDetailsByOrder(_this8.order.id);
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    },
-    applyCategories: function applyCategories() {
-      var _this9 = this;
-
-      var ings = this.applied_categories.map(function (item) {
-        var category = _this9.categories.find(function (obj) {
-          return obj.id === item;
-        });
-
-        return category.ingredient_ids;
-      });
-      ings = ings.flat();
-      ings = ings.concat(this.blacklist);
-      this.mix = _toConsumableArray(new Set(ings));
-    },
-    removeIngredientFromBlacklist: function removeIngredientFromBlacklist(id) {
-      this.mix = this.mix.filter(function (item) {
-        return item !== id;
-      });
-    },
-    saveBlacklist: function saveBlacklist() {
-      var _this10 = this;
-
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/blacklist', {
-        id: this.order.id,
-        blacklist: this.mix
-      }).then(function (response) {
-        _this10.$store.dispatch('showAlert', {
-          'isVisible': true,
-          'msg': response.data.msg,
-          'color': 'green',
-          'type': 'success'
-        });
-      })["catch"](function (error) {
-        console.log(error);
-        _this10.errors = error.response.data.errors;
-      });
-    },
-    addTag: function addTag() {
-      var _this11 = this;
-
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/wishlist', {
-        id: this.order.id,
-        tag: this.tag
-      }).then(function (response) {
-        _this11.getSelectDetailsByOrder(_this11.order.id);
-
-        _this11.tag = '';
-
-        _this11.$store.dispatch('showAlert', {
-          'isVisible': true,
-          'msg': response.data.msg,
-          'color': response.data.status ? 'green' : 'error',
-          'type': response.data.status ? 'success' : 'error'
-        });
-
-        _this11.errors = [];
-      })["catch"](function (error) {
-        _this11.errors = error.response.data.errors;
-      });
-    },
-    removeTag: function removeTag(tag) {
-      var _this12 = this;
-
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/wishlist/remove', {
-        id: this.order.id,
-        tag: tag.wish
-      }).then(function (response) {
-        _this12.wishlist = _this12.wishlist.filter(function (item) {
-          return item !== tag;
-        });
-
-        _this12.getSelectDetailsByOrder(_this12.order.id);
-
-        _this12.$store.dispatch('showAlert', {
-          'isVisible': true,
-          'msg': response.data.msg,
-          'color': response.data.status ? 'green' : 'error',
-          'type': response.data.status ? 'success' : 'error'
-        });
-      })["catch"](function (error) {
-        console.log(error);
-        _this12.errors = error.response.data.errors;
-      });
-    },
-    addWishToSelect: function addWishToSelect(id) {
-      var _this13 = this;
-
-      if (Object.keys(this.result).length === 0) return;
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/wish', {
-        s_id: this.result.id,
-        w_id: id
-      }).then(function (response) {
-        _this13.wish_ids = response.data.data;
-
-        _this13.getSelectDetailsByOrder(_this13.order.id);
-      })["catch"](function (error) {
-        _this13.errors = error.response.data.errors;
-      });
-    },
-    hasResultIncludeIngredient: function hasResultIncludeIngredient(id) {
-      if (!this.result.ingredient_ids) return;
-      return this.result.ingredient_ids.includes(id);
-    },
-    getDishesByRation: function getDishesByRation(id) {
-      var _this14 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee8() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee8$(_context8) {
-          while (1) {
-            switch (_context8.prev = _context8.next) {
-              case 0:
-                _context8.next = 2;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/dishes/ration/' + id).then(function (response) {
-                  _this14.dishes = response.data;
-
-                  if (_this14.dishes.length > 0) {
-                    _this14.dish = _this14.dishes.find(function (obj) {
-                      return obj.id === _this14.result.dish_id;
-                    });
-
-                    if (!_this14.dish) {
-                      _this14.dish = _this14.dishes[0];
-                    }
-                  } else {
-                    _this14.dish.ingredients = [];
-                  }
-                })["catch"](function (error) {
-                  console.log(error);
-                });
-
-              case 2:
-              case "end":
-                return _context8.stop();
-            }
-          }
-        }, _callee8);
-      }))();
-    },
-    setDish: function setDish() {
-      var _this15 = this;
-
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/add/dish', {
-        select_id: this.result.id,
-        ration_id: this.ration_id,
-        dish_id: this.dish.id
-      }).then(function (response) {
-        if (!response.data.status) {
-          _this15.$store.dispatch('showAlert', {
-            'isVisible': true,
-            'msg': response.data.msg,
-            'color': 'error',
-            'type': 'error'
-          });
-        }
-
-        _this15.result = response.data.data;
-
-        _this15.getSelectDetailsByOrder(_this15.order.id);
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    },
-    getAnalogName: function getAnalogName(id) {
-      return this.result.ingredients.find(function (obj) {
-        return obj.pivot.analog_id === id;
-      }).name;
-    },
-    hasAnalog: function hasAnalog(id) {
-      if (!this.result.ingredient_ids) return;
-      var index = this.result.ingredients.findIndex(function (obj) {
-        return obj.pivot.analog_id === id;
-      });
-      return index >= 0;
-    },
-    addIngredient: function addIngredient(id) {
-      var _this16 = this;
-
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/add/ingredient', {
-        select_id: this.result.id,
-        ingredient_id: id
-      }).then(function (response) {
-        if (!response.data.status) {
-          _this16.$store.dispatch('showAlert', {
-            'isVisible': true,
-            'msg': response.data.msg,
-            'color': 'error',
-            'type': 'error'
-          });
-        }
-
-        _this16.result = response.data.data;
-
-        _this16.getSelectDetailsByOrder(_this16.order.id);
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    },
-    removeIngredient: function removeIngredient(id) {
-      var _this17 = this;
-
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/remove/ingredient', {
-        select_id: this.result.id,
-        ingredient_id: id
-      }).then(function (response) {
-        if (!response.data.status) {
-          _this17.$store.dispatch('showAlert', {
-            'isVisible': true,
-            'msg': response.data.msg,
-            'color': 'error',
-            'type': 'error'
-          });
-        }
-
-        _this17.result = response.data.data;
-
-        _this17.getSelectDetailsByOrder(_this17.order.id);
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    },
-    showAnalogs: function showAnalogs(id) {
-      this.getCategoriesByIngredient(id);
-      this.target_ingredient = id;
-      this.dialog2 = true;
-    },
-    getAnalogId: function getAnalogId(id) {
-      return this.result.ingredients.find(function (obj) {
-        return obj.pivot.analog_id === id;
-      }).id;
-    },
-    replaceIngredient: function replaceIngredient(id) {
-      var _this18 = this;
-
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/replace/ingredient', {
-        select_id: this.result.id,
-        ingredient_id: this.target_ingredient,
-        analog_id: id
-      }).then(function (response) {
-        if (response.data.status) {
-          _this18.result = response.data.select;
-
-          _this18.getSelectDetailsByOrder(_this18.order.id);
-
-          _this18.closeDialog2();
-        }
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    },
-    returnIngredient: function returnIngredient(target_id) {
-      var _this19 = this;
-
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/return/ingredient', {
-        select_id: this.result.id,
-        ingredient_id: target_id,
-        analog_id: this.getAnalogId(target_id)
-      }).then(function (response) {
-        if (response.data.status) {
-          _this19.result = response.data.select;
-
-          _this19.getSelectDetailsByOrder(_this19.order.id);
-        }
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    },
-    getCategoriesByIngredient: function getCategoriesByIngredient(id) {
-      var _this20 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee9() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee9$(_context9) {
-          while (1) {
-            switch (_context9.prev = _context9.next) {
-              case 0:
-                _context9.next = 2;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/categories/ingredient/' + id).then(function (response) {
-                  _this20.ingredient_categories = response.data;
-                })["catch"](function (error) {
-                  console.log(error);
-                });
-
-              case 2:
-              case "end":
-                return _context9.stop();
-            }
-          }
-        }, _callee9);
-      }))();
-    },
     getSelectColor: function getSelectColor(id) {
       if (this.select_result.length > 0) {
         var select = this.select_result.find(function (x) {
@@ -1204,108 +391,105 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       return '';
     },
-    isActive: function isActive(id) {
-      if (this.select_result.length > 0) {
-        var select = this.select_result.find(function (x) {
-          return x.ration_id === id;
-        });
-        return select ? select.is_active : true;
-      }
-
-      return true;
-    },
-    getSelectName: function getSelectName(id) {
-      if (this.select_result.length > 0) {
-        var select = this.select_result.find(function (x) {
-          return x.ration_id === id;
-        });
-        return select ? select.dish_name : '';
-      }
-
-      return '';
-    },
-    closeDialog: function closeDialog() {
-      this.dish = {};
-      this.dialog = false;
-      this.getSelectDetailsByOrder(this.order.id);
-    },
-    closeDialog2: function closeDialog2() {
-      this.ingredient_categories = [];
-      this.chosen_category = {};
-      this.chosen_ingredient = {};
-      this.target_ingredient = null;
-      this.r1_val = null;
-      this.dialog2 = false;
-    },
-    saveDetails: function saveDetails() {
-      var _this21 = this;
-
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/add/details', this.result).then(function (response) {
-        _this21.result = response.data.data;
-        _this21.dialog3 = false;
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    },
     exportExcel: function exportExcel() {},
-    r1: function r1() {
-      this.replaceIngredient(this.r1_val);
+    whatsapp: function whatsapp(num, r_name, name) {
+      window.open('https://api.whatsapp.com/send?phone=' + num + '&text=Рацион:%20' + r_name + '%0D%0AНазвание:%20' + name, '_blank');
     },
-    addExtra: function addExtra(id) {
-      var _this22 = this;
+    resetResult: function resetResult(id) {
+      var _this6 = this;
 
-      if (!id) return;
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/add/extra', {
-        select_id: this.result.id,
-        ingredient_id: id
-      }).then(function (response) {
-        _this22.result = response.data.data;
-
-        _this22.getSelectDetailsByOrder(_this22.order.id);
-
-        _this22.r2_val = null;
-      })["catch"](function (error) {
-        console.log(error);
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/reset', {
+        id: id
+      }).then(function (res) {
+        _this6.getOrders();
       });
     },
-    removeExtra: function removeExtra(id) {
-      var _this23 = this;
+    getSelect: function getSelect() {
+      var _this7 = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/remove/extra', {
-        select_id: this.result.id,
-        ingredient_id: id
-      }).then(function (response) {
-        _this23.result = response.data.data;
-
-        _this23.getSelectDetailsByOrder(_this23.order.id);
-      })["catch"](function (error) {
-        console.log(error);
+      axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/orders/select').then(function (res) {
+        _this7.loading = false;
+        _this7.orders = res.data.orders;
+        _this7.select_stat = res.data.stat;
+        _this7.isSelect = true;
       });
     },
-    showIngredient: function showIngredient(id) {
-      var _this24 = this;
+    getLite: function getLite() {
+      var _this8 = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/show/ingredient', {
-        select_id: this.result.id,
-        ingredient_id: id
-      }).then(function (response) {
-        _this24.result = response.data.data;
-      })["catch"](function (error) {
-        console.log(error);
+      axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/orders/lite').then(function (res) {
+        _this8.loading = false;
+        _this8.orders = res.data.orders;
+        _this8.select_stat = res.data.stat;
+        _this8.isSelect = false;
       });
     },
-    hideIngredient: function hideIngredient(id) {
-      var _this25 = this;
-
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/hide/ingredient', {
-        select_id: this.result.id,
-        ingredient_id: id
-      }).then(function (response) {
-        _this25.result = response.data.data;
-      })["catch"](function (error) {
-        console.log(error);
+    sendMessage: function sendMessage(id, num) {
+      axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/select/message/' + id).then(function (res) {
+        window.open("https://api.whatsapp.com/send?phone=".concat(num, "&text=").concat(encodeURIComponent(res.data)), '_blank');
       });
     }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Dietology/Stat.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Dietology/Stat.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: "Stat",
+  props: {
+    stat: Object
   }
 });
 
@@ -1998,6 +1182,44 @@ component.options.__file = "resources/js/components/Dietology/Select.vue"
 
 /***/ }),
 
+/***/ "./resources/js/components/Dietology/Stat.vue":
+/*!****************************************************!*\
+  !*** ./resources/js/components/Dietology/Stat.vue ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _Stat_vue_vue_type_template_id_ed2d80c4___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Stat.vue?vue&type=template&id=ed2d80c4& */ "./resources/js/components/Dietology/Stat.vue?vue&type=template&id=ed2d80c4&");
+/* harmony import */ var _Stat_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Stat.vue?vue&type=script&lang=js& */ "./resources/js/components/Dietology/Stat.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Stat_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Stat_vue_vue_type_template_id_ed2d80c4___WEBPACK_IMPORTED_MODULE_0__.render,
+  _Stat_vue_vue_type_template_id_ed2d80c4___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Dietology/Stat.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/Kitchen/SelectModal.vue":
 /*!*********************************************************!*\
   !*** ./resources/js/components/Kitchen/SelectModal.vue ***!
@@ -2051,6 +1273,21 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/Dietology/Stat.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************!*\
+  !*** ./resources/js/components/Dietology/Stat.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Stat_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Stat.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Dietology/Stat.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Stat_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/components/Kitchen/SelectModal.vue?vue&type=script&lang=js&":
 /*!**********************************************************************************!*\
   !*** ./resources/js/components/Kitchen/SelectModal.vue?vue&type=script&lang=js& ***!
@@ -2078,6 +1315,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Select_vue_vue_type_template_id_490d1474___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Select_vue_vue_type_template_id_490d1474___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Select.vue?vue&type=template&id=490d1474& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Dietology/Select.vue?vue&type=template&id=490d1474&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/Dietology/Stat.vue?vue&type=template&id=ed2d80c4&":
+/*!***********************************************************************************!*\
+  !*** ./resources/js/components/Dietology/Stat.vue?vue&type=template&id=ed2d80c4& ***!
+  \***********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Stat_vue_vue_type_template_id_ed2d80c4___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Stat_vue_vue_type_template_id_ed2d80c4___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Stat_vue_vue_type_template_id_ed2d80c4___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Stat.vue?vue&type=template&id=ed2d80c4& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Dietology/Stat.vue?vue&type=template&id=ed2d80c4&");
 
 
 /***/ }),
@@ -2119,105 +1372,108 @@ var render = function() {
       _c(
         "v-row",
         [
-          _c(
-            "v-col",
-            [
-              _c(
-                "v-btn",
-                {
-                  staticClass: "ma-3",
-                  attrs: {
-                    loading: _vm.amo_loading,
-                    disabled: _vm.amo_loading,
-                    color: "primary"
-                  },
-                  on: { click: _vm.fetchOrdersFromAmo }
-                },
-                [
-                  _vm._v(
-                    "\n                    Получить данные с AMOCRM\n                "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "a",
-                { attrs: { type: "button", href: "/api/select/export" } },
-                [
-                  _c(
-                    "v-btn",
-                    {
-                      staticClass: "my-3 mr-7",
-                      attrs: { color: "primary" },
-                      on: { click: _vm.exportExcel }
+          _c("v-col", { staticClass: "d-flex justify-space-between" }, [
+            _c(
+              "div",
+              [
+                _c(
+                  "div",
+                  { staticClass: "d-flex" },
+                  [
+                    _c(
+                      "v-btn",
+                      {
+                        staticClass: "mr-3",
+                        attrs: {
+                          disabled: _vm.isSelect,
+                          color: "primary",
+                          small: ""
+                        },
+                        on: { click: _vm.getSelect }
+                      },
+                      [
+                        _vm._v(
+                          "\n                        Select\n                    "
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "v-btn",
+                      {
+                        staticClass: "mr-5",
+                        attrs: {
+                          disabled: !_vm.isSelect,
+                          color: "primary",
+                          small: ""
+                        },
+                        on: { click: _vm.getLite }
+                      },
+                      [
+                        _vm._v(
+                          "\n                        Lite\n                    "
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("h3", [_vm._v(_vm._s(_vm.cuisine.name))])
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c("stat", {
+                  staticClass: "my-3",
+                  attrs: { stat: _vm.select_stat }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "mt-2" },
+              [
+                _c(
+                  "v-btn",
+                  {
+                    staticClass: "mr-4",
+                    attrs: {
+                      loading: _vm.amo_loading,
+                      disabled: _vm.amo_loading,
+                      color: "primary"
                     },
-                    [
-                      _vm._v(
-                        "\n                        Excel\n                    "
-                      )
-                    ]
-                  )
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "v-chip",
-                {
-                  staticClass: "ma-2",
-                  attrs: { color: "teal", "text-color": "white", label: "" }
-                },
-                [
-                  _vm._v(
-                    "\n                    Итого: " +
-                      _vm._s(_vm.select_stat.total) +
-                      "\n                "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c("v-chip", { staticClass: "ma-2", attrs: { label: "" } }, [
-                _vm._v(
-                  "\n                    XS: " +
-                    _vm._s(_vm.select_stat.xs) +
-                    "\n                "
+                    on: { click: _vm.fetchOrdersFromAmo }
+                  },
+                  [
+                    _vm._v(
+                      "\n                    Получить данные с AMOCRM\n                "
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  { attrs: { type: "button", href: "/api/select/export" } },
+                  [
+                    _c(
+                      "v-btn",
+                      {
+                        attrs: { color: "primary" },
+                        on: { click: _vm.exportExcel }
+                      },
+                      [
+                        _vm._v(
+                          "\n                        Excel\n                    "
+                        )
+                      ]
+                    )
+                  ],
+                  1
                 )
-              ]),
-              _vm._v(" "),
-              _c("v-chip", { staticClass: "ma-2", attrs: { label: "" } }, [
-                _vm._v(
-                  "\n                    S: " +
-                    _vm._s(_vm.select_stat.s) +
-                    "\n                "
-                )
-              ]),
-              _vm._v(" "),
-              _c("v-chip", { staticClass: "ma-2", attrs: { label: "" } }, [
-                _vm._v(
-                  "\n                    M: " +
-                    _vm._s(_vm.select_stat.m) +
-                    "\n                "
-                )
-              ]),
-              _vm._v(" "),
-              _c("v-chip", { staticClass: "ma-2", attrs: { label: "" } }, [
-                _vm._v(
-                  "\n                    L: " +
-                    _vm._s(_vm.select_stat.l) +
-                    "\n                "
-                )
-              ]),
-              _vm._v(" "),
-              _c("v-chip", { staticClass: "ma-2", attrs: { label: "" } }, [
-                _vm._v(
-                  "\n                    XL: " +
-                    _vm._s(_vm.select_stat.xl) +
-                    "\n                "
-                )
-              ])
-            ],
-            1
-          )
+              ],
+              1
+            )
+          ])
         ],
         1
       ),
@@ -2274,9 +1530,38 @@ var render = function() {
                           var index = ref.index
                           return [
                             _vm._v(
-                              "\n                            " +
+                              "\n                        " +
                                 _vm._s(index + 1) +
-                                "\n                        "
+                                "\n                    "
+                            )
+                          ]
+                        }
+                      },
+                      {
+                        key: "item.actions",
+                        fn: function(ref) {
+                          var item = ref.item
+                          return [
+                            _c(
+                              "v-btn",
+                              {
+                                staticClass: "mr-2",
+                                attrs: { "x-small": "", color: "lime" },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.sendMessage(
+                                      item.id,
+                                      item.whatsapp
+                                    )
+                                  }
+                                }
+                              },
+                              [
+                                _c("v-icon", { attrs: { "x-small": "" } }, [
+                                  _vm._v("mdi-whatsapp")
+                                ])
+                              ],
+                              1
                             )
                           ]
                         }
@@ -2294,9 +1579,31 @@ var render = function() {
             ? _c(
                 "v-col",
                 [
-                  _c("h3", { staticClass: "mb-3" }, [
-                    _vm._v(_vm._s(_vm.order.name))
-                  ]),
+                  _c(
+                    "div",
+                    { staticClass: "mb-5 d-flex justify-space-between" },
+                    [
+                      _c("h3", [_vm._v(_vm._s(_vm.order.name))]),
+                      _vm._v(" "),
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "red", dark: "", small: "" },
+                          on: {
+                            click: function($event) {
+                              return _vm.resetResult(_vm.order.id)
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                    Сбросить\n                "
+                          )
+                        ]
+                      )
+                    ],
+                    1
+                  ),
                   _vm._v(" "),
                   _c(
                     "v-row",
@@ -2329,26 +1636,25 @@ var render = function() {
                               _c(
                                 "v-card-actions",
                                 [
-                                  result.is_active
-                                    ? _c(
-                                        "v-btn",
-                                        {
-                                          attrs: { color: "primary", text: "" },
-                                          on: {
-                                            click: function($event) {
-                                              return _vm.openSettings(
-                                                result.ration
-                                              )
-                                            }
-                                          }
-                                        },
-                                        [
-                                          _vm._v(
-                                            "\n                                    настроить\n                                "
+                                  _c(
+                                    "v-btn",
+                                    {
+                                      attrs: { text: "" },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.openSettings(
+                                            result.id,
+                                            result.r_id
                                           )
-                                        ]
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                                open\n                            "
                                       )
-                                    : _vm._e(),
+                                    ]
+                                  ),
                                   _vm._v(" "),
                                   _c(
                                     "v-btn",
@@ -2364,16 +1670,46 @@ var render = function() {
                                     },
                                     [
                                       _vm._v(
-                                        "\n                                    " +
+                                        "\n                                " +
                                           _vm._s(
                                             result.is_active
                                               ? "Убрать"
                                               : "Вернуть"
                                           ) +
-                                          "\n                                "
+                                          "\n                            "
                                       )
                                     ]
-                                  )
+                                  ),
+                                  _vm._v(" "),
+                                  result.is_active
+                                    ? _c(
+                                        "v-btn",
+                                        {
+                                          attrs: { text: "" },
+                                          on: {
+                                            click: function($event) {
+                                              return _vm.whatsapp(
+                                                result.whatsapp,
+                                                result.ration.name,
+                                                result.dish_name
+                                              )
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c(
+                                            "v-icon",
+                                            { attrs: { dark: "" } },
+                                            [
+                                              _vm._v(
+                                                "\n                                    mdi-whatsapp\n                                "
+                                              )
+                                            ]
+                                          )
+                                        ],
+                                        1
+                                      )
+                                    : _vm._e()
                                 ],
                                 1
                               )
@@ -2392,1218 +1728,64 @@ var render = function() {
             : _vm._e()
         ],
         1
-      ),
-      _vm._v(" "),
-      _c(
-        "v-row",
-        { attrs: { justify: "center" } },
-        [
-          _c(
-            "v-dialog",
-            {
-              attrs: {
-                fullscreen: "",
-                "hide-overlay": "",
-                transition: "dialog-bottom-transition"
-              },
-              model: {
-                value: _vm.dialog,
-                callback: function($$v) {
-                  _vm.dialog = $$v
-                },
-                expression: "dialog"
-              }
-            },
-            [
-              _c(
-                "v-card",
-                [
-                  _c(
-                    "v-toolbar",
-                    { attrs: { dark: "", color: "primary" } },
-                    [
-                      _c(
-                        "v-btn",
-                        {
-                          attrs: { icon: "", dark: "" },
-                          on: {
-                            click: function($event) {
-                              _vm.dialog = false
-                            }
-                          }
-                        },
-                        [_c("v-icon", [_vm._v("mdi-close")])],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c("v-toolbar-title", [
-                        _vm._v("Диета - " + _vm._s(_vm.ration.name))
-                      ]),
-                      _vm._v(" "),
-                      _c("v-spacer")
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c("v-card-title", [
-                    _vm._v(
-                      _vm._s(_vm.order.name) + " - " + _vm._s(_vm.order.tag)
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _vm.order
-                    ? _c(
-                        "v-card-text",
-                        [
-                          _c(
-                            "v-container",
-                            { attrs: { fluid: "" } },
-                            [
-                              _c(
-                                "v-row",
-                                [
-                                  _c(
-                                    "v-col",
-                                    {
-                                      attrs: {
-                                        cols: "12",
-                                        sm: "12",
-                                        lg: "4   "
-                                      }
-                                    },
-                                    [
-                                      _vm.order.diet
-                                        ? _c(
-                                            "v-card",
-                                            {
-                                              staticClass: "mb-4",
-                                              attrs: { color: "lime lighten-4" }
-                                            },
-                                            [
-                                              _c("v-card-text", [
-                                                _vm._v(
-                                                  "\n                                            " +
-                                                    _vm._s(_vm.order.diet) +
-                                                    "\n                                        "
-                                                )
-                                              ])
-                                            ],
-                                            1
-                                          )
-                                        : _vm._e()
-                                    ],
-                                    1
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "v-col",
-                                    {
-                                      attrs: {
-                                        cols: "12",
-                                        sm: "12",
-                                        lg: "4   "
-                                      }
-                                    },
-                                    [
-                                      _vm.order.diet_old
-                                        ? _c(
-                                            "v-card",
-                                            {
-                                              attrs: { color: "red lighten-4" }
-                                            },
-                                            [
-                                              _c("v-card-text", [
-                                                _vm._v(
-                                                  "\n                                            " +
-                                                    _vm._s(_vm.order.diet_old) +
-                                                    "\n                                        "
-                                                )
-                                              ])
-                                            ],
-                                            1
-                                          )
-                                        : _vm._e()
-                                    ],
-                                    1
-                                  )
-                                ],
-                                1
-                              ),
-                              _vm._v(" "),
-                              _c("v-divider", { staticClass: "my-8" }),
-                              _vm._v(" "),
-                              _c("h3", { staticClass: "mb-5" }, [
-                                _vm._v("Черный список")
-                              ]),
-                              _vm._v(" "),
-                              _c(
-                                "v-row",
-                                [
-                                  _c(
-                                    "v-col",
-                                    {
-                                      attrs: { cols: "12", sm: "12", lg: "4" }
-                                    },
-                                    [
-                                      _c("v-autocomplete", {
-                                        attrs: {
-                                          items: _vm.categories,
-                                          "item-text": "name",
-                                          "item-value": "id",
-                                          clearable: "",
-                                          outlined: "",
-                                          label: "Категории",
-                                          multiple: ""
-                                        },
-                                        on: { change: _vm.applyCategories },
-                                        model: {
-                                          value: _vm.applied_categories,
-                                          callback: function($$v) {
-                                            _vm.applied_categories = $$v
-                                          },
-                                          expression: "applied_categories"
-                                        }
-                                      })
-                                    ],
-                                    1
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "v-col",
-                                    {
-                                      attrs: { cols: "12", sm: "12", lg: "8" }
-                                    },
-                                    [
-                                      _c("v-autocomplete", {
-                                        attrs: {
-                                          items: _vm.ingredients,
-                                          "item-text": "name",
-                                          "item-value": "id",
-                                          clearable: "",
-                                          outlined: "",
-                                          "small-chips": "",
-                                          label: "Ингредиенты",
-                                          multiple: ""
-                                        },
-                                        scopedSlots: _vm._u(
-                                          [
-                                            {
-                                              key: "selection",
-                                              fn: function(data) {
-                                                return [
-                                                  _c(
-                                                    "v-chip",
-                                                    _vm._b(
-                                                      {
-                                                        attrs: {
-                                                          small: "",
-                                                          "input-value":
-                                                            data.selected,
-                                                          close: ""
-                                                        },
-                                                        on: {
-                                                          click: data.select,
-                                                          "click:close": function(
-                                                            $event
-                                                          ) {
-                                                            return _vm.removeIngredientFromBlacklist(
-                                                              data.item.id
-                                                            )
-                                                          }
-                                                        }
-                                                      },
-                                                      "v-chip",
-                                                      data.attrs,
-                                                      false
-                                                    ),
-                                                    [
-                                                      _vm._v(
-                                                        "\n                                                " +
-                                                          _vm._s(
-                                                            data.item.name
-                                                          ) +
-                                                          "\n                                            "
-                                                      )
-                                                    ]
-                                                  )
-                                                ]
-                                              }
-                                            }
-                                          ],
-                                          null,
-                                          false,
-                                          222228305
-                                        ),
-                                        model: {
-                                          value: _vm.mix,
-                                          callback: function($$v) {
-                                            _vm.mix = $$v
-                                          },
-                                          expression: "mix"
-                                        }
-                                      }),
-                                      _vm._v(" "),
-                                      _c(
-                                        "v-btn",
-                                        {
-                                          attrs: { dark: "" },
-                                          on: { click: _vm.saveBlacklist }
-                                        },
-                                        [
-                                          _vm._v(
-                                            "\n                                        Сохранить\n                                    "
-                                          )
-                                        ]
-                                      )
-                                    ],
-                                    1
-                                  )
-                                ],
-                                1
-                              ),
-                              _vm._v(" "),
-                              _c("h3", { staticClass: "my-5" }, [
-                                _vm._v("Зеленый список")
-                              ]),
-                              _vm._v(" "),
-                              _c(
-                                "v-row",
-                                { staticClass: "mb-4" },
-                                [
-                                  _c(
-                                    "v-col",
-                                    { attrs: { sm: "12", lg: "4" } },
-                                    [
-                                      _c("v-text-field", {
-                                        attrs: {
-                                          clearable: "",
-                                          label: "Тэг",
-                                          outlined: "",
-                                          "error-messages": _vm.errors.tag
-                                        },
-                                        model: {
-                                          value: _vm.tag,
-                                          callback: function($$v) {
-                                            _vm.tag = $$v
-                                          },
-                                          expression: "tag"
-                                        }
-                                      }),
-                                      _vm._v(" "),
-                                      _c(
-                                        "v-btn",
-                                        {
-                                          attrs: { color: "primary" },
-                                          on: { click: _vm.addTag }
-                                        },
-                                        [
-                                          _vm._v(
-                                            "\n                                        Добавить\n                                    "
-                                          )
-                                        ]
-                                      )
-                                    ],
-                                    1
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "v-col",
-                                    { attrs: { sm: "12", lg: "8" } },
-                                    _vm._l(_vm.wishlist, function(t) {
-                                      return _c(
-                                        "v-chip",
-                                        {
-                                          key: t.id,
-                                          staticClass: "ma-2",
-                                          attrs: {
-                                            color: _vm.wish_ids.includes(t.id)
-                                              ? "lime"
-                                              : "",
-                                            close: ""
-                                          },
-                                          on: {
-                                            click: function($event) {
-                                              return _vm.addWishToSelect(t.id)
-                                            },
-                                            "click:close": function($event) {
-                                              return _vm.removeTag(t)
-                                            }
-                                          }
-                                        },
-                                        [
-                                          _vm._v(
-                                            "\n                                        " +
-                                              _vm._s(t.wish) +
-                                              "\n                                    "
-                                          )
-                                        ]
-                                      )
-                                    }),
-                                    1
-                                  )
-                                ],
-                                1
-                              ),
-                              _vm._v(" "),
-                              _c("v-divider", { staticClass: "my-6" }),
-                              _vm._v(" "),
-                              _c("h2", { staticClass: "mb-6" }, [
-                                _vm._v(
-                                  _vm._s(_vm.cuisine.name) +
-                                    " - " +
-                                    _vm._s(_vm.ration.name)
-                                )
-                              ]),
-                              _vm._v(" "),
-                              _c(
-                                "v-row",
-                                { staticClass: "py-3" },
-                                [
-                                  Object.keys(_vm.previous).length > 0
-                                    ? _c(
-                                        "v-col",
-                                        { attrs: { cols: "3" } },
-                                        [
-                                          _c("h4", [
-                                            _vm._v(
-                                              _vm._s(_vm.previous.created_at)
-                                            )
-                                          ]),
-                                          _vm._v(" "),
-                                          _c("span", [
-                                            _vm._v(_vm._s(_vm.previous.cuisine))
-                                          ]),
-                                          _vm._v(" "),
-                                          _vm.previous.dish_name
-                                            ? _c(
-                                                "v-card",
-                                                {
-                                                  staticClass: "mb-5 mt-3",
-                                                  attrs: {
-                                                    color: "blue-grey lighten-5"
-                                                  }
-                                                },
-                                                [
-                                                  _c("v-card-title", [
-                                                    _vm._v(
-                                                      _vm._s(
-                                                        _vm.previous.dish_name
-                                                      )
-                                                    )
-                                                  ]),
-                                                  _vm._v(" "),
-                                                  _c("v-card-subtitle", [
-                                                    _vm._v(
-                                                      _vm._s(
-                                                        _vm.previous.description
-                                                      )
-                                                    )
-                                                  ])
-                                                ],
-                                                1
-                                              )
-                                            : _vm._e(),
-                                          _vm._v(" "),
-                                          _c(
-                                            "v-list",
-                                            { attrs: { dense: "" } },
-                                            _vm._l(
-                                              _vm.previous.ingredients,
-                                              function(ing, i) {
-                                                return _c(
-                                                  "v-list-item",
-                                                  {
-                                                    key: i,
-                                                    class: _vm.hasResultIncludeIngredient(
-                                                      ing.id
-                                                    )
-                                                      ? "yellow lighten-3"
-                                                      : ""
-                                                  },
-                                                  [
-                                                    _c(
-                                                      "v-list-item-content",
-                                                      [
-                                                        _c(
-                                                          "v-list-item-title",
-                                                          [
-                                                            _vm._v(
-                                                              _vm._s(i + 1) +
-                                                                ". " +
-                                                                _vm._s(ing.name)
-                                                            )
-                                                          ]
-                                                        )
-                                                      ],
-                                                      1
-                                                    )
-                                                  ],
-                                                  1
-                                                )
-                                              }
-                                            ),
-                                            1
-                                          )
-                                        ],
-                                        1
-                                      )
-                                    : _vm._e(),
-                                  _vm._v(" "),
-                                  _c(
-                                    "v-col",
-                                    { attrs: { cols: "5" } },
-                                    [
-                                      _c("h4", [_vm._v("Сегодня")]),
-                                      _vm._v(" "),
-                                      _c("span", [
-                                        _vm._v(_vm._s(_vm.cuisine.name))
-                                      ]),
-                                      _vm._v(" "),
-                                      _c(
-                                        "v-row",
-                                        { staticClass: "mt-2" },
-                                        [
-                                          _c(
-                                            "v-col",
-                                            { attrs: { cols: "3" } },
-                                            [
-                                              _c("v-select", {
-                                                attrs: {
-                                                  items: _vm.rations,
-                                                  dense: "",
-                                                  "item-text": "name",
-                                                  "item-value": "id",
-                                                  outlined: "",
-                                                  label: "Рационы"
-                                                },
-                                                on: {
-                                                  change: function($event) {
-                                                    return _vm.getDishesByRation(
-                                                      _vm.ration_id
-                                                    )
-                                                  }
-                                                },
-                                                model: {
-                                                  value: _vm.ration_id,
-                                                  callback: function($$v) {
-                                                    _vm.ration_id = $$v
-                                                  },
-                                                  expression: "ration_id"
-                                                }
-                                              })
-                                            ],
-                                            1
-                                          ),
-                                          _vm._v(" "),
-                                          _vm.dish
-                                            ? _c(
-                                                "v-col",
-                                                { attrs: { cols: "6" } },
-                                                [
-                                                  _c("v-select", {
-                                                    attrs: {
-                                                      dense: "",
-                                                      items: _vm.dishes,
-                                                      "item-text": "name",
-                                                      "return-object": "",
-                                                      outlined: "",
-                                                      label: "Блюда"
-                                                    },
-                                                    model: {
-                                                      value: _vm.dish,
-                                                      callback: function($$v) {
-                                                        _vm.dish = $$v
-                                                      },
-                                                      expression: "dish"
-                                                    }
-                                                  })
-                                                ],
-                                                1
-                                              )
-                                            : _vm._e(),
-                                          _vm._v(" "),
-                                          _vm.dish
-                                            ? _c(
-                                                "v-col",
-                                                { attrs: { cols: "3" } },
-                                                [
-                                                  _c(
-                                                    "v-btn",
-                                                    {
-                                                      attrs: {
-                                                        color: "primary",
-                                                        small: "",
-                                                        disabled:
-                                                          _vm.dish.id ===
-                                                          _vm.result.dish_id
-                                                      },
-                                                      on: { click: _vm.setDish }
-                                                    },
-                                                    [
-                                                      _vm._v(
-                                                        "\n                                                Выбрать\n                                            "
-                                                      )
-                                                    ]
-                                                  )
-                                                ],
-                                                1
-                                              )
-                                            : _vm._e()
-                                        ],
-                                        1
-                                      ),
-                                      _vm._v(" "),
-                                      _vm.dish && _vm.result
-                                        ? _c(
-                                            "div",
-                                            _vm._l(
-                                              _vm.dish.ingredients,
-                                              function(ing, key) {
-                                                return _c(
-                                                  "v-sheet",
-                                                  {
-                                                    key: ing.id,
-                                                    staticClass:
-                                                      "pa-3 mb-3 flex justify-center",
-                                                    attrs: {
-                                                      elevation: "1",
-                                                      color: _vm.mix.includes(
-                                                        ing.id
-                                                      )
-                                                        ? "red lighten-3"
-                                                        : ""
-                                                    }
-                                                  },
-                                                  [
-                                                    _c(
-                                                      "div",
-                                                      {
-                                                        staticClass:
-                                                          "flex flex-row"
-                                                      },
-                                                      [
-                                                        _c(
-                                                          "p",
-                                                          {
-                                                            class: _vm.hasResultIncludeIngredient(
-                                                              ing.id
-                                                            )
-                                                              ? ""
-                                                              : "text-decoration-line-through"
-                                                          },
-                                                          [
-                                                            _vm._v(
-                                                              "\n                                                    " +
-                                                                _vm._s(
-                                                                  key + 1
-                                                                ) +
-                                                                ". " +
-                                                                _vm._s(
-                                                                  ing.name
-                                                                ) +
-                                                                "\n                                                "
-                                                            )
-                                                          ]
-                                                        ),
-                                                        _vm._v(" "),
-                                                        _vm.hasAnalog(ing.id)
-                                                          ? _c("span", [
-                                                              _vm._v(
-                                                                "\n                                                    " +
-                                                                  _vm._s(
-                                                                    _vm.getAnalogName(
-                                                                      ing.id
-                                                                    )
-                                                                  ) +
-                                                                  "\n                                                "
-                                                              )
-                                                            ])
-                                                          : _vm._e()
-                                                      ]
-                                                    ),
-                                                    _vm._v(" "),
-                                                    _vm.dish.id ===
-                                                    _vm.result.dish_id
-                                                      ? _c(
-                                                          "div",
-                                                          {
-                                                            staticClass: "mt-2"
-                                                          },
-                                                          [
-                                                            !_vm.hasAnalog(
-                                                              ing.id
-                                                            )
-                                                              ? _c(
-                                                                  "v-btn",
-                                                                  {
-                                                                    class: _vm.hasResultIncludeIngredient(
-                                                                      ing.id
-                                                                    )
-                                                                      ? "red white--text"
-                                                                      : "green",
-                                                                    attrs: {
-                                                                      "x-small":
-                                                                        ""
-                                                                    },
-                                                                    on: {
-                                                                      click: function(
-                                                                        $event
-                                                                      ) {
-                                                                        _vm.hasResultIncludeIngredient(
-                                                                          ing.id
-                                                                        )
-                                                                          ? _vm.removeIngredient(
-                                                                              ing.id
-                                                                            )
-                                                                          : _vm.addIngredient(
-                                                                              ing.id
-                                                                            )
-                                                                      }
-                                                                    }
-                                                                  },
-                                                                  [
-                                                                    _vm._v(
-                                                                      "\n                                                    " +
-                                                                        _vm._s(
-                                                                          _vm.hasResultIncludeIngredient(
-                                                                            ing.id
-                                                                          )
-                                                                            ? "Убрать"
-                                                                            : "Вернуть"
-                                                                        ) +
-                                                                        "\n                                                "
-                                                                    )
-                                                                  ]
-                                                                )
-                                                              : _vm._e(),
-                                                            _vm._v(" "),
-                                                            _vm.mix.includes(
-                                                              ing.id
-                                                            )
-                                                              ? _c(
-                                                                  "v-btn",
-                                                                  {
-                                                                    staticClass:
-                                                                      "ml-2",
-                                                                    attrs: {
-                                                                      "x-small":
-                                                                        ""
-                                                                    },
-                                                                    on: {
-                                                                      click: function(
-                                                                        $event
-                                                                      ) {
-                                                                        !_vm.hasAnalog(
-                                                                          ing.id
-                                                                        )
-                                                                          ? _vm.showAnalogs(
-                                                                              ing.id
-                                                                            )
-                                                                          : _vm.returnIngredient(
-                                                                              ing.id
-                                                                            )
-                                                                      }
-                                                                    }
-                                                                  },
-                                                                  [
-                                                                    _vm._v(
-                                                                      "\n                                                    " +
-                                                                        _vm._s(
-                                                                          !_vm.hasAnalog(
-                                                                            ing.id
-                                                                          )
-                                                                            ? "Замена"
-                                                                            : "Отменить замену"
-                                                                        ) +
-                                                                        "\n                                                "
-                                                                    )
-                                                                  ]
-                                                                )
-                                                              : _vm._e()
-                                                          ],
-                                                          1
-                                                        )
-                                                      : _vm._e()
-                                                  ]
-                                                )
-                                              }
-                                            ),
-                                            1
-                                          )
-                                        : _vm._e()
-                                    ],
-                                    1
-                                  ),
-                                  _vm._v(" "),
-                                  _c("v-col", { attrs: { cols: "4" } }, [
-                                    _c("h4", [_vm._v("Итог")]),
-                                    _vm._v(" "),
-                                    _c("span", [
-                                      _vm._v(_vm._s(_vm.cuisine.name))
-                                    ]),
-                                    _vm._v(" "),
-                                    Object.keys(_vm.result).length > 0
-                                      ? _c(
-                                          "div",
-                                          [
-                                            _c(
-                                              "v-card",
-                                              {
-                                                staticClass: "mb-5 mt-3",
-                                                attrs: {
-                                                  color: "blue-grey lighten-3"
-                                                }
-                                              },
-                                              [
-                                                _c("v-card-title", [
-                                                  _vm._v(
-                                                    _vm._s(_vm.result.dish_name)
-                                                  )
-                                                ]),
-                                                _vm._v(" "),
-                                                _c("v-card-subtitle", [
-                                                  _vm._v(
-                                                    _vm._s(
-                                                      _vm.result.description
-                                                    )
-                                                  )
-                                                ]),
-                                                _vm._v(" "),
-                                                _c(
-                                                  "v-card-actions",
-                                                  [
-                                                    _c(
-                                                      "v-btn",
-                                                      {
-                                                        attrs: { text: "" },
-                                                        on: {
-                                                          click: function(
-                                                            $event
-                                                          ) {
-                                                            _vm.dialog3 = true
-                                                          }
-                                                        }
-                                                      },
-                                                      [
-                                                        _vm._v(
-                                                          "\n                                                    редактировать\n                                                "
-                                                        )
-                                                      ]
-                                                    )
-                                                  ],
-                                                  1
-                                                )
-                                              ],
-                                              1
-                                            ),
-                                            _vm._v(" "),
-                                            _vm.result.status === 2
-                                              ? _c("v-autocomplete", {
-                                                  attrs: {
-                                                    items: _vm.ingredients,
-                                                    "item-text": "name",
-                                                    "item-value": "id",
-                                                    clearable: "",
-                                                    outlined: "",
-                                                    label: "Добавить ингредиент"
-                                                  },
-                                                  on: { change: _vm.addExtra },
-                                                  model: {
-                                                    value: _vm.r2_val,
-                                                    callback: function($$v) {
-                                                      _vm.r2_val = $$v
-                                                    },
-                                                    expression: "r2_val"
-                                                  }
-                                                })
-                                              : _vm._e(),
-                                            _vm._v(" "),
-                                            _vm._l(
-                                              _vm.result.ingredients,
-                                              function(ing, i) {
-                                                return _c(
-                                                  "v-sheet",
-                                                  {
-                                                    key: i,
-                                                    staticClass: "pa-3 mb-3",
-                                                    attrs: {
-                                                      elevation: "1",
-                                                      color: _vm.mix.includes(
-                                                        ing.id
-                                                      )
-                                                        ? "red lighten-3"
-                                                        : ""
-                                                    }
-                                                  },
-                                                  [
-                                                    _c(
-                                                      "v-row",
-                                                      [
-                                                        ing.pivot.is_visible
-                                                          ? _c(
-                                                              "v-col",
-                                                              {
-                                                                attrs: {
-                                                                  cols: "1"
-                                                                }
-                                                              },
-                                                              [
-                                                                _c(
-                                                                  "v-icon",
-                                                                  {
-                                                                    attrs: {
-                                                                      left: ""
-                                                                    }
-                                                                  },
-                                                                  [
-                                                                    _vm._v(
-                                                                      "\n                                                        mdi-checkbox-marked-circle\n                                                    "
-                                                                    )
-                                                                  ]
-                                                                )
-                                                              ],
-                                                              1
-                                                            )
-                                                          : _vm._e(),
-                                                        _vm._v(" "),
-                                                        _c("v-col", [
-                                                          _vm._v(
-                                                            "\n                                                    " +
-                                                              _vm._s(i + 1) +
-                                                              ". " +
-                                                              _vm._s(ing.name) +
-                                                              "\n                                                "
-                                                          )
-                                                        ])
-                                                      ],
-                                                      1
-                                                    ),
-                                                    _vm._v(" "),
-                                                    _c(
-                                                      "v-row",
-                                                      [
-                                                        ing.pivot.is_editable
-                                                          ? _c(
-                                                              "v-col",
-                                                              [
-                                                                _c(
-                                                                  "v-btn",
-                                                                  {
-                                                                    attrs: {
-                                                                      "x-small":
-                                                                        ""
-                                                                    },
-                                                                    on: {
-                                                                      click: function(
-                                                                        $event
-                                                                      ) {
-                                                                        return _vm.removeExtra(
-                                                                          ing.id
-                                                                        )
-                                                                      }
-                                                                    }
-                                                                  },
-                                                                  [
-                                                                    _vm._v(
-                                                                      "убрать"
-                                                                    )
-                                                                  ]
-                                                                )
-                                                              ],
-                                                              1
-                                                            )
-                                                          : _vm._e()
-                                                      ],
-                                                      1
-                                                    )
-                                                  ],
-                                                  1
-                                                )
-                                              }
-                                            )
-                                          ],
-                                          2
-                                        )
-                                      : _vm._e()
-                                  ])
-                                ],
-                                1
-                              )
-                            ],
-                            1
-                          )
-                        ],
-                        1
-                      )
-                    : _vm._e()
-                ],
-                1
-              )
-            ],
-            1
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "v-dialog",
-        {
-          attrs: { scrollable: "", persistent: "", "max-width": "800px" },
-          model: {
-            value: _vm.dialog2,
-            callback: function($$v) {
-              _vm.dialog2 = $$v
-            },
-            expression: "dialog2"
-          }
-        },
-        [
-          _c(
-            "v-card",
-            [
-              _c("v-card-title", [
-                _vm._v("\n                    Замена\n                ")
-              ]),
-              _vm._v(" "),
-              _c(
-                "v-card-text",
-                { staticStyle: { height: "400px" } },
-                [
-                  _c(
-                    "v-row",
-                    { staticClass: "mt-3" },
-                    [
-                      _c(
-                        "v-col",
-                        { attrs: { cols: "12", md: "4" } },
-                        [
-                          _vm.ingredient_categories.length > 0
-                            ? _c("v-select", {
-                                attrs: {
-                                  items: _vm.ingredient_categories,
-                                  label: "Категории",
-                                  "item-text": "name",
-                                  "return-object": "",
-                                  outlined: "",
-                                  clearable: ""
-                                },
-                                model: {
-                                  value: _vm.chosen_category,
-                                  callback: function($$v) {
-                                    _vm.chosen_category = $$v
-                                  },
-                                  expression: "chosen_category"
-                                }
-                              })
-                            : _vm._e(),
-                          _vm._v(" "),
-                          _c("v-autocomplete", {
-                            attrs: {
-                              items: _vm.ingredients,
-                              "item-text": "name",
-                              "item-value": "id",
-                              clearable: "",
-                              outlined: "",
-                              label: "Ингредиенты"
-                            },
-                            on: { change: _vm.r1 },
-                            model: {
-                              value: _vm.r1_val,
-                              callback: function($$v) {
-                                _vm.r1_val = $$v
-                              },
-                              expression: "r1_val"
-                            }
-                          })
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _vm.chosen_category
-                        ? _c(
-                            "v-col",
-                            _vm._l(_vm.chosen_category.ingredients, function(
-                              ing,
-                              key
-                            ) {
-                              return _c(
-                                "v-sheet",
-                                {
-                                  key: key,
-                                  staticClass: "pa-3 mb-3 flex justify-center",
-                                  class: _vm.mix.includes(ing.id)
-                                    ? "red lighten-3"
-                                    : "",
-                                  attrs: { elevation: "1" }
-                                },
-                                [
-                                  _c("p", [
-                                    _vm._v(
-                                      "\n                                    " +
-                                        _vm._s(key + 1) +
-                                        ". " +
-                                        _vm._s(ing.name) +
-                                        "\n                                "
-                                    )
-                                  ]),
-                                  _vm._v(" "),
-                                  _c(
-                                    "div",
-                                    { staticClass: "mt-2" },
-                                    [
-                                      _c(
-                                        "v-btn",
-                                        {
-                                          attrs: { "x-small": "" },
-                                          on: {
-                                            click: function($event) {
-                                              return _vm.replaceIngredient(
-                                                ing.id
-                                              )
-                                            }
-                                          }
-                                        },
-                                        [
-                                          _vm._v(
-                                            "\n                                        выбрать\n                                    "
-                                          )
-                                        ]
-                                      )
-                                    ],
-                                    1
-                                  )
-                                ]
-                              )
-                            }),
-                            1
-                          )
-                        : _vm._e()
-                    ],
-                    1
-                  )
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "v-card-actions",
-                [
-                  _c(
-                    "v-btn",
-                    {
-                      attrs: { color: "primary", text: "" },
-                      on: { click: _vm.closeDialog2 }
-                    },
-                    [
-                      _vm._v(
-                        "\n                        Закрыть\n                    "
-                      )
-                    ]
-                  )
-                ],
-                1
-              )
-            ],
-            1
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "v-dialog",
-        {
-          attrs: { "max-width": "700px" },
-          model: {
-            value: _vm.dialog3,
-            callback: function($$v) {
-              _vm.dialog3 = $$v
-            },
-            expression: "dialog3"
-          }
-        },
-        [
-          _c(
-            "v-card",
-            [
-              _c("v-card-title", [
-                _vm._v("\n                    Редактировать\n                ")
-              ]),
-              _vm._v(" "),
-              _c(
-                "v-card-text",
-                [
-                  _c("v-text-field", {
-                    attrs: { clearable: "", outlined: "", label: "Название" },
-                    model: {
-                      value: _vm.result.dish_name,
-                      callback: function($$v) {
-                        _vm.$set(_vm.result, "dish_name", $$v)
-                      },
-                      expression: "result.dish_name"
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("v-textarea", {
-                    attrs: {
-                      outlined: "",
-                      clearable: "",
-                      label: "Дополнительная информация"
-                    },
-                    model: {
-                      value: _vm.result.description,
-                      callback: function($$v) {
-                        _vm.$set(_vm.result, "description", $$v)
-                      },
-                      expression: "result.description"
-                    }
-                  })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "v-card-actions",
-                [
-                  _c(
-                    "v-btn",
-                    {
-                      attrs: { color: "primary", text: "" },
-                      on: {
-                        click: function($event) {
-                          _vm.dialog3 = false
-                        }
-                      }
-                    },
-                    [
-                      _vm._v(
-                        "\n                        Закрыть\n                    "
-                      )
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "v-btn",
-                    {
-                      attrs: { color: "primary", text: "" },
-                      on: { click: _vm.saveDetails }
-                    },
-                    [
-                      _vm._v(
-                        "\n                        Сохранить\n                    "
-                      )
-                    ]
-                  )
-                ],
-                1
-              )
-            ],
-            1
-          )
-        ],
-        1
       )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Dietology/Stat.vue?vue&type=template&id=ed2d80c4&":
+/*!**************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Dietology/Stat.vue?vue&type=template&id=ed2d80c4& ***!
+  \**************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c(
+        "v-chip",
+        {
+          staticClass: "mr-2",
+          attrs: { color: "teal", "text-color": "white", label: "" }
+        },
+        [_vm._v("\n        Итого: " + _vm._s(_vm.stat.total) + "\n    ")]
+      ),
+      _vm._v(" "),
+      _c("v-chip", { staticClass: "mr-2", attrs: { label: "" } }, [
+        _vm._v("\n        XS: " + _vm._s(_vm.stat.xs) + "\n    ")
+      ]),
+      _vm._v(" "),
+      _c("v-chip", { staticClass: "mr-2", attrs: { label: "" } }, [
+        _vm._v("\n        S: " + _vm._s(_vm.stat.s) + "\n    ")
+      ]),
+      _vm._v(" "),
+      _c("v-chip", { staticClass: "mr-2", attrs: { label: "" } }, [
+        _vm._v("\n        M: " + _vm._s(_vm.stat.m) + "\n    ")
+      ]),
+      _vm._v(" "),
+      _c("v-chip", { staticClass: "mr-2", attrs: { label: "" } }, [
+        _vm._v("\n        L: " + _vm._s(_vm.stat.l) + "\n    ")
+      ]),
+      _vm._v(" "),
+      _c("v-chip", { attrs: { label: "" } }, [
+        _vm._v("\n        XL: " + _vm._s(_vm.stat.xl) + "\n    ")
+      ])
     ],
     1
   )

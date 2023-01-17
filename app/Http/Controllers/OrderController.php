@@ -164,52 +164,49 @@ class OrderController extends Controller
 
     public function getSelect(): JsonResponse
     {
-        $user = Auth::user();
-        $orders = Order::where('type', Order::EAT_FIT_SELECT)
-            ->where('city_id', $user->city_id)
+        $select = Order::where('type', Order::EAT_FIT_SELECT)
             ->where('is_active', true)
             ->orderBy('size')
             ->get();
 
-        $select = [
-            'total' => $orders->count(),
-            'xs'    => $orders->where('size', Order::XS)->count(),
-            's'     => $orders->where('size', Order::S)->count(),
-            'm'     => $orders->where('size', Order::M)->count(),
-            'l'     => $orders->where('size', Order::L)->count(),
-            'xl'    => $orders->where('size', Order::XL)->count()
+        $select_stat = [
+            'total' => $select->count(),
+            'xs'    => $select->where('size', Order::XS)->count(),
+            's'     => $select->where('size', Order::S)->count(),
+            'm'     => $select->where('size', Order::M)->count(),
+            'l'     => $select->where('size', Order::L)->count(),
+            'xl'    => $select->where('size', Order::XL)->count()
         ];
 
         return response()->json([
             'status' => true,
-            'orders' => OrderSelectCollection::collection($orders),
-            'stat' => $select
+            'orders' => OrderSelectCollection::collection($select),
+            'stat' => $select_stat
         ]);
     }
 
-    public function getSelectAll(): JsonResponse
+    public function getLite(): JsonResponse
     {
-        $orders = Order::where('type', Order::EAT_FIT_SELECT)
+        $lite = Order::where('type', Order::EAT_FIT_LITE)
             ->where('is_active', true)
             ->orderBy('size')
             ->get();
 
-        $select = [
-            'total' => $orders->count(),
-            'xs'    => $orders->where('size', Order::XS)->count(),
-            's'     => $orders->where('size', Order::S)->count(),
-            'm'     => $orders->where('size', Order::M)->count(),
-            'l'     => $orders->where('size', Order::L)->count(),
-            'xl'    => $orders->where('size', Order::XL)->count()
+        $lite_stat = [
+            'total' => $lite->count(),
+            'xs'    => $lite->where('size', Order::XS)->count(),
+            's'     => $lite->where('size', Order::S)->count(),
+            'm'     => $lite->where('size', Order::M)->count(),
+            'l'     => $lite->where('size', Order::L)->count(),
+            'xl'    => $lite->where('size', Order::XL)->count()
         ];
 
         return response()->json([
             'status' => true,
-            'orders' => OrderSelectCollection::collection($orders),
-            'stat' => $select
+            'orders' => OrderSelectCollection::collection($lite),
+            'stat' => $lite_stat
         ]);
     }
-
     public function getOrderStat(): JsonResponse
     {
         $items = Order::getOrderByType(Order::EAT_FIT_LITE);

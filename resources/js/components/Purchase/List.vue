@@ -13,12 +13,14 @@
         >
             <v-col cols="1">
                 <v-checkbox
-                    v-model="i.done"
+                    v-model="i.is_done"
                     @change="done(i)"
                 ></v-checkbox>
             </v-col>
             <v-col cols="11">
-                <v-card :disabled="i.done === 1" :color="i.done === 1 ? 'grey' : ''">
+                <v-card
+                    :disabled="i.is_done === 1"
+                    :color="i.is_done === 1 ? 'grey lighten-1' : ''">
                     <v-card-text>
                         <v-row>
                             <v-col cols="12" md="6">
@@ -26,7 +28,7 @@
                             </v-col>
                             <v-col cols="6" sm="4">
                                 <h5 class="text-uppercase">Нужно взять:</h5>
-                                <strong class="green--text">{{i.diff}}</strong>
+                                <h2 class="">{{i.diff}}</h2>
                             </v-col>
 <!--                            <v-col sm="1">
                                 <v-btn icon @click="openModal">

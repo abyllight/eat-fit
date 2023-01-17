@@ -119,6 +119,27 @@ export default {
                 value: null
             },
             {
+                model: 'department_id',
+                label: 'Цех',
+                type: 'v-select',
+                item_name: 'name',
+                items: [
+                    {
+                        id: 0,
+                        name: 'Горячий цех'
+                    },
+                    {
+                        id: 1,
+                        name: 'Холодный цех'
+                    },
+                    {
+                        id: 2,
+                        name: 'Кондитерский'
+                    }
+                ],
+                value: null
+            },
+            {
                 model: 'password',
                 label: 'Пароль',
                 type: 'v-text-field',

@@ -52,9 +52,11 @@
                     :error-messages="errors.ingredient_ids"
                     multiple
                 ></v-autocomplete>
+                <tiptap-vuetify v-model="dish.description" :extensions="extensions"></tiptap-vuetify>
                 <v-btn
                     color="primary"
                     @click="create"
+                    class="mt-5"
                 >
                     Сохранить
                 </v-btn>
@@ -63,8 +65,11 @@
     </div>
 </template>
 <script>
+    import { TiptapVuetify, Heading, Bold, Italic, Strike, Underline, Code, Paragraph, BulletList, OrderedList, ListItem, Link, Blockquote, HardBreak, HorizontalRule, History } from 'tiptap-vuetify'
+
     export default {
         name: 'CuisineDishesCreate',
+        components: { TiptapVuetify },
         props: {
             id: Number,
             r_id: Number
@@ -82,8 +87,30 @@
                 ration_id: null,
                 department_id: null,
                 ingredient_ids: [],
-                is_custom: false
-            }
+                is_custom: false,
+                description: null
+            },
+            extensions: [
+                History,
+                Blockquote,
+                Link,
+                Underline,
+                Strike,
+                Italic,
+                ListItem,
+                BulletList,
+                OrderedList,
+                [Heading, {
+                    options: {
+                        levels: [1, 2, 3]
+                    }
+                }],
+                Bold,
+                Code,
+                HorizontalRule,
+                Paragraph,
+                HardBreak
+            ]
         }),
         created() {
             this.getIngredients()

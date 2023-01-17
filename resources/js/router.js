@@ -149,6 +149,20 @@ const router = new VueRouter({
             component: () => import('./components/Dietology/Select')
         },
         {
+            path: '/select/:id/:r_id',
+            name: 'select-details',
+            props: (route) => {
+                const id = parseInt(route.params.id)
+                const r_id = parseInt(route.params.r_id)
+                return {id, r_id}
+            },
+            meta: {
+                auth: true,
+                roles: ['admin', 'diet']
+            },
+            component: () => import('./components/Dietology/SelectDetails.vue')
+        },
+        {
             path: '/select-rations',
             name: 'select-rations',
             meta: {
@@ -168,6 +182,26 @@ const router = new VueRouter({
             component: () => import('./components/Kitchen/Stickers')
         },
         {
+            path: '/grid',
+            name: 'grid',
+            props: true,
+            meta: {
+                auth: true,
+                roles: ['admin', 'diet', 'kitchen']
+            },
+            component: () => import('./components/Kitchen/Grid.vue')
+        },
+        {
+            path: '/cards',
+            name: 'cards',
+            props: true,
+            meta: {
+                auth: true,
+                roles: ['admin', 'kitchen']
+            },
+            component: () => import('./components/Kitchen/CardNGroup.vue')
+        },
+        {
             path: '/rations',
             name: 'rations',
             meta: {
@@ -175,6 +209,15 @@ const router = new VueRouter({
                 roles: ['admin', 'diet']
             },
             component: () => import('./components/Dietology/Rations')
+        },
+        {
+            path: '/tableware',
+            name: 'tableware',
+            meta: {
+                auth: true,
+                roles: ['admin', 'diet']
+            },
+            component: () => import('./components/Dietology/Tableware.vue')
         },
         {
             path: '/cuisines',
@@ -227,24 +270,6 @@ const router = new VueRouter({
                 roles: ['admin', 'diet']
             },
             component: () => import('./components/Dietology/Dishes')
-        },
-        {
-            path: '/dishes/:id/edit',
-            name: 'dish_edit',
-            meta: {
-                auth: true,
-                roles: ['admin', 'diet']
-            },
-            component: () => import('./components/Dietology/DishEdit')
-        },
-        {
-            path: '/dish/create',
-            name: 'dish_create',
-            meta: {
-                auth: true,
-                roles: ['admin', 'diet']
-            },
-            component: () => import('./components/Dietology/DishCreate')
         },
         {
             path: '/category',
@@ -344,6 +369,15 @@ const router = new VueRouter({
                 roles: ['admin', 'kitchen']
             },
             component: () => import('./components/Kitchen/PurchaseList')
+        },
+        {
+            path: '/marat',
+            name: 'marat',
+            meta: {
+                auth: true,
+                roles: ['admin', 'kitchen']
+            },
+            component: () => import('./components/Kitchen/Marat.vue')
         },
     ]
 })

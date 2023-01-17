@@ -5,6 +5,7 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\BuilderCategoryController;
 use App\Http\Controllers\BuilderMixController;
 use App\Http\Controllers\BuilderValueController;
+use App\Http\Controllers\CardGroupController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CartItemController;
 use App\Http\Controllers\CategoryController;
@@ -31,6 +32,8 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SelectController;
 use App\Http\Controllers\ShopOrderController;
+use App\Http\Controllers\StatController;
+use App\Http\Controllers\TableWareController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -77,7 +80,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/orders/stat', [OrderController::class, 'getOrderStat']);
 
     Route::get('/orders/select', [OrderController::class, 'getSelect']);
-    Route::get('/orders/select/all', [OrderController::class, 'getSelectAll']);
+    Route::get('/orders/lite', [OrderController::class, 'getLite']);
     Route::get('/orders/{order}/previous/select/ration/{ration}', [OrderController::class, 'getPreviousOrderSelectByRation']);
     Route::get('/orders/{order}/today/select/ration/{ration}', [OrderController::class, 'getOrderSelectByRation']);
 
@@ -102,7 +105,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/reports/export/{date}', [ReportController::class, 'export']);
 
     Route::get('/cuisines', [CuisineController::class, 'index']);
+    Route::get('/cuisines/dishes', [CuisineController::class, 'getCuisineDishesByRation']);
     Route::get('/cuisines/{id}', [CuisineController::class, 'show']);
+    Route::post('/cuisine/{id}/file', [CuisineController::class, 'saveFile']);
     Route::get('/cuisine/duty', [CuisineController::class, 'getDutyCuisine']);
     Route::post('/cuisine/duty', [CuisineController::class, 'setCuisine']);
     Route::post('/cuisine/purchase', [CuisineController::class, 'setPurchase']);
@@ -118,6 +123,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('departments', [DepartmentController::class, 'index']);
 
+    Route::resource('tableware', TableWareController::class)->only(['index', 'store', 'destroy']);
+    Route::post('tableware/{id}', [TableWareController::class, 'update']);
+
+    Route::get('/select/all', [SelectController::class, 'index']);
+    Route::get('/select/message/{id}', [SelectController::class, 'getMessage']);
     Route::post('select/add/dish', [SelectController::class, 'setDishToSelect']);
     Route::post('select/add/details', [SelectController::class, 'saveSelectDetails']);
     Route::post('select/add/ingredient', [SelectController::class, 'addIngredientFromSelect']);
@@ -133,9 +143,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/select/generate-code', [SelectController::class, 'generateCode']);
     Route::post('select/wish', [SelectController::class, 'addRemoveWish']);
     Route::get('/select/order/{id}', [SelectController::class, 'getSelectByOrder']);
+    Route::get('/selects/order/{id}', [SelectController::class, 'getSelectsByOrder']);
+    Route::post('/select/reset', [SelectController::class, 'resetResult']);
+    Route::post('/select/tableware', [SelectController::class, 'setTableware']);
     Route::get('/select/rations', [SelectController::class, 'selectRations']);
     Route::get('/select/stickers/{id}', [SelectController::class, 'getSelectStickersByRation']);
     Route::get('/select/{id}', [SelectController::class, 'getSelectById']);
+    Route::post('/select/{id}/done', [SelectController::class, 'setDone']);
 
     Route::resource('/categories', CategoryController::class)->except(['create', 'show', 'edit']);
     Route::get('/categories/ingredient/{id}', [CategoryController::class, 'getCategoriesByIngredient']);
@@ -144,6 +158,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/ingredients/iiko/{id}', [IngredientController::class, 'fetchIngredients']);
     Route::post('/ingredient/set/analog', [IngredientController::class, 'setAnalog']);
 
+    Route::get('/cards', [CardGroupController::class, 'index']);
+    Route::post('/cards', [CardGroupController::class, 'store']);
+    Route::post('/cards/{id}', [CardGroupController::class, 'destroy']);
+    Route::post('/cards-sort', [CardGroupController::class, 'sortCards']);
 
     Route::resource('rations', RationController::class)->except(['create', 'show', 'edit']);
 
@@ -164,6 +182,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/purchase-list-kitchen/done', [PurchaseController::class, 'done']);
     Route::post('/purchase-list-kitchen/set/ingredients', [PurchaseController::class, 'setIngredients']);
     Route::post('/purchase-list-kitchen/remove/ingredient', [PurchaseController::class, 'removeIngredient']);
+
+    Route::get('/marat/stat', [StatController::class, 'index']);
 });
 
 Route::get('/promocode/{promocode}', [PromocodeController::class, 'check']);

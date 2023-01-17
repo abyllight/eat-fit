@@ -13,6 +13,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var tiptap_vuetify__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! tiptap-vuetify */ "./node_modules/tiptap-vuetify/dist/bundle-esm.js");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -102,8 +103,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'CuisineDishesEdit',
+  components: {
+    TiptapVuetify: tiptap_vuetify__WEBPACK_IMPORTED_MODULE_1__.TiptapVuetify
+  },
   props: ['id'],
   data: function data() {
     return {
@@ -117,12 +124,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         ration_id: 0,
         code: '',
         department_id: 0,
-        ingredients: []
+        ingredients: [],
+        description: null
       },
       dishes: [],
       loading: false,
       disabled: false,
-      errors: []
+      errors: [],
+      extensions: [tiptap_vuetify__WEBPACK_IMPORTED_MODULE_1__.History, tiptap_vuetify__WEBPACK_IMPORTED_MODULE_1__.Blockquote, tiptap_vuetify__WEBPACK_IMPORTED_MODULE_1__.Link, tiptap_vuetify__WEBPACK_IMPORTED_MODULE_1__.Underline, tiptap_vuetify__WEBPACK_IMPORTED_MODULE_1__.Strike, tiptap_vuetify__WEBPACK_IMPORTED_MODULE_1__.Italic, tiptap_vuetify__WEBPACK_IMPORTED_MODULE_1__.Image, tiptap_vuetify__WEBPACK_IMPORTED_MODULE_1__.ListItem, tiptap_vuetify__WEBPACK_IMPORTED_MODULE_1__.BulletList, tiptap_vuetify__WEBPACK_IMPORTED_MODULE_1__.OrderedList, [tiptap_vuetify__WEBPACK_IMPORTED_MODULE_1__.Heading, {
+        options: {
+          levels: [1, 2, 3]
+        }
+      }], tiptap_vuetify__WEBPACK_IMPORTED_MODULE_1__.Bold, tiptap_vuetify__WEBPACK_IMPORTED_MODULE_1__.Code, tiptap_vuetify__WEBPACK_IMPORTED_MODULE_1__.HorizontalRule, tiptap_vuetify__WEBPACK_IMPORTED_MODULE_1__.Paragraph, tiptap_vuetify__WEBPACK_IMPORTED_MODULE_1__.HardBreak]
     };
   },
   created: function created() {
@@ -488,9 +501,24 @@ var render = function() {
                 }
               }),
               _vm._v(" "),
+              _c("tiptap-vuetify", {
+                attrs: { extensions: _vm.extensions },
+                model: {
+                  value: _vm.dish.description,
+                  callback: function($$v) {
+                    _vm.$set(_vm.dish, "description", $$v)
+                  },
+                  expression: "dish.description"
+                }
+              }),
+              _vm._v(" "),
               _c(
                 "v-btn",
-                { attrs: { color: "primary" }, on: { click: _vm.update } },
+                {
+                  staticClass: "mt-5",
+                  attrs: { color: "primary" },
+                  on: { click: _vm.update }
+                },
                 [_vm._v("\n                Сохранить\n            ")]
               )
             ],

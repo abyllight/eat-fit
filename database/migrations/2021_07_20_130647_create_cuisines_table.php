@@ -19,7 +19,10 @@ class CreateCuisinesTable extends Migration
             $table->string('iiko_name');
             $table->string('name')->nullable();
             $table->boolean('is_on_duty')->default(false);
+            $table->boolean('purchase_duty')->default(false);
+            $table->dateTime('purchase_date')->nullable();
             $table->integer('position')->nullable();
+            $table->string('file')->nullable();
             $table->timestamps();
         });
     }

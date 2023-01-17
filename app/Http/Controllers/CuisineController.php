@@ -18,6 +18,7 @@ use App\Models\Week;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use function Matrix\trace;
 
 class CuisineController extends Controller
@@ -228,9 +229,29 @@ class CuisineController extends Controller
         ]);
     }
 
+    public function getCuisineDishesByRation() {
+        $duty_cuisine = Cuisine::where('is_on_duty', true)->first();
+
+        $dishes = $duty_cuisine->dishes();
+    }
+
     public function getDutyCuisine(): JsonResponse
     {
-        return response()->json(Cuisine::where('is_on_duty', true)->first());
+        $duty_cuisine = Cuisine::where('is_on_duty', true)->first();
+        $dishes = [];
+
+        foreach ($duty_cuisine->dishes as $d) {
+            $dishes[] = [
+                'name' => $d->name,
+                'r_id' => $d->ration_id,
+                'r_name' => $d->ration->name
+            ];
+        }
+        return response()->json([
+            'status' => true,
+            'cuisine' => $duty_cuisine,
+            'dishes' => $dishes
+        ]);
     }
 
     public function getDishesByCuisineId($id): JsonResponse
@@ -239,5 +260,30 @@ class CuisineController extends Controller
         $dishes = DishCollection::collection($cuisine->dishes->sortBy('ration_id'));
 
         return response()->json($dishes);
+    }
+    public function saveFile(Request $request, $id): JsonResponse
+    {
+        $request->validate([
+            'file' => 'required'
+        ]);
+
+        $cuisine = Cuisine::find($id);
+
+        if (!$cuisine) {
+            return response()->json([
+                'status' => false,
+                'msg' => 'Cuisine not found'
+            ]);
+        }
+
+        Storage::disk('public')->delete($cuisine->file);
+        $cuisine->file = $request->file('file')->store('files', 'public');
+        $cuisine->save();
+
+
+        return response()->json([
+            'status' => true,
+            'msg' => 'Файл успешно добавлен'
+        ]);
     }
 }
