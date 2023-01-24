@@ -17,16 +17,13 @@ class Payment extends Model
             'name' => 'Наличный расчет'
         ],
         [
-            'name' => 'POS-терминал ТОО'
-        ],
-        [
             'name' => 'POS-терминал КС'
         ],
         [
-            'name' => 'POS-терминал Р'
+            'name' => 'Kaspi POS'
         ],
         [
-            'name' => 'Kaspi'
+            'name' => 'Личный Kaspi'
         ]
     ];
 
