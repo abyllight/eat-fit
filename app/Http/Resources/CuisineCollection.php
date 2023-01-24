@@ -26,7 +26,7 @@ class CuisineCollection extends JsonResource
             'position' => $this->position,
             'file' => $this->file,
             'week' => $this->week,
-            'dishes' => DishCollection::collection($this->dishes)
+            'dishes' => DishCollection::collection($this->dishes->sortBy('ration_id'))
         ];
     }
 }

@@ -240,7 +240,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _this.amo_loading = true;
                 _context.next = 3;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/orders/eat-fit').then(function () {
-                  _this.getOrders();
+                  _this.getSelect();
                 })["catch"](function (error) {
                   _this.$store.dispatch('showAlert', {
                     'isVisible': true,
@@ -401,7 +401,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/reset', {
         id: id
       }).then(function (res) {
-        _this6.getOrders();
+        _this6.getSelect();
       });
     },
     getSelect: function getSelect() {
@@ -410,6 +410,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/orders/select').then(function (res) {
         _this7.loading = false;
         _this7.orders = res.data.orders;
+        console.log(_this7.orders);
         _this7.select_stat = res.data.stat;
         _this7.isSelect = true;
       });

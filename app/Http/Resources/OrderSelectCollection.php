@@ -22,6 +22,7 @@ class OrderSelectCollection extends JsonResource
             'tag' => $this->getTag($this->type, $this->size),
             'diet' => $this->diet,
             'diet_old' => $this->diet_old,
+            'whatsapp' => $this->whatsapp ?? $this->phone
             //'blacklist' => $this->getBlacklistIds(),
             //'wishlist' => $this->getWishes(),
             //'previous' => SelectCollection::collection($this->getPreviousSelect()),

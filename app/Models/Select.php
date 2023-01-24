@@ -110,7 +110,7 @@ class Select extends Model
             ->get()
             ->groupBy('ration_id');
 
-        $duty_cuisine = Cuisine::where('is_on_duty', true)->first();
+        //$duty_cuisine = Cuisine::where('is_on_duty', true)->first();
 
         foreach ($groups as $group){
 
@@ -118,7 +118,7 @@ class Select extends Model
             //beautify
             foreach ($group as $item) {
                 $code = null;
-                $duty_dish = Dish::where('cuisine_id', $duty_cuisine->id)->where('ration_id', $item->ration_id)->first();
+                //$duty_dish = Dish::where('cuisine_id', $duty_cuisine->id)->where('ration_id', $item->ration_id)->first();
 
                 /*if ($duty_dish && $item->dish_id === $duty_dish->id) {
                     $code = '0';
@@ -127,6 +127,7 @@ class Select extends Model
                 $ids[] = [
                     'id'=> $item->id,
                     'code' => $code,
+                    'description' => $item->description,
                     'ids' => $item->getIngredientIds()
                 ];
             }
@@ -143,7 +144,7 @@ class Select extends Model
                     $a = array_diff($ids[$i]['ids'], $ids[$j]['ids']);
                     $b = array_diff($ids[$j]['ids'], $ids[$i]['ids']);
 
-                    if (count($a) === 0 && count($b) === 0){
+                    if (count($a) === 0 && count($b) === 0 && $ids[$i]['description'] === $ids[$j]['description']){
                         $ids[$j]['code'] = $i+1;
                     }
                 }

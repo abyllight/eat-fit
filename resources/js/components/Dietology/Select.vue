@@ -198,7 +198,7 @@
                 await axios
                     .get('/api/orders/eat-fit')
                     .then(() => {
-                        this.getOrders()
+                        this.getSelect()
                     })
                     .catch(error => {
                         this.$store.dispatch('showAlert', {
@@ -302,7 +302,7 @@
                 axios.post('/api/select/reset', {
                     id: id
                 }).then(res => {
-                    this.getOrders()
+                    this.getSelect()
                 })
             },
             getSelect() {
@@ -310,6 +310,7 @@
                     .then(res => {
                         this.loading = false
                         this.orders = res.data.orders
+                        console.log(this.orders)
                         this.select_stat = res.data.stat
                         this.isSelect = true
                     })
