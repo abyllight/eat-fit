@@ -237,9 +237,7 @@ class Order extends Model
                 if ($dish) {
                     $ds = $dish->sizes->where('size', $this->size)->first();
 
-                    $item->weight = null;
-
-                    if ($ds) {
+                    if ($ds && $item->status === Select::LITE) {
                         $item->weight = $ds->weight;
                     }
 
