@@ -2,7 +2,7 @@
     <div>
         <div>
             <div>
-                <draggable id="0" group="cards" @end="log" preventOnFilter="false" style="display: flex; overflow-x: scroll; padding: 4px; border: 1px dashed darkgrey; height: 250px">
+                <draggable id="0" group="cards" filter="input" @end="log" preventOnFilter="false" style="display: flex; overflow-x: scroll; padding: 4px; border: 1px dashed darkgrey; height: 250px">
                     <v-sheet
                         v-for="card in cards"
                         :id="card.code"

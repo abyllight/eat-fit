@@ -4144,7 +4144,12 @@ var render = function() {
                     border: "1px dashed darkgrey",
                     height: "250px"
                   },
-                  attrs: { id: "0", group: "cards", preventOnFilter: "false" },
+                  attrs: {
+                    id: "0",
+                    group: "cards",
+                    filter: "input",
+                    preventOnFilter: "false"
+                  },
                   on: { end: _vm.log }
                 },
                 _vm._l(_vm.cards, function(card) {
