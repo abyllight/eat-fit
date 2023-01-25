@@ -179,7 +179,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "CardNGroup",
@@ -215,6 +214,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return axios.get('/api/cards').then(function (res) {
                   _this.cards = res.data.cards;
                   _this.groups = res.data.groups;
+                  console.log(_this.groups);
                 });
 
               case 2:
@@ -298,9 +298,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
       this.weight = count;
     },
-    openModal: function openModal(item) {
-      this.order = item;
-      this.countWeight(item.items);
+    openModal: function openModal(evt) {
+      var code = evt.item.id;
+      var index = Object.keys(this.cards).findIndex(function (x) {
+        return x === code;
+      });
+
+      if (index >= 0) {
+        this.order = Object.values(this.cards)[index];
+      } //this.order = item
+
+
+      this.countWeight(this.order.items);
       this.modal = true;
     },
     changeDep: function changeDep() {
@@ -4144,13 +4153,8 @@ var render = function() {
                     border: "1px dashed darkgrey",
                     height: "250px"
                   },
-                  attrs: {
-                    id: "0",
-                    group: "cards",
-                    filter: "input",
-                    preventOnFilter: "false"
-                  },
-                  on: { end: _vm.log }
+                  attrs: { id: "0", group: "cards", preventOnFilter: "false" },
+                  on: { choose: _vm.openModal, end: _vm.log }
                 },
                 _vm._l(_vm.cards, function(card) {
                   return _c(
@@ -4165,11 +4169,6 @@ var render = function() {
                         elevation: "1",
                         width: "200",
                         height: "160"
-                      },
-                      nativeOn: {
-                        click: function($event) {
-                          return _vm.openModal(card)
-                        }
                       }
                     },
                     [
@@ -4237,7 +4236,7 @@ var render = function() {
                       height: "250px"
                     },
                     attrs: { id: group.id, group: "cards" },
-                    on: { end: _vm.log }
+                    on: { choose: _vm.openModal, end: _vm.log }
                   },
                   _vm._l(group.cards, function(card) {
                     return _c(

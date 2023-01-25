@@ -2,7 +2,7 @@
     <div>
         <div>
             <div>
-                <draggable id="0" group="cards" filter="input" @end="log" preventOnFilter="false" style="display: flex; overflow-x: scroll; padding: 4px; border: 1px dashed darkgrey; height: 250px">
+                <draggable id="0" group="cards" @choose="openModal" @end="log" preventOnFilter="false" style="display: flex; overflow-x: scroll; padding: 4px; border: 1px dashed darkgrey; height: 250px">
                     <v-sheet
                         v-for="card in cards"
                         :id="card.code"
@@ -13,7 +13,6 @@
                         height="160"
                         class="pa-3 mr-5"
                         style="flex-shrink: 0; cursor:pointer;"
-                        @click.native="openModal(card)"
                     >
                         <h2>{{card.code}}</h2>
                         <p class="text-body-2">{{card.dish_name}}</p>
@@ -30,7 +29,7 @@
                     </v-btn>
                 </div>
 
-                <draggable :id="group.id" group="cards" @end="log" style="display: flex; overflow-x: scroll; padding: 4px; border: 1px dashed darkgrey; height: 250px">
+                <draggable :id="group.id" group="cards" @choose="openModal" @end="log" style="display: flex; overflow-x: scroll; padding: 4px; border: 1px dashed darkgrey; height: 250px">
                     <v-sheet
                         v-for="card in group.cards"
                         :id="card.code"
@@ -184,6 +183,7 @@ export default {
                 .then(res => {
                     this.cards = res.data.cards
                     this.groups = res.data.groups
+                    console.log(this.groups)
                 })
         },
         async getDepartments(){
@@ -244,9 +244,16 @@ export default {
 
             this.weight = count
         },
-        openModal(item) {
-            this.order = item
-            this.countWeight(item.items)
+        openModal(evt) {
+            let code = evt.item.id
+
+            let index = Object.keys(this.cards).findIndex(x => x === code)
+
+            if (index >= 0) {
+                this.order = Object.values(this.cards)[index]
+            }
+            //this.order = item
+            this.countWeight(this.order.items)
             this.modal = true
         },
         changeDep() {
