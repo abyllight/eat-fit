@@ -4163,6 +4163,7 @@ var render = function() {
                       },
                       on: {
                         click: function($event) {
+                          $event.stopPropagation()
                           return _vm.openModal(card)
                         }
                       }

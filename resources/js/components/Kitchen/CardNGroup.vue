@@ -13,7 +13,7 @@
                         height="160"
                         class="pa-3 mr-5"
                         style="flex-shrink: 0; cursor:pointer;"
-                        @click="openModal(card)"
+                        @click.stop="openModal(card)"
                     >
                         <h2>{{card.code}}</h2>
                         <p class="text-body-2">{{card.dish_name}}</p>

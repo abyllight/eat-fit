@@ -86,8 +86,13 @@ class DishController extends Controller
 
                     foreach ($request->ingredient_ids as $ingredient) {
                         $di = DishIngredient::where('dish_id', $dish->id)->where('ingredient_id', $ingredient)->first();
-                        $di->is_visible = true;
-                        $di->save();
+
+                        if ($di) {
+                            $di->is_visible = true;
+                            $di->save();
+                        } else {
+                            $dish->ingredients()->attach($ingredient);
+                        }
                     }
                 }else {
                     $dish->ingredients()->sync($request->ingredient_ids);
