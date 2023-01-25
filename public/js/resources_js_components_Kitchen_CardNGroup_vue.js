@@ -4161,9 +4161,8 @@ var render = function() {
                         width: "200",
                         height: "160"
                       },
-                      on: {
+                      nativeOn: {
                         click: function($event) {
-                          $event.stopPropagation()
                           return _vm.openModal(card)
                         }
                       }
@@ -4249,7 +4248,7 @@ var render = function() {
                           width: "200",
                           height: "160"
                         },
-                        on: {
+                        nativeOn: {
                           click: function($event) {
                             return _vm.openModal(card)
                           }
