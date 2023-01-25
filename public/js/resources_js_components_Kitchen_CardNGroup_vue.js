@@ -4142,9 +4142,9 @@ var render = function() {
                     "overflow-x": "scroll",
                     padding: "4px",
                     border: "1px dashed darkgrey",
-                    height: "210px"
+                    height: "250px"
                   },
-                  attrs: { id: "0", group: "cards" },
+                  attrs: { id: "0", group: "cards", preventOnFilter: "false" },
                   on: { end: _vm.log }
                 },
                 _vm._l(_vm.cards, function(card) {
@@ -4229,7 +4229,7 @@ var render = function() {
                       "overflow-x": "scroll",
                       padding: "4px",
                       border: "1px dashed darkgrey",
-                      height: "210px"
+                      height: "250px"
                     },
                     attrs: { id: group.id, group: "cards" },
                     on: { end: _vm.log }
