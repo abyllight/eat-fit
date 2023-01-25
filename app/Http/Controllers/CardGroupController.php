@@ -16,7 +16,13 @@ class CardGroupController extends Controller
         $arr = [];
         $groups = [];
 
-        $select_groups = Select::whereDate('created_at', Carbon::today())->where('dep_id', $user->kd_id)->where('group_id', null)->get()->groupBy('code');
+        $select_groups = Select::whereDate('created_at', Carbon::today())->where('group_id', null);
+
+        if ($user->kd_id) {
+            $select_groups = $select_groups->where('dep_id', $user->kd_id);
+        }
+
+        $select_groups = $select_groups->get()->groupBy('code');
 
         foreach ($select_groups as $key => $group) {
             $arr[$key] = [
