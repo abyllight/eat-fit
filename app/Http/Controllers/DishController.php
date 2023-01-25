@@ -45,6 +45,14 @@ class DishController extends Controller
 
         $dish->ingredients()->sync($request->ingredient_ids);
 
+        foreach ($request->sizes as $size) {
+            $ds = new DishSize();
+            $ds->dish_id = $dish->id;
+            $ds->size = $size['id'];
+            $ds->weight = $size['val'];
+            $ds->save();
+        }
+
         return response()->json([
             'status' => true,
             'msg' => 'Блюдо добавлено'
@@ -84,6 +92,16 @@ class DishController extends Controller
                 }else {
                     $dish->ingredients()->sync($request->ingredient_ids);
                 }
+            }
+
+            $dish->sizes()->delete();
+
+            foreach ($request->sizes as $size) {
+                $ds = new DishSize();
+                $ds->dish_id = $dish->id;
+                $ds->size = $size['id'];
+                $ds->weight = $size['val'];
+                $ds->save();
             }
 
             return response()->json([

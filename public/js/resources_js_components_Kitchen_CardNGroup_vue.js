@@ -125,6 +125,61 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "CardNGroup",
@@ -138,11 +193,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       dialog: false,
       modal: false,
       group_name: null,
-      order: {}
+      order: {},
+      weight: 0,
+      departments: []
     };
   },
   mounted: function mounted() {
     this.getItems();
+    this.getDepartments();
   },
   methods: {
     getItems: function getItems() {
@@ -167,26 +225,51 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee);
       }))();
     },
-    createGroup: function createGroup() {
+    getDepartments: function getDepartments() {
       var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return axios.get('/api/departments').then(function (response) {
+                  _this2.departments = response.data;
+                })["catch"](function (error) {
+                  console.log(error);
+                });
+
+              case 2:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    },
+    createGroup: function createGroup() {
+      var _this3 = this;
 
       axios.post('/api/cards', {
         name: this.group_name
       }).then(function (res) {
-        _this2.groups = res.data;
-        _this2.group_name = null;
-        _this2.dialog = false;
+        _this3.groups = res.data;
+        _this3.group_name = null;
+        _this3.dialog = false;
       });
     },
     deleteGroup: function deleteGroup(id) {
-      var _this3 = this;
+      var _this4 = this;
 
       axios.post('/api/cards/' + id).then(function (res) {
-        _this3.groups = res.data;
+        _this4.groups = res.data;
+
+        _this4.getItems();
       });
     },
     log: function log(evt) {
-      var _this4 = this;
+      var _this5 = this;
 
       var code = evt.item.id;
       var group_id = evt.to.id;
@@ -194,7 +277,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         code: code,
         g_id: group_id
       }).then(function (res) {
-        _this4.getItems();
+        _this5.getItems();
       });
     },
     checkPrepared: function checkPrepared(items) {
@@ -206,9 +289,31 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
       return count;
     },
+    countWeight: function countWeight(items) {
+      var count = 0;
+      items.map(function (x) {
+        if (x.weight > 0) {
+          count += x.weight;
+        }
+      });
+      this.weight = count;
+    },
     openModal: function openModal(item) {
       this.order = item;
+      this.countWeight(item.items);
       this.modal = true;
+    },
+    changeDep: function changeDep() {
+      var _this6 = this;
+
+      axios.post('/api/cards-dep', {
+        items: this.order.items,
+        dep_id: this.order.dep_id
+      }).then(function (res) {
+        _this6.modal = false;
+
+        _this6.getItems();
+      });
     }
   }
 });
@@ -4034,22 +4139,28 @@ var render = function() {
                 {
                   staticStyle: {
                     display: "flex",
-                    "overflow-x": "auto",
+                    "overflow-x": "scroll",
                     padding: "4px",
                     border: "1px dashed darkgrey",
-                    height: "200px"
+                    height: "210px"
                   },
                   attrs: { id: "0", group: "cards" },
                   on: { end: _vm.log }
                 },
                 _vm._l(_vm.cards, function(card) {
                   return _c(
-                    "v-card",
+                    "v-sheet",
                     {
                       key: card.code,
-                      staticClass: "pa-4 mr-5",
-                      staticStyle: { "flex-shrink": "0" },
-                      attrs: { id: card.code, width: "300" },
+                      staticClass: "pa-3 mr-5",
+                      staticStyle: { "flex-shrink": "0", cursor: "pointer" },
+                      attrs: {
+                        id: card.code,
+                        rounded: "",
+                        elevation: "1",
+                        width: "200",
+                        height: "160"
+                      },
                       on: {
                         click: function($event) {
                           return _vm.openModal(card)
@@ -4115,22 +4226,28 @@ var render = function() {
                   {
                     staticStyle: {
                       display: "flex",
-                      "overflow-x": "auto",
+                      "overflow-x": "scroll",
                       padding: "4px",
                       border: "1px dashed darkgrey",
-                      height: "200px"
+                      height: "210px"
                     },
                     attrs: { id: group.id, group: "cards" },
                     on: { end: _vm.log }
                   },
                   _vm._l(group.cards, function(card) {
                     return _c(
-                      "v-card",
+                      "v-sheet",
                       {
                         key: card.code,
-                        staticClass: "pa-4 mr-5",
-                        staticStyle: { "flex-shrink": "0" },
-                        attrs: { id: card.code, width: "300" },
+                        staticClass: "pa-3 mr-5",
+                        staticStyle: { "flex-shrink": "0", cursor: "pointer" },
+                        attrs: {
+                          id: card.code,
+                          rounded: "",
+                          elevation: "1",
+                          width: "200",
+                          height: "160"
+                        },
                         on: {
                           click: function($event) {
                             return _vm.openModal(card)
@@ -4300,29 +4417,133 @@ var render = function() {
                                 1
                               ),
                               _vm._v(" "),
-                              _c("v-col", [
-                                _vm.order.description
-                                  ? _c(
-                                      "div",
-                                      {
-                                        staticClass: "mb-3 rounded pa-2",
-                                        staticStyle: {
-                                          border: "1px solid grey"
-                                        }
-                                      },
-                                      [
-                                        _c("h4", [_vm._v("Описание:")]),
-                                        _vm._v(
-                                          "\n                                    " +
-                                            _vm._s(_vm.order.description) +
-                                            "\n                                "
-                                        )
-                                      ]
-                                    )
-                                  : _vm._e()
-                              ])
+                              _c(
+                                "v-col",
+                                [
+                                  _vm.weight > 0
+                                    ? _c(
+                                        "div",
+                                        {
+                                          staticClass: "mb-3 rounded pa-2",
+                                          staticStyle: {
+                                            border: "1px solid grey"
+                                          }
+                                        },
+                                        [
+                                          _c("h4", [_vm._v("Вес:")]),
+                                          _vm._v(
+                                            "\n                                    " +
+                                              _vm._s(_vm.weight) +
+                                              " грамм\n                                "
+                                          )
+                                        ]
+                                      )
+                                    : _vm._e(),
+                                  _vm._v(" "),
+                                  _vm.order.description
+                                    ? _c(
+                                        "div",
+                                        {
+                                          staticClass: "mb-3 rounded pa-2",
+                                          staticStyle: {
+                                            border: "1px solid grey"
+                                          }
+                                        },
+                                        [
+                                          _c("h4", [_vm._v("Описание:")]),
+                                          _vm._v(
+                                            "\n                                    " +
+                                              _vm._s(_vm.order.description) +
+                                              "\n                                "
+                                          )
+                                        ]
+                                      )
+                                    : _vm._e(),
+                                  _vm._v(" "),
+                                  _c(
+                                    "v-row",
+                                    [
+                                      _c(
+                                        "v-col",
+                                        [
+                                          _c("v-select", {
+                                            staticClass: "mb-0",
+                                            attrs: {
+                                              items: _vm.departments,
+                                              "item-text": "name",
+                                              "item-value": "id",
+                                              label: "Цех",
+                                              outlined: "",
+                                              dense: ""
+                                            },
+                                            model: {
+                                              value: _vm.order.dep_id,
+                                              callback: function($$v) {
+                                                _vm.$set(
+                                                  _vm.order,
+                                                  "dep_id",
+                                                  $$v
+                                                )
+                                              },
+                                              expression: "order.dep_id"
+                                            }
+                                          })
+                                        ],
+                                        1
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "v-col",
+                                        { attrs: { cols: "5" } },
+                                        [
+                                          _c(
+                                            "v-btn",
+                                            {
+                                              staticClass: "mt-0",
+                                              attrs: {
+                                                small: "",
+                                                color: "primary"
+                                              },
+                                              on: { click: _vm.changeDep }
+                                            },
+                                            [_vm._v("Сохранить")]
+                                          )
+                                        ],
+                                        1
+                                      )
+                                    ],
+                                    1
+                                  )
+                                ],
+                                1
+                              )
                             ],
                             1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-card-actions",
+                        [
+                          _c("v-spacer"),
+                          _vm._v(" "),
+                          _c(
+                            "v-btn",
+                            {
+                              attrs: { color: "red", text: "" },
+                              on: {
+                                click: function($event) {
+                                  _vm.modal = false
+                                }
+                              }
+                            },
+                            [
+                              _vm._v(
+                                "\n                            Закрыть\n                        "
+                              )
+                            ]
                           )
                         ],
                         1

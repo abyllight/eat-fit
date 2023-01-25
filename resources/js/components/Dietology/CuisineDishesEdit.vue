@@ -59,6 +59,25 @@
                     label="Цех"
                     :error-messages="errors.department_id"
                 ></v-autocomplete>
+
+                <div>
+                    <v-row>
+                        <v-col
+                            v-for="size in sizes"
+                            :key="size.name"
+                        >
+                            <v-text-field
+                                type="number"
+                                v-model="size.val"
+                                :label="size.name"
+                                outlined
+                                clearable
+                                dense
+                            ></v-text-field>
+                        </v-col>
+                    </v-row>
+                </div>
+
                 <v-autocomplete
                     v-model="dish.ingredient_ids"
                     :items="ingredients"
@@ -105,6 +124,33 @@
                 description: null
             },
             dishes: [],
+            sizes: [
+                {
+                    id: 1,
+                    name: 'XS',
+                    val: null
+                },
+                {
+                    id: 2,
+                    name: 'S',
+                    val: null
+                },
+                {
+                    id: 3,
+                    name: 'M',
+                    val: null
+                },
+                {
+                    id: 4,
+                    name: 'L',
+                    val: null
+                },
+                {
+                    id: 5,
+                    name: 'XL',
+                    val: null
+                }
+            ],
             loading: false,
             disabled: false,
             errors: [],
@@ -143,6 +189,14 @@
                     .get('/api/dishes/'+this.id)
                     .then(response => {
                         this.dish = response.data
+                        this.sizes = this.sizes.map(x => {
+                            let found = this.dish.sizes.find(d => d.size === x.id)
+
+                            return {
+                                ...x,
+                                val: found.weight
+                            }
+                        })
                     })
                     .catch(error => {
                         console.log(error)
@@ -179,6 +233,7 @@
                     })
             },
             update(){
+                this.dish.sizes = this.sizes
                 axios
                     .patch('/api/dishes/'+this.dish.id, this.dish)
                     .then(response => {

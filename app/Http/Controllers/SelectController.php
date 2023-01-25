@@ -148,22 +148,18 @@ class SelectController extends Controller
             ]);
         }
 
-        $select = Select::where('order_id', $request->order_id)
-            ->where('cuisine_id', $request->cuisine_id)
-            ->where('ration_id', $request->ration_id)
-            ->whereDate('created_at', Carbon::today())
-            ->first();
+        $select = Select::find($request->id);
 
-        $ration = Ration::find($request->ration_id);
-        $duty_dish = Dish::where('cuisine_id', $request->cuisine_id)->where('ration_id', $request->ration_id)->first();
+        $ration = Ration::find($select->ration_id);
+        $duty_dish = Dish::where('cuisine_id', $select->cuisine_id)->where('ration_id', $ration->id)->first();
 
-        if (!$select) {
+        /*if (!$select) {
             $select = new Select();
             $select->order_id = $request->order_id;
             $select->cuisine_id = $request->cuisine_id;
             $select->ration_id = $request->ration_id;
             $select->dep_id = $ration->department_id;
-        }
+        }*/
 
         if (!$duty_dish || $request->dish_id !== $duty_dish->id) {
             $select->status = Select::REPLACEMENT;
@@ -174,6 +170,15 @@ class SelectController extends Controller
         $select->dish_id = $request->dish_id;
         $select->dish_name = $dish->name;
         $select->tableware_id = $ration->tableware_id;
+        $select->weight = null;
+
+        $order = Order::find($select->order_id);
+        $ds = $dish->sizes->where('size', $order->size)->first();
+
+        if ($ds) {
+            $select->weight = $ds->weight;
+        }
+
         $select->save();
 
         $select->ingredients()->sync($dish->getIngredientIds());
@@ -196,6 +201,7 @@ class SelectController extends Controller
         }
 
         $select->dish_name = $request->dish_name;
+        $select->weight = $request->weight;
         $select->description = $request->description;
         $select->save();
 
@@ -387,6 +393,21 @@ class SelectController extends Controller
             'status' => true,
             'msg' => 'OK'
         ]);
+    }
+
+    public function addExtraSelect(Request $request) {
+        $ration = Ration::find($request->r_id);
+        $t_id = $ration->tableware ? $ration->tableware->id : null;
+
+        $select = new Select();
+        $select->order_id = $request->o_id;
+        $select->cuisine_id = $request->c_id;
+        $select->ration_id = $request->r_id;
+        $select->status = Select::REPLACEMENT;
+        $select->tableware_id = $t_id;
+        $select->dep_id = $ration->department_id;
+        $select->is_extra = true;
+        $select->save();
     }
 
     public function addExtraIngredient(Request $request){

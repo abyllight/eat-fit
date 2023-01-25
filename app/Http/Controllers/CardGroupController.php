@@ -21,13 +21,16 @@ class CardGroupController extends Controller
         foreach ($select_groups as $key => $group) {
             $arr[$key] = [
                 'code' => $group[0]->code,
+                'dep_id' => $user->kd_id,
                 'dish_name' => $group[0]->dish_name,
+                'description' => $group[0]->description,
                 'ingredients' => $group[0]->ingredients
             ];
 
             foreach ($group as $item) {
                 $arr[$key]['items'][] = [
                     'id' => $item->id,
+                    'weight' => $item->weight,
                     'is_prepared' => $item->is_prepared
                 ];
             }
@@ -37,20 +40,23 @@ class CardGroupController extends Controller
             $selects = $group->selects->groupBy('code');
 
             $groups[$i] = [
-                'name' => $group->name,
-                'id' => $group->id
+                'id' => $group->id,
+                'name' => $group->name
             ];
 
             foreach ($selects as $key => $select) {
                 $groups[$i]['cards'][$key] = [
                     'code' => $select[0]->code,
+                    'dep_id' => $user->kd_id,
                     'dish_name' => $select[0]->dish_name,
-                    'ingredients' => $group[0]->ingredients
+                    'description' => $select[0]->description,
+                    'ingredients' => $select[0]->ingredients
                 ];
 
                 foreach ($select as $item) {
                     $groups[$i]['cards'][$key]['items'][] = [
                         'id' => $item->id,
+                        'weight' => $item->weight,
                         'is_prepared' => $item->is_prepared
                     ];
                 }
@@ -88,6 +94,18 @@ class CardGroupController extends Controller
         $group->delete();
 
         return response()->json(Auth::user()->groups);
+    }
+
+    public function changeDepartment(Request $request) {
+        $items = $request->items;
+
+        foreach ($items as $item) {
+            $select = Select::find($item['id']);
+
+            $select->group_id = null;
+            $select->dep_id = $request->dep_id;
+            $select->save();
+        }
     }
 
     public function sortCards(Request $request) {

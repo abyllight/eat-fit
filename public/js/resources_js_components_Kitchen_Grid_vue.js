@@ -206,6 +206,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -762,6 +767,26 @@ var render = function() {
                               ),
                               _vm._v(" "),
                               _c("v-col", [
+                                _vm.order.weight
+                                  ? _c(
+                                      "div",
+                                      {
+                                        staticClass: "mb-3 rounded pa-2",
+                                        staticStyle: {
+                                          border: "1px solid grey"
+                                        }
+                                      },
+                                      [
+                                        _c("h4", [_vm._v("Вес:")]),
+                                        _vm._v(
+                                          "\n                                    " +
+                                            _vm._s(_vm.order.weight) +
+                                            " грамм\n                                "
+                                        )
+                                      ]
+                                    )
+                                  : _vm._e(),
+                                _vm._v(" "),
                                 _vm.order.description
                                   ? _c(
                                       "div",

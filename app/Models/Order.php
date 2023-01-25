@@ -213,6 +213,12 @@ class Order extends Model
                     $select->dish_id = $duty_dish->id;
                     $select->dish_name = $duty_dish->name;
                     $select->status = Select::LITE;
+
+                    $ds = $duty_dish->sizes->where('size', $this->size)->first();
+
+                    if ($ds) {
+                        $select->weight = $ds->weight;
+                    }
                 }
 
                 $select->save();
@@ -223,6 +229,23 @@ class Order extends Model
             }
 
             return $this->select()->whereDate('created_at', Carbon::today())->get()->sortBy('ration_id');
+        }
+        else {
+            foreach ($result as $item) {
+                $dish = Dish::find($item->dish_id);
+
+                if ($dish) {
+                    $ds = $dish->sizes->where('size', $this->size)->first();
+
+                    $item->weight = null;
+
+                    if ($ds) {
+                        $item->weight = $ds->weight;
+                    }
+
+                    $item->save();
+                }
+            }
         }
 
         return $result;

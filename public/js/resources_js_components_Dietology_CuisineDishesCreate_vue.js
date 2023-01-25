@@ -86,6 +86,25 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'CuisineDishesCreate',
@@ -104,6 +123,27 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       loading: false,
       disabled: false,
       errors: [],
+      sizes: [{
+        id: 1,
+        name: 'XS',
+        val: null
+      }, {
+        id: 2,
+        name: 'S',
+        val: null
+      }, {
+        id: 3,
+        name: 'M',
+        val: null
+      }, {
+        id: 4,
+        name: 'L',
+        val: null
+      }, {
+        id: 5,
+        name: 'XL',
+        val: null
+      }],
       dish: {
         cuisine_id: null,
         name: null,
@@ -200,6 +240,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       this.dish.cuisine_id = this.id;
       this.dish.ration_id = this.r_id;
+      this.dish.sizes = this.sizes;
       axios.post('/api/dishes', this.dish).then(function (response) {
         _this4.$store.dispatch('showAlert', {
           'isVisible': true,
@@ -398,6 +439,42 @@ var render = function() {
                   expression: "dish.department_id"
                 }
               }),
+              _vm._v(" "),
+              _c(
+                "div",
+                [
+                  _c(
+                    "v-row",
+                    _vm._l(_vm.sizes, function(size) {
+                      return _c(
+                        "v-col",
+                        { key: size.name },
+                        [
+                          _c("v-text-field", {
+                            attrs: {
+                              type: "number",
+                              label: size.name,
+                              outlined: "",
+                              clearable: "",
+                              dense: ""
+                            },
+                            model: {
+                              value: size.val,
+                              callback: function($$v) {
+                                _vm.$set(size, "val", $$v)
+                              },
+                              expression: "size.val"
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    }),
+                    1
+                  )
+                ],
+                1
+              ),
               _vm._v(" "),
               _c("v-autocomplete", {
                 attrs: {

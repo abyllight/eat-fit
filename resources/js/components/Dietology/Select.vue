@@ -85,17 +85,6 @@
                         <template v-slot:item.index="{ index }">
                             {{ index + 1 }}
                         </template>
-
-                        <template v-slot:item.actions="{ item }">
-                            <v-btn
-                                x-small
-                                class="mr-2"
-                                color="lime"
-                                @click="sendMessage(item.id, item.whatsapp)"
-                            >
-                                <v-icon x-small>mdi-whatsapp</v-icon>
-                            </v-btn>
-                        </template>
                     </v-data-table>
                 </v-card>
             </v-col>
@@ -139,19 +128,67 @@
                                 >
                                     {{result.is_active ? 'Убрать' : 'Вернуть'}}
                                 </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-col>
+                    <v-col
+                        cols="12" md="4"
+                    >
+                        <v-card>
+                            <v-card-title>Дополнительно</v-card-title>
+                            <v-card-actions>
                                 <v-btn
-                                    v-if="result.is_active"
                                     text
-                                    @click="whatsapp(result.whatsapp, result.ration.name, result.dish_name)"
+                                    @click="dialog = true"
                                 >
-                                    <v-icon dark>
-                                        mdi-whatsapp
-                                    </v-icon>
+                                    Добавить
                                 </v-btn>
                             </v-card-actions>
                         </v-card>
                     </v-col>
                 </v-row>
+            </v-col>
+        </v-row>
+
+        <v-row>
+            <v-col>
+                <v-dialog
+                    v-model="dialog"
+                    max-width="400px"
+                >
+                    <v-card>
+                        <v-card-title>
+                            Дополнительно
+                        </v-card-title>
+                        <v-card-text>
+                            <v-select
+                                v-model="extra.r_id"
+                                :items="rations"
+                                dense
+                                item-text="name"
+                                item-value="id"
+                                outlined
+                                label="Рационы"
+                            ></v-select>
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-btn
+                                color="primary"
+                                text
+                                @click="dialog=false"
+                            >
+                                Закрыть
+                            </v-btn>
+                            <v-btn
+                                color="primary"
+                                text
+                                @click="addExtra"
+                            >
+                                Сохранить
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
             </v-col>
         </v-row>
     </div>
@@ -180,11 +217,19 @@
             loading: true,
             select_loading: false,
             cuisine: {},
-            isSelect: true
+            isSelect: true,
+            dialog: false,
+            rations: [],
+            extra: {
+                r_id: null,
+                c_id: null,
+                o_id: null
+            }
         }),
         created() {
             this.getSelect()
             this.getCuisine()
+            this.getRations()
             this.generateCode()
         },
         computed: {
@@ -193,6 +238,15 @@
             }
         },
         methods: {
+            addExtra() {
+                axios.post('/api/select/extra', this.extra)
+                    .then(res => {
+                        this.dialog = false
+                        window.location.reload()
+                    }).catch(err => {
+                        console.log(err)
+                })
+            },
             async fetchOrdersFromAmo() {
                 this.amo_loading = true
                 await axios
@@ -215,6 +269,7 @@
                     .get('/api/cuisine/duty')
                     .then(response => {
                         this.cuisine = response.data.cuisine
+                        this.extra.c_id = this.cuisine.id
                     })
                     .catch(error => {
                         this.loading = false
@@ -226,11 +281,23 @@
                         })
                     })
             },
+            async getRations(){
+                await axios
+                    .get('/api/rations')
+                    .then(response => {
+                        this.rations = response.data
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+            },
             generateCode() {
                 axios.get('/api/select/generate-code')
             },
             showOrderDetails(order){
                 this.order = order
+                this.extra.o_id = order.id
+
                 this.getSelectDetailsByOrder(order.id)
             },
             async getSelectDetailsByOrder(id){
@@ -310,7 +377,6 @@
                     .then(res => {
                         this.loading = false
                         this.orders = res.data.orders
-                        console.log(this.orders)
                         this.select_stat = res.data.stat
                         this.isSelect = true
                     })

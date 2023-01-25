@@ -145,6 +145,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/select/order/{id}', [SelectController::class, 'getSelectByOrder']);
     Route::get('/selects/order/{id}', [SelectController::class, 'getSelectsByOrder']);
     Route::post('/select/reset', [SelectController::class, 'resetResult']);
+    Route::post('/select/extra', [SelectController::class, 'addExtraSelect']);
     Route::post('/select/tableware', [SelectController::class, 'setTableware']);
     Route::get('/select/rations', [SelectController::class, 'selectRations']);
     Route::get('/select/stickers/{id}', [SelectController::class, 'getSelectStickersByRation']);
@@ -160,6 +161,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/cards', [CardGroupController::class, 'index']);
     Route::post('/cards', [CardGroupController::class, 'store']);
+    Route::post('/cards-dep', [CardGroupController::class, 'changeDepartment']);
     Route::post('/cards/{id}', [CardGroupController::class, 'destroy']);
     Route::post('/cards-sort', [CardGroupController::class, 'sortCards']);
 

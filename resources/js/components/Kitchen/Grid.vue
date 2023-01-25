@@ -94,6 +94,11 @@
                                 </v-col>
 
                                 <v-col>
+                                    <div v-if="order.weight" class="mb-3 rounded pa-2" style="border:1px solid grey">
+                                        <h4>Вес:</h4>
+                                        {{order.weight}} грамм
+                                    </div>
+
                                     <div v-if="order.description" class="mb-3 rounded pa-2" style="border:1px solid grey">
                                         <h4>Описание:</h4>
                                         {{order.description}}

@@ -29,7 +29,8 @@ class DishCollection extends JsonResource
             'ingredient_ids' => $this->getIngredientIds(),
             'ingredients' => IngredientCollection::collection($this->getVisibleIngredients()),
             'original_ingredients' => IngredientCollection::collection($this->getOriginalIngredients()),
-            'description' => $this->description
+            'description' => $this->description,
+            'sizes' => $this->sizes
         ];
     }
 }

@@ -999,6 +999,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -1416,10 +1429,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this14 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/add/dish', {
-        order_id: this.order.id,
-        ration_id: this.r_id,
-        dish_id: this.dish.id,
-        cuisine_id: this.cuisine.id
+        id: this.id,
+        dish_id: this.dish.id
       }).then(function (response) {
         if (!response.data.status) {
           _this14.$store.dispatch('showAlert', {
@@ -3928,7 +3939,21 @@ var render = function() {
                         ]),
                         _vm._v(" "),
                         _c("v-card-subtitle", [
-                          _vm._v(_vm._s(_vm.result.description))
+                          _vm._v(
+                            _vm._s(
+                              _vm.result.weight
+                                ? _vm.result.weight + " грамм"
+                                : ""
+                            )
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("v-card-text", [
+                          _vm._v(
+                            "\n                            " +
+                              _vm._s(_vm.result.description) +
+                              "\n                        "
+                          )
                         ]),
                         _vm._v(" "),
                         _c(
@@ -4298,6 +4323,22 @@ var render = function() {
                         _vm.$set(_vm.result, "dish_name", $$v)
                       },
                       expression: "result.dish_name"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("v-text-field", {
+                    attrs: {
+                      type: "number",
+                      clearable: "",
+                      outlined: "",
+                      label: "Вес(грамм)"
+                    },
+                    model: {
+                      value: _vm.result.weight,
+                      callback: function($$v) {
+                        _vm.$set(_vm.result, "weight", $$v)
+                      },
+                      expression: "result.weight"
                     }
                   }),
                   _vm._v(" "),

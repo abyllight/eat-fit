@@ -34,6 +34,7 @@ class SelectCollection extends JsonResource
             'wishlist' => $this->wishes,
             'created_at' => $this->created_at->format('Y-m-d'),
             'description' => $this->description,
+            'weight' => $this->weight,
             'status' => $this->status,
             'color' => $this->getStatusColor(),
             'selected_wishes' => $this->selected_wishes(),

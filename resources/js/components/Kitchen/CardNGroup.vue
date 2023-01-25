@@ -2,12 +2,23 @@
     <div>
         <div>
             <div>
-                <draggable id="0" group="cards" @end="log" style="display: flex; overflow-x: auto; padding: 4px; border: 1px dashed darkgrey; height: 200px">
-                    <v-card v-for="card in cards" :id="card.code" :key="card.code" width="300" class="pa-4 mr-5" style="flex-shrink: 0" @click="openModal(card)">
+                <draggable id="0" group="cards" @end="log" style="display: flex; overflow-x: scroll; padding: 4px; border: 1px dashed darkgrey; height: 210px">
+                    <v-sheet
+                        v-for="card in cards"
+                        :id="card.code"
+                        :key="card.code"
+                        rounded
+                        elevation="1"
+                        width="200"
+                        height="160"
+                        class="pa-3 mr-5"
+                        style="flex-shrink: 0; cursor:pointer;"
+                        @click="openModal(card)"
+                    >
                         <h2>{{card.code}}</h2>
                         <p class="text-body-2">{{card.dish_name}}</p>
                         <span class="text-h6">Количество: <strong>{{card.items.length}}</strong></span>
-                    </v-card>
+                    </v-sheet>
                 </draggable>
             </div>
 
@@ -19,12 +30,23 @@
                     </v-btn>
                 </div>
 
-                <draggable :id="group.id" group="cards" @end="log" style="display: flex; overflow-x: auto; padding: 4px; border: 1px dashed darkgrey; height: 200px">
-                    <v-card v-for="card in group.cards" :id="card.code" :key="card.code" width="300" class="pa-4 mr-5" style="flex-shrink: 0" @click="openModal(card)">
+                <draggable :id="group.id" group="cards" @end="log" style="display: flex; overflow-x: scroll; padding: 4px; border: 1px dashed darkgrey; height: 210px">
+                    <v-sheet
+                        v-for="card in group.cards"
+                        :id="card.code"
+                        :key="card.code"
+                        rounded
+                        elevation="1"
+                        width="200"
+                        height="160"
+                        class="pa-3 mr-5"
+                        style="flex-shrink: 0; cursor: pointer"
+                        @click="openModal(card)"
+                    >
                         <h2>{{card.code}}</h2>
                         <p class="text-body-2">{{card.dish_name}}</p>
                         <span class="text-h6">Количество: <strong>{{card.items.length}}</strong></span>
-                    </v-card>
+                    </v-sheet>
                 </draggable>
             </div>
         </div>
@@ -88,13 +110,46 @@
                                 </v-col>
 
                                 <v-col>
+                                    <div v-if="weight > 0" class="mb-3 rounded pa-2" style="border:1px solid grey">
+                                        <h4>Вес:</h4>
+                                        {{weight}} грамм
+                                    </div>
                                     <div v-if="order.description" class="mb-3 rounded pa-2" style="border:1px solid grey">
                                         <h4>Описание:</h4>
                                         {{order.description}}
                                     </div>
+
+                                    <v-row>
+                                        <v-col>
+                                            <v-select
+                                                v-model="order.dep_id"
+                                                :items="departments"
+                                                item-text="name"
+                                                item-value="id"
+                                                label="Цех"
+                                                outlined
+                                                dense
+                                                class="mb-0"
+                                            ></v-select>
+                                        </v-col>
+                                        <v-col cols="5">
+                                            <v-btn small color="primary" class="mt-0" @click="changeDep">Сохранить</v-btn>
+                                        </v-col>
+                                    </v-row>
                                 </v-col>
                             </v-row>
                         </v-card-text>
+
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn
+                                color="red"
+                                text
+                                @click="modal = false"
+                            >
+                                Закрыть
+                            </v-btn>
+                        </v-card-actions>
                     </v-card>
                 </v-dialog>
             </v-col>
@@ -115,10 +170,13 @@ export default {
         dialog: false,
         modal: false,
         group_name: null,
-        order: {}
+        order: {},
+        weight: 0,
+        departments: []
     }),
     mounted() {
         this.getItems()
+        this.getDepartments()
     },
     methods: {
         async getItems() {
@@ -126,6 +184,16 @@ export default {
                 .then(res => {
                     this.cards = res.data.cards
                     this.groups = res.data.groups
+                })
+        },
+        async getDepartments(){
+            await axios
+                .get('/api/departments')
+                .then(response => {
+                    this.departments = response.data
+                })
+                .catch(error => {
+                    console.log(error)
                 })
         },
         createGroup() {
@@ -140,6 +208,7 @@ export default {
         deleteGroup(id) {
             axios.post('/api/cards/'+ id).then(res => {
                 this.groups = res.data
+                this.getItems()
             })
         },
         log(evt){
@@ -164,9 +233,31 @@ export default {
 
             return count
         },
+        countWeight(items) {
+            let count = 0
+
+            items.map(x => {
+                if (x.weight > 0) {
+                    count += x.weight
+                }
+            })
+
+            this.weight = count
+        },
         openModal(item) {
             this.order = item
+            this.countWeight(item.items)
             this.modal = true
+        },
+        changeDep() {
+            axios.post('/api/cards-dep', {
+                items: this.order.items,
+                dep_id: this.order.dep_id
+            })
+                .then(res => {
+                    this.modal = false
+                    this.getItems()
+                })
         }
     }
 }

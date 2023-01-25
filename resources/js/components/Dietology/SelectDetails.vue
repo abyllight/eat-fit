@@ -217,7 +217,10 @@
                 <div v-if="result">
                     <v-card class="mb-5 mt-3" color="blue-grey lighten-3">
                         <v-card-title>{{result.dish_name}}</v-card-title>
-                        <v-card-subtitle>{{result.description}}</v-card-subtitle>
+                        <v-card-subtitle>{{result.weight ? result.weight + ' грамм' : ''}}</v-card-subtitle>
+                        <v-card-text>
+                            {{result.description}}
+                        </v-card-text>
                         <v-card-actions>
                             <v-btn text @click="dialog3 = true">
                                 редактировать
@@ -376,6 +379,16 @@
                         label="Название"
                     >
                     </v-text-field>
+
+                    <v-text-field
+                        v-model="result.weight"
+                        type="number"
+                        clearable
+                        outlined
+                        label="Вес(грамм)"
+                    >
+                    </v-text-field>
+
                     <v-textarea
                         v-model="result.description"
                         outlined
@@ -719,10 +732,8 @@
             setDish() {
                 axios
                     .post('/api/select/add/dish', {
-                        order_id: this.order.id,
-                        ration_id: this.r_id,
-                        dish_id: this.dish.id,
-                        cuisine_id: this.cuisine.id
+                        id: this.id,
+                        dish_id: this.dish.id
                     })
                     .then(response => {
                         if (!response.data.status){

@@ -40,6 +40,25 @@
                     label="Цех"
                     :error-messages="errors.department_id"
                 ></v-autocomplete>
+
+                <div>
+                    <v-row>
+                        <v-col
+                            v-for="size in sizes"
+                            :key="size.name"
+                        >
+                            <v-text-field
+                                type="number"
+                                v-model="size.val"
+                                :label="size.name"
+                                outlined
+                                clearable
+                                dense
+                            ></v-text-field>
+                        </v-col>
+                    </v-row>
+                </div>
+
                 <v-autocomplete
                     v-model="dish.ingredient_ids"
                     :items="ingredients"
@@ -81,6 +100,33 @@
             loading: false,
             disabled: false,
             errors: [],
+            sizes: [
+                {
+                    id: 1,
+                    name: 'XS',
+                    val: null
+                },
+                {
+                    id: 2,
+                    name: 'S',
+                    val: null
+                },
+                {
+                    id: 3,
+                    name: 'M',
+                    val: null
+                },
+                {
+                    id: 4,
+                    name: 'L',
+                    val: null
+                },
+                {
+                    id: 5,
+                    name: 'XL',
+                    val: null
+                }
+            ],
             dish: {
                 cuisine_id: null,
                 name: null,
@@ -151,6 +197,8 @@
             create(){
                 this.dish.cuisine_id = this.id
                 this.dish.ration_id = this.r_id
+                this.dish.sizes = this.sizes
+
                 axios
                     .post('/api/dishes', this.dish)
                     .then(response => {
