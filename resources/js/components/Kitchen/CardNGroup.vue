@@ -2,7 +2,7 @@
     <div>
         <div>
             <div>
-                <draggable id="0" group="cards" @end="log" style="display: flex; overflow-x: scroll; padding: 4px; border: 1px dashed darkgrey; height: 210px">
+                <draggable id="0" group="cards" @end="log" style="display: flex; overflow-x: scroll; padding: 4px; border: 1px dashed darkgrey; height: 250px">
                     <v-sheet
                         v-for="card in cards"
                         :id="card.code"
@@ -30,7 +30,7 @@
                     </v-btn>
                 </div>
 
-                <draggable :id="group.id" group="cards" @end="log" style="display: flex; overflow-x: scroll; padding: 4px; border: 1px dashed darkgrey; height: 210px">
+                <draggable :id="group.id" group="cards" @end="log" style="display: flex; overflow-x: scroll; padding: 4px; border: 1px dashed darkgrey; height: 250px">
                     <v-sheet
                         v-for="card in group.cards"
                         :id="card.code"
