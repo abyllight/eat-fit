@@ -39,7 +39,8 @@ class SelectCollection extends JsonResource
             'color' => $this->getStatusColor(),
             'selected_wishes' => $this->selected_wishes(),
             'tableware' => $this->tableware,
-            'is_active' => $this->is_active
+            'is_active' => $this->is_active,
+            'is_extra' => $this->is_extra
         ];
     }
 }

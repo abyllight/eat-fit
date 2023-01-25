@@ -122,11 +122,12 @@
                                     open
                                 </v-btn>
                                 <v-btn
+                                    v-if="result.is_extra"
                                     color="black"
                                     text
-                                    @click="activateDeactivate(result.id)"
+                                    @click="deleteSelect(result.id)"
                                 >
-                                    {{result.is_active ? 'Убрать' : 'Вернуть'}}
+                                    Удалить
                                 </v-btn>
                             </v-card-actions>
                         </v-card>
@@ -245,6 +246,14 @@
                         window.location.reload()
                     }).catch(err => {
                         console.log(err)
+                })
+            },
+            deleteSelect(id) {
+                axios.delete('/api/select/'+id)
+                    .then(res => {
+                        window.location.reload()
+                    }).catch(err => {
+                    console.log(err)
                 })
             },
             async fetchOrdersFromAmo() {

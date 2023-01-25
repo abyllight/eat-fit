@@ -218,6 +218,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 
 
@@ -279,6 +280,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/extra', this.extra).then(function (res) {
         _this.dialog = false;
+        window.location.reload();
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    },
+    deleteSelect: function deleteSelect(id) {
+      axios__WEBPACK_IMPORTED_MODULE_1___default()["delete"]('/api/select/' + id).then(function (res) {
         window.location.reload();
       })["catch"](function (err) {
         console.log(err);
@@ -1714,30 +1722,26 @@ var render = function() {
                                       ]
                                     ),
                                     _vm._v(" "),
-                                    _c(
-                                      "v-btn",
-                                      {
-                                        attrs: { color: "black", text: "" },
-                                        on: {
-                                          click: function($event) {
-                                            return _vm.activateDeactivate(
-                                              result.id
+                                    result.is_extra
+                                      ? _c(
+                                          "v-btn",
+                                          {
+                                            attrs: { color: "black", text: "" },
+                                            on: {
+                                              click: function($event) {
+                                                return _vm.deleteSelect(
+                                                  result.id
+                                                )
+                                              }
+                                            }
+                                          },
+                                          [
+                                            _vm._v(
+                                              "\n                                Удалить\n                            "
                                             )
-                                          }
-                                        }
-                                      },
-                                      [
-                                        _vm._v(
-                                          "\n                                " +
-                                            _vm._s(
-                                              result.is_active
-                                                ? "Убрать"
-                                                : "Вернуть"
-                                            ) +
-                                            "\n                            "
+                                          ]
                                         )
-                                      ]
-                                    )
+                                      : _vm._e()
                                   ],
                                   1
                                 )

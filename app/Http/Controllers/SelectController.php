@@ -60,6 +60,14 @@ class SelectController extends Controller
         ]);
     }
 
+    public function deleteSelect($id) {
+        $select = Select::find($id);
+
+        $select->ingredients()->detach();
+        $select->wishes()->detach();
+        $select->delete();
+    }
+
     public function getSelectsByOrder($id): JsonResponse
     {
         $order = Order::find($id);

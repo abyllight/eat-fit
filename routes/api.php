@@ -150,6 +150,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/select/rations', [SelectController::class, 'selectRations']);
     Route::get('/select/stickers/{id}', [SelectController::class, 'getSelectStickersByRation']);
     Route::get('/select/{id}', [SelectController::class, 'getSelectById']);
+    Route::delete('/select/{id}', [SelectController::class, 'deleteSelect']);
     Route::post('/select/{id}/done', [SelectController::class, 'setDone']);
 
     Route::resource('/categories', CategoryController::class)->except(['create', 'show', 'edit']);
