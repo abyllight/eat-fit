@@ -129,6 +129,15 @@
                                 >
                                     Удалить
                                 </v-btn>
+                                <v-btn
+                                    v-else
+                                    color="black"
+                                    text
+                                    @click="activateDeactivate(result.id)"
+                                >
+                                    {{result.is_active ? 'Убрать' : 'Вернуть'}}
+                                    Удалить
+                                </v-btn>
                             </v-card-actions>
                         </v-card>
                     </v-col>
