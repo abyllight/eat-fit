@@ -17,6 +17,7 @@ class Select extends Model
     const REPLACEMENT = 2;
     const WITHOUT = 3;
     const LITE = 5;
+    const EXTRA = 6;
 
     public function order()
     {
@@ -84,6 +85,14 @@ class Select extends Model
 
         if ($this->status === self::REPLACEMENT){
             $color = 'red lighten-3';
+        }
+
+        if ($this->status === self::WITHOUT){
+            $color = 'yellow accent-4';
+        }
+
+        if ($this->status === self::EXTRA){
+            $color = 'light-blue accent-1';
         }
 
         return $color;

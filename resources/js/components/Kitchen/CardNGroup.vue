@@ -9,14 +9,26 @@
                         :key="card.code"
                         rounded
                         elevation="1"
-                        width="200"
+                        :color="card.color"
+                        width="240"
                         height="160"
-                        class="pa-3 mr-5"
+                        class="pa-3 mr-5 d-flex flex-column justify-space-between"
                         style="flex-shrink: 0; cursor:pointer;"
                     >
-                        <h2>{{card.code}}</h2>
-                        <p class="text-body-2">{{card.dish_name}}</p>
-                        <span class="text-h6">Количество: <strong>{{card.items.length}}</strong></span>
+                        <div>
+                            <div class="d-flex justify-space-between align-center">
+                                <h2>{{card.code}}</h2>
+                                {{countWeight(card.items)}} грамм
+                            </div>
+                            <p class="text-body-2">{{card.dish_name}}</p>
+                        </div>
+
+                        <div>
+                            <div class="d-flex align-end">
+                                <v-icon class="mr-2">mdi-account-group</v-icon>
+                                {{card.items.length}}
+                            </div>
+                        </div>
                     </v-sheet>
                 </draggable>
             </div>
@@ -38,13 +50,24 @@
                         elevation="1"
                         width="200"
                         height="160"
-                        class="pa-3 mr-5"
+                        class="pa-3 mr-5 d-flex flex-column justify-space-between"
                         style="flex-shrink: 0; cursor: pointer"
                         @click.native="openModal(card)"
                     >
-                        <h2>{{card.code}}</h2>
-                        <p class="text-body-2">{{card.dish_name}}</p>
-                        <span class="text-h6">Количество: <strong>{{card.items.length}}</strong></span>
+                        <div>
+                            <div class="d-flex justify-space-between align-center">
+                                <h2>{{card.code}}</h2>
+                                {{countWeight(card.items)}} грамм
+                            </div>
+                            <p class="text-body-2">{{card.dish_name}}</p>
+                        </div>
+
+                        <div>
+                            <div class="d-flex align-end">
+                                <v-icon class="mr-2">mdi-account-group</v-icon>
+                                {{card.items.length}}
+                            </div>
+                        </div>
                     </v-sheet>
                 </draggable>
             </div>
@@ -183,7 +206,7 @@ export default {
                 .then(res => {
                     this.cards = res.data.cards
                     this.groups = res.data.groups
-                    console.log(this.groups)
+                    console.log(this.cards)
                 })
         },
         async getDepartments(){
@@ -242,7 +265,7 @@ export default {
                 }
             })
 
-            this.weight = count
+            return count
         },
         openModal(evt) {
             let code = evt.item.id
@@ -251,6 +274,16 @@ export default {
 
             if (index >= 0) {
                 this.order = Object.values(this.cards)[index]
+            }else  {
+                for(let i = 0; i < this.groups.length; i++){
+                    let cards = this.groups[i].cards
+                    let g_index = Object.keys(cards).findIndex(x => x === code)
+
+                    if (g_index >= 0) {
+                        this.order = Object.values(this.groups[i].cards)[g_index]
+                        break
+                    }
+                }
             }
             //this.order = item
             this.countWeight(this.order.items)

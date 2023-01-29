@@ -179,6 +179,29 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "CardNGroup",
@@ -214,7 +237,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return axios.get('/api/cards').then(function (res) {
                   _this.cards = res.data.cards;
                   _this.groups = res.data.groups;
-                  console.log(_this.groups);
+                  console.log(_this.cards);
                 });
 
               case 2:
@@ -296,7 +319,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           count += x.weight;
         }
       });
-      this.weight = count;
+      return count;
     },
     openModal: function openModal(evt) {
       var code = evt.item.id;
@@ -306,6 +329,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       if (index >= 0) {
         this.order = Object.values(this.cards)[index];
+      } else {
+        for (var i = 0; i < this.groups.length; i++) {
+          var cards = this.groups[i].cards;
+          var g_index = Object.keys(cards).findIndex(function (x) {
+            return x === code;
+          });
+
+          if (g_index >= 0) {
+            this.order = Object.values(this.groups[i].cards)[g_index];
+            break;
+          }
+        }
       } //this.order = item
 
 
@@ -4161,26 +4196,57 @@ var render = function() {
                     "v-sheet",
                     {
                       key: card.code,
-                      staticClass: "pa-3 mr-5",
+                      staticClass:
+                        "pa-3 mr-5 d-flex flex-column justify-space-between",
                       staticStyle: { "flex-shrink": "0", cursor: "pointer" },
                       attrs: {
                         id: card.code,
                         rounded: "",
                         elevation: "1",
-                        width: "200",
+                        color: card.color,
+                        width: "240",
                         height: "160"
                       }
                     },
                     [
-                      _c("h2", [_vm._v(_vm._s(card.code))]),
-                      _vm._v(" "),
-                      _c("p", { staticClass: "text-body-2" }, [
-                        _vm._v(_vm._s(card.dish_name))
+                      _c("div", [
+                        _c(
+                          "div",
+                          {
+                            staticClass:
+                              "d-flex justify-space-between align-center"
+                          },
+                          [
+                            _c("h2", [_vm._v(_vm._s(card.code))]),
+                            _vm._v(
+                              "\n                            " +
+                                _vm._s(_vm.countWeight(card.items)) +
+                                " грамм\n                        "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("p", { staticClass: "text-body-2" }, [
+                          _vm._v(_vm._s(card.dish_name))
+                        ])
                       ]),
                       _vm._v(" "),
-                      _c("span", { staticClass: "text-h6" }, [
-                        _vm._v("Количество: "),
-                        _c("strong", [_vm._v(_vm._s(card.items.length))])
+                      _c("div", [
+                        _c(
+                          "div",
+                          { staticClass: "d-flex align-end" },
+                          [
+                            _c("v-icon", { staticClass: "mr-2" }, [
+                              _vm._v("mdi-account-group")
+                            ]),
+                            _vm._v(
+                              "\n                            " +
+                                _vm._s(card.items.length) +
+                                "\n                        "
+                            )
+                          ],
+                          1
+                        )
                       ])
                     ]
                   )
@@ -4243,7 +4309,8 @@ var render = function() {
                       "v-sheet",
                       {
                         key: card.code,
-                        staticClass: "pa-3 mr-5",
+                        staticClass:
+                          "pa-3 mr-5 d-flex flex-column justify-space-between",
                         staticStyle: { "flex-shrink": "0", cursor: "pointer" },
                         attrs: {
                           id: card.code,
@@ -4259,15 +4326,44 @@ var render = function() {
                         }
                       },
                       [
-                        _c("h2", [_vm._v(_vm._s(card.code))]),
-                        _vm._v(" "),
-                        _c("p", { staticClass: "text-body-2" }, [
-                          _vm._v(_vm._s(card.dish_name))
+                        _c("div", [
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "d-flex justify-space-between align-center"
+                            },
+                            [
+                              _c("h2", [_vm._v(_vm._s(card.code))]),
+                              _vm._v(
+                                "\n                            " +
+                                  _vm._s(_vm.countWeight(card.items)) +
+                                  " грамм\n                        "
+                              )
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c("p", { staticClass: "text-body-2" }, [
+                            _vm._v(_vm._s(card.dish_name))
+                          ])
                         ]),
                         _vm._v(" "),
-                        _c("span", { staticClass: "text-h6" }, [
-                          _vm._v("Количество: "),
-                          _c("strong", [_vm._v(_vm._s(card.items.length))])
+                        _c("div", [
+                          _c(
+                            "div",
+                            { staticClass: "d-flex align-end" },
+                            [
+                              _c("v-icon", { staticClass: "mr-2" }, [
+                                _vm._v("mdi-account-group")
+                              ]),
+                              _vm._v(
+                                "\n                            " +
+                                  _vm._s(card.items.length) +
+                                  "\n                        "
+                              )
+                            ],
+                            1
+                          )
                         ])
                       ]
                     )

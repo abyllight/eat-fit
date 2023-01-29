@@ -128,7 +128,9 @@ class SelectController extends Controller
             $select->cuisine_id = $request->cuisine_id;
             $select->ration_id = $ration->id;
             $select->dep_id = $ration->department_id;
-            $select->status = Select::REPLACEMENT;
+            if (!$select->is_extra) {
+                $select->status = Select::REPLACEMENT;
+            }
         }
 
         $select->dish_id = $request->dish_id;
@@ -169,10 +171,12 @@ class SelectController extends Controller
             $select->dep_id = $ration->department_id;
         }*/
 
-        if (!$duty_dish || $request->dish_id !== $duty_dish->id) {
-            $select->status = Select::REPLACEMENT;
-        }else {
-            $select->status = Select::LITE;
+        if (!$select->is_extra) {
+            if (!$duty_dish || $request->dish_id !== $duty_dish->id) {
+                $select->status = Select::REPLACEMENT;
+            }else {
+                $select->status = Select::LITE;
+            }
         }
 
         $select->dish_id = $request->dish_id;
@@ -314,7 +318,9 @@ class SelectController extends Controller
             $select->dep_id = $ration->department_id;
             $select->dish_id = $request->dish_id;
             $select->dish_name = $dish->name;
-            $select->status = Select::REPLACEMENT;
+            if (!$select->is_extra) {
+                $select->status = Select::REPLACEMENT;
+            }
             $select->save();
 
             $select->ingredients()->sync($dish->getIngredientIds());
@@ -351,9 +357,13 @@ class SelectController extends Controller
             if (!$has_replaced_ingredients){
                 $has_removed_ingredients = $this->hasRemovedIngredients($select);
                 if ($has_removed_ingredients){
-                    $select->status = Select::WITHOUT;
+                    if (!$select->is_extra) {
+                        $select->status = Select::WITHOUT;
+                    }
                 }else{
-                    $select->status = Select::LITE;
+                    if (!$select->is_extra) {
+                        $select->status = Select::LITE;
+                    }
                 }
                 $select->save();
             }
@@ -411,7 +421,7 @@ class SelectController extends Controller
         $select->order_id = $request->o_id;
         $select->cuisine_id = $request->c_id;
         $select->ration_id = $request->r_id;
-        $select->status = Select::REPLACEMENT;
+        $select->status = Select::EXTRA;
         $select->tableware_id = $t_id;
         $select->dep_id = $ration->department_id;
         $select->is_extra = true;
@@ -562,7 +572,9 @@ class SelectController extends Controller
             $select->dep_id = $ration->department_id;
             $select->dish_id = $request->dish_id;
             $select->dish_name = $dish->name;
-            $select->status = Select::LITE;
+            if (!$select->is_extra) {
+                $select->status = Select::LITE;
+            }
             $select->tableware_id = $ration->tableware_id;
             $select->save();
 

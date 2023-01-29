@@ -95,9 +95,9 @@
                 <div class="mb-5 d-flex justify-space-between">
                     <h3>{{order.name}} | {{order.whatsapp}}</h3>
 
-                    <v-btn color="red" dark small @click="resetResult(order.id)">
+<!--                    <v-btn color="red" dark small @click="resetResult(order.id)">
                         Сбросить
-                    </v-btn>
+                    </v-btn>-->
                 </div>
 
                 <v-row>
@@ -119,7 +119,7 @@
                                     text
                                     @click="openSettings(result.id, result.r_id)"
                                 >
-                                    open
+                                    настроить
                                 </v-btn>
                                 <v-btn
                                     v-if="result.is_extra"
@@ -136,7 +136,6 @@
                                     @click="activateDeactivate(result.id)"
                                 >
                                     {{result.is_active ? 'Убрать' : 'Вернуть'}}
-                                    Удалить
                                 </v-btn>
                             </v-card-actions>
                         </v-card>

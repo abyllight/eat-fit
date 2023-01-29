@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 class CardGroupController extends Controller
 {
     public function index() {
+        Select::generateCode();
+
         $user = Auth::user();
         $arr = [];
         $groups = [];
@@ -28,6 +30,7 @@ class CardGroupController extends Controller
             $arr[$key] = [
                 'code' => $group[0]->code,
                 'dep_id' => $user->kd_id,
+                'color' => $this->getColor($group[0]->status),
                 'dish_name' => $group[0]->dish_name,
                 'description' => $group[0]->description,
                 'ingredients' => $group[0]->ingredients
@@ -54,6 +57,7 @@ class CardGroupController extends Controller
                 $groups[$i]['cards'][$key] = [
                     'code' => $select[0]->code,
                     'dep_id' => $user->kd_id,
+                    'color' => $this->getColor($select[0]->status),
                     'dish_name' => $select[0]->dish_name,
                     'description' => $select[0]->description,
                     'ingredients' => $select[0]->ingredients
@@ -74,6 +78,25 @@ class CardGroupController extends Controller
             'cards' => $arr,
             'groups' => $groups
         ]);
+    }
+
+    public function getColor($status): string
+    {
+        $color = 'lime lighten-2';
+
+        if ($status === Select::REPLACEMENT){
+            $color = 'red lighten-3';
+        }
+
+        if ($status=== Select::WITHOUT){
+            $color = 'yellow accent-4';
+        }
+
+        if ($status === Select::EXTRA){
+            $color = 'light-blue accent-1';
+        }
+
+        return $color;
     }
 
     public function store(Request $request): JsonResponse

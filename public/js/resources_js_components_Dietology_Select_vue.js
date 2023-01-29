@@ -219,6 +219,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -1481,7 +1489,7 @@ var render = function() {
                       },
                       [
                         _vm._v(
-                          "\n                        Select\n                    "
+                          "\n                            Select\n                        "
                         )
                       ]
                     ),
@@ -1499,7 +1507,7 @@ var render = function() {
                       },
                       [
                         _vm._v(
-                          "\n                        Lite\n                    "
+                          "\n                            Lite\n                        "
                         )
                       ]
                     ),
@@ -1534,7 +1542,7 @@ var render = function() {
                   },
                   [
                     _vm._v(
-                      "\n                    Получить данные с AMOCRM\n                "
+                      "\n                        Получить данные с AMOCRM\n                    "
                     )
                   ]
                 ),
@@ -1551,7 +1559,7 @@ var render = function() {
                       },
                       [
                         _vm._v(
-                          "\n                        Excel\n                    "
+                          "\n                            Excel\n                        "
                         )
                       ]
                     )
@@ -1618,9 +1626,9 @@ var render = function() {
                           var index = ref.index
                           return [
                             _vm._v(
-                              "\n                        " +
+                              "\n                            " +
                                 _vm._s(index + 1) +
-                                "\n                    "
+                                "\n                        "
                             )
                           ]
                         }
@@ -1648,26 +1656,8 @@ var render = function() {
                             " | " +
                             _vm._s(_vm.order.whatsapp)
                         )
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "v-btn",
-                        {
-                          attrs: { color: "red", dark: "", small: "" },
-                          on: {
-                            click: function($event) {
-                              return _vm.resetResult(_vm.order.id)
-                            }
-                          }
-                        },
-                        [
-                          _vm._v(
-                            "\n                    Сбросить\n                "
-                          )
-                        ]
-                      )
-                    ],
-                    1
+                      ])
+                    ]
                   ),
                   _vm._v(" "),
                   _c(
@@ -1717,7 +1707,7 @@ var render = function() {
                                       },
                                       [
                                         _vm._v(
-                                          "\n                                open\n                            "
+                                          "\n                                    настроить\n                                "
                                         )
                                       ]
                                     ),
@@ -1737,11 +1727,34 @@ var render = function() {
                                           },
                                           [
                                             _vm._v(
-                                              "\n                                Удалить\n                            "
+                                              "\n                                    Удалить\n                                "
                                             )
                                           ]
                                         )
-                                      : _vm._e()
+                                      : _c(
+                                          "v-btn",
+                                          {
+                                            attrs: { color: "black", text: "" },
+                                            on: {
+                                              click: function($event) {
+                                                return _vm.activateDeactivate(
+                                                  result.id
+                                                )
+                                              }
+                                            }
+                                          },
+                                          [
+                                            _vm._v(
+                                              "\n                                    " +
+                                                _vm._s(
+                                                  result.is_active
+                                                    ? "Убрать"
+                                                    : "Вернуть"
+                                                ) +
+                                                "\n                                "
+                                            )
+                                          ]
+                                        )
                                   ],
                                   1
                                 )
@@ -1777,7 +1790,7 @@ var render = function() {
                                     },
                                     [
                                       _vm._v(
-                                        "\n                                Добавить\n                            "
+                                        "\n                                    Добавить\n                                "
                                       )
                                     ]
                                   )
@@ -1825,7 +1838,7 @@ var render = function() {
                     [
                       _c("v-card-title", [
                         _vm._v(
-                          "\n                        Дополнительно\n                    "
+                          "\n                            Дополнительно\n                        "
                         )
                       ]),
                       _vm._v(" "),
@@ -1868,7 +1881,7 @@ var render = function() {
                             },
                             [
                               _vm._v(
-                                "\n                            Закрыть\n                        "
+                                "\n                                Закрыть\n                            "
                               )
                             ]
                           ),
@@ -1881,7 +1894,7 @@ var render = function() {
                             },
                             [
                               _vm._v(
-                                "\n                            Сохранить\n                        "
+                                "\n                                Сохранить\n                            "
                               )
                             ]
                           )
