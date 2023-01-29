@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\BroadcastMenuController;
 use App\Http\Controllers\BuilderCategoryController;
 use App\Http\Controllers\BuilderMixController;
 use App\Http\Controllers\BuilderValueController;
@@ -152,6 +153,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/select/{id}', [SelectController::class, 'getSelectById']);
     Route::delete('/select/{id}', [SelectController::class, 'deleteSelect']);
     Route::post('/select/{id}/done', [SelectController::class, 'setDone']);
+
+    Route::get('/broadcast', [BroadcastMenuController::class, 'index']);
 
     Route::resource('/categories', CategoryController::class)->except(['create', 'show', 'edit']);
     Route::get('/categories/ingredient/{id}', [CategoryController::class, 'getCategoriesByIngredient']);

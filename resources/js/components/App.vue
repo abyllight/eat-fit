@@ -112,6 +112,12 @@ export default {
                         icon: 'account-star',
                         roles: ['admin', 'office']
                     },
+                    {
+                        title: 'Рассылка меню',
+                        link: '/broadcast-menu',
+                        icon: 'account-star',
+                        roles: ['admin', 'office']
+                    },
                 ]
             },
             {

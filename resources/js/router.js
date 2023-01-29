@@ -379,6 +379,15 @@ const router = new VueRouter({
             },
             component: () => import('./components/Kitchen/Marat.vue')
         },
+        {
+            path: '/broadcast-menu',
+            name: 'broadcast_menu',
+            meta: {
+                auth: true,
+                roles: ['admin']
+            },
+            component: () => import('./components/Admin/BroadcastMenu.vue')
+        },
     ]
 })
 

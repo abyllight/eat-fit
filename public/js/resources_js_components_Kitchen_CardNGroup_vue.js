@@ -203,6 +203,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "CardNGroup",
@@ -238,6 +239,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return axios.get('/api/cards').then(function (res) {
                   _this.cards = res.data.cards;
                   _this.groups = res.data.groups;
+                  console.log(_this.groups);
                 });
 
               case 2:
@@ -4324,6 +4326,7 @@ var render = function() {
                         staticStyle: { "flex-shrink": "0", cursor: "pointer" },
                         attrs: {
                           id: card.code,
+                          color: card.color,
                           rounded: "",
                           elevation: "1",
                           width: "200",

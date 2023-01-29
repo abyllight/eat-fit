@@ -47,6 +47,7 @@
                         v-for="card in group.cards"
                         :id="card.code"
                         :key="card.code"
+                        :color="card.color"
                         rounded
                         elevation="1"
                         width="200"
@@ -207,6 +208,7 @@ export default {
                 .then(res => {
                     this.cards = res.data.cards
                     this.groups = res.data.groups
+                    console.log(this.groups)
                 })
         },
         async getDepartments(){
