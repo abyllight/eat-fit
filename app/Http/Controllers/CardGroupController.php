@@ -20,7 +20,7 @@ class CardGroupController extends Controller
 
         $select_groups = Select::whereDate('created_at', Carbon::today())->where('group_id', null);
 
-        if ($user->kd_id) {
+        if ($user->kd_id !== null) {
             $select_groups = $select_groups->where('dep_id', $user->kd_id);
         }
 
