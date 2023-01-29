@@ -2,7 +2,7 @@
     <div>
         <div>
             <div>
-                <draggable id="0" group="cards" @choose="openModal" @end="log" preventOnFilter="false" style="display: flex; overflow-x: scroll; padding: 4px; border: 1px dashed darkgrey; height: 250px">
+                <draggable id="0" group="cards" @end="log" :options="{delay: 250}" style="display: flex; overflow-x: scroll; padding: 4px; border: 1px dashed darkgrey; height: 250px">
                     <v-sheet
                         v-for="card in cards"
                         :id="card.code"
@@ -14,6 +14,7 @@
                         height="160"
                         class="pa-3 mr-5 d-flex flex-column justify-space-between"
                         style="flex-shrink: 0; cursor:pointer;"
+                        @click.stop="openModal(card.code)"
                     >
                         <div>
                             <div class="d-flex justify-space-between align-center">
@@ -41,7 +42,7 @@
                     </v-btn>
                 </div>
 
-                <draggable :id="group.id" group="cards" @choose="openModal" @end="log" style="display: flex; overflow-x: scroll; padding: 4px; border: 1px dashed darkgrey; height: 250px">
+                <draggable :id="group.id" group="cards" :options="{delay: 250}" @end="log" style="display: flex; overflow-x: scroll; padding: 4px; border: 1px dashed darkgrey; height: 250px">
                     <v-sheet
                         v-for="card in group.cards"
                         :id="card.code"
@@ -52,7 +53,7 @@
                         height="160"
                         class="pa-3 mr-5 d-flex flex-column justify-space-between"
                         style="flex-shrink: 0; cursor: pointer"
-                        @click.native="openModal(card)"
+                        @click.stop="openModal(card.code)"
                     >
                         <div>
                             <div class="d-flex justify-space-between align-center">
@@ -206,7 +207,6 @@ export default {
                 .then(res => {
                     this.cards = res.data.cards
                     this.groups = res.data.groups
-                    console.log(this.cards)
                 })
         },
         async getDepartments(){
@@ -268,7 +268,7 @@ export default {
             return count
         },
         openModal(evt) {
-            let code = evt.item.id
+            let code = evt
 
             let index = Object.keys(this.cards).findIndex(x => x === code)
 
