@@ -45,12 +45,14 @@ class DishController extends Controller
 
         $dish->ingredients()->sync($request->ingredient_ids);
 
-        foreach ($request->sizes as $size) {
-            $ds = new DishSize();
-            $ds->dish_id = $dish->id;
-            $ds->size = $size['id'];
-            $ds->weight = $size['val'];
-            $ds->save();
+        if ($request->sizes) {
+            foreach ($request->sizes as $size) {
+                $ds = new DishSize();
+                $ds->dish_id = $dish->id;
+                $ds->size = $size['id'];
+                $ds->weight = $size['val'];
+                $ds->save();
+            }
         }
 
         return response()->json([
