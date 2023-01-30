@@ -31,6 +31,12 @@ class SelectController extends Controller
         return response()->json($select->ingredients);
     }
 
+    public function saveDep(Request $request) {
+        $select = Select::find($request->s_id);
+
+        $select->dep_id = $request->dep_id;
+        $select->save();
+    }
     public function getSelectByOrder($id): JsonResponse
     {
         $select = Select::find($id);

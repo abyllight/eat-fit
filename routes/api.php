@@ -153,6 +153,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/select/{id}', [SelectController::class, 'getSelectById']);
     Route::delete('/select/{id}', [SelectController::class, 'deleteSelect']);
     Route::post('/select/{id}/done', [SelectController::class, 'setDone']);
+    Route::post('select/department', [SelectController::class, 'saveDep']);
 
     Route::get('/broadcast', [BroadcastMenuController::class, 'index']);
 

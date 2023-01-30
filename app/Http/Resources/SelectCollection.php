@@ -23,6 +23,7 @@ class SelectCollection extends JsonResource
             'whatsapp' => $this->order->whatsapp,
             'done' => $this->done,
             'code' => $this->code,
+            'dep_id' => $this->dep_id,
             'order_tag' => $this->order->getSize(1),
             'dish_id' => $this->dish ? $this->dish->id : null,
             'dish_name' => $this->dish_name,

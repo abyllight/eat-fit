@@ -215,6 +215,21 @@
                 <h4>Итог</h4>
                 <span>{{cuisine.name}}</span>
                 <div v-if="result">
+                    <div class="d-flex mt-3">
+                        <v-select
+                            v-model="result.dep_id"
+                            :items="departments"
+                            item-text="name"
+                            item-value="id"
+                            dense
+                            class="mr-3"
+                            clearable
+                            outlined
+                            label="Цех"
+                        ></v-select>
+
+                        <v-btn color="primary" @click="saveDep">сохранить</v-btn>
+                    </div>
                     <v-card class="mb-5 mt-3" color="blue-grey lighten-3">
                         <v-card-title>{{result.dish_name}}</v-card-title>
                         <v-card-subtitle>{{result.weight ? result.weight + ' грамм' : ''}}</v-card-subtitle>
@@ -479,13 +494,15 @@
             tablewares: [],
             errors: [],
             r1_val: null,
-            r2_val: null
+            r2_val: null,
+            departments: []
         }),
         mounted() {
             this.getSelectDetailsByOrder()
             this.getCuisine()
             this.getCategories()
             this.getIngredients()
+            this.getDepartments()
             this.getTablewares()
             this.getRations()
             this.getDishesByRation(this.r_id)
@@ -502,6 +519,24 @@
             }
         },
         methods: {
+            saveDep() {
+                axios.post('/api/select/department', {
+                    dep_id: this.result.dep_id,
+                    s_id: this.id
+                }).then(res => {
+                    this.getSelectDetailsByOrder()
+                })
+            },
+            async getDepartments() {
+                await axios
+                    .get('/api/departments')
+                    .then(response => {
+                        this.departments = response.data
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+            },
             async getIngredients() {
                 await axios
                     .get('/api/ingredients')

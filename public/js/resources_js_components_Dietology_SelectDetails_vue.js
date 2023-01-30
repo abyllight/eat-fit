@@ -1012,6 +1012,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -1076,7 +1091,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       tablewares: [],
       errors: [],
       r1_val: null,
-      r2_val: null
+      r2_val: null,
+      departments: []
     };
   },
   mounted: function mounted() {
@@ -1084,6 +1100,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     this.getCuisine();
     this.getCategories();
     this.getIngredients();
+    this.getDepartments();
     this.getTablewares();
     this.getRations();
     this.getDishesByRation(this.r_id);
@@ -1100,8 +1117,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   methods: {
-    getIngredients: function getIngredients() {
+    saveDep: function saveDep() {
       var _this = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/department', {
+        dep_id: this.result.dep_id,
+        s_id: this.id
+      }).then(function (res) {
+        _this.getSelectDetailsByOrder();
+      });
+    },
+    getDepartments: function getDepartments() {
+      var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
@@ -1109,8 +1136,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/ingredients').then(function (response) {
-                  _this.ingredients = response.data;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/departments').then(function (response) {
+                  _this2.departments = response.data;
                 })["catch"](function (error) {
                   console.log(error);
                 });
@@ -1123,8 +1150,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee);
       }))();
     },
-    getTablewares: function getTablewares() {
-      var _this2 = this;
+    getIngredients: function getIngredients() {
+      var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
@@ -1132,8 +1159,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.next = 2;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/tableware').then(function (response) {
-                  _this2.tablewares = response.data.data;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/ingredients').then(function (response) {
+                  _this3.ingredients = response.data;
                 })["catch"](function (error) {
                   console.log(error);
                 });
@@ -1146,8 +1173,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee2);
       }))();
     },
-    getCategories: function getCategories() {
-      var _this3 = this;
+    getTablewares: function getTablewares() {
+      var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
@@ -1155,8 +1182,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context3.prev = _context3.next) {
               case 0:
                 _context3.next = 2;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/categories').then(function (response) {
-                  _this3.categories = response.data;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/tableware').then(function (response) {
+                  _this4.tablewares = response.data.data;
                 })["catch"](function (error) {
                   console.log(error);
                 });
@@ -1169,8 +1196,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee3);
       }))();
     },
-    getRations: function getRations() {
-      var _this4 = this;
+    getCategories: function getCategories() {
+      var _this5 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
@@ -1178,11 +1205,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context4.prev = _context4.next) {
               case 0:
                 _context4.next = 2;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/rations').then(function (response) {
-                  _this4.rations = response.data;
-                  _this4.ration = _this4.rations.find(function (x) {
-                    return x.id === _this4.r_id;
-                  });
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/categories').then(function (response) {
+                  _this5.categories = response.data;
                 })["catch"](function (error) {
                   console.log(error);
                 });
@@ -1195,8 +1219,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee4);
       }))();
     },
-    getCuisine: function getCuisine() {
-      var _this5 = this;
+    getRations: function getRations() {
+      var _this6 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
@@ -1204,17 +1228,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context5.prev = _context5.next) {
               case 0:
                 _context5.next = 2;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/cuisine/duty').then(function (response) {
-                  _this5.cuisine = response.data.cuisine;
-                })["catch"](function (error) {
-                  _this5.loading = false;
-
-                  _this5.$store.dispatch('showAlert', {
-                    'isVisible': true,
-                    'msg': error.message,
-                    'color': 'error',
-                    'type': 'error'
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/rations').then(function (response) {
+                  _this6.rations = response.data;
+                  _this6.ration = _this6.rations.find(function (x) {
+                    return x.id === _this6.r_id;
                   });
+                })["catch"](function (error) {
+                  console.log(error);
                 });
 
               case 2:
@@ -1225,31 +1245,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee5);
       }))();
     },
-    setTW: function setTW(id) {
-      var _this6 = this;
-
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/tableware', {
-        order_id: this.order.id,
-        ration_id: this.r_id,
-        dish_id: this.dish.id,
-        cuisine_id: this.cuisine.id,
-        tableware_id: id
-      }).then(function (response) {
-        if (!response.data.status) {
-          _this6.$store.dispatch('showAlert', {
-            'isVisible': true,
-            'msg': response.data.msg,
-            'color': 'error',
-            'type': 'error'
-          });
-        }
-
-        _this6.getSelectDetailsByOrder();
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    },
-    getSelectDetailsByOrder: function getSelectDetailsByOrder() {
+    getCuisine: function getCuisine() {
       var _this7 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee6() {
@@ -1258,16 +1254,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context6.prev = _context6.next) {
               case 0:
                 _context6.next = 2;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/select/order/' + _this7.id).then(function (response) {
-                  _this7.order = response.data.order;
-                  _this7.previous = response.data.previous;
-                  _this7.result = response.data.result;
-                  _this7.blacklist = response.data.blacklist;
-                  _this7.mix = response.data.blacklist;
-                  _this7.wishlist = response.data.wishlist;
-                  _this7.wish_ids = Object.keys(_this7.result).length > 0 ? _this7.result.selected_wishes : [];
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/cuisine/duty').then(function (response) {
+                  _this7.cuisine = response.data.cuisine;
                 })["catch"](function (error) {
-                  console.log(error);
+                  _this7.loading = false;
+
+                  _this7.$store.dispatch('showAlert', {
+                    'isVisible': true,
+                    'msg': error.message,
+                    'color': 'error',
+                    'type': 'error'
+                  });
                 });
 
               case 2:
@@ -1278,39 +1275,52 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee6);
       }))();
     },
-    getDishesByRation: function getDishesByRation(id) {
+    setTW: function setTW(id) {
       var _this8 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/tableware', {
+        order_id: this.order.id,
+        ration_id: this.r_id,
+        dish_id: this.dish.id,
+        cuisine_id: this.cuisine.id,
+        tableware_id: id
+      }).then(function (response) {
+        if (!response.data.status) {
+          _this8.$store.dispatch('showAlert', {
+            'isVisible': true,
+            'msg': response.data.msg,
+            'color': 'error',
+            'type': 'error'
+          });
+        }
+
+        _this8.getSelectDetailsByOrder();
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    getSelectDetailsByOrder: function getSelectDetailsByOrder() {
+      var _this9 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee7() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee7$(_context7) {
           while (1) {
             switch (_context7.prev = _context7.next) {
               case 0:
-                _this8.ration_id = _this8.r_id;
-                _context7.next = 3;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/dishes/ration/' + id).then(function (response) {
-                  _this8.dishes = response.data;
-
-                  if (_this8.dishes.length > 0) {
-                    if (id === _this8.r_id) {
-                      _this8.duty_dish_id = _this8.dishes[0].id;
-                    }
-
-                    _this8.dish = _this8.dishes.find(function (obj) {
-                      return obj.id === _this8.result.dish_id;
-                    });
-
-                    if (!_this8.dish) {
-                      _this8.dish = _this8.dishes[0];
-                    }
-                  } else {
-                    _this8.dish.ingredients = [];
-                  }
+                _context7.next = 2;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/select/order/' + _this9.id).then(function (response) {
+                  _this9.order = response.data.order;
+                  _this9.previous = response.data.previous;
+                  _this9.result = response.data.result;
+                  _this9.blacklist = response.data.blacklist;
+                  _this9.mix = response.data.blacklist;
+                  _this9.wishlist = response.data.wishlist;
+                  _this9.wish_ids = Object.keys(_this9.result).length > 0 ? _this9.result.selected_wishes : [];
                 })["catch"](function (error) {
                   console.log(error);
                 });
 
-              case 3:
+              case 2:
               case "end":
                 return _context7.stop();
             }
@@ -1318,11 +1328,51 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee7);
       }))();
     },
+    getDishesByRation: function getDishesByRation(id) {
+      var _this10 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee8() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee8$(_context8) {
+          while (1) {
+            switch (_context8.prev = _context8.next) {
+              case 0:
+                _this10.ration_id = _this10.r_id;
+                _context8.next = 3;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/dishes/ration/' + id).then(function (response) {
+                  _this10.dishes = response.data;
+
+                  if (_this10.dishes.length > 0) {
+                    if (id === _this10.r_id) {
+                      _this10.duty_dish_id = _this10.dishes[0].id;
+                    }
+
+                    _this10.dish = _this10.dishes.find(function (obj) {
+                      return obj.id === _this10.result.dish_id;
+                    });
+
+                    if (!_this10.dish) {
+                      _this10.dish = _this10.dishes[0];
+                    }
+                  } else {
+                    _this10.dish.ingredients = [];
+                  }
+                })["catch"](function (error) {
+                  console.log(error);
+                });
+
+              case 3:
+              case "end":
+                return _context8.stop();
+            }
+          }
+        }, _callee8);
+      }))();
+    },
     applyCategories: function applyCategories() {
-      var _this9 = this;
+      var _this11 = this;
 
       var ings = this.applied_categories.map(function (item) {
-        var category = _this9.categories.find(function (obj) {
+        var category = _this11.categories.find(function (obj) {
           return obj.id === item;
         });
 
@@ -1338,15 +1388,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
     },
     saveBlacklist: function saveBlacklist() {
-      var _this10 = this;
+      var _this12 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/blacklist', {
         id: this.order.id,
         blacklist: this.mix
       }).then(function (response) {
-        _this10.getSelectDetailsByOrder(_this10.order.id);
+        _this12.getSelectDetailsByOrder(_this12.order.id);
 
-        _this10.$store.dispatch('showAlert', {
+        _this12.$store.dispatch('showAlert', {
           'isVisible': true,
           'msg': response.data.msg,
           'color': 'green',
@@ -1354,46 +1404,46 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         });
       })["catch"](function (error) {
         console.log(error);
-        _this10.errors = error.response.data.errors;
+        _this12.errors = error.response.data.errors;
       });
     },
     addTag: function addTag() {
-      var _this11 = this;
+      var _this13 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/wishlist', {
         id: this.order.id,
         tag: this.tag
       }).then(function (response) {
-        _this11.getSelectDetailsByOrder(_this11.order.id);
+        _this13.getSelectDetailsByOrder(_this13.order.id);
 
-        _this11.tag = '';
+        _this13.tag = '';
 
-        _this11.$store.dispatch('showAlert', {
+        _this13.$store.dispatch('showAlert', {
           'isVisible': true,
           'msg': response.data.msg,
           'color': response.data.status ? 'green' : 'error',
           'type': response.data.status ? 'success' : 'error'
         });
 
-        _this11.errors = [];
+        _this13.errors = [];
       })["catch"](function (error) {
-        _this11.errors = error.response.data.errors;
+        _this13.errors = error.response.data.errors;
       });
     },
     removeTag: function removeTag(tag) {
-      var _this12 = this;
+      var _this14 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/wishlist/remove', {
         id: this.order.id,
         tag: tag.wish
       }).then(function (response) {
-        _this12.wishlist = _this12.wishlist.filter(function (item) {
+        _this14.wishlist = _this14.wishlist.filter(function (item) {
           return item !== tag;
         });
 
-        _this12.getSelectDetailsByOrder(_this12.order.id);
+        _this14.getSelectDetailsByOrder(_this14.order.id);
 
-        _this12.$store.dispatch('showAlert', {
+        _this14.$store.dispatch('showAlert', {
           'isVisible': true,
           'msg': response.data.msg,
           'color': response.data.status ? 'green' : 'error',
@@ -1401,11 +1451,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         });
       })["catch"](function (error) {
         console.log(error);
-        _this12.errors = error.response.data.errors;
+        _this14.errors = error.response.data.errors;
       });
     },
     addWishToSelect: function addWishToSelect(id) {
-      var _this13 = this;
+      var _this15 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/wish', {
         order_id: this.order.id,
@@ -1414,11 +1464,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         dish_id: this.dish.id,
         w_id: id
       }).then(function (response) {
-        _this13.wish_ids = response.data.data;
+        _this15.wish_ids = response.data.data;
 
-        _this13.getSelectDetailsByOrder();
+        _this15.getSelectDetailsByOrder();
       })["catch"](function (error) {
-        _this13.errors = error.response.data.errors;
+        _this15.errors = error.response.data.errors;
       });
     },
     hasResultIncludeIngredient: function hasResultIncludeIngredient(id) {
@@ -1426,14 +1476,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return this.result.ingredient_ids.includes(id);
     },
     setDish: function setDish() {
-      var _this14 = this;
+      var _this16 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/add/dish', {
         id: this.id,
         dish_id: this.dish.id
       }).then(function (response) {
         if (!response.data.status) {
-          _this14.$store.dispatch('showAlert', {
+          _this16.$store.dispatch('showAlert', {
             'isVisible': true,
             'msg': response.data.msg,
             'color': 'error',
@@ -1441,9 +1491,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           });
         }
 
-        _this14.result = response.data.data;
+        _this16.result = response.data.data;
 
-        _this14.getSelectDetailsByOrder();
+        _this16.getSelectDetailsByOrder();
       })["catch"](function (error) {
         console.log(error);
       });
@@ -1461,14 +1511,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return index >= 0;
     },
     addIngredient: function addIngredient(id) {
-      var _this15 = this;
+      var _this17 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/add/ingredient', {
         select_id: this.result.id,
         ingredient_id: id
       }).then(function (response) {
         if (!response.data.status) {
-          _this15.$store.dispatch('showAlert', {
+          _this17.$store.dispatch('showAlert', {
             'isVisible': true,
             'msg': response.data.msg,
             'color': 'error',
@@ -1476,15 +1526,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           });
         }
 
-        _this15.result = response.data.data;
+        _this17.result = response.data.data;
 
-        _this15.getSelectDetailsByOrder(_this15.order.id);
+        _this17.getSelectDetailsByOrder(_this17.order.id);
       })["catch"](function (error) {
         console.log(error);
       });
     },
     removeIngredient: function removeIngredient(id) {
-      var _this16 = this;
+      var _this18 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/remove/ingredient', {
         order_id: this.order.id,
@@ -1494,7 +1544,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         ingredient_id: id
       }).then(function (response) {
         if (!response.data.status) {
-          _this16.$store.dispatch('showAlert', {
+          _this18.$store.dispatch('showAlert', {
             'isVisible': true,
             'msg': response.data.msg,
             'color': 'error',
@@ -1502,9 +1552,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           });
         }
 
-        _this16.result = response.data.data;
+        _this18.result = response.data.data;
 
-        _this16.getSelectDetailsByOrder(_this16.order.id);
+        _this18.getSelectDetailsByOrder(_this18.order.id);
       })["catch"](function (error) {
         console.log(error);
       });
@@ -1520,7 +1570,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }).id;
     },
     replaceIngredient: function replaceIngredient(id) {
-      var _this17 = this;
+      var _this19 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/replace/ingredient', {
         order_id: this.order.id,
@@ -1531,18 +1581,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         analog_id: id
       }).then(function (response) {
         if (response.data.status) {
-          _this17.result = response.data.select;
+          _this19.result = response.data.select;
 
-          _this17.getSelectDetailsByOrder(_this17.order.id);
+          _this19.getSelectDetailsByOrder(_this19.order.id);
 
-          _this17.closeDialog2();
+          _this19.closeDialog2();
         }
       })["catch"](function (error) {
         console.log(error);
       });
     },
     returnIngredient: function returnIngredient(target_id) {
-      var _this18 = this;
+      var _this20 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/return/ingredient', {
         select_id: this.result.id,
@@ -1550,35 +1600,35 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         analog_id: this.getAnalogId(target_id)
       }).then(function (response) {
         if (response.data.status) {
-          _this18.result = response.data.select;
+          _this20.result = response.data.select;
 
-          _this18.getSelectDetailsByOrder(_this18.order.id);
+          _this20.getSelectDetailsByOrder(_this20.order.id);
         }
       })["catch"](function (error) {
         console.log(error);
       });
     },
     getCategoriesByIngredient: function getCategoriesByIngredient(id) {
-      var _this19 = this;
+      var _this21 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee8() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee8$(_context8) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee9() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee9$(_context9) {
           while (1) {
-            switch (_context8.prev = _context8.next) {
+            switch (_context9.prev = _context9.next) {
               case 0:
-                _context8.next = 2;
+                _context9.next = 2;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/categories/ingredient/' + id).then(function (response) {
-                  _this19.ingredient_categories = response.data;
+                  _this21.ingredient_categories = response.data;
                 })["catch"](function (error) {
                   console.log(error);
                 });
 
               case 2:
               case "end":
-                return _context8.stop();
+                return _context9.stop();
             }
           }
-        }, _callee8);
+        }, _callee9);
       }))();
     },
     getSelectColor: function getSelectColor(order, r_id) {
@@ -1617,11 +1667,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.dialog2 = false;
     },
     saveDetails: function saveDetails() {
-      var _this20 = this;
+      var _this22 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/add/details', this.result).then(function (response) {
-        _this20.result = response.data.data;
-        _this20.dialog3 = false;
+        _this22.result = response.data.data;
+        _this22.dialog3 = false;
       })["catch"](function (error) {
         console.log(error);
       });
@@ -1631,56 +1681,56 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.replaceIngredient(this.r1_val);
     },
     addExtra: function addExtra(id) {
-      var _this21 = this;
+      var _this23 = this;
 
       if (!id) return;
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/add/extra', {
         select_id: this.result.id,
         ingredient_id: id
       }).then(function (response) {
-        _this21.result = response.data.data;
+        _this23.result = response.data.data;
 
-        _this21.getSelectDetailsByOrder(_this21.order.id);
+        _this23.getSelectDetailsByOrder(_this23.order.id);
 
-        _this21.r2_val = null;
+        _this23.r2_val = null;
       })["catch"](function (error) {
         console.log(error);
       });
     },
     removeExtra: function removeExtra(id) {
-      var _this22 = this;
+      var _this24 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/remove/extra', {
         select_id: this.result.id,
         ingredient_id: id
       }).then(function (response) {
-        _this22.result = response.data.data;
+        _this24.result = response.data.data;
 
-        _this22.getSelectDetailsByOrder(_this22.order.id);
+        _this24.getSelectDetailsByOrder(_this24.order.id);
       })["catch"](function (error) {
         console.log(error);
       });
     },
     showIngredient: function showIngredient(id) {
-      var _this23 = this;
+      var _this25 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/show/ingredient', {
         select_id: this.result.id,
         ingredient_id: id
       }).then(function (response) {
-        _this23.result = response.data.data;
+        _this25.result = response.data.data;
       })["catch"](function (error) {
         console.log(error);
       });
     },
     hideIngredient: function hideIngredient(id) {
-      var _this24 = this;
+      var _this26 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/hide/ingredient', {
         select_id: this.result.id,
         ingredient_id: id
       }).then(function (response) {
-        _this24.result = response.data.data;
+        _this26.result = response.data.data;
       })["catch"](function (error) {
         console.log(error);
       });
@@ -3927,6 +3977,42 @@ var render = function() {
               ? _c(
                   "div",
                   [
+                    _c(
+                      "div",
+                      { staticClass: "d-flex mt-3" },
+                      [
+                        _c("v-select", {
+                          staticClass: "mr-3",
+                          attrs: {
+                            items: _vm.departments,
+                            "item-text": "name",
+                            "item-value": "id",
+                            dense: "",
+                            clearable: "",
+                            outlined: "",
+                            label: "Цех"
+                          },
+                          model: {
+                            value: _vm.result.dep_id,
+                            callback: function($$v) {
+                              _vm.$set(_vm.result, "dep_id", $$v)
+                            },
+                            expression: "result.dep_id"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "v-btn",
+                          {
+                            attrs: { color: "primary" },
+                            on: { click: _vm.saveDep }
+                          },
+                          [_vm._v("сохранить")]
+                        )
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
                     _c(
                       "v-card",
                       {
