@@ -204,6 +204,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "CardNGroup",
@@ -4239,23 +4247,35 @@ var render = function() {
                         ])
                       ]),
                       _vm._v(" "),
-                      _c("div", [
-                        _c(
-                          "div",
-                          { staticClass: "d-flex align-end" },
-                          [
-                            _c("v-icon", { staticClass: "mr-2" }, [
-                              _vm._v("mdi-account-group")
-                            ]),
+                      _c(
+                        "div",
+                        { staticClass: "d-flex justify-space-between" },
+                        [
+                          _c(
+                            "div",
+                            { staticClass: "d-flex align-end" },
+                            [
+                              _c("v-icon", { staticClass: "mr-2" }, [
+                                _vm._v("mdi-account-group")
+                              ]),
+                              _vm._v(
+                                "\n                            " +
+                                  _vm._s(card.items.length) +
+                                  "\n                        "
+                              )
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c("div", [
                             _vm._v(
                               "\n                            " +
-                                _vm._s(card.items.length) +
+                                _vm._s(card.ration) +
                                 "\n                        "
                             )
-                          ],
-                          1
-                        )
-                      ])
+                          ])
+                        ]
+                      )
                     ]
                   )
                 }),
@@ -4377,7 +4397,15 @@ var render = function() {
                               )
                             ],
                             1
-                          )
+                          ),
+                          _vm._v(" "),
+                          _c("div", [
+                            _vm._v(
+                              "\n                            " +
+                                _vm._s(card.ration) +
+                                "\n                        "
+                            )
+                          ])
                         ])
                       ]
                     )

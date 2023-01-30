@@ -254,8 +254,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         text: 'Тэг',
         value: 'tag'
       }, {
-        text: 'WA',
-        value: 'actions'
+        text: 'Город',
+        value: 'city'
       }],
       select_result: [],
       loading: true,

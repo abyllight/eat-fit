@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\City;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -22,7 +23,8 @@ class OrderSelectCollection extends JsonResource
             'tag' => $this->getTag($this->type, $this->size),
             'diet' => $this->diet,
             'diet_old' => $this->diet_old,
-            'whatsapp' => $this->whatsapp ?? $this->phone
+            'whatsapp' => $this->whatsapp ?? $this->phone,
+            'city' => City::getCity($this->city_id)
             //'blacklist' => $this->getBlacklistIds(),
             //'wishlist' => $this->getWishes(),
             //'previous' => SelectCollection::collection($this->getPreviousSelect()),

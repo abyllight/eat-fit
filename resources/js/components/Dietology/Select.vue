@@ -220,7 +220,7 @@
                 { text: '#', value: 'index' },
                 { text: 'Имя', value: 'name' },
                 { text: 'Тэг', value: 'tag' },
-                { text: 'WA', value: 'actions' }
+                { text: 'Город', value: 'city' }
             ],
             select_result: [],
             loading: true,

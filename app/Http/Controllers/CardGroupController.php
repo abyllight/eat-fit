@@ -20,6 +20,10 @@ class CardGroupController extends Controller
 
         $select_groups = Select::whereDate('created_at', Carbon::today())->where('group_id', null);
 
+        if ($user->city_id !== null) {
+            $select_groups = $select_groups->where('city_id', $user->city_id);
+        }
+
         if ($user->kd_id !== null) {
             $select_groups = $select_groups->where('dep_id', $user->kd_id);
         }
@@ -31,6 +35,7 @@ class CardGroupController extends Controller
                 'code' => $group[0]->code,
                 'dep_id' => $user->kd_id,
                 'color' => $this->getColor($group[0]->status),
+                'ration' => $group[0]->ration->name,
                 'dish_name' => $group[0]->dish_name,
                 'description' => $group[0]->description,
                 'ingredients' => $group[0]->ingredients
@@ -57,6 +62,7 @@ class CardGroupController extends Controller
                 $groups[$i]['cards'][$key] = [
                     'code' => $select[0]->code,
                     'dep_id' => $user->kd_id,
+                    'ration' => $select[0]->ration->name,
                     'color' => $this->getColor($select[0]->status),
                     'dish_name' => $select[0]->dish_name,
                     'description' => $select[0]->description,

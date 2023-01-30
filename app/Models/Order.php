@@ -208,6 +208,7 @@ class Order extends Model
                 $select->ration_id = $ration->id;
                 $select->dep_id = $ration->department_id;
                 $select->tableware_id = $ration->tableware_id;
+                $select->city_id = $this->city_id;
 
                 if ($duty_dish) {
                     $select->dish_id = $duty_dish->id;
@@ -233,6 +234,8 @@ class Order extends Model
         else {
             foreach ($result as $item) {
                 $dish = Dish::find($item->dish_id);
+                $item->city_id = $this->city_id;
+                $item->save();
 
                 if ($dish) {
                     $ds = $dish->sizes->where('size', $this->size)->first();

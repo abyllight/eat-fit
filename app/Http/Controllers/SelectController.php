@@ -123,10 +123,12 @@ class SelectController extends Controller
         $ration = Ration::find($request->ration_id);
 
         if (!$select) {
+            $order = Order::find($request->order_id);
             $select = new Select();
-            $select->order_id = $request->order_id;
+            $select->order_id = $order->id;
             $select->cuisine_id = $request->cuisine_id;
             $select->ration_id = $ration->id;
+            $select->city_id = $order->city_id;
             $select->dep_id = $ration->department_id;
             if (!$select->is_extra) {
                 $select->status = Select::REPLACEMENT;
@@ -272,9 +274,11 @@ class SelectController extends Controller
 
         if (!$select) {
             $ration = Ration::find($request->id);
+            $order = Order::find($request->order_id);
 
             $select = new Select();
-            $select->order_id = $request->order_id;
+            $select->order_id = $order->id;
+            $select->city_id = $order->city_id;
             $select->cuisine_id = $request->cuisine_id;
             $select->ration_id = $request->ration_id;
             $select->dish_id = $request->dish_id;
@@ -310,9 +314,11 @@ class SelectController extends Controller
 
         if (!$select){
             $ration = Ration::find($request->id);
+            $order = Order::find($request->order_id);
 
             $select = new Select();
-            $select->order_id = $request->order_id;
+            $select->order_id = $order->id;
+            $select->city_id = $order->city_id;
             $select->cuisine_id = $request->cuisine_id;
             $select->ration_id = $request->ration_id;
             $select->dep_id = $ration->department_id;
@@ -416,9 +422,11 @@ class SelectController extends Controller
     public function addExtraSelect(Request $request) {
         $ration = Ration::find($request->r_id);
         $t_id = $ration->tableware ? $ration->tableware->id : null;
+        $order = Order::find($request->o_id);
 
         $select = new Select();
-        $select->order_id = $request->o_id;
+        $select->order_id = $order->id;
+        $select->city_id = $order->city_id;
         $select->cuisine_id = $request->c_id;
         $select->ration_id = $request->r_id;
         $select->status = Select::EXTRA;
@@ -548,8 +556,6 @@ class SelectController extends Controller
             ->whereDate('created_at', Carbon::today())
             ->first();
 
-        $ration = Ration::find($request->ration_id);
-
         if ($select) {
             $sel_wish = SelectWish::where('select_id', $select->id)->where('wish_id', $request->w_id)->first();
 
@@ -564,9 +570,11 @@ class SelectController extends Controller
         }else {
             $dish = Dish::find($request->dish_id);
             $ration = Ration::find($request->id);
+            $order = Order::find($request->order_id);
 
             $select = new Select();
-            $select->order_id = $request->order_id;
+            $select->order_id = $order->id;
+            $select->city_id = $order->city_id;
             $select->cuisine_id = $request->cuisine_id;
             $select->ration_id = $request->ration_id;
             $select->dep_id = $ration->department_id;
