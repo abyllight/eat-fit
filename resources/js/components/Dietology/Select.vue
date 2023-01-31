@@ -110,7 +110,10 @@
                             :color="result.color"
                             :loading="select_loading"
                         >
-                            <v-card-title>{{result.ration.name}}</v-card-title>
+                            <div class="d-flex justify-space-between align-center pt-4 px-4">
+                                <h3>{{result.ration.name}}</h3>
+                                <span>{{result.weight}} гр</span>
+                            </div>
                             <v-card-subtitle>{{result.dish_name}}</v-card-subtitle>
 
                             <v-card-text>{{result.description}}</v-card-text>

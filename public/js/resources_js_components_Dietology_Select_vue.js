@@ -227,6 +227,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
 
 
 
@@ -1677,9 +1680,22 @@ var render = function() {
                                 }
                               },
                               [
-                                _c("v-card-title", [
-                                  _vm._v(_vm._s(result.ration.name))
-                                ]),
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "d-flex justify-space-between align-center pt-4 px-4"
+                                  },
+                                  [
+                                    _c("h3", [
+                                      _vm._v(_vm._s(result.ration.name))
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("span", [
+                                      _vm._v(_vm._s(result.weight) + " гр")
+                                    ])
+                                  ]
+                                ),
                                 _vm._v(" "),
                                 _c("v-card-subtitle", [
                                   _vm._v(_vm._s(result.dish_name))
