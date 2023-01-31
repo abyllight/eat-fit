@@ -4349,7 +4349,7 @@ var render = function() {
                           color: card.color,
                           rounded: "",
                           elevation: "1",
-                          width: "200",
+                          width: "240",
                           height: "160"
                         },
                         on: {

@@ -64,6 +64,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/management/plus-one-saturday', [ManagementController::class, 'plusOneSaturday']);
     Route::post('/management/trial', [ManagementController::class, 'shiftTrial']);
     Route::post('/management/work', [ManagementController::class, 'shiftWork']);
+    Route::post('/management/select', [ManagementController::class, 'shiftWork']);
+
 
     Route::get('/cities', [CityController::class, 'index']);
 

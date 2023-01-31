@@ -29,11 +29,16 @@ class ManagementController extends Controller
             ->where('type', Management::WORK_TYPE)
             ->exists();
 
+        $select = Management::whereDate('created_at', Carbon::now()->toDateString())
+            ->where('type', Management::SEND_SELECT_TYPE)
+            ->exists();
+
         return response()->json([
             'plus' => $plus,
             'trial' => $trial,
             'work' => $work,
-            'saturday' => $saturday
+            'saturday' => $saturday,
+            'select' => $select
         ]);
     }
 
@@ -240,6 +245,14 @@ class ManagementController extends Controller
     }
 
     public function shiftWork(): JsonResponse
+    {
+        $status = Management::WORK_STATUS;
+        $type = Management::WORK_TYPE;
+
+        return $this->shift($status, $type);
+    }
+
+    public function sendSelect(): JsonResponse
     {
         $status = Management::WORK_STATUS;
         $type = Management::WORK_TYPE;

@@ -13,9 +13,13 @@ class Management extends Model
     public const WORK_STATUS = 16566964; // В работе
     public const PLUS_ONE_STATUS = 27248140; // Доставлено
     public const PLUS_ONE_SATURDAY_STATUS = 50754262; // Субботу x2v2
+    public const SEND_SELECT_STATUS = 54498818; // Меню Селект
+    //Меню селект 884607
+    //меню изображение 884637
 
     public const PLUS_TYPE = 1;
     public const TRIAL_TYPE = 2;
     public const WORK_TYPE = 3;
     public const PLUS_SATURDAY_TYPE = 4;
+    public const SEND_SELECT_TYPE = 5;
 }

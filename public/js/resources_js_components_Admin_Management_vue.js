@@ -107,6 +107,28 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Management",
   data: function data() {
@@ -115,10 +137,12 @@ __webpack_require__.r(__webpack_exports__);
       saturday: null,
       trial: null,
       work: null,
+      select: null,
       plus_loading: false,
       saturday_loading: false,
       trial_loading: false,
       work_loading: false,
+      select_loading: false,
       prompt: false,
       type: 1,
       link: '/api/management/plus-one'
@@ -134,7 +158,8 @@ __webpack_require__.r(__webpack_exports__);
       axios.get('/api/management').then(function (res) {
         _this.plus = res.data.plus;
         _this.trial = res.data.trial;
-        _this.work = res.data.work; //this.saturday = res.data.saturday
+        _this.work = res.data.work;
+        _this.select = res.data.select; //this.saturday = res.data.saturday
       })["catch"](function (err) {
         console.log(err);
       });
@@ -146,6 +171,7 @@ __webpack_require__.r(__webpack_exports__);
       this.plus = true;
       this.trial = true;
       this.work = true;
+      this.select = true;
       this.saturday = true;
       axios.post(this.link).then(function (res) {
         _this2.$store.dispatch('showAlert', {
@@ -183,6 +209,12 @@ __webpack_require__.r(__webpack_exports__);
       this.type = 3;
       this.prompt = true;
       this.work_loading = true;
+    },
+    sendSelect: function sendSelect() {
+      this.link = '/api/management/select';
+      this.type = 5;
+      this.prompt = true;
+      this.select_loading = true;
     },
     close: function close() {
       this.prompt = false;
@@ -396,6 +428,43 @@ var render = function() {
                     "\n                Закрытие смены(В работе)\n                "
                   ),
                   _vm.work
+                    ? _c("v-icon", { attrs: { right: "", dark: "" } }, [
+                        _vm._v(
+                          "\n                    mdi-check\n                "
+                        )
+                      ])
+                    : _vm._e()
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-row",
+        [
+          _c(
+            "v-col",
+            [
+              _c(
+                "v-btn",
+                {
+                  staticClass: "mr-10",
+                  attrs: {
+                    disabled: _vm.select,
+                    color: "green",
+                    dark: !_vm.select,
+                    loading: _vm.select_loading
+                  },
+                  on: { click: _vm.sendSelect }
+                },
+                [
+                  _vm._v("\n                Меню Селект\n                "),
+                  _vm.select
                     ? _c("v-icon", { attrs: { right: "", dark: "" } }, [
                         _vm._v(
                           "\n                    mdi-check\n                "

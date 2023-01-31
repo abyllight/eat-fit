@@ -78,6 +78,28 @@
             </v-col>
         </v-row>
 
+        <v-row>
+            <v-col>
+                <v-btn
+                    :disabled="select"
+                    @click="sendSelect"
+                    class="mr-10"
+                    color="green"
+                    :dark="!select"
+                    :loading="select_loading"
+                >
+                    Меню Селект
+                    <v-icon
+                        v-if="select"
+                        right
+                        dark
+                    >
+                        mdi-check
+                    </v-icon>
+                </v-btn>
+            </v-col>
+        </v-row>
+
         <v-row justify="center">
             <v-dialog v-model="prompt" max-width="500px">
                 <v-card>
@@ -102,10 +124,12 @@ export default {
         saturday: null,
         trial: null,
         work: null,
+        select: null,
         plus_loading: false,
         saturday_loading: false,
         trial_loading: false,
         work_loading: false,
+        select_loading: false,
         prompt: false,
         type: 1,
         link: '/api/management/plus-one'
@@ -120,6 +144,7 @@ export default {
                     this.plus = res.data.plus
                     this.trial = res.data.trial
                     this.work = res.data.work
+                    this.select = res.data.select
                     //this.saturday = res.data.saturday
                 }).catch(err => {
                     console.log(err)
@@ -130,6 +155,7 @@ export default {
             this.plus = true
             this.trial = true
             this.work = true
+            this.select = true
             this.saturday = true
 
             axios.post(this.link)
@@ -169,6 +195,12 @@ export default {
             this.type = 3
             this.prompt = true
             this.work_loading = true
+        },
+        sendSelect() {
+            this.link = '/api/management/select'
+            this.type = 5
+            this.prompt = true
+            this.select_loading = true
         },
         close() {
             this.prompt = false

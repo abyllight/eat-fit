@@ -54,7 +54,7 @@
                         :color="card.color"
                         rounded
                         elevation="1"
-                        width="200"
+                        width="240"
                         height="160"
                         class="pa-3 mr-5 d-flex flex-column justify-space-between"
                         style="flex-shrink: 0; cursor: pointer"

@@ -17,12 +17,89 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "BroadcastMenu",
+  data: function data() {
+    return {
+      items: [],
+      file: null,
+      c_id: null,
+      type: null,
+      dialog: false
+    };
+  },
   mounted: function mounted() {
-    axios.get('/api/broadcast').then(function (res) {
-      console.log(res);
-    });
+    this.getItems();
+  },
+  methods: {
+    getItems: function getItems() {
+      var _this = this;
+
+      axios.get('/api/broadcast').then(function (res) {
+        _this.items = res.data.data;
+      });
+    },
+    openDialog: function openDialog(id, type) {
+      this.c_id = id;
+      this.type = type;
+      this.$refs.uploader.$el.click();
+      console.log(this.$refs.uploader);
+    },
+    onFileChanged: function onFileChanged(e) {
+      this.file = e.target.files[0];
+      console.log(e.target, this.file);
+    },
+    addImage: function addImage(id, type) {
+      var _this2 = this;
+
+      var dataForm = new FormData();
+      dataForm.append('file', this.file);
+      dataForm.append('c_id', id);
+      dataForm.append('type', type);
+      dataForm.append('_method', 'POST');
+      axios({
+        method: 'POST',
+        url: '/api/broadcast/',
+        data: dataForm,
+        headers: {
+          'content-type': 'multipart/form-data'
+        }
+      }).then(function () {
+        _this2.file = null;
+
+        _this2.getItems();
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    }
   }
 });
 
@@ -112,7 +189,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_vm._v("\n    broadcast\n")])
+  return _c("div")
 }
 var staticRenderFns = []
 render._withStripped = true

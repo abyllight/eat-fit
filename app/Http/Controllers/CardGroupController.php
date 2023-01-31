@@ -18,7 +18,7 @@ class CardGroupController extends Controller
         $arr = [];
         $groups = [];
 
-        $select_groups = Select::whereDate('created_at', Carbon::today())->where('group_id', null);
+        $select_groups = Select::whereDate('created_at', Carbon::today())->where('is_active', true)->where('group_id', null);
 
         if ($user->city_id !== null) {
             $select_groups = $select_groups->where('city_id', $user->city_id);

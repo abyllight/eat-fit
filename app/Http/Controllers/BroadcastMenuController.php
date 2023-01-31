@@ -2,17 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Select;
-use Carbon\Carbon;
+use App\Models\Cuisine;
 use Illuminate\Http\Request;
 
 class BroadcastMenuController extends Controller
 {
     public function index() {
-        $selects = Select::whereDate('created_at', Carbon::today())->get()->groupBy('order_id');
-        $text = '';
+        $cuisines = Cuisine::all();
 
-        foreach ($selects as $select) {
+        return response()->json([
+            'status' => true,
+            'data' => $cuisines
+        ]);
+    }
+
+    public function addImage(Request $request) {
+        $cuisine = Cuisine::find($request->c_id);
+
+        if ($request->type === 1) {
 
         }
     }
