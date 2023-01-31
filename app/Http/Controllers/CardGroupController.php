@@ -144,7 +144,13 @@ class CardGroupController extends Controller
     }
 
     public function sortCards(Request $request) {
-        $selects = Select::whereDate('created_at', Carbon::today())->where('code', $request->code)->get();
+        $user = Auth::user();
+
+        $selects = Select::whereDate('created_at', Carbon::today())
+            ->where('is_active', true)
+            ->where('code', $request->code)
+            ->where('city_id',  $user->city_id)
+            ->get();
 
         $g_id = $request->g_id === '0' ? null : $request->g_id;
 
