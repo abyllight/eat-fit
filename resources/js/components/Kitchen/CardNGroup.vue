@@ -68,7 +68,7 @@
                             <p class="text-body-2">{{card.dish_name}}</p>
                         </div>
 
-                        <div>
+                        <div class="d-flex justify-space-between">
                             <div class="d-flex align-end">
                                 <v-icon class="mr-2">mdi-account-group</v-icon>
                                 {{card.items.length}}
