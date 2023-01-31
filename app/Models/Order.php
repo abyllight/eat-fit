@@ -231,23 +231,6 @@ class Order extends Model
 
             return $this->select()->whereDate('created_at', Carbon::today())->get()->sortBy('ration_id');
         }
-        else {
-            foreach ($result as $item) {
-                $dish = Dish::find($item->dish_id);
-                $item->city_id = $this->city_id;
-                $item->save();
-
-                if ($dish) {
-                    $ds = $dish->sizes->where('size', $this->size)->first();
-
-                    if ($ds && $item->status === Select::LITE) {
-                        $item->weight = $ds->weight;
-                    }
-
-                    $item->save();
-                }
-            }
-        }
 
         return $result;
     }
