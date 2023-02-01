@@ -65,6 +65,7 @@
                 </v-card-actions>
                 <v-card-actions>
                     <v-btn
+                        v-if="isActive"
                         color="blue-grey"
                         class="white--text"
                         small
@@ -195,6 +196,13 @@ export default {
     }),
     created() {
         this.fetchOrders()
+    },
+    computed: {
+        isActive() {
+            const d = new Date()
+            let hour = d.getHours()
+            return hour >= 5 && hour <= 10
+        }
     },
     methods: {
         fetchOrders(){

@@ -234,6 +234,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Client',
@@ -289,6 +290,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     this.getWeek();
     this.getLeads();
     this.getOrderStat();
+  },
+  computed: {
+    isActive: function isActive() {
+      var d = new Date();
+      var hour = d.getHours();
+      return hour < 5 || hour >= 10;
+    }
   },
   methods: {
     getLeads: function getLeads() {
@@ -1247,19 +1255,21 @@ var render = function() {
       _c(
         "v-row",
         [
-          _c(
-            "v-btn",
-            {
-              staticClass: "ma-3",
-              attrs: {
-                loading: _vm.amo_loading,
-                disabled: _vm.amo_loading,
-                color: "primary"
-              },
-              on: { click: _vm.fetchLeads }
-            },
-            [_vm._v("\n            Получить данные\n        ")]
-          ),
+          _vm.isActive
+            ? _c(
+                "v-btn",
+                {
+                  staticClass: "ma-3",
+                  attrs: {
+                    loading: _vm.amo_loading,
+                    disabled: _vm.amo_loading,
+                    color: "primary"
+                  },
+                  on: { click: _vm.fetchLeads }
+                },
+                [_vm._v("\n            Получить данные\n        ")]
+              )
+            : _vm._e(),
           _vm._v(" "),
           _c(
             "v-btn",

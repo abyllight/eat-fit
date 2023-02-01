@@ -230,6 +230,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 
 
@@ -283,6 +284,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   computed: {
     isDutyDishId: function isDutyDishId() {
       return this.dishes[0].id === this.dish.id;
+    },
+    isActive: function isActive() {
+      var d = new Date();
+      var hour = d.getHours();
+      return hour < 5 || hour >= 10;
     }
   },
   methods: {
@@ -1532,23 +1538,25 @@ var render = function() {
               "div",
               { staticClass: "mt-2" },
               [
-                _c(
-                  "v-btn",
-                  {
-                    staticClass: "mr-4",
-                    attrs: {
-                      loading: _vm.amo_loading,
-                      disabled: _vm.amo_loading,
-                      color: "primary"
-                    },
-                    on: { click: _vm.fetchOrdersFromAmo }
-                  },
-                  [
-                    _vm._v(
-                      "\n                        Получить данные с AMOCRM\n                    "
+                _vm.isActive
+                  ? _c(
+                      "v-btn",
+                      {
+                        staticClass: "mr-4",
+                        attrs: {
+                          loading: _vm.amo_loading,
+                          disabled: _vm.amo_loading,
+                          color: "primary"
+                        },
+                        on: { click: _vm.fetchOrdersFromAmo }
+                      },
+                      [
+                        _vm._v(
+                          "\n                        Получить данные с AMOCRM\n                    "
+                        )
+                      ]
                     )
-                  ]
-                ),
+                  : _vm._e(),
                 _vm._v(" "),
                 _c(
                   "a",

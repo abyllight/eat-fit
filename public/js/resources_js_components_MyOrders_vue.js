@@ -193,6 +193,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "MyOrders",
   data: function data() {
@@ -209,6 +210,13 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     this.fetchOrders();
+  },
+  computed: {
+    isActive: function isActive() {
+      var d = new Date();
+      var hour = d.getHours();
+      return hour >= 5 && hour <= 10;
+    }
   },
   methods: {
     fetchOrders: function fetchOrders() {
@@ -517,35 +525,37 @@ var render = function() {
                 _c(
                   "v-card-actions",
                   [
-                    _c(
-                      "v-btn",
-                      {
-                        staticClass: "white--text",
-                        attrs: {
-                          color: "blue-grey",
-                          small: "",
-                          disabled: order.is_notified
-                        },
-                        on: {
-                          click: function($event) {
-                            return _vm.notify(order.id)
-                          }
-                        }
-                      },
-                      [
-                        _vm._v(
-                          "\n                    Еду\n                    "
-                        ),
-                        order.is_notified
-                          ? _c("v-icon", { attrs: { right: "" } }, [
-                              _vm._v(
-                                "\n                        mdi-check\n                    "
-                              )
-                            ])
-                          : _vm._e()
-                      ],
-                      1
-                    ),
+                    _vm.isActive
+                      ? _c(
+                          "v-btn",
+                          {
+                            staticClass: "white--text",
+                            attrs: {
+                              color: "blue-grey",
+                              small: "",
+                              disabled: order.is_notified
+                            },
+                            on: {
+                              click: function($event) {
+                                return _vm.notify(order.id)
+                              }
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "\n                    Еду\n                    "
+                            ),
+                            order.is_notified
+                              ? _c("v-icon", { attrs: { right: "" } }, [
+                                  _vm._v(
+                                    "\n                        mdi-check\n                    "
+                                  )
+                                ])
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      : _vm._e(),
                     _vm._v(" "),
                     _c(
                       "v-btn",

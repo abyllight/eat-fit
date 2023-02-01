@@ -2,6 +2,7 @@
     <div>
         <v-row>
             <v-btn
+                v-if="isActive"
                 class="ma-3"
                 :loading="amo_loading"
                 :disabled="amo_loading"
@@ -249,6 +250,13 @@
             this.getWeek()
             this.getLeads()
             this.getOrderStat()
+        },
+        computed: {
+            isActive() {
+                const d = new Date()
+                let hour = d.getHours()
+                return hour < 5 || hour >= 10
+            }
         },
         methods: {
             async getLeads() {

@@ -32,6 +32,7 @@
 
                 <div class="mt-2">
                     <v-btn
+                        v-if="isActive"
                         class="mr-4"
                         :loading="amo_loading"
                         :disabled="amo_loading"
@@ -247,6 +248,11 @@
         computed: {
             isDutyDishId() {
                 return this.dishes[0].id === this.dish.id
+            },
+            isActive() {
+                const d = new Date()
+                let hour = d.getHours()
+                return hour < 5 || hour >= 10
             }
         },
         methods: {
