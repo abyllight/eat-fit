@@ -221,6 +221,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -246,8 +247,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     };
   },
   mounted: function mounted() {
-    this.getSelects(); //this.getStat()
-
+    this.getSelects();
+    this.getStat();
     this.getCuisine();
   },
   methods: {
@@ -653,7 +654,10 @@ var render = function() {
                             _c("v-card-text", [
                               _c(
                                 "div",
-                                { staticClass: "d-flex justify-space-between" },
+                                {
+                                  staticClass:
+                                    "d-flex justify-space-between mb-3"
+                                },
                                 [
                                   _c(
                                     "p",
@@ -670,9 +674,17 @@ var render = function() {
                                 1
                               ),
                               _vm._v(" "),
-                              _c("h2", [_vm._v(_vm._s(o.code))]),
+                              _c("h2", { staticClass: "mb-2" }, [
+                                _vm._v(_vm._s(o.code))
+                              ]),
                               _vm._v(" "),
-                              _c("span", [_vm._v(_vm._s(o.dish_name))])
+                              _c("p", { staticClass: "mb-2" }, [
+                                _vm._v(_vm._s(o.dish_name))
+                              ]),
+                              _vm._v(" "),
+                              _c("p", { staticClass: "font-weight-bold" }, [
+                                _vm._v(_vm._s(o.weight) + "гр")
+                              ])
                             ])
                           ],
                           1

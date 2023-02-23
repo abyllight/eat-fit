@@ -161,7 +161,7 @@ export default {
     }),
     mounted() {
         this.getSelects()
-        //this.getStat()
+        this.getStat()
         this.getCuisine()
     },
     methods: {

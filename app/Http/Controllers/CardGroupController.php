@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Dish;
-use App\Models\Ingredient;
 use App\Models\Order;
 use App\Models\Ration;
 use App\Models\Select;
@@ -253,6 +251,8 @@ class CardGroupController extends Controller
         foreach ($orders as $key => $order) {
             $selects = $order->select()->whereDate('created_at', Carbon::today())->get()->sortBy('ration_id');
 
+            if (count($selects) === 0) continue;
+
             $n++;
             $sheet->setCellValue('A' . $n, $key + 1);
             $sheet->mergeCells('A' . $n . ':A' . ($n + 3));
@@ -272,6 +272,7 @@ class CardGroupController extends Controller
 
                 $sheet->setCellValue($letters[$i] . $n, ($key+1).'/'.$order->name.' - '.$order->getSize($order->size));
                 $sheet->getStyle($letters[$i] . $n)->applyFromArray($center);
+                $sheet->getRowDimension($n)->setRowHeight(20);
 
                 if ($s){
                     if ($s->is_active && $s->status > 0) {
@@ -288,6 +289,11 @@ class CardGroupController extends Controller
 
                 $sheet->setCellValue($letters[$i] . ($n+1), $code_section);
                 $sheet->getStyle($letters[$i] . ($n+1))->applyFromArray($code);
+
+                $sheet->getRowDimension($n+1)->setRowHeight(50);
+                $sheet->getRowDimension($n+2)->setRowHeight(40);
+                $sheet->getRowDimension($n+3)->setRowHeight(20);
+
             }
 
             $n+=3;
