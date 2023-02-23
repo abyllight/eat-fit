@@ -9,6 +9,9 @@ class City extends Model
 {
     use HasFactory;
 
+    const ASTANA = 1;
+    const ALMATY = 2;
+
     const cities = [
         [
             'id' => 1,

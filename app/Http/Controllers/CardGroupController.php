@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
 use App\Models\Order;
 use App\Models\Ration;
 use App\Models\Select;
@@ -245,7 +246,7 @@ class CardGroupController extends Controller
             $spreadsheet->getActiveSheet()->getColumnDimension($letter)->setWidth(25);
         }
 
-        $orders = Order::where('type', Order::EAT_FIT_SELECT)->where('is_active', true)->orderBy('size')->get();
+        $orders = Order::where('type', Order::EAT_FIT_SELECT)->where('city_id', City::ASTANA)->where('is_active', true)->orderBy('size')->get();
         $n = 1;
 
         foreach ($orders as $key => $order) {
