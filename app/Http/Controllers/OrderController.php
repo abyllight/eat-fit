@@ -6,6 +6,7 @@ use AmoCRM\Client;
 use App\Http\Resources\OrderLogisticCollection;
 use App\Http\Resources\OrderSelectCollection;
 use App\Http\Resources\SelectCollection;
+use App\Models\City;
 use App\Models\Cuisine;
 use App\Models\Dish;
 use App\Models\Order;
@@ -162,12 +163,16 @@ class OrderController extends Controller
         ]);
     }
 
-    public function getSelect(): JsonResponse
+    public function getSelect(bool $byAstana = false): JsonResponse
     {
         $select = Order::where('type', Order::EAT_FIT_SELECT)
-            ->where('is_active', true)
-            ->orderBy('size')
-            ->get();
+            ->where('is_active', true);
+
+        if ($byAstana) {
+            $select = $select->where('city_id', City::ASTANA);
+        }
+
+        $select = $select->orderBy('size')->get();
 
         $select_stat = [
             'total' => $select->count(),
