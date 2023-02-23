@@ -290,7 +290,7 @@ class CardGroupController extends Controller
                 $sheet->setCellValue($letters[$i] . ($n+1), $code_section);
                 $sheet->getStyle($letters[$i] . ($n+1))->applyFromArray($code);
 
-                $sheet->getRowDimension($n+1)->setRowHeight(50);
+                $sheet->getRowDimension($n+1)->setRowHeight(30);
                 $sheet->getRowDimension($n+2)->setRowHeight(40);
                 $sheet->getRowDimension($n+3)->setRowHeight(20);
 
