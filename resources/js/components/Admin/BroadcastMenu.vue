@@ -1,34 +1,39 @@
 <template>
     <div>
-<!--        <v-row>
-            <v-col
-                v-for="item in items"
-                :key="item.name"
-                cols="4"
-            >
-                <div>
-                    <h5 class="mb-2">{{item.name}}</h5>
-                    <div class="d-flex">
-                        <div
-                            style="width: 160px; height: 240px; border: 1px dashed darkgrey;"
-                            class="mr-4 rounded"
-                            :class="item.f1 === null ? 'd-flex justify-center align-center' : ''"
-                        >
-                            <v-btn icon @click="openDialog(item.id, 1)">
-                                <v-icon>mdi-plus</v-icon>
-                            </v-btn>
-                        </div>
-
-&lt;!&ndash;                        <div style="width: 160px; height: 240px; border: 1px dashed darkgrey" class="rounded">
-
-                        </div>&ndash;&gt;
-                    </div>
-                </div>
+        <v-row>
+            <v-col class="d-flex justify-space-between">
+                <h3>{{cuisine}}</h3>
+                <v-btn @click="dialog=true">Отправить</v-btn>
             </v-col>
         </v-row>
 
-        <v-file-input ref="uploader" @change="onFileChanged" class="d-none"></v-file-input>-->
+        <v-row>
+            <v-col
+                v-for="item in items"
+                :key="item.name"
+                cols="3"
+            >
+                <v-card>
+                    <v-card-title>{{item.name}}</v-card-title>
+                    <v-card-text v-html="item.text">
+                    </v-card-text>
+                </v-card>
+            </v-col>
+        </v-row>
 
+        <v-row justify="center">
+            <v-dialog v-model="dialog" max-width="500px">
+                <v-card>
+                    <v-card-title class="text-h5">Вы уверены, что хотите продолжить действие?</v-card-title>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="blue darken-1" text @click="dialog=false">Отмена</v-btn>
+                        <v-btn color="blue darken-1" text @click="send">ДА</v-btn>
+                        <v-spacer></v-spacer>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </v-row>
     </div>
 </template>
 
@@ -37,9 +42,7 @@ export default {
     name: "BroadcastMenu",
     data: () => ({
         items: [],
-        file: null,
-        c_id: null,
-        type: null,
+        cuisine: '',
         dialog: false
     }),
     mounted() {
@@ -47,41 +50,19 @@ export default {
     },
     methods: {
         getItems() {
-            axios.get('/api/broadcast')
+            axios.get('/api/broadcast-select')
                 .then(res => {
+                    this.cuisine = res.data.cuisine
                     this.items = res.data.data
                 })
         },
-        openDialog(id, type) {
-            this.c_id = id
-            this.type = type
-            this.$refs.uploader.$el.click()
-            console.log(this.$refs.uploader)
-        },
-        onFileChanged(e) {
-            this.file = e.target.files[0];
-            console.log(e.target, this.file)
-        },
-        addImage(id, type) {
-            let dataForm = new FormData()
-            dataForm.append('file', this.file)
-            dataForm.append('c_id', id)
-            dataForm.append('type', type)
-            dataForm.append('_method', 'POST');
+        send() {
+            this.dialog = false
 
-            axios({
-                method: 'POST',
-                url: '/api/broadcast/',
-                data: dataForm,
-                headers: {
-                    'content-type': 'multipart/form-data'
-                }
-            }).then(() => {
-                this.file = null
-                this.getItems()
-            }).catch(err => {
-                console.log(err)
-            })
+            axios.post('/api/broadcast-select')
+                .then(res => {
+                    console.log(res)
+                })
         }
     }
 }

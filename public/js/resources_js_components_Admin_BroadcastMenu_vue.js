@@ -45,14 +45,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "BroadcastMenu",
   data: function data() {
     return {
       items: [],
-      file: null,
-      c_id: null,
-      type: null,
+      cuisine: '',
       dialog: false
     };
   },
@@ -63,41 +66,15 @@ __webpack_require__.r(__webpack_exports__);
     getItems: function getItems() {
       var _this = this;
 
-      axios.get('/api/broadcast').then(function (res) {
+      axios.get('/api/broadcast-select').then(function (res) {
+        _this.cuisine = res.data.cuisine;
         _this.items = res.data.data;
       });
     },
-    openDialog: function openDialog(id, type) {
-      this.c_id = id;
-      this.type = type;
-      this.$refs.uploader.$el.click();
-      console.log(this.$refs.uploader);
-    },
-    onFileChanged: function onFileChanged(e) {
-      this.file = e.target.files[0];
-      console.log(e.target, this.file);
-    },
-    addImage: function addImage(id, type) {
-      var _this2 = this;
-
-      var dataForm = new FormData();
-      dataForm.append('file', this.file);
-      dataForm.append('c_id', id);
-      dataForm.append('type', type);
-      dataForm.append('_method', 'POST');
-      axios({
-        method: 'POST',
-        url: '/api/broadcast/',
-        data: dataForm,
-        headers: {
-          'content-type': 'multipart/form-data'
-        }
-      }).then(function () {
-        _this2.file = null;
-
-        _this2.getItems();
-      })["catch"](function (err) {
-        console.log(err);
+    send: function send() {
+      this.dialog = false;
+      axios.post('/api/broadcast-select').then(function (res) {
+        console.log(res);
       });
     }
   }
@@ -189,7 +166,128 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div")
+  return _c(
+    "div",
+    [
+      _c(
+        "v-row",
+        [
+          _c(
+            "v-col",
+            { staticClass: "d-flex justify-space-between" },
+            [
+              _c("h3", [_vm._v(_vm._s(_vm.cuisine))]),
+              _vm._v(" "),
+              _c(
+                "v-btn",
+                {
+                  on: {
+                    click: function($event) {
+                      _vm.dialog = true
+                    }
+                  }
+                },
+                [_vm._v("Отправить")]
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-row",
+        _vm._l(_vm.items, function(item) {
+          return _c(
+            "v-col",
+            { key: item.name, attrs: { cols: "3" } },
+            [
+              _c(
+                "v-card",
+                [
+                  _c("v-card-title", [_vm._v(_vm._s(item.name))]),
+                  _vm._v(" "),
+                  _c("v-card-text", {
+                    domProps: { innerHTML: _vm._s(item.text) }
+                  })
+                ],
+                1
+              )
+            ],
+            1
+          )
+        }),
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-row",
+        { attrs: { justify: "center" } },
+        [
+          _c(
+            "v-dialog",
+            {
+              attrs: { "max-width": "500px" },
+              model: {
+                value: _vm.dialog,
+                callback: function($$v) {
+                  _vm.dialog = $$v
+                },
+                expression: "dialog"
+              }
+            },
+            [
+              _c(
+                "v-card",
+                [
+                  _c("v-card-title", { staticClass: "text-h5" }, [
+                    _vm._v("Вы уверены, что хотите продолжить действие?")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "v-card-actions",
+                    [
+                      _c("v-spacer"),
+                      _vm._v(" "),
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "blue darken-1", text: "" },
+                          on: {
+                            click: function($event) {
+                              _vm.dialog = false
+                            }
+                          }
+                        },
+                        [_vm._v("Отмена")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "blue darken-1", text: "" },
+                          on: { click: _vm.send }
+                        },
+                        [_vm._v("ДА")]
+                      ),
+                      _vm._v(" "),
+                      _c("v-spacer")
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true

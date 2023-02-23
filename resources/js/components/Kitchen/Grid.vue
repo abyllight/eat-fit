@@ -1,8 +1,18 @@
 <template>
     <div>
         <v-row>
-            <v-col>
+            <v-col class="d-flex justify-space-between">
                 <stat :stat="stat"/>
+                <a
+                    type="button"
+                    href="/api/select/export/stickers"
+                >
+                    <v-btn
+                        color="primary"
+                    >
+                        Excel
+                    </v-btn>
+                </a>
             </v-col>
         </v-row>
 
@@ -214,6 +224,9 @@ export default {
                 .then(res => {
                     this.getSelects()
                 })
+        },
+        exportStickers() {
+
         }
     }
 }

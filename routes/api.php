@@ -64,7 +64,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/management/plus-one-saturday', [ManagementController::class, 'plusOneSaturday']);
     Route::post('/management/trial', [ManagementController::class, 'shiftTrial']);
     Route::post('/management/work', [ManagementController::class, 'shiftWork']);
-    Route::post('/management/select', [ManagementController::class, 'shiftWork']);
+    Route::post('/management/select', [ManagementController::class, 'sendSelect']);
 
 
     Route::get('/cities', [CityController::class, 'index']);
@@ -143,6 +143,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('select/show/ingredient', [SelectController::class, 'showIngredient']);
     Route::post('select/hide/ingredient', [SelectController::class, 'hideIngredient']);
     Route::get('/select/export', [SelectController::class, 'export']);
+    Route::get('/select/export/stickers', [CardGroupController::class, 'exportStickers']);
     Route::get('/select/generate-code', [SelectController::class, 'generateCode']);
     Route::post('select/wish', [SelectController::class, 'addRemoveWish']);
     Route::get('/select/order/{id}', [SelectController::class, 'getSelectByOrder']);
@@ -158,6 +159,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('select/department', [SelectController::class, 'saveDep']);
 
     Route::get('/broadcast', [BroadcastMenuController::class, 'index']);
+    Route::get('/broadcast-select', [BroadcastMenuController::class, 'selectIndex']);
+    Route::post('/broadcast-select', [BroadcastMenuController::class, 'sendMenu']);
 
     Route::resource('/categories', CategoryController::class)->except(['create', 'show', 'edit']);
     Route::get('/categories/ingredient/{id}', [CategoryController::class, 'getCategoriesByIngredient']);

@@ -211,6 +211,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -342,7 +352,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/' + order.id + '/done').then(function (res) {
         _this4.getSelects();
       });
-    }
+    },
+    exportStickers: function exportStickers() {}
   }
 });
 
@@ -563,7 +574,29 @@ var render = function() {
     [
       _c(
         "v-row",
-        [_c("v-col", [_c("stat", { attrs: { stat: _vm.stat } })], 1)],
+        [
+          _c(
+            "v-col",
+            { staticClass: "d-flex justify-space-between" },
+            [
+              _c("stat", { attrs: { stat: _vm.stat } }),
+              _vm._v(" "),
+              _c(
+                "a",
+                {
+                  attrs: { type: "button", href: "/api/select/export/stickers" }
+                },
+                [
+                  _c("v-btn", { attrs: { color: "primary" } }, [
+                    _vm._v("\n                    Excel\n                ")
+                  ])
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
         1
       ),
       _vm._v(" "),

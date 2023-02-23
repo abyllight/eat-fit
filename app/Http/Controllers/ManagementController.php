@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cuisine;
 use App\Models\Management;
 use App\Models\Order;
 use Carbon\Carbon;
@@ -254,9 +255,86 @@ class ManagementController extends Controller
 
     public function sendSelect(): JsonResponse
     {
-        $status = Management::WORK_STATUS;
-        $type = Management::WORK_TYPE;
+        $status = Management::SEND_SELECT_STATUS;
+        $type = Management::SEND_SELECT_TYPE;
 
-        return $this->shift($status, $type);
+        return $this->sendMenu($status, $type);
+    }
+
+    public function sendMenu(int $status, int $type): JsonResponse
+    {
+        try{
+            $amo = new Client(env('AMO_SUBDOMAIN'), env('AMO_LOGIN'), env('AMO_HASH'));
+
+            $items = $amo->lead->apiList([
+                'limit_rows' => 500,
+                'status' => $status,
+            ]);
+            $orders = Order::where('is_active', true)->where('type', Order::EAT_FIT_SELECT)->get();
+            $order = Order::find(489);
+
+            $selects = $order->select()->whereDate('created_at', Carbon::today())->get();
+
+            $text = $order->name;
+            foreach ($selects as $select) {
+                $text.= '';
+            }
+            dd($items);
+            foreach ($items as $item){
+                $budget = (int)$item['price'];
+                $otrabotano = null;
+
+                $order = Order::where('amo_id', $item['id'])->orderBy('created_at','desc')->first();
+
+                foreach ($item['custom_fields'] as $field){
+                    if ($field['id'] === 495367){ //Отработано
+                        $otrabotano = (int)$field["values"][0]["value"];
+                    }
+                }
+
+                $lead = $amo->lead;
+
+                if ($otrabotano != null){
+                    $otrabotano += $budget;
+
+                    $lead->addCustomField(495367,
+                        $otrabotano
+                    );
+                }else{
+                    $lead->addCustomField(495367,
+                        $budget
+                    );
+                }
+
+                if($order && $order->courier) {
+                    $lead->addCustomField(489499,
+                        $order->courier->phone
+                    );
+                    $lead->addCustomField(489497,
+                        $order->courier->name
+                    );
+                }
+
+                $lead->apiUpdate((int)$item['id'], 'now');
+            }
+
+            $management = Management::whereDate('created_at', Carbon::now()->toDateString())->where('type', $type)->first();
+
+            if(!$management){
+                $m = new Management();
+                $m->type = $type;
+                $m->save();
+            }
+
+            return response()->json([
+                'status' => true,
+                'msg' => 'Success!'
+            ]);
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'msg' => $e->getCode() . '. ' . $e->getMessage()
+            ]);
+        }
     }
 }

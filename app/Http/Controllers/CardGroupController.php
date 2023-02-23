@@ -2,12 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dish;
+use App\Models\Ingredient;
+use App\Models\Order;
+use App\Models\Ration;
 use App\Models\Select;
 use App\Models\UserGroup;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class CardGroupController extends Controller
 {
@@ -158,5 +166,138 @@ class CardGroupController extends Controller
             $select->group_id = $g_id;
             $select->save();
         }
+    }
+
+    public function exportStickers(){
+        Select::generateCode();
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $rations = Ration::all()->toArray();
+
+        $ration_names = array_map(function ($obj){
+            return $obj['name'];
+        }, $rations);
+
+        $arrayHeader = [
+            ['#', 'Тэг', 'Клиент']
+        ];
+
+        array_push($arrayHeader[0], ...$ration_names);
+
+        $sheet->fromArray($arrayHeader, NULL, 'A1');
+
+        $blackStyleArray = [
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => [
+                    'rgb' => '424242'
+                ]
+            ],
+            'font' => [
+                'color' => [
+                    'rgb' => 'ffffff'
+                ],
+                'bold' => true,
+                'size' => 13
+            ],
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER
+            ],
+        ];
+
+        $center = [
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+                'wrapText' => true
+            ],
+            'font' => [
+                'bold' => true,
+                'size' => 10
+            ],
+        ];
+
+        $code = [
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+                'wrapText' => true
+            ],
+            'font' => [
+                'bold' => true,
+                'size' => 20
+            ],
+        ];
+
+        $letters = ['D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q'];
+
+        $sheet->getStyle('A1:M1')->applyFromArray($blackStyleArray);
+
+        //Row height
+        $sheet->getRowDimension('1')->setRowHeight(40);
+
+        $spreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(5);
+        $spreadsheet->getActiveSheet()->getColumnDimension('B')->setWidth(5);
+        $spreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(16);
+
+        foreach ($letters as $letter) {
+            $spreadsheet->getActiveSheet()->getColumnDimension($letter)->setWidth(25);
+        }
+
+        $orders = Order::where('type', Order::EAT_FIT_SELECT)->where('is_active', true)->orderBy('size')->get();
+        $n = 1;
+
+        foreach ($orders as $key => $order) {
+            $selects = $order->select()->whereDate('created_at', Carbon::today())->get()->sortBy('ration_id');
+
+            $n++;
+            $sheet->setCellValue('A' . $n, $key + 1);
+            $sheet->mergeCells('A' . $n . ':A' . ($n + 3));
+            $sheet->getStyle('A'. $n)->applyFromArray($blackStyleArray);
+
+            $sheet->setCellValue('B' . $n, $order->getSize($order->size));
+            $sheet->mergeCells('B' . $n . ':B' . ($n + 3));
+            $sheet->getStyle('B' . $n)->getFont()->setBold(true);
+            $sheet->getStyle('B' . $n)->getFont()->setSize(15);
+
+            $sheet->setCellValue('C' . $n, ($key+1).'/'.$order->name);
+            $sheet->mergeCells('C' . $n . ':C' . ($n + 3));
+            $sheet->getStyle('C' . $n)->applyFromArray($center);
+
+            foreach ($selects as $i => $s) {
+                $code_section = '---';
+
+                $sheet->setCellValue($letters[$i] . $n, ($key+1).'/'.$order->name.' - '.$order->getSize($order->size));
+                $sheet->getStyle($letters[$i] . $n)->applyFromArray($center);
+
+                if ($s){
+                    if ($s->is_active && $s->status > 0) {
+
+                        $code_section = $s->code;
+
+                        $sheet->setCellValue($letters[$i] . ($n+2), $s->dish_name);
+                        $sheet->getStyle($letters[$i] . ($n+2))->applyFromArray($center);
+
+                        $sheet->setCellValue($letters[$i] . ($n+3), $s->ration->name . ' ------ ' . $s->weight . 'гр');
+                        $sheet->getStyle($letters[$i] . ($n+3))->applyFromArray($center);
+                    }
+                }
+
+                $sheet->setCellValue($letters[$i] . ($n+1), $code_section);
+                $sheet->getStyle($letters[$i] . ($n+1))->applyFromArray($code);
+            }
+
+            $n+=3;
+        }
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="Select.xlsx"');
+        header('Cache-Control: max-age=0');
+
+        $writer = new Xlsx($spreadsheet);
+        $writer->save('php://output');
     }
 }

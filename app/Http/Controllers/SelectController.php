@@ -739,7 +739,7 @@ class SelectController extends Controller
             ],
         ];
 
-        $letters = ['D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M'];
+        $letters = ['D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q'];
 
         $sheet->getStyle('A1:M1')->applyFromArray($blackStyleArray);
 
@@ -758,7 +758,7 @@ class SelectController extends Controller
         $n = 1;
 
         foreach ($orders as $key => $order) {
-            $select = $order->select()->whereDate('created_at', Carbon::today())->get();
+            $selects = $order->select()->whereDate('created_at', Carbon::today())->get()->sortBy('ration_id');
 
             $n++;
             $sheet->setCellValue('A' . $n, $key + 1);
@@ -774,8 +774,7 @@ class SelectController extends Controller
             $sheet->mergeCells('C' . $n . ':C' . ($n + 3));
             $sheet->getStyle('C' . $n)->applyFromArray($center);
 
-            foreach ($rations as $i => $r) {
-                $s = $select->where('ration_id', $r['id'])->first();
+            foreach ($selects as $i => $s) {
                 $code_section = '---';
 
                 $sheet->setCellValue($letters[$i] . $n, ($key+1).'/'.$order->name.' - '.$order->getSize($order->size));
@@ -842,10 +841,10 @@ class SelectController extends Controller
                     $sheet->getStyle($letters[$i] . ($n+1))
                         ->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB($s->getStatusColorExcel($s->status));
                 }*/
-            }
 
-            /*$sheet->setCellValue('D' . ($n+1), $order->order_name.' - '.$order->order_tag);
-            $sheet->getStyle('D' . ($n+1))->applyFromArray($center);*/
+                /*$sheet->setCellValue('D' . ($n+1), $order->order_name.' - '.$order->order_tag);
+                $sheet->getStyle('D' . ($n+1))->applyFromArray($center);*/
+            }
 
             $n+=3;
         }

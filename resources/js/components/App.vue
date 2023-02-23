@@ -113,7 +113,7 @@ export default {
                         roles: ['admin', 'office']
                     },
                     {
-                        title: 'Рассылка меню',
+                        title: 'Рассылка меню Select',
                         link: '/broadcast-menu',
                         icon: 'account-star',
                         roles: ['admin', 'office']
