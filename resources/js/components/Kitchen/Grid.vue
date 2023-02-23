@@ -43,12 +43,13 @@
                             @click="openDialog(o)"
                         >
                             <v-card-text>
-                                <div class="d-flex justify-space-between">
+                                <div class="d-flex justify-space-between mb-3">
                                     <p class="text-sm-body-2 mb-0">{{o.ration.name}}</p>
                                     <v-icon v-if="o.done" class="mb-2">mdi-check</v-icon>
                                 </div>
-                                <h2>{{o.code}}</h2>
-                                <span>{{o.dish_name}}</span>
+                                <h2 class="mb-2">{{o.code}}</h2>
+                                <span class="mb-2">{{o.dish_name}}</span>
+                                <span class="mb-2">{{o.weight}}</span>
                             </v-card-text>
                         </v-card>
 
