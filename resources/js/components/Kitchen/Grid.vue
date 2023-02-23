@@ -49,7 +49,7 @@
                                 </div>
                                 <h2 class="mb-2">{{o.code}}</h2>
                                 <p class="mb-2">{{o.dish_name}}</p>
-                                <p class="mb-2">{{o.weight}}гр</p>
+                                <p class="font-weight-bold">{{o.weight}}гр</p>
                             </v-card-text>
                         </v-card>
 
