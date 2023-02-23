@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\OrderSelectCollection;
 use App\Http\Resources\SelectCollection;
+use App\Models\City;
 use App\Models\Dish;
 use App\Models\Ingredient;
 use App\Models\Order;
@@ -21,7 +22,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 class SelectController extends Controller
 {
     public function index() {
-        $selects = Select::whereDate('created_at', Carbon::today())->get();
+        $selects = Select::whereDate('created_at', Carbon::today())->where('city_id', City::ASTANA)->get();
         Select::generateCode();
         return SelectCollection::collection($selects)->collection->sortBy('ration_id')->groupBy('order_id');
     }
