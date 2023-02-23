@@ -48,8 +48,8 @@
                                     <v-icon v-if="o.done" class="mb-2">mdi-check</v-icon>
                                 </div>
                                 <h2 class="mb-2">{{o.code}}</h2>
-                                <span class="mb-2">{{o.dish_name}}</span>
-                                <span class="mb-2">{{o.weight}}</span>
+                                <p class="mb-2">{{o.dish_name}}</p>
+                                <p class="mb-2">{{o.weight}}гр</p>
                             </v-card-text>
                         </v-card>
 
