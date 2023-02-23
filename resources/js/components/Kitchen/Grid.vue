@@ -44,10 +44,10 @@
                         >
                             <v-card-text>
                                 <div class="d-flex justify-space-between mb-3">
-                                    <p v-if="o.is_active" class="text-sm-body-2 mb-0">{{o.ration.name}}</p>
+                                    <p class="text-sm-body-2 mb-0">{{o.ration.name}}</p>
                                     <v-icon v-if="o.done" class="mb-2">mdi-check</v-icon>
                                 </div>
-                                <h2 class="mb-2">{{o.code}}</h2>
+                                <h2 v-if="o.is_active" class="mb-2">{{o.code}}</h2>
                                 <p class="mb-2">{{o.dish_name}}</p>
                                 <p class="font-weight-bold">{{o.weight}}гр</p>
                             </v-card-text>
