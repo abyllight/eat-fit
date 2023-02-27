@@ -119,7 +119,7 @@ class Select extends Model
             ->get()
             ->groupBy('ration_id');
 
-        //$duty_cuisine = Cuisine::where('is_on_duty', true)->first();
+        $duty_cuisine = Cuisine::where('is_on_duty', true)->first();
 
         foreach ($groups as $group){
 
@@ -127,11 +127,18 @@ class Select extends Model
             //beautify
             foreach ($group as $item) {
                 $code = null;
-                //$duty_dish = Dish::where('cuisine_id', $duty_cuisine->id)->where('ration_id', $item->ration_id)->first();
 
-                /*if ($duty_dish && $item->dish_id === $duty_dish->id) {
-                    $code = '0';
-                }*/
+                $duty_dish = Dish::where('cuisine_id', $duty_cuisine->id)->where('ration_id', $item->ration_id)->first();
+                //dd($duty_dish->getIngredientIds()->toArray());
+                if ($duty_dish) {
+                    $a = array_diff($duty_dish->getIngredientIds()->toArray(), $item->getIngredientIds());
+                    $b = array_diff($item->getIngredientIds(), $duty_dish->getIngredientIds()->toArray());
+
+                    if (count($a) === 0 && count($b) === 0 && !$item->description){
+                        $code = '0';
+                    }
+                }
+
 
                 $ids[] = [
                     'id'=> $item->id,

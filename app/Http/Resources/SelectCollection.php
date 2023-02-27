@@ -24,7 +24,7 @@ class SelectCollection extends JsonResource
             'done' => $this->done,
             'code' => $this->code,
             'dep_id' => $this->dep_id,
-            'order_tag' => $this->order->getSize(1),
+            'order_tag' => $this->order->getSize($this->order->size),
             'dish_id' => $this->dish ? $this->dish->id : null,
             'dish_name' => $this->dish_name,
             'ingredients' => $this->ingredients->sortBy('name')->toArray(),

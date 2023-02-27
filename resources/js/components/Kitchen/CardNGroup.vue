@@ -1,5 +1,14 @@
 <template>
     <div>
+        <v-row v-if="loading" class="d-flex justify-center">
+            <v-progress-circular
+                :size="70"
+                :width="7"
+                color="primary"
+                indeterminate
+            ></v-progress-circular>
+        </v-row>
+
         <div>
             <div>
                 <draggable id="0" group="cards" @end="log" :options="{delay: 250}" style="display: flex; overflow-x: scroll; padding: 4px; border: 1px dashed darkgrey; height: 250px">
@@ -81,19 +90,19 @@
                     </v-sheet>
                 </draggable>
             </div>
-        </div>
 
-        <v-btn
-            color="pink"
-            dark
-            fixed
-            bottom
-            right
-            fab
-            @click="dialog = true"
-        >
-            <v-icon>mdi-plus</v-icon>
-        </v-btn>
+            <v-btn
+                color="pink"
+                dark
+                fixed
+                bottom
+                right
+                fab
+                @click="dialog = true"
+            >
+                <v-icon>mdi-plus</v-icon>
+            </v-btn>
+        </div>
 
         <v-dialog
             v-model="dialog"
@@ -197,6 +206,7 @@ export default {
         draggable
     },
     data: () => ({
+        loading: true,
         cards: [],
         groups: [],
         dialog: false,
@@ -216,7 +226,7 @@ export default {
                 .then(res => {
                     this.cards = res.data.cards
                     this.groups = res.data.groups
-                    console.log(this.groups)
+                    this.loading = false
                 })
         },
         async getDepartments(){

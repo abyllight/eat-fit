@@ -269,7 +269,7 @@ class CardGroupController extends Controller
             $sheet->getStyle('C' . $n)->applyFromArray($center);
 
             foreach ($selects as $i => $s) {
-                $code_section = '---';
+                $code_section = '-БЕЗ-';
 
                 $sheet->setCellValue($letters[$i] . $n, ($key+1).'/'.$order->name.' - '.$order->getSize($order->size));
                 $sheet->getStyle($letters[$i] . $n)->applyFromArray($center);
@@ -283,7 +283,7 @@ class CardGroupController extends Controller
                         $sheet->setCellValue($letters[$i] . ($n+2), $s->dish_name);
                         $sheet->getStyle($letters[$i] . ($n+2))->applyFromArray($center);
 
-                        $sheet->setCellValue($letters[$i] . ($n+3), $s->ration->name . ' ------ ' . $s->weight . 'гр');
+                        $sheet->setCellValue($letters[$i] . ($n+3), $s->ration->name . ' -------- ' . $s->weight . 'гр');
                         $sheet->getStyle($letters[$i] . ($n+3))->applyFromArray($center);
                     }
                 }

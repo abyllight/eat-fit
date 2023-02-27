@@ -222,6 +222,57 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -231,7 +282,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   data: function data() {
     return {
-      loading: false,
+      loading: true,
       isSelect: true,
       orders: [],
       stat: {},
@@ -243,7 +294,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         tableware: {},
         wishlist: []
       },
-      ration: {}
+      ration: {},
+      panel: []
     };
   },
   mounted: function mounted() {
@@ -353,8 +405,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/' + order.id + '/done').then(function (res) {
         _this4.getSelects();
       });
-    },
-    exportStickers: function exportStickers() {}
+    }
   }
 });
 
@@ -589,7 +640,9 @@ var render = function() {
                 },
                 [
                   _c("v-btn", { attrs: { color: "primary" } }, [
-                    _vm._v("\n                    Excel\n                ")
+                    _vm._v(
+                      "\n                        Excel\n                    "
+                    )
                   ])
                 ],
                 1
@@ -607,121 +660,175 @@ var render = function() {
         1
       ),
       _vm._v(" "),
-      _vm._l(_vm.orders, function(order, index) {
-        return _c(
-          "v-row",
-          {
-            key: index,
-            staticClass: "mb-10",
-            staticStyle: { "border-bottom": "1px solid grey" }
-          },
-          [
-            _c("v-col", { attrs: { cols: "2" } }, [
-              _c("p", { staticClass: "mb-0 text-sm-body-2" }, [
-                _vm._v(_vm._s(order[0].order_tag))
-              ]),
-              _vm._v(" "),
-              _c("p", { staticClass: "text-sm-body-2 font-weight-bold" }, [
-                _vm._v(_vm._s(order[0].order_name))
-              ])
-            ]),
-            _vm._v(" "),
-            _c(
-              "v-col",
-              [
-                _c(
-                  "v-row",
-                  _vm._l(order, function(o) {
-                    return _c(
-                      "v-col",
-                      { key: o.name, attrs: { cols: "12", md: "3" } },
-                      [
-                        _c(
-                          "v-card",
-                          {
-                            staticStyle: { cursor: "pointer" },
-                            attrs: {
-                              color: o.done ? "teal" : o.color,
-                              dark: o.done === 1
-                            },
-                            on: {
-                              click: function($event) {
-                                return _vm.openDialog(o)
-                              }
-                            }
-                          },
-                          [
-                            _c("v-card-text", [
-                              _c(
-                                "div",
-                                {
-                                  staticClass:
-                                    "d-flex justify-space-between mb-3"
-                                },
+      _vm.loading
+        ? _c(
+            "v-row",
+            { staticClass: "d-flex justify-center" },
+            [
+              _c("v-progress-circular", {
+                attrs: {
+                  size: 70,
+                  width: 7,
+                  color: "primary",
+                  indeterminate: ""
+                }
+              })
+            ],
+            1
+          )
+        : _c(
+            "v-row",
+            [
+              _c(
+                "v-expansion-panels",
+                {
+                  attrs: { multiple: "" },
+                  model: {
+                    value: _vm.panel,
+                    callback: function($$v) {
+                      _vm.panel = $$v
+                    },
+                    expression: "panel"
+                  }
+                },
+                _vm._l(_vm.orders, function(order, index) {
+                  return _c(
+                    "v-expansion-panel",
+                    { key: index },
+                    [
+                      _c("v-expansion-panel-header", [
+                        _c("p", [
+                          _c(
+                            "span",
+                            { staticClass: "text-sm-body-2 font-weight-bold" },
+                            [
+                              _vm._v(
+                                _vm._s(order[0].order_name) +
+                                  " - " +
+                                  _vm._s(order[0].order_tag)
+                              )
+                            ]
+                          )
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "v-expansion-panel-content",
+                        [
+                          _c(
+                            "v-row",
+                            _vm._l(order, function(o) {
+                              return _c(
+                                "v-col",
+                                { key: o.name, attrs: { cols: "12", md: "3" } },
                                 [
                                   _c(
-                                    "p",
-                                    { staticClass: "text-sm-body-2 mb-0" },
-                                    [_vm._v(_vm._s(o.ration.name))]
+                                    "v-card",
+                                    {
+                                      staticClass: "mb-3",
+                                      staticStyle: { cursor: "pointer" },
+                                      attrs: {
+                                        color: o.done ? "teal" : o.color,
+                                        dark: o.done === 1
+                                      },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.openDialog(o)
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _c("v-card-text", [
+                                        _c(
+                                          "div",
+                                          {
+                                            staticClass:
+                                              "d-flex justify-space-between mb-2"
+                                          },
+                                          [
+                                            o.is_active
+                                              ? _c(
+                                                  "h2",
+                                                  { staticClass: "mb-2" },
+                                                  [_vm._v(_vm._s(o.code))]
+                                                )
+                                              : _vm._e(),
+                                            _vm._v(" "),
+                                            _c(
+                                              "p",
+                                              {
+                                                staticClass:
+                                                  "text-sm-body-2 mb-0"
+                                              },
+                                              [_vm._v(_vm._s(o.ration.name))]
+                                            )
+                                          ]
+                                        ),
+                                        _vm._v(" "),
+                                        _c("p", { staticClass: "mb-2" }, [
+                                          _vm._v(_vm._s(o.dish_name))
+                                        ]),
+                                        _vm._v(" "),
+                                        _c(
+                                          "p",
+                                          {
+                                            staticClass: "font-weight-bold mb-0"
+                                          },
+                                          [_vm._v(_vm._s(o.weight) + "гр")]
+                                        )
+                                      ])
+                                    ],
+                                    1
                                   ),
                                   _vm._v(" "),
-                                  o.done
-                                    ? _c("v-icon", { staticClass: "mb-2" }, [
-                                        _vm._v("mdi-check")
-                                      ])
+                                  o.is_active
+                                    ? _c(
+                                        "v-btn",
+                                        {
+                                          attrs: {
+                                            color: "teal",
+                                            dark: "",
+                                            block: ""
+                                          },
+                                          on: {
+                                            click: function($event) {
+                                              return _vm.done(o)
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _vm._v(
+                                            "\n                                    сделано\n                                    "
+                                          ),
+                                          o.done
+                                            ? _c(
+                                                "v-icon",
+                                                { attrs: { right: "" } },
+                                                [_vm._v("mdi-check")]
+                                              )
+                                            : _vm._e()
+                                        ],
+                                        1
+                                      )
                                     : _vm._e()
                                 ],
                                 1
-                              ),
-                              _vm._v(" "),
-                              _c("h2", { staticClass: "mb-2" }, [
-                                _vm._v(_vm._s(o.code))
-                              ]),
-                              _vm._v(" "),
-                              _c("p", { staticClass: "mb-2" }, [
-                                _vm._v(_vm._s(o.dish_name))
-                              ]),
-                              _vm._v(" "),
-                              _c("p", { staticClass: "font-weight-bold" }, [
-                                _vm._v(_vm._s(o.weight) + "гр")
-                              ])
-                            ])
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        o.is_active
-                          ? _c(
-                              "v-btn",
-                              {
-                                staticClass: "mt-3",
-                                attrs: { color: "teal", dark: "", block: "" },
-                                on: {
-                                  click: function($event) {
-                                    return _vm.done(o)
-                                  }
-                                }
-                              },
-                              [
-                                _vm._v(
-                                  "\n                        сделано\n                    "
-                                )
-                              ]
-                            )
-                          : _vm._e()
-                      ],
-                      1
-                    )
-                  }),
-                  1
-                )
-              ],
-              1
-            )
-          ],
-          1
-        )
-      }),
+                              )
+                            }),
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                }),
+                1
+              )
+            ],
+            1
+          ),
       _vm._v(" "),
       _c(
         "v-row",
@@ -752,9 +859,9 @@ var render = function() {
                         { attrs: { color: "primary", dark: "" } },
                         [
                           _vm._v(
-                            "\n                        " +
+                            "\n                            " +
                               _vm._s(_vm.order.order_name) +
-                              "\n                        "
+                              "\n                            "
                           ),
                           _c("v-spacer"),
                           _vm._v(" "),
@@ -801,9 +908,9 @@ var render = function() {
                                         _vm._v(_vm._s(index + 1) + ".")
                                       ]),
                                       _vm._v(
-                                        "\n                                    " +
+                                        "\n                                        " +
                                           _vm._s(i.name) +
-                                          "\n                                "
+                                          "\n                                    "
                                       )
                                     ]
                                   )
@@ -824,9 +931,9 @@ var render = function() {
                                       [
                                         _c("h4", [_vm._v("Вес:")]),
                                         _vm._v(
-                                          "\n                                    " +
+                                          "\n                                        " +
                                             _vm._s(_vm.order.weight) +
-                                            " грамм\n                                "
+                                            " грамм\n                                    "
                                         )
                                       ]
                                     )
@@ -844,9 +951,9 @@ var render = function() {
                                       [
                                         _c("h4", [_vm._v("Описание:")]),
                                         _vm._v(
-                                          "\n                                    " +
+                                          "\n                                        " +
                                             _vm._s(_vm.order.description) +
-                                            "\n                                "
+                                            "\n                                    "
                                         )
                                       ]
                                     )
@@ -878,7 +985,7 @@ var render = function() {
                                               _vm._v(
                                                 " " +
                                                   _vm._s(w.wish) +
-                                                  "\n                                    "
+                                                  "\n                                        "
                                               )
                                             ]
                                           )
@@ -937,7 +1044,7 @@ var render = function() {
         1
       )
     ],
-    2
+    1
   )
 }
 var staticRenderFns = []

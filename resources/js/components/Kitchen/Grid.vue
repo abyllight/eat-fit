@@ -22,13 +22,16 @@
             </v-col>
         </v-row>
 
-        <v-row
-            v-for="(order, index) in orders"
-            :key="index"
-            style="border-bottom: 1px solid grey"
-            class="mb-10"
-        >
-            <v-col cols="2">
+        <v-row v-if="loading" class="d-flex justify-center">
+            <v-progress-circular
+                :size="70"
+                :width="7"
+                color="primary"
+                indeterminate
+            ></v-progress-circular>
+        </v-row>
+        <v-row v-else>
+<!--            <v-col cols="2">
                 <p class="mb-0 text-sm-body-2">{{order[0].order_tag}}</p>
                 <p class="text-sm-body-2 font-weight-bold">{{order[0].order_name}}</p>
             </v-col>
@@ -65,7 +68,55 @@
                         </v-btn>
                     </v-col>
                 </v-row>
-            </v-col>
+            </v-col>-->
+
+            <v-expansion-panels
+                v-model="panel"
+                multiple
+            >
+                <v-expansion-panel
+                    v-for="(order, index) in orders"
+                    :key="index"
+                >
+                    <v-expansion-panel-header>
+                        <p><span class="text-sm-body-2 font-weight-bold">{{order[0].order_name}} - {{order[0].order_tag}}</span></p>
+                    </v-expansion-panel-header>
+                    <v-expansion-panel-content>
+                        <v-row>
+                            <v-col cols="12" md="3" v-for="o in order" :key="o.name">
+                                <v-card
+                                    :color="o.done ? 'teal' : o.color"
+                                    style="cursor:pointer;"
+                                    :dark="o.done === 1"
+                                    @click="openDialog(o)"
+                                    class="mb-3"
+                                >
+                                    <v-card-text>
+                                        <div class="d-flex justify-space-between mb-2">
+                                            <h2 v-if="o.is_active" class="mb-2">{{o.code}}</h2>
+                                            <p class="text-sm-body-2 mb-0">{{o.ration.name}}</p>
+                                        </div>
+
+                                        <p class="mb-2">{{o.dish_name}}</p>
+                                        <p class="font-weight-bold mb-0">{{o.weight}}гр</p>
+                                    </v-card-text>
+                                </v-card>
+
+                                <v-btn
+                                    v-if="o.is_active"
+                                    color="teal"
+                                    dark
+                                    block
+                                    @click="done(o)"
+                                >
+                                    сделано
+                                    <v-icon v-if="o.done" right>mdi-check</v-icon>
+                                </v-btn>
+                            </v-col>
+                        </v-row>
+                    </v-expansion-panel-content>
+                </v-expansion-panel>
+            </v-expansion-panels>
         </v-row>
 
         <v-row justify="space-around">
@@ -145,7 +196,7 @@ export default {
     name: "Grid",
     components: {Stat},
     data: () => ({
-        loading: false,
+        loading: true,
         isSelect: true,
         orders: [],
         stat: {},
@@ -157,7 +208,8 @@ export default {
             tableware: {},
             wishlist: []
         },
-        ration: {}
+        ration: {},
+        panel: []
     }),
     mounted() {
         this.getSelects()
@@ -225,9 +277,6 @@ export default {
                 .then(res => {
                     this.getSelects()
                 })
-        },
-        exportStickers() {
-
         }
     }
 }

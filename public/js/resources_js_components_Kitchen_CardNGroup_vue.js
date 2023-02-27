@@ -212,6 +212,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "CardNGroup",
@@ -220,6 +229,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   data: function data() {
     return {
+      loading: true,
       cards: [],
       groups: [],
       dialog: false,
@@ -247,7 +257,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return axios.get('/api/cards').then(function (res) {
                   _this.cards = res.data.cards;
                   _this.groups = res.data.groups;
-                  console.log(_this.groups);
+                  _this.loading = false;
                 });
 
               case 2:
@@ -4182,6 +4192,24 @@ var render = function() {
   return _c(
     "div",
     [
+      _vm.loading
+        ? _c(
+            "v-row",
+            { staticClass: "d-flex justify-center" },
+            [
+              _c("v-progress-circular", {
+                attrs: {
+                  size: 70,
+                  width: 7,
+                  color: "primary",
+                  indeterminate: ""
+                }
+              })
+            ],
+            1
+          )
+        : _vm._e(),
+      _vm._v(" "),
       _c(
         "div",
         [
@@ -4419,30 +4447,30 @@ var render = function() {
               ],
               1
             )
-          })
+          }),
+          _vm._v(" "),
+          _c(
+            "v-btn",
+            {
+              attrs: {
+                color: "pink",
+                dark: "",
+                fixed: "",
+                bottom: "",
+                right: "",
+                fab: ""
+              },
+              on: {
+                click: function($event) {
+                  _vm.dialog = true
+                }
+              }
+            },
+            [_c("v-icon", [_vm._v("mdi-plus")])],
+            1
+          )
         ],
         2
-      ),
-      _vm._v(" "),
-      _c(
-        "v-btn",
-        {
-          attrs: {
-            color: "pink",
-            dark: "",
-            fixed: "",
-            bottom: "",
-            right: "",
-            fab: ""
-          },
-          on: {
-            click: function($event) {
-              _vm.dialog = true
-            }
-          }
-        },
-        [_c("v-icon", [_vm._v("mdi-plus")])],
-        1
       ),
       _vm._v(" "),
       _c(
