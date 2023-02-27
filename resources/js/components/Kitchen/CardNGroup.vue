@@ -9,7 +9,7 @@
             ></v-progress-circular>
         </v-row>
 
-        <div>
+        <div v-else>
             <div>
                 <draggable id="0" group="cards" @end="log" :options="{delay: 250}" style="display: flex; overflow-x: scroll; padding: 4px; border: 1px dashed darkgrey; height: 250px">
                     <v-sheet
