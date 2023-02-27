@@ -77,13 +77,15 @@ class BroadcastMenuController extends Controller
             //$data = $this->performText();
             //$orders = Order::where('is_active', true)->where('type', Order::EAT_FIT_SELECT)->get();
             $duty_cuisine = Cuisine::where('is_on_duty', true)->first();
-            $order = Order::find(271);
+            $order = Order::find(489);
             $selects = $order->select()->whereDate('created_at', Carbon::today())->get()->sortBy('ration_id');
 
-            $text = 'Test11'.'%0D%0A';
+            define('PHP_EOL',"\r\n");
+
+            $text = 'Test1';
 
             foreach ($selects as $select) {
-                $text .= $select->ration->name.'%0D%0A';
+                $text .= $select->ration->name.PHP_EOL;
             }
 
             $lead = $amo->lead;

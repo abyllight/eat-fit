@@ -30,46 +30,8 @@
                 indeterminate
             ></v-progress-circular>
         </v-row>
+
         <v-row v-else>
-<!--            <v-col cols="2">
-                <p class="mb-0 text-sm-body-2">{{order[0].order_tag}}</p>
-                <p class="text-sm-body-2 font-weight-bold">{{order[0].order_name}}</p>
-            </v-col>
-
-            <v-col>
-                <v-row>
-                    <v-col cols="12" md="3" v-for="o in order" :key="o.name">
-                        <v-card
-                            :color="o.done ? 'teal' : o.color"
-                            style="cursor:pointer;"
-                            :dark="o.done === 1"
-                            @click="openDialog(o)"
-                        >
-                            <v-card-text>
-                                <div class="d-flex justify-space-between mb-3">
-                                    <p class="text-sm-body-2 mb-0">{{o.ration.name}}</p>
-                                    <v-icon v-if="o.done" class="mb-2">mdi-check</v-icon>
-                                </div>
-                                <h2 v-if="o.is_active" class="mb-2">{{o.code}}</h2>
-                                <p class="mb-2">{{o.dish_name}}</p>
-                                <p class="font-weight-bold">{{o.weight}}гр</p>
-                            </v-card-text>
-                        </v-card>
-
-                        <v-btn
-                            v-if="o.is_active"
-                            class="mt-3"
-                            color="teal"
-                            dark
-                            block
-                            @click="done(o)"
-                        >
-                            сделано
-                        </v-btn>
-                    </v-col>
-                </v-row>
-            </v-col>-->
-
             <v-expansion-panels
                 v-model="panel"
                 multiple
@@ -117,6 +79,46 @@
                     </v-expansion-panel-content>
                 </v-expansion-panel>
             </v-expansion-panels>
+        </v-row>
+        <v-row>
+<!--            <v-col cols="2">
+                <p class="mb-0 text-sm-body-2">{{order[0].order_tag}}</p>
+                <p class="text-sm-body-2 font-weight-bold">{{order[0].order_name}}</p>
+            </v-col>
+
+            <v-col>
+                <v-row>
+                    <v-col cols="12" md="3" v-for="o in order" :key="o.name">
+                        <v-card
+                            :color="o.done ? 'teal' : o.color"
+                            style="cursor:pointer;"
+                            :dark="o.done === 1"
+                            @click="openDialog(o)"
+                        >
+                            <v-card-text>
+                                <div class="d-flex justify-space-between mb-3">
+                                    <p class="text-sm-body-2 mb-0">{{o.ration.name}}</p>
+                                    <v-icon v-if="o.done" class="mb-2">mdi-check</v-icon>
+                                </div>
+                                <h2 v-if="o.is_active" class="mb-2">{{o.code}}</h2>
+                                <p class="mb-2">{{o.dish_name}}</p>
+                                <p class="font-weight-bold">{{o.weight}}гр</p>
+                            </v-card-text>
+                        </v-card>
+
+                        <v-btn
+                            v-if="o.is_active"
+                            class="mt-3"
+                            color="teal"
+                            dark
+                            block
+                            @click="done(o)"
+                        >
+                            сделано
+                        </v-btn>
+                    </v-col>
+                </v-row>
+            </v-col>-->
         </v-row>
 
         <v-row justify="space-around">

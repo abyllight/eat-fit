@@ -4208,270 +4208,278 @@ var render = function() {
             ],
             1
           )
-        : _vm._e(),
-      _vm._v(" "),
-      _c(
-        "div",
-        [
-          _c(
+        : _c(
             "div",
             [
               _c(
-                "draggable",
-                {
-                  staticStyle: {
-                    display: "flex",
-                    "overflow-x": "scroll",
-                    padding: "4px",
-                    border: "1px dashed darkgrey",
-                    height: "250px"
-                  },
-                  attrs: { id: "0", group: "cards", options: { delay: 250 } },
-                  on: { end: _vm.log }
-                },
-                _vm._l(_vm.cards, function(card) {
-                  return _c(
-                    "v-sheet",
+                "div",
+                [
+                  _c(
+                    "draggable",
                     {
-                      key: card.code,
-                      staticClass:
-                        "pa-3 mr-5 d-flex flex-column justify-space-between",
-                      staticStyle: { "flex-shrink": "0", cursor: "pointer" },
-                      attrs: {
-                        id: card.code,
-                        rounded: "",
-                        elevation: "1",
-                        color: card.color,
-                        width: "240",
-                        height: "160"
+                      staticStyle: {
+                        display: "flex",
+                        "overflow-x": "scroll",
+                        padding: "4px",
+                        border: "1px dashed darkgrey",
+                        height: "250px"
                       },
-                      on: {
-                        click: function($event) {
-                          $event.stopPropagation()
-                          return _vm.openModal(card.code)
-                        }
-                      }
+                      attrs: {
+                        id: "0",
+                        group: "cards",
+                        options: { delay: 250 }
+                      },
+                      on: { end: _vm.log }
                     },
-                    [
-                      _c("div", [
-                        _c(
-                          "div",
-                          {
-                            staticClass:
-                              "d-flex justify-space-between align-center"
+                    _vm._l(_vm.cards, function(card) {
+                      return _c(
+                        "v-sheet",
+                        {
+                          key: card.code,
+                          staticClass:
+                            "pa-3 mr-5 d-flex flex-column justify-space-between",
+                          staticStyle: {
+                            "flex-shrink": "0",
+                            cursor: "pointer"
                           },
-                          [
-                            _c("h2", [_vm._v(_vm._s(card.code))]),
-                            _vm._v(
-                              "\n                            " +
-                                _vm._s(_vm.countWeight(card.items)) +
-                                " грамм\n                        "
-                            )
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c("p", { staticClass: "text-body-2" }, [
-                          _vm._v(_vm._s(card.dish_name))
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "d-flex justify-space-between" },
+                          attrs: {
+                            id: card.code,
+                            rounded: "",
+                            elevation: "1",
+                            color: card.color,
+                            width: "240",
+                            height: "160"
+                          },
+                          on: {
+                            click: function($event) {
+                              $event.stopPropagation()
+                              return _vm.openModal(card.code)
+                            }
+                          }
+                        },
                         [
+                          _c("div", [
+                            _c(
+                              "div",
+                              {
+                                staticClass:
+                                  "d-flex justify-space-between align-center"
+                              },
+                              [
+                                _c("h2", [_vm._v(_vm._s(card.code))]),
+                                _vm._v(
+                                  "\n                            " +
+                                    _vm._s(_vm.countWeight(card.items)) +
+                                    " грамм\n                        "
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c("p", { staticClass: "text-body-2" }, [
+                              _vm._v(_vm._s(card.dish_name))
+                            ])
+                          ]),
+                          _vm._v(" "),
                           _c(
                             "div",
-                            { staticClass: "d-flex align-end" },
+                            { staticClass: "d-flex justify-space-between" },
                             [
-                              _c("v-icon", { staticClass: "mr-2" }, [
-                                _vm._v("mdi-account-group")
-                              ]),
-                              _vm._v(
-                                "\n                            " +
-                                  _vm._s(card.items.length) +
-                                  "\n                        "
-                              )
-                            ],
-                            1
-                          ),
-                          _vm._v(" "),
-                          _c("div", [
-                            _vm._v(
-                              "\n                            " +
-                                _vm._s(card.ration) +
-                                "\n                        "
-                            )
-                          ])
+                              _c(
+                                "div",
+                                { staticClass: "d-flex align-end" },
+                                [
+                                  _c("v-icon", { staticClass: "mr-2" }, [
+                                    _vm._v("mdi-account-group")
+                                  ]),
+                                  _vm._v(
+                                    "\n                            " +
+                                      _vm._s(card.items.length) +
+                                      "\n                        "
+                                  )
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c("div", [
+                                _vm._v(
+                                  "\n                            " +
+                                    _vm._s(card.ration) +
+                                    "\n                        "
+                                )
+                              ])
+                            ]
+                          )
                         ]
                       )
-                    ]
+                    }),
+                    1
                   )
-                }),
+                ],
                 1
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _vm._l(_vm.groups, function(group) {
-            return _c(
-              "div",
-              { key: group.name, staticClass: "my-10" },
-              [
-                _c(
+              ),
+              _vm._v(" "),
+              _vm._l(_vm.groups, function(group) {
+                return _c(
                   "div",
-                  {
-                    staticClass:
-                      "d-flex justify-space-between align-center mb-5"
-                  },
+                  { key: group.name, staticClass: "my-10" },
                   [
-                    _c("h3", [_vm._v(_vm._s(group.name))]),
-                    _vm._v(" "),
                     _c(
-                      "v-btn",
+                      "div",
                       {
-                        attrs: { "x-small": "", color: "red", dark: "" },
-                        on: {
-                          click: function($event) {
-                            return _vm.deleteGroup(group.id)
-                          }
-                        }
+                        staticClass:
+                          "d-flex justify-space-between align-center mb-5"
                       },
                       [
-                        _vm._v(
-                          "\n                    удалить\n                "
+                        _c("h3", [_vm._v(_vm._s(group.name))]),
+                        _vm._v(" "),
+                        _c(
+                          "v-btn",
+                          {
+                            attrs: { "x-small": "", color: "red", dark: "" },
+                            on: {
+                              click: function($event) {
+                                return _vm.deleteGroup(group.id)
+                              }
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "\n                    удалить\n                "
+                            )
+                          ]
                         )
-                      ]
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "draggable",
+                      {
+                        staticStyle: {
+                          display: "flex",
+                          "overflow-x": "scroll",
+                          padding: "4px",
+                          border: "1px dashed darkgrey",
+                          height: "250px"
+                        },
+                        attrs: {
+                          id: group.id,
+                          group: "cards",
+                          options: { delay: 250 }
+                        },
+                        on: { end: _vm.log }
+                      },
+                      _vm._l(group.cards, function(card) {
+                        return _c(
+                          "v-sheet",
+                          {
+                            key: card.code,
+                            staticClass:
+                              "pa-3 mr-5 d-flex flex-column justify-space-between",
+                            staticStyle: {
+                              "flex-shrink": "0",
+                              cursor: "pointer"
+                            },
+                            attrs: {
+                              id: card.code,
+                              color: card.color,
+                              rounded: "",
+                              elevation: "1",
+                              width: "240",
+                              height: "160"
+                            },
+                            on: {
+                              click: function($event) {
+                                $event.stopPropagation()
+                                return _vm.openModal(card.code)
+                              }
+                            }
+                          },
+                          [
+                            _c("div", [
+                              _c(
+                                "div",
+                                {
+                                  staticClass:
+                                    "d-flex justify-space-between align-center"
+                                },
+                                [
+                                  _c("h2", [_vm._v(_vm._s(card.code))]),
+                                  _vm._v(
+                                    "\n                            " +
+                                      _vm._s(_vm.countWeight(card.items)) +
+                                      " грамм\n                        "
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c("p", { staticClass: "text-body-2" }, [
+                                _vm._v(_vm._s(card.dish_name))
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticClass: "d-flex justify-space-between" },
+                              [
+                                _c(
+                                  "div",
+                                  { staticClass: "d-flex align-end" },
+                                  [
+                                    _c("v-icon", { staticClass: "mr-2" }, [
+                                      _vm._v("mdi-account-group")
+                                    ]),
+                                    _vm._v(
+                                      "\n                            " +
+                                        _vm._s(card.items.length) +
+                                        "\n                        "
+                                    )
+                                  ],
+                                  1
+                                ),
+                                _vm._v(" "),
+                                _c("div", [
+                                  _vm._v(
+                                    "\n                            " +
+                                      _vm._s(card.ration) +
+                                      "\n                        "
+                                  )
+                                ])
+                              ]
+                            )
+                          ]
+                        )
+                      }),
+                      1
                     )
                   ],
                   1
-                ),
-                _vm._v(" "),
-                _c(
-                  "draggable",
-                  {
-                    staticStyle: {
-                      display: "flex",
-                      "overflow-x": "scroll",
-                      padding: "4px",
-                      border: "1px dashed darkgrey",
-                      height: "250px"
-                    },
-                    attrs: {
-                      id: group.id,
-                      group: "cards",
-                      options: { delay: 250 }
-                    },
-                    on: { end: _vm.log }
-                  },
-                  _vm._l(group.cards, function(card) {
-                    return _c(
-                      "v-sheet",
-                      {
-                        key: card.code,
-                        staticClass:
-                          "pa-3 mr-5 d-flex flex-column justify-space-between",
-                        staticStyle: { "flex-shrink": "0", cursor: "pointer" },
-                        attrs: {
-                          id: card.code,
-                          color: card.color,
-                          rounded: "",
-                          elevation: "1",
-                          width: "240",
-                          height: "160"
-                        },
-                        on: {
-                          click: function($event) {
-                            $event.stopPropagation()
-                            return _vm.openModal(card.code)
-                          }
-                        }
-                      },
-                      [
-                        _c("div", [
-                          _c(
-                            "div",
-                            {
-                              staticClass:
-                                "d-flex justify-space-between align-center"
-                            },
-                            [
-                              _c("h2", [_vm._v(_vm._s(card.code))]),
-                              _vm._v(
-                                "\n                            " +
-                                  _vm._s(_vm.countWeight(card.items)) +
-                                  " грамм\n                        "
-                              )
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c("p", { staticClass: "text-body-2" }, [
-                            _vm._v(_vm._s(card.dish_name))
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          { staticClass: "d-flex justify-space-between" },
-                          [
-                            _c(
-                              "div",
-                              { staticClass: "d-flex align-end" },
-                              [
-                                _c("v-icon", { staticClass: "mr-2" }, [
-                                  _vm._v("mdi-account-group")
-                                ]),
-                                _vm._v(
-                                  "\n                            " +
-                                    _vm._s(card.items.length) +
-                                    "\n                        "
-                                )
-                              ],
-                              1
-                            ),
-                            _vm._v(" "),
-                            _c("div", [
-                              _vm._v(
-                                "\n                            " +
-                                  _vm._s(card.ration) +
-                                  "\n                        "
-                              )
-                            ])
-                          ]
-                        )
-                      ]
-                    )
-                  }),
-                  1
                 )
-              ],
-              1
-            )
-          }),
-          _vm._v(" "),
-          _c(
-            "v-btn",
-            {
-              attrs: {
-                color: "pink",
-                dark: "",
-                fixed: "",
-                bottom: "",
-                right: "",
-                fab: ""
-              },
-              on: {
-                click: function($event) {
-                  _vm.dialog = true
-                }
-              }
-            },
-            [_c("v-icon", [_vm._v("mdi-plus")])],
-            1
-          )
-        ],
-        2
-      ),
+              }),
+              _vm._v(" "),
+              _c(
+                "v-btn",
+                {
+                  attrs: {
+                    color: "pink",
+                    dark: "",
+                    fixed: "",
+                    bottom: "",
+                    right: "",
+                    fab: ""
+                  },
+                  on: {
+                    click: function($event) {
+                      _vm.dialog = true
+                    }
+                  }
+                },
+                [_c("v-icon", [_vm._v("mdi-plus")])],
+                1
+              )
+            ],
+            2
+          ),
       _vm._v(" "),
       _c(
         "v-dialog",
