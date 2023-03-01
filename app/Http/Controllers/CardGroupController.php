@@ -239,7 +239,7 @@ class CardGroupController extends Controller
             ],
             'font' => [
                 'bold' => true,
-                'size' => 24
+                'size' => 21
             ],
         ];
 
