@@ -290,7 +290,7 @@ class CardGroupController extends Controller
                 if ($s){
                     if ($s->is_active && $s->status > 0) {
 
-                        $code_section = $order->id . ' - ' . $s->code;
+                        $code_section = $order->id . ' --- ' . $s->code;
 
                         $sheet->setCellValue($letters[$i] . ($n+2), $s->dish_name);
                         $sheet->getStyle($letters[$i] . ($n+2))->applyFromArray($center);
