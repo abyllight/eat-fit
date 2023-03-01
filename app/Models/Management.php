@@ -14,7 +14,7 @@ class Management extends Model
     public const PLUS_ONE_STATUS = 27248140; // Доставлено
     public const PLUS_ONE_SATURDAY_STATUS = 50754262; // Субботу x2v2
     public const SEND_SELECT_STATUS = 54498818; // Меню Селект
-    //Меню селект 884607
+    //Меню селект 885091
     //меню изображение 884637
 
     public const PLUS_TYPE = 1;

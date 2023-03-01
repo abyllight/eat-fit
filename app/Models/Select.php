@@ -129,13 +129,17 @@ class Select extends Model
                 $code = null;
 
                 $duty_dish = Dish::where('cuisine_id', $duty_cuisine->id)->where('ration_id', $item->ration_id)->first();
-                //dd($duty_dish->getIngredientIds()->toArray());
+
                 if ($duty_dish) {
                     $a = array_diff($duty_dish->getIngredientIds()->toArray(), $item->getIngredientIds());
                     $b = array_diff($item->getIngredientIds(), $duty_dish->getIngredientIds()->toArray());
 
-                    if (count($a) === 0 && count($b) === 0 && !$item->description){
-                        $code = '0';
+                    if (count($a) === 0 && count($b) === 0 && !$item->description) {
+                        $size = $duty_dish->sizes()->where('size', $item->order->size)->first();
+
+                        if ($size && $item->weight === $size->weight) {
+                            $code = '0';
+                        }
                     }
                 }
 
@@ -143,6 +147,7 @@ class Select extends Model
                 $ids[] = [
                     'id'=> $item->id,
                     'code' => $code,
+                    'weight' => $item->weight,
                     'description' => $item->description,
                     'ids' => $item->getIngredientIds()
                 ];
@@ -160,7 +165,10 @@ class Select extends Model
                     $a = array_diff($ids[$i]['ids'], $ids[$j]['ids']);
                     $b = array_diff($ids[$j]['ids'], $ids[$i]['ids']);
 
-                    if (count($a) === 0 && count($b) === 0 && $ids[$i]['description'] === $ids[$j]['description']){
+                    if (count($a) === 0 && count($b) === 0
+                        && $ids[$i]['description'] === $ids[$j]['description']
+                        && $ids[$i]['weight'] === $ids[$j]['weight'])
+                    {
                         $ids[$j]['code'] = $i+1;
                     }
                 }

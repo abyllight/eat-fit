@@ -41,7 +41,7 @@
                     :key="index"
                 >
                     <v-expansion-panel-header>
-                        <p><span class="text-sm-body-2 font-weight-bold">{{order[0].order_name}} - {{order[0].order_tag}}</span></p>
+                        <p><span class="text-sm-body-2 font-weight-bold">{{order[0].order_id}} - {{order[0].order_name}} - {{order[0].order_tag}}</span></p>
                     </v-expansion-panel-header>
                     <v-expansion-panel-content>
                         <v-row>

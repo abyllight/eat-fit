@@ -3,7 +3,7 @@
         <v-row>
             <v-col class="d-flex justify-space-between">
                 <h3>{{cuisine}}</h3>
-                <v-btn @click="dialog=true">Отправить</v-btn>
+                <v-btn v-if="isActive" @click="dialog=true" color="primary" :loading="loading" :disabled="loading">Отправить</v-btn>
             </v-col>
         </v-row>
 
@@ -43,10 +43,19 @@ export default {
     data: () => ({
         items: [],
         cuisine: '',
-        dialog: false
+        dialog: false,
+        loading: false
     }),
     mounted() {
         this.getItems()
+    },
+    computed: {
+        isActive() {
+            const d = new Date()
+            let hour = d.getHours()
+            let minute = d.getMinutes()
+            return hour >= 17 && minute >= 0 && hour <= 17 && minute <= 40
+        }
     },
     methods: {
         getItems() {
@@ -58,10 +67,12 @@ export default {
         },
         send() {
             this.dialog = false
+            this.loading = true
 
             axios.post('/api/broadcast-select')
                 .then(res => {
                     console.log(res)
+                    this.loading = false
                 })
         }
     }

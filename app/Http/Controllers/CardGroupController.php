@@ -219,6 +219,18 @@ class CardGroupController extends Controller
             ],
         ];
 
+        $center_gr = [
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+                'wrapText' => true
+            ],
+            'font' => [
+                'bold' => true,
+                'size' => 12
+            ],
+        ];
+
         $code = [
             'alignment' => [
                 'horizontal' => Alignment::HORIZONTAL_CENTER,
@@ -227,7 +239,7 @@ class CardGroupController extends Controller
             ],
             'font' => [
                 'bold' => true,
-                'size' => 20
+                'size' => 24
             ],
         ];
 
@@ -264,27 +276,27 @@ class CardGroupController extends Controller
             $sheet->getStyle('B' . $n)->getFont()->setBold(true);
             $sheet->getStyle('B' . $n)->getFont()->setSize(15);
 
-            $sheet->setCellValue('C' . $n, ($key+1).'/'.$order->name);
+            $sheet->setCellValue('C' . $n, ($order->id).'/'.$order->name);
             $sheet->mergeCells('C' . $n . ':C' . ($n + 3));
             $sheet->getStyle('C' . $n)->applyFromArray($center);
 
             foreach ($selects as $i => $s) {
                 $code_section = 'БЕЗ РАЦИОНА';
 
-                $sheet->setCellValue($letters[$i] . $n, ($key+1).'/'.$order->name.' - '.$order->getSize($order->size));
+                $sheet->setCellValue($letters[$i] . $n, ($order->id).'/'.$order->name.' - '.$order->getSize($order->size));
                 $sheet->getStyle($letters[$i] . $n)->applyFromArray($center);
                 $sheet->getRowDimension($n)->setRowHeight(20);
 
                 if ($s){
                     if ($s->is_active && $s->status > 0) {
 
-                        $code_section = $s->code;
+                        $code_section = $order->id . ' - ' . $s->code;
 
                         $sheet->setCellValue($letters[$i] . ($n+2), $s->dish_name);
                         $sheet->getStyle($letters[$i] . ($n+2))->applyFromArray($center);
 
                         $sheet->setCellValue($letters[$i] . ($n+3), $s->ration->name . ' -------- ' . $s->weight . 'гр');
-                        $sheet->getStyle($letters[$i] . ($n+3))->applyFromArray($center);
+                        $sheet->getStyle($letters[$i] . ($n+3))->applyFromArray($center_gr);
                     }
                 }
 
@@ -292,7 +304,7 @@ class CardGroupController extends Controller
                 $sheet->getStyle($letters[$i] . ($n+1))->applyFromArray($code);
 
                 $sheet->getRowDimension($n+1)->setRowHeight(30);
-                $sheet->getRowDimension($n+2)->setRowHeight(40);
+                $sheet->getRowDimension($n+2)->setRowHeight(36);
                 $sheet->getRowDimension($n+3)->setRowHeight(20);
 
             }

@@ -56,11 +56,20 @@ __webpack_require__.r(__webpack_exports__);
     return {
       items: [],
       cuisine: '',
-      dialog: false
+      dialog: false,
+      loading: false
     };
   },
   mounted: function mounted() {
     this.getItems();
+  },
+  computed: {
+    isActive: function isActive() {
+      var d = new Date();
+      var hour = d.getHours();
+      var minute = d.getMinutes();
+      return hour >= 17 && minute >= 0 && hour <= 17 && minute <= 40;
+    }
   },
   methods: {
     getItems: function getItems() {
@@ -72,9 +81,13 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     send: function send() {
+      var _this2 = this;
+
       this.dialog = false;
+      this.loading = true;
       axios.post('/api/broadcast-select').then(function (res) {
         console.log(res);
+        _this2.loading = false;
       });
     }
   }
@@ -178,17 +191,24 @@ var render = function() {
             [
               _c("h3", [_vm._v(_vm._s(_vm.cuisine))]),
               _vm._v(" "),
-              _c(
-                "v-btn",
-                {
-                  on: {
-                    click: function($event) {
-                      _vm.dialog = true
-                    }
-                  }
-                },
-                [_vm._v("Отправить")]
-              )
+              _vm.isActive
+                ? _c(
+                    "v-btn",
+                    {
+                      attrs: {
+                        color: "primary",
+                        loading: _vm.loading,
+                        disabled: _vm.loading
+                      },
+                      on: {
+                        click: function($event) {
+                          _vm.dialog = true
+                        }
+                      }
+                    },
+                    [_vm._v("Отправить")]
+                  )
+                : _vm._e()
             ],
             1
           )

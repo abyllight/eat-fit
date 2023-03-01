@@ -705,7 +705,9 @@ var render = function() {
                             { staticClass: "text-sm-body-2 font-weight-bold" },
                             [
                               _vm._v(
-                                _vm._s(order[0].order_name) +
+                                _vm._s(order[0].order_id) +
+                                  " - " +
+                                  _vm._s(order[0].order_name) +
                                   " - " +
                                   _vm._s(order[0].order_tag)
                               )

@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use AmoCRM\Client;
 use AmoCRM\Exception;
+use App\Models\City;
 use App\Models\Cuisine;
 use App\Models\Management;
 use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use SebastianBergmann\CodeCoverage\Report\PHP;
 
 class BroadcastMenuController extends Controller
 {
@@ -38,12 +40,38 @@ class BroadcastMenuController extends Controller
         $arr = [];
 
         foreach ($orders as $order) {
-            $text = $duty_cuisine->name . PHP_EOL;
-            $selects = $order->select()->whereDate('created_at', Carbon::today())->get()->sortBy('ration_id');
+            $text = '*'.$duty_cuisine->name .'*'. PHP_EOL.PHP_EOL;
+            $selects = $order->select()->whereDate('created_at', Carbon::today())->where('is_active', true)->get()->sortBy('ration_id');
 
             foreach ($selects as $select) {
-                $text .= $select->ration->name . PHP_EOL;
-                $text .= $select->dish_name . PHP_EOL . PHP_EOL;
+                $text .= '*'.$select->ration->name.'*' . PHP_EOL;
+                $text .= $select->dish_name . PHP_EOL.PHP_EOL;
+            }
+
+            $arr[] = [
+                'id' => $order->amo_id,
+                'name' => $order->name,
+                'text' => $text
+            ];
+        }
+
+        return $arr;
+    }
+
+    public function performTextWeb(): array
+    {
+        $orders = Order::where('is_active', true)->where('type', Order::EAT_FIT_SELECT)->get();
+        $duty_cuisine = Cuisine::where('is_on_duty', true)->first();
+
+        $arr = [];
+
+        foreach ($orders as $order) {
+            $text = '<b>'.$duty_cuisine->name .'</b><br/><br/>';
+            $selects = $order->select()->whereDate('created_at', Carbon::today())->where('is_active', true)->get()->sortBy('ration_id');
+
+            foreach ($selects as $select) {
+                $text .= '<b>'.$select->ration->name.'</b><br/>';
+                $text .= $select->dish_name . '<br/><br/>';
             }
 
             $arr[] = [
@@ -62,7 +90,7 @@ class BroadcastMenuController extends Controller
         return response()->json([
             'status' => true,
             'cuisine' => $duty_cuisine->name,
-            'data' => $this->performText()
+            'data' => $this->performTextWeb()
         ]);
     }
 
@@ -74,44 +102,15 @@ class BroadcastMenuController extends Controller
         try{
             $amo = new Client(env('AMO_SUBDOMAIN'), env('AMO_LOGIN'), env('AMO_HASH'));
 
-            //$data = $this->performText();
-            //$orders = Order::where('is_active', true)->where('type', Order::EAT_FIT_SELECT)->get();
-            $duty_cuisine = Cuisine::where('is_on_duty', true)->first();
-            $order = Order::find(489);
-            $selects = $order->select()->whereDate('created_at', Carbon::today())->get()->sortBy('ration_id');
+            $data = $this->performText();
 
-            define('PHP_EOL',"\r\n");
-
-            $text = 'Test1';
-
-            foreach ($selects as $select) {
-                $text .= $select->ration->name.PHP_EOL;
-            }
-
-            $lead = $amo->lead;
-            $lead['status_id'] = $status;
-            $lead->addCustomField(884607, $text);
-
-            $lead->apiUpdate(30641287, 'now');
-            /*foreach ($data as $item){
-
+            foreach ($data as $item) {
                 $lead = $amo->lead;
                 $lead['status_id'] = $status;
-                $lead->addCustomField(884607,
-                    $item['text']
-                );
+                $lead->addCustomField(885091, $item['text']);
 
-                $lead->apiUpdate(30641287, 'now');
-            }*/
-
-            /*$management = Management::whereDate('created_at', Carbon::now()->toDateString())->where('type', $type)->first();
-
-            if(!$management){
-                $m = new Management();
-                $m->type = $type;
-                $m->save();
-            }*/
-
+                $lead->apiUpdate($item['id'], 'now');
+            }
             return response()->json([
                 'status' => true,
                 'msg' => 'Success!'
