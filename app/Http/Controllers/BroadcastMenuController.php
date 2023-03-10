@@ -34,7 +34,7 @@ class BroadcastMenuController extends Controller
 
     public function performText(): array
     {
-        $orders = Order::where('is_active', true)->where('type', Order::EAT_FIT_SELECT)->get();
+        $orders = Order::where('is_active', true)->where('city_id', City::ASTANA)->where('type', Order::EAT_FIT_SELECT)->get();
         $duty_cuisine = Cuisine::where('is_on_duty', true)->first();
 
         $arr = [];
@@ -60,7 +60,7 @@ class BroadcastMenuController extends Controller
 
     public function performTextWeb(): array
     {
-        $orders = Order::where('is_active', true)->where('type', Order::EAT_FIT_SELECT)->get();
+        $orders = Order::where('is_active', true)->where('city_id', City::ASTANA)->where('type', Order::EAT_FIT_SELECT)->get();
         $duty_cuisine = Cuisine::where('is_on_duty', true)->first();
 
         $arr = [];

@@ -67,6 +67,7 @@ class ListController extends Controller
         $couriers = User::getCouriers();
         $n = 1;
         $xs = $s = $m = $l = $xl = 0;
+        $xs_a = $s_a = $m_a = $l_a = $xl_a = 0;
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -94,9 +95,9 @@ class ListController extends Controller
 
         foreach ($couriers as $courier) {
 
-            foreach ($courier->orders as $c) {
-                if($c->type === Order::EAT_FIT_LITE) {
-                    switch ($c->size) {
+            foreach ($courier->orders as $order) {
+                if($order->type === Order::EAT_FIT_LITE) {
+                    switch ($order->size) {
                         case Order::XS:
                             ++$xs;
                             break;
@@ -113,27 +114,45 @@ class ListController extends Controller
                             ++$xl;
                             break;
                     }
+
+                    if (str_contains($order->name, 'Автосделка')) {
+                        switch ($order->size) {
+                            case Order::XS:
+                                ++$xs_a;
+                                break;
+                            case Order::S:
+                                ++$s_a;
+                                break;
+                            case Order::M:
+                                ++$m_a;
+                                break;
+                            case Order::L:
+                                ++$l_a;
+                                break;
+                            case Order::XL:
+                                ++$xl_a;
+                                break;
+                        }
+                    }
                 }
             }
 
-            $xs = $xs > 0 ? ' [XS - ' . $xs . '] ' : '';
-            $s  = $s  > 0 ? ' [S - ' . $s . '] ' : '';
-            $m  = $m  > 0 ? ' [M - ' . $m . '] ' : '';
-            $l  = $l  > 0 ? ' [L - ' . $l . '] ' : '';
-            $xl = $xl > 0 ? ' [XL - ' . $xl . '] ' : '';
+            $xs_t = $xs > 0 ? ' [XS - ' . $xs . '] ' : '';
+            $s_t  = $s  > 0 ? ' [S - ' . $s . '] ' : '';
+            $m_t  = $m  > 0 ? ' [M - ' . $m . '] ' : '';
+            $l_t  = $l  > 0 ? ' [L - ' . $l . '] ' : '';
+            $xl_t = $xl > 0 ? ' [XL - ' . $xl . '] ' : '';
 
             //Merge courier name cells
             $sheet->mergeCells('A' . $n . ':G' . $n);
             $sheet->setCellValue(
                 'A' . $n,
                 $courier->name . ' - ' . count($courier->orders) .
-                ' | Lite '. $xs . $s . $m . $l . $xl
+                ' | Lite '. $xs_t . $s_t . $m_t . $l_t . $xl_t
             );
 
-            $xs = $s = $m = $l = $xl = 0;
-
             //Courier name size
-            $sheet->getStyle('A' . $n)->getFont()->setSize(16);
+            $sheet->getStyle('A' . $n)->getFont()->setBold(true)->setSize(20);
             $sheet->getStyle('A' . $n)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
 
             $n = $n + 1;
@@ -197,7 +216,29 @@ class ListController extends Controller
 
             $sheet->getStyle('A' . $n . ':G' . $count)->applyFromArray($borderStyleArray);
 
-            $n = $count + 2;
+            $xs_t = $xs_a > 0 ? ' [XS - ' . ($xs - $xs_a) . ' + '. $xs_a . '] ' : '';
+            $s_t = $s_a > 0 ? ' [S - ' . ($s - $s_a) . ' + '. $s_a . '] ' : '';
+            $m_t = $m_a > 0 ? ' [M - ' . ($m - $m_a) . ' + '. $m_a . '] ' : '';
+            $l_t = $l_a > 0 ? ' [L - ' . ($l - $l_a) . ' + '. $l_a . '] ' : '';
+            $xl_t = $xl_a > 0 ? ' [XL - ' . ($xl - $xl_a) . ' + '. $xl_a . '] ' : '';
+
+            //Merge courier name cells
+            $sheet->mergeCells('A' . ($count + 2) . ':G' . ($count + 2));
+            $sheet->setCellValue(
+                'A' . ($count + 2),
+                $xs_a === 0 && $s_a === 0 && $m_a === 0 && $l_a === 0 && $xl_a === 0 ? '' :
+                    $courier->name . ' - ' . count($courier->orders) .
+                ' | Lite '. $xs_t . $s_t . $m_t . $l_t . $xl_t
+            );
+
+            //Courier name size
+            $sheet->getStyle('A' . ($count + 2))->getFont()->setBold(true)->setSize(30);
+            $sheet->getStyle('A' . ($count + 2))->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+
+            $n = $count + 4;
+
+            $xs = $s = $m = $l = $xl = 0;
+            $xs_a = $s_a = $m_a = $l_a = $xl_a = 0;
         }
 
         $sheet->getColumnDimension('B')->setAutoSize(true);
