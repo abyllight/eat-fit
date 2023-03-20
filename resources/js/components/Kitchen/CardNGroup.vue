@@ -140,14 +140,36 @@
                         <v-card-text>
                             <v-row>
                                 <v-col>
-                                    <v-sheet
-                                        v-for="(i, index) in order.ingredients"
-                                        :key="i.name"
-                                        class="mb-2"
-                                    >
-                                        <strong>{{index+1}}.</strong>
-                                        {{i.name}}
-                                    </v-sheet>
+                                    <div v-if="order.status !== 3">
+                                        <v-sheet
+
+                                            v-for="(i, index) in order.ingredients"
+                                            :key="i.name"
+                                            class="mb-2"
+                                        >
+                                            <strong>{{index+1}}.</strong>
+                                            {{i.name}}
+                                        </v-sheet>
+                                    </div>
+
+                                    <div v-else>
+                                        <v-sheet
+                                            v-for="(i, index) in order.original"
+                                            :key="i.name"
+                                            class="mb-2"
+                                        >
+                                            <strong>{{index+1}}.</strong>
+                                            <span
+                                                v-if="!hasResultIncludeIngredient(i.id)"
+                                                class="font-weight-bold red--text"
+                                            >БЕЗ</span>
+                                            <span
+                                                :class="hasResultIncludeIngredient(i.id) ? '' : 'text-decoration-line-through'"
+                                            >
+                                                {{i.name}}
+                                            </span>
+                                        </v-sheet>
+                                    </div>
                                 </v-col>
 
                                 <v-col>
@@ -214,7 +236,8 @@ export default {
         group_name: null,
         order: {},
         weight: 0,
-        departments: []
+        departments: [],
+        original: []
     }),
     mounted() {
         this.getItems()
@@ -226,6 +249,11 @@ export default {
                 .then(res => {
                     this.cards = res.data.cards
                     this.groups = res.data.groups
+                    this.loading = false
+                }).catch(err => {
+                    console.log(err)
+                })
+                .finally(() => {
                     this.loading = false
                 })
         },
@@ -265,17 +293,6 @@ export default {
                 this.getItems()
             })
         },
-        checkPrepared(items) {
-            let count = 0
-
-            items.map(x => {
-                if (x.is_prepared) {
-                    count++
-                }
-            })
-
-            return count
-        },
         countWeight(items) {
             let count = 0
 
@@ -305,6 +322,8 @@ export default {
                     }
                 }
             }
+
+            this.original = this.order.original
             //this.order = item
             this.countWeight(this.order.items)
             this.modal = true
@@ -318,7 +337,10 @@ export default {
                     this.modal = false
                     this.getItems()
                 })
-        }
+        },
+        hasResultIncludeIngredient(id) {
+            return this.order.i_ids.includes(id)
+        },
     }
 }
 </script>

@@ -230,7 +230,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
 
 
 
@@ -1560,20 +1559,18 @@ var render = function() {
                 _vm._v(" "),
                 _c(
                   "a",
-                  { attrs: { type: "button", href: "/api/select/export" } },
+                  {
+                    attrs: {
+                      type: "button",
+                      href: "/api/select/export/stickers"
+                    }
+                  },
                   [
-                    _c(
-                      "v-btn",
-                      {
-                        attrs: { color: "primary" },
-                        on: { click: _vm.exportExcel }
-                      },
-                      [
-                        _vm._v(
-                          "\n                            Excel\n                        "
-                        )
-                      ]
-                    )
+                    _c("v-btn", { attrs: { color: "primary" } }, [
+                      _vm._v(
+                        "\n                            Стикеры\n                        "
+                      )
+                    ])
                   ],
                   1
                 )

@@ -265,16 +265,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -632,24 +622,7 @@ var render = function() {
           _c(
             "v-col",
             { staticClass: "d-flex justify-space-between" },
-            [
-              _c("stat", { attrs: { stat: _vm.stat } }),
-              _vm._v(" "),
-              _c(
-                "a",
-                {
-                  attrs: { type: "button", href: "/api/select/export/stickers" }
-                },
-                [
-                  _c("v-btn", { attrs: { color: "primary" } }, [
-                    _vm._v(
-                      "\n                        Excel\n                    "
-                    )
-                  ])
-                ],
-                1
-              )
-            ],
+            [_c("stat", { attrs: { stat: _vm.stat } })],
             1
           )
         ],
@@ -705,11 +678,11 @@ var render = function() {
                             { staticClass: "text-sm-body-2 font-weight-bold" },
                             [
                               _vm._v(
-                                _vm._s(order[0].order_id) +
+                                _vm._s(order.id) +
                                   " - " +
-                                  _vm._s(order[0].order_name) +
+                                  _vm._s(order.order_name) +
                                   " - " +
-                                  _vm._s(order[0].order_tag)
+                                  _vm._s(order.order_tag)
                               )
                             ]
                           )
@@ -721,7 +694,7 @@ var render = function() {
                         [
                           _c(
                             "v-row",
-                            _vm._l(order, function(o) {
+                            _vm._l(order.selects, function(o) {
                               return _c(
                                 "v-col",
                                 { key: o.name, attrs: { cols: "12", md: "3" } },

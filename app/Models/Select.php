@@ -126,6 +126,15 @@ class Select extends Model
             $ids = [];
             //beautify
             foreach ($group as $item) {
+
+                if (!$item->order->is_active) {
+                    $item->is_active = false;
+                }else {
+                    $item->is_active = true;
+                }
+
+                $item->save();
+
                 $code = null;
 
                 $duty_dish = Dish::where('cuisine_id', $duty_cuisine->id)->where('ration_id', $item->ration_id)->first();
@@ -143,9 +152,8 @@ class Select extends Model
                     }
                 }
 
-
                 $ids[] = [
-                    'id'=> $item->id,
+                    'id' => $item->id,
                     'code' => $code,
                     'weight' => $item->weight,
                     'description' => $item->description,
@@ -153,7 +161,7 @@ class Select extends Model
                 ];
             }
 
-            for ($i = 0; $i < count($ids); $i++){
+            for ($i = 0; $i < count($ids); $i++) {
 
                 if ($ids[$i]['code'] === null){
                     $ids[$i]['code'] = $i+1;
@@ -161,7 +169,7 @@ class Select extends Model
                     continue;
                 }
 
-                for ($j = $i+1; $j < count($ids); $j++){
+                for ($j = $i+1; $j < count($ids); $j++) {
                     $a = array_diff($ids[$i]['ids'], $ids[$j]['ids']);
                     $b = array_diff($ids[$j]['ids'], $ids[$i]['ids']);
 

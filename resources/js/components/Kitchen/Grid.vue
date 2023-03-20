@@ -3,16 +3,6 @@
         <v-row>
             <v-col class="d-flex justify-space-between">
                 <stat :stat="stat"/>
-                <a
-                    type="button"
-                    href="/api/select/export/stickers"
-                >
-                    <v-btn
-                        color="primary"
-                    >
-                        Excel
-                    </v-btn>
-                </a>
             </v-col>
         </v-row>
 
@@ -41,11 +31,11 @@
                     :key="index"
                 >
                     <v-expansion-panel-header>
-                        <p><span class="text-sm-body-2 font-weight-bold">{{order[0].order_id}} - {{order[0].order_name}} - {{order[0].order_tag}}</span></p>
+                        <p><span class="text-sm-body-2 font-weight-bold">{{order.id}} - {{order.order_name}} - {{order.order_tag}}</span></p>
                     </v-expansion-panel-header>
                     <v-expansion-panel-content>
                         <v-row>
-                            <v-col cols="12" md="3" v-for="o in order" :key="o.name">
+                            <v-col cols="12" md="3" v-for="o in order.selects" :key="o.name">
                                 <v-card
                                     :color="o.done ? 'teal' : o.color"
                                     style="cursor:pointer;"

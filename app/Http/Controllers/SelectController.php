@@ -22,9 +22,37 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 class SelectController extends Controller
 {
     public function index() {
-        $selects = Select::whereDate('created_at', Carbon::today())->where('city_id', City::ASTANA)->get();
-        Select::generateCode();
-        return SelectCollection::collection($selects)->collection->sortBy('ration_id')->groupBy('order_id');
+        $orders = Order::where('type', Order::EAT_FIT_SELECT)->where('city_id', City::ASTANA)->where('is_active', true)->orderBy('size')->get();
+        $arr = [];
+
+        foreach ($orders as $key => $order) {
+            $selects = $order->select;
+            $arr[$key] = [
+                'id' => $key+1,
+                'order_name' => $order->name,
+                'order_tag' => $order->getSize($order->size),
+                'selects' => []
+            ];
+
+            foreach ($selects as $select) {
+                $arr[$key]['selects'][] = [
+                    'code' => $select->code,
+                    'done' => $select->done,
+                    'color' => $select->getStatusColor(),
+                    'is_active' => $select->is_active,
+                    'ration' => $select->ration,
+                    'dish_name' => $select->dish_name,
+                    'weight' => $select->weight,
+                    'ingredients' => $select->ingredients->sortBy('name')->toArray(),
+                    'wishlist' => $select->wishes
+                ];
+            }
+        }
+
+       // dd($arr);
+       // $selects = Select::whereDate('created_at', Carbon::today())->where('city_id', City::ASTANA)->get();
+        //Select::generateCode();
+        return response()->json($arr);
     }
     public function getSelectById($id) {
         $select = Select::find($id);
@@ -677,7 +705,7 @@ class SelectController extends Controller
     }
 
     public function export(){
-        Select::generateCode();
+        //Select::generateCode();
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();

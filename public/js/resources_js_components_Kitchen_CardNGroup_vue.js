@@ -221,6 +221,28 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "CardNGroup",
@@ -237,7 +259,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       group_name: null,
       order: {},
       weight: 0,
-      departments: []
+      departments: [],
+      original: []
     };
   },
   mounted: function mounted() {
@@ -257,6 +280,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return axios.get('/api/cards').then(function (res) {
                   _this.cards = res.data.cards;
                   _this.groups = res.data.groups;
+                  _this.loading = false;
+                })["catch"](function (err) {
+                  console.log(err);
+                })["finally"](function () {
                   _this.loading = false;
                 });
 
@@ -323,15 +350,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         _this5.getItems();
       });
     },
-    checkPrepared: function checkPrepared(items) {
-      var count = 0;
-      items.map(function (x) {
-        if (x.is_prepared) {
-          count++;
-        }
-      });
-      return count;
-    },
     countWeight: function countWeight(items) {
       var count = 0;
       items.map(function (x) {
@@ -361,8 +379,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             break;
           }
         }
-      } //this.order = item
+      }
 
+      this.original = this.order.original; //this.order = item
 
       this.countWeight(this.order.items);
       this.modal = true;
@@ -378,6 +397,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
         _this6.getItems();
       });
+    },
+    hasResultIncludeIngredient: function hasResultIncludeIngredient(id) {
+      return this.order.i_ids.includes(id);
     }
   }
 });
@@ -4575,29 +4597,81 @@ var render = function() {
                           _c(
                             "v-row",
                             [
-                              _c(
-                                "v-col",
-                                _vm._l(_vm.order.ingredients, function(
-                                  i,
-                                  index
-                                ) {
-                                  return _c(
-                                    "v-sheet",
-                                    { key: i.name, staticClass: "mb-2" },
-                                    [
-                                      _c("strong", [
-                                        _vm._v(_vm._s(index + 1) + ".")
-                                      ]),
-                                      _vm._v(
-                                        "\n                                    " +
-                                          _vm._s(i.name) +
-                                          "\n                                "
-                                      )
-                                    ]
-                                  )
-                                }),
-                                1
-                              ),
+                              _c("v-col", [
+                                _vm.order.status !== 3
+                                  ? _c(
+                                      "div",
+                                      _vm._l(_vm.order.ingredients, function(
+                                        i,
+                                        index
+                                      ) {
+                                        return _c(
+                                          "v-sheet",
+                                          { key: i.name, staticClass: "mb-2" },
+                                          [
+                                            _c("strong", [
+                                              _vm._v(_vm._s(index + 1) + ".")
+                                            ]),
+                                            _vm._v(
+                                              "\n                                        " +
+                                                _vm._s(i.name) +
+                                                "\n                                    "
+                                            )
+                                          ]
+                                        )
+                                      }),
+                                      1
+                                    )
+                                  : _c(
+                                      "div",
+                                      _vm._l(_vm.order.original, function(
+                                        i,
+                                        index
+                                      ) {
+                                        return _c(
+                                          "v-sheet",
+                                          { key: i.name, staticClass: "mb-2" },
+                                          [
+                                            _c("strong", [
+                                              _vm._v(_vm._s(index + 1) + ".")
+                                            ]),
+                                            _vm._v(" "),
+                                            !_vm.hasResultIncludeIngredient(
+                                              i.id
+                                            )
+                                              ? _c(
+                                                  "span",
+                                                  {
+                                                    staticClass:
+                                                      "font-weight-bold red--text"
+                                                  },
+                                                  [_vm._v("БЕЗ")]
+                                                )
+                                              : _vm._e(),
+                                            _vm._v(" "),
+                                            _c(
+                                              "span",
+                                              {
+                                                class: _vm.hasResultIncludeIngredient(
+                                                  i.id
+                                                )
+                                                  ? ""
+                                                  : "text-decoration-line-through"
+                                              },
+                                              [
+                                                _vm._v(
+                                                  "\n                                            " +
+                                                    _vm._s(i.name) +
+                                                    "\n                                        "
+                                                )
+                                              ]
+                                            )
+                                          ]
+                                        )
+                                      }),
+                                      1
+                                    )
+                              ]),
                               _vm._v(" "),
                               _c(
                                 "v-col",

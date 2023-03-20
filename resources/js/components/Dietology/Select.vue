@@ -43,13 +43,12 @@
                     </v-btn>
                     <a
                         type="button"
-                        href="/api/select/export"
+                        href="/api/select/export/stickers"
                     >
                         <v-btn
                             color="primary"
-                            @click="exportExcel"
                         >
-                            Excel
+                            Стикеры
                         </v-btn>
                     </a>
                 </div>

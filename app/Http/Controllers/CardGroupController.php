@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\City;
+use App\Models\Cuisine;
+use App\Models\Dish;
 use App\Models\Order;
 use App\Models\Ration;
 use App\Models\Select;
@@ -18,12 +20,15 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class CardGroupController extends Controller
 {
-    public function index() {
-        Select::generateCode();
+    public function index(): JsonResponse
+    {
+        //Select::generateCode();
 
         $user = Auth::user();
         $arr = [];
         $groups = [];
+
+        $cuisine = Cuisine::where('is_on_duty', true)->first();
 
         $select_groups = Select::whereDate('created_at', Carbon::today())->where('is_active', true)->where('group_id', null);
 
@@ -35,17 +40,23 @@ class CardGroupController extends Controller
             $select_groups = $select_groups->where('dep_id', $user->kd_id);
         }
 
-        $select_groups = $select_groups->get()->groupBy('code');
+        $select_groups = $select_groups->orderBy('code')->get()->groupBy('code');
 
         foreach ($select_groups as $key => $group) {
+            $duty = Dish::where('cuisine_id', $cuisine->id)->where('ration_id', $group[0]->ration->id)->first();
+
             $arr[$key] = [
                 'code' => $group[0]->code,
                 'dep_id' => $user->kd_id,
+                'status' => $group[0]->status,
                 'color' => $this->getColor($group[0]->status),
                 'ration' => $group[0]->ration->name,
                 'dish_name' => $group[0]->dish_name,
                 'description' => $group[0]->description,
-                'ingredients' => $group[0]->ingredients
+                'ingredients' => $group[0]->ingredients,
+                'i_ids' => $group[0]->getIngredientIds(),
+                'original' => $duty->ingredients,
+                'o_ids' => $duty->getIngredientIds(),
             ];
 
             foreach ($group as $item) {
@@ -58,7 +69,7 @@ class CardGroupController extends Controller
         }
 
         foreach ($user->groups as $i => $group) {
-            $selects = $group->selects->groupBy('code');
+            $selects = $group->selects->orderBy('code')->groupBy('code');
 
             $groups[$i] = [
                 'id' => $group->id,
@@ -66,14 +77,20 @@ class CardGroupController extends Controller
             ];
 
             foreach ($selects as $key => $select) {
+                $duty2 = Dish::where('cuisine_id', $cuisine->id)->where('ration_id', $select[0]->ration->id)->first();
+
                 $groups[$i]['cards'][$key] = [
                     'code' => $select[0]->code,
                     'dep_id' => $user->kd_id,
+                    'status' => $select[0]->status,
                     'ration' => $select[0]->ration->name,
                     'color' => $this->getColor($select[0]->status),
                     'dish_name' => $select[0]->dish_name,
                     'description' => $select[0]->description,
-                    'ingredients' => $select[0]->ingredients
+                    'ingredients' => $select[0]->ingredients,
+                    'i_ids' => $select[0]->getIngredientIds(),
+                    'original' => $duty2->ingredients,
+                    'o_ids' => $duty2->getIngredientIds()
                 ];
 
                 foreach ($select as $item) {
@@ -168,7 +185,7 @@ class CardGroupController extends Controller
     }
 
     public function exportStickers(){
-        Select::generateCode();
+        //Select::generateCode();
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -283,14 +300,14 @@ class CardGroupController extends Controller
             foreach ($selects as $i => $s) {
                 $code_section = 'БЕЗ РАЦИОНА';
 
-                $sheet->setCellValue($letters[$i] . $n, ($order->id).'/'.$order->name.' - '.$order->getSize($order->size));
+                $sheet->setCellValue($letters[$i] . $n, ($key+1).'/'.$order->name.' - '.$order->getSize($order->size));
                 $sheet->getStyle($letters[$i] . $n)->applyFromArray($center);
                 $sheet->getRowDimension($n)->setRowHeight(20);
 
                 if ($s){
                     if ($s->is_active && $s->status > 0) {
 
-                        $code_section = $order->id . ' --- ' . $s->code;
+                        $code_section = $s->code . ' --- ' . ($key+1);
 
                         $sheet->setCellValue($letters[$i] . ($n+2), $s->dish_name);
                         $sheet->getStyle($letters[$i] . ($n+2))->applyFromArray($center);
