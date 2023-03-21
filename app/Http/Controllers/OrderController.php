@@ -163,29 +163,49 @@ class OrderController extends Controller
         ]);
     }
 
-    public function getSelect(bool $byAstana = false): JsonResponse
+    public function getSelect(): JsonResponse
     {
         $select = Order::where('type', Order::EAT_FIT_SELECT)
-            ->where('is_active', true);
+            ->where('is_active', true)
+            ->where('city_id', City::ASTANA);
 
-        if ($byAstana) {
-            $select = $select->where('city_id', City::ASTANA);
+        $max = $select->max('s_num');
+
+        $fin = $select->orderBy('size')->get();
+
+        if (!$max) {
+            foreach ($fin as $key => $item) {
+                $item->s_num = $key+1;
+                $item->save();
+            }
+        }else {
+            foreach ($fin as $key => $item) {
+                if ($item->s_num === null) {
+                    if ($key === 0) {
+                        $item->s_num = 1;
+                    }elseif ($key === $select->count() - 1) {
+                        $item->s_num === $select->count();
+                    }else {
+                        $item->s_num = $fin[$key - 1]->s_num + 1;
+                    }
+
+                    $item->save();
+                }
+            }
         }
 
-        $select = $select->orderBy('size')->get();
-
         $select_stat = [
-            'total' => $select->count(),
-            'xs'    => $select->where('size', Order::XS)->count(),
-            's'     => $select->where('size', Order::S)->count(),
-            'm'     => $select->where('size', Order::M)->count(),
-            'l'     => $select->where('size', Order::L)->count(),
-            'xl'    => $select->where('size', Order::XL)->count()
+            'total' => $fin->count(),
+            'xs'    => $fin->where('size', Order::XS)->count(),
+            's'     => $fin->where('size', Order::S)->count(),
+            'm'     => $fin->where('size', Order::M)->count(),
+            'l'     => $fin->where('size', Order::L)->count(),
+            'xl'    => $fin->where('size', Order::XL)->count()
         ];
 
         return response()->json([
             'status' => true,
-            'orders' => OrderSelectCollection::collection($select),
+            'orders' => OrderSelectCollection::collection($fin),
             'stat' => $select_stat
         ]);
     }

@@ -275,7 +275,7 @@ class CardGroupController extends Controller
             $spreadsheet->getActiveSheet()->getColumnDimension($letter)->setWidth(25);
         }
 
-        $orders = Order::where('type', Order::EAT_FIT_SELECT)->where('city_id', City::ASTANA)->where('is_active', true)->orderBy('size')->get();
+        $orders = Order::where('type', Order::EAT_FIT_SELECT)->where('city_id', City::ASTANA)->where('is_active', true)->orderBy('s_num')->get();
         $n = 1;
 
         foreach ($orders as $key => $order) {
@@ -293,21 +293,21 @@ class CardGroupController extends Controller
             $sheet->getStyle('B' . $n)->getFont()->setBold(true);
             $sheet->getStyle('B' . $n)->getFont()->setSize(15);
 
-            $sheet->setCellValue('C' . $n, ($order->id).'/'.$order->name);
+            $sheet->setCellValue('C' . $n, ($order->s_num).'/'.$order->name);
             $sheet->mergeCells('C' . $n . ':C' . ($n + 3));
             $sheet->getStyle('C' . $n)->applyFromArray($center);
 
             foreach ($selects as $i => $s) {
                 $code_section = 'БЕЗ РАЦИОНА';
 
-                $sheet->setCellValue($letters[$i] . $n, ($key+1).'/'.$order->name.' - '.$order->getSize($order->size));
+                $sheet->setCellValue($letters[$i] . $n, ($order->s_num).'/'.$order->name.' - '.$order->getSize($order->size));
                 $sheet->getStyle($letters[$i] . $n)->applyFromArray($center);
                 $sheet->getRowDimension($n)->setRowHeight(20);
 
                 if ($s){
                     if ($s->is_active && $s->status > 0) {
 
-                        $code_section = $s->code . ' --- ' . ($key+1);
+                        $code_section = $s->code . ' ----- ' . ($order->s_num);
 
                         $sheet->setCellValue($letters[$i] . ($n+2), $s->dish_name);
                         $sheet->getStyle($letters[$i] . ($n+2))->applyFromArray($center);

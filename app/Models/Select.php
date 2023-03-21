@@ -129,6 +129,7 @@ class Select extends Model
 
                 if (!$item->order->is_active) {
                     $item->is_active = false;
+                    $item->s_num = null;
                 }else {
                     $item->is_active = true;
                 }

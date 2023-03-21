@@ -239,10 +239,10 @@
             }
         }),
         created() {
+            this.generateCode()
             this.getSelect()
             this.getCuisine()
             this.getRations()
-            this.generateCode()
         },
         computed: {
             isDutyDishId() {
