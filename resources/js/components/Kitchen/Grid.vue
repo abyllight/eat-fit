@@ -59,7 +59,7 @@
                                     color="teal"
                                     dark
                                     block
-                                    @click="done(o)"
+                                    @click="done(o.order_id)"
                                 >
                                     сделано
                                     <v-icon v-if="o.done" right>mdi-check</v-icon>
@@ -263,9 +263,9 @@ export default {
             console.log(order)
             this.dialog = true
         },
-        done(order) {
+        done(id) {
             axios
-                .post('/api/select/'+order.id+'/done')
+                .post('/api/select/'+id+'/done')
                 .then(res => {
                     this.getSelects()
                 })

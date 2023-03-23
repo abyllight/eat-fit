@@ -172,7 +172,6 @@ class OrderController extends Controller
             ->where('is_active', true)
             ->where('city_id', City::ASTANA);
 
-        $max = $select->max('s_num');
         $fin = $select->orderBy('size')->get();
 
         if(!$management){
@@ -185,6 +184,7 @@ class OrderController extends Controller
                 $item->save();
             }
         }else {
+            $max = $select->max('s_num');
             $nums = $select->where('s_num', null)->orderBy('size')->get();
 
             foreach ($nums as $key => $item) {

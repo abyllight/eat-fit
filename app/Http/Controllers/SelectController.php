@@ -30,6 +30,7 @@ class SelectController extends Controller
             $selects = $order->select()->whereDate('created_at', Carbon::today())->get();
             $arr[$key] = [
                 'id' => $order->s_num,
+                'order_id' => $order->id,
                 'order_name' => $order->name,
                 'order_tag' => $order->getSize($order->size),
                 'selects' => []
