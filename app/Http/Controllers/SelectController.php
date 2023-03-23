@@ -23,7 +23,7 @@ class SelectController extends Controller
 {
     public function index(): JsonResponse
     {
-        $orders = Order::where('type', Order::EAT_FIT_SELECT)->where('city_id', City::ASTANA)->where('is_active', true)->orderBy('s_num')->get();
+        $orders = Order::where('s_num', '!=', null)->where('city_id', City::ASTANA)->where('is_active', true)->orderBy('s_num')->get();
         $arr = [];
 
         foreach ($orders as $key => $order) {
