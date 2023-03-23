@@ -22,4 +22,5 @@ class Management extends Model
     public const WORK_TYPE = 3;
     public const PLUS_SATURDAY_TYPE = 4;
     public const SEND_SELECT_TYPE = 5;
+    public const S_NUM_TYPE = 6;
 }

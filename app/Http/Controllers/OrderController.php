@@ -9,6 +9,7 @@ use App\Http\Resources\SelectCollection;
 use App\Models\City;
 use App\Models\Cuisine;
 use App\Models\Dish;
+use App\Models\Management;
 use App\Models\Order;
 use App\Models\Select;
 use App\Models\SelectWish;
@@ -165,32 +166,30 @@ class OrderController extends Controller
 
     public function getSelect(): JsonResponse
     {
+        $management = Management::whereDate('created_at', Carbon::now()->toDateString())->where('type', Management::S_NUM_TYPE)->first();
+
         $select = Order::where('type', Order::EAT_FIT_SELECT)
             ->where('is_active', true)
             ->where('city_id', City::ASTANA);
 
         $max = $select->max('s_num');
-
         $fin = $select->orderBy('size')->get();
 
-        if (!$max) {
+        if(!$management){
+            $m = new Management();
+            $m->type = Management::S_NUM_TYPE;
+            $m->save();
+
             foreach ($fin as $key => $item) {
-                $item->s_num = $key+1;
+                $item->s_num = $key + 1;
                 $item->save();
             }
         }else {
-            foreach ($fin as $key => $item) {
-                if ($item->s_num === null) {
-                    if ($key === 0) {
-                        $item->s_num = 1;
-                    }elseif ($key === $select->count() - 1) {
-                        $item->s_num === $select->count();
-                    }else {
-                        $item->s_num = $fin[$key - 1]->s_num + 1;
-                    }
+            $nums = $select->where('s_num', null)->orderBy('size')->get();
 
-                    $item->save();
-                }
+            foreach ($nums as $key => $item) {
+                $item->s_num = $max + $key + 1;
+                $item->save();
             }
         }
 
