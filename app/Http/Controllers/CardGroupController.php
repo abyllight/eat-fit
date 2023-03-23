@@ -69,7 +69,7 @@ class CardGroupController extends Controller
         }
 
         foreach ($user->groups as $i => $group) {
-            $selects = $group->selects()->orderBy('code')->groupBy('code');
+            $selects = $group->selects()->orderBy('code')->get()->groupBy('code');
 
             $groups[$i] = [
                 'id' => $group->id,
