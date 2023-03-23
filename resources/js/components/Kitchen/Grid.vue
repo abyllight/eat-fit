@@ -59,7 +59,7 @@
                                     color="teal"
                                     dark
                                     block
-                                    @click="done(o.order_id)"
+                                    @click="done(o.select_id)"
                                 >
                                     сделано
                                     <v-icon v-if="o.done" right>mdi-check</v-icon>

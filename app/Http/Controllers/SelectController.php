@@ -30,7 +30,6 @@ class SelectController extends Controller
             $selects = $order->select()->whereDate('created_at', Carbon::today())->get();
             $arr[$key] = [
                 'id' => $order->s_num,
-                'order_id' => $order->id,
                 'order_name' => $order->name,
                 'order_tag' => $order->getSize($order->size),
                 'selects' => []
@@ -38,6 +37,7 @@ class SelectController extends Controller
 
             foreach ($selects as $select) {
                 $arr[$key]['selects'][] = [
+                    'select_id' => $select->id,
                     'code' => $select->code,
                     'done' => $select->done,
                     'color' => $select->getStatusColor(),
