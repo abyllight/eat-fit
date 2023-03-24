@@ -191,6 +191,14 @@ class Order extends Model
         $result = $this->select()->whereDate('created_at', Carbon::today())->get()->sortBy('ration_id');
 
         if ($result->count() === 0) {
+            if ($this->type !== Order::EAT_FIT_SELECT) {
+                $max = Order::where('is_active', true)
+                    ->where('city_id', City::ASTANA)->max('s_num');
+
+                $this->s_num = $max + 1;
+                $this->save();
+            }
+
             $cuisine = Cuisine::where('is_on_duty', true)->first();
 
             if (!$cuisine) {

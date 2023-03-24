@@ -391,10 +391,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       console.log(order);
       this.dialog = true;
     },
-    done: function done(order) {
+    done: function done(id) {
       var _this4 = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/' + order.id + '/done').then(function (res) {
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/' + id + '/done').then(function (res) {
         _this4.getSelects();
       });
     }
@@ -769,7 +769,7 @@ var render = function() {
                                           },
                                           on: {
                                             click: function($event) {
-                                              return _vm.done(o)
+                                              return _vm.done(o.select_id)
                                             }
                                           }
                                         },
