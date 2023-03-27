@@ -168,7 +168,7 @@ class OrderController extends Controller
     {
         $management = Management::whereDate('created_at', Carbon::now()->toDateString())->where('type', Management::S_NUM_TYPE)->first();
 
-        $select = Order::where('type', Order::EAT_FIT_SELECT)->where('type', Order::EAT_FIT_SELECT_MAX)
+        $select = Order::where('type', Order::EAT_FIT_SELECT)
             ->where('is_active', true)
             ->where('city_id', City::ASTANA);
 
