@@ -168,7 +168,7 @@ class OrderController extends Controller
     {
         $management = Management::whereDate('created_at', Carbon::now()->toDateString())->where('type', Management::S_NUM_TYPE)->first();
 
-        $select = Order::where('type', Order::EAT_FIT_SELECT)
+        $select = Order::where('type', Order::EAT_FIT_SELECT)->where('type', Order::EAT_FIT_SELECT_MAX)
             ->where('is_active', true)
             ->where('city_id', City::ASTANA);
 
@@ -183,6 +183,9 @@ class OrderController extends Controller
                 $item->s_num = $key + 1;
                 $item->save();
             }
+
+            Order::where('is_active', false)
+                ->update(['s_num' => null]);
         }else {
             $max = $select->max('s_num');
             $nums = $select->where('s_num', null)->orderBy('size')->get();
@@ -403,6 +406,9 @@ class OrderController extends Controller
                     break;
                 case '678647': //Select
                     $fields['type'] = Order::EAT_FIT_SELECT;
+                    break;
+                case '978826': //Select
+                    $fields['type'] = Order::EAT_FIT_SELECT_MAX;
                     break;
                 case '954721': //Detox
                     $fields['type'] = Order::EAT_FIT_DETOX;

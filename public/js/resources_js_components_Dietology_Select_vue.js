@@ -1657,15 +1657,7 @@ var render = function() {
                   _c(
                     "div",
                     { staticClass: "mb-5 d-flex justify-space-between" },
-                    [
-                      _c("h3", [
-                        _vm._v(
-                          _vm._s(_vm.order.name) +
-                            " | " +
-                            _vm._s(_vm.order.whatsapp)
-                        )
-                      ])
-                    ]
+                    [_c("h3", [_vm._v(_vm._s(_vm.order.name))])]
                   ),
                   _vm._v(" "),
                   _c(

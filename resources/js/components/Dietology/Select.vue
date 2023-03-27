@@ -93,7 +93,7 @@
             <v-col v-if="Object.keys(order).length > 0">
 
                 <div class="mb-5 d-flex justify-space-between">
-                    <h3>{{order.name}} | {{order.whatsapp}}</h3>
+                    <h3>{{order.name}}</h3>
 
 <!--                    <v-btn color="red" dark small @click="resetResult(order.id)">
                         Сбросить

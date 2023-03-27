@@ -63,6 +63,7 @@ class Order extends Model
     const EAT_FIT_SATURDAY = 7;
     const EAT_CHILL = 5;
     const CAKES = 6;
+    const EAT_FIT_SELECT_MAX = 8;
 
     const XS = 1;
     const S = 2;
@@ -74,7 +75,7 @@ class Order extends Model
     const ASTANA = 1;
     const ALMATY = 2;
 
-    const EAT_FIT_ARRAY = [self::EAT_FIT_LITE, self::EAT_FIT_SELECT, self::EAT_FIT_DETOX, self::EAT_FIT_GO, self::EAT_FIT_SATURDAY];
+    const EAT_FIT_ARRAY = [self::EAT_FIT_LITE, self::EAT_FIT_SELECT, self::EAT_FIT_SELECT_MAX, self::EAT_FIT_DETOX, self::EAT_FIT_GO, self::EAT_FIT_SATURDAY];
 
     const TYPES = ['LITE', 'SELECT', 'DETOX', 'GO', 'CHILL', 'CAKES', 'СУББОТА'];
 

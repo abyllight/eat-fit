@@ -127,11 +127,16 @@ class Select extends Model
             //beautify
             foreach ($group as $item) {
 
-                if (!$item->order->is_active) {
-                    $item->is_active = false;
-                    $item->s_num = null;
-                    $item->save();
+                if ($item->order) {
+                    if (!$item->order->is_active) {
+                        $item->is_active = false;
+                        if ($item->s_num) {
+                            $item->s_num = null;
+                            $item->save();
+                        }
+                    }
                 }
+
 
                 $code = null;
 
