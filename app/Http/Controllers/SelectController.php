@@ -27,6 +27,7 @@ class SelectController extends Controller
         $arr = [];
 
         $max_date = Select::max('created_at');
+        $max_date = explode(" ", $max_date)[0];
 
         foreach ($orders as $key => $order) {
             $selects = $order->select()->whereDate('created_at', $max_date)->get();

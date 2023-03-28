@@ -30,6 +30,7 @@ class CardGroupController extends Controller
 
         $cuisine = Cuisine::where('is_on_duty', true)->first();
         $max_date = Select::max('created_at');
+        $max_date = explode(" ", $max_date)[0];
 
         $select_groups = Select::whereDate('created_at', $max_date)->where('is_active', true);
 
