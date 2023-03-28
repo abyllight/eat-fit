@@ -26,8 +26,10 @@ class SelectController extends Controller
         $orders = Order::where('s_num', '!=', null)->where('city_id', City::ASTANA)->where('is_active', true)->orderBy('s_num')->get();
         $arr = [];
 
+        $max_date = Select::max('created_at');
+
         foreach ($orders as $key => $order) {
-            $selects = $order->select()->whereDate('created_at', Carbon::today())->get();
+            $selects = $order->select()->whereDate('created_at', $max_date)->get();
             $arr[$key] = [
                 'id' => $order->s_num,
                 'order_name' => $order->name,

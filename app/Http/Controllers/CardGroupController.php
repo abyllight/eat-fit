@@ -29,8 +29,13 @@ class CardGroupController extends Controller
         $groups = [];
 
         $cuisine = Cuisine::where('is_on_duty', true)->first();
+        $max_date = Select::max('created_at');
 
-        $select_groups = Select::whereDate('created_at', Carbon::today())->where('is_active', true)->where('group_id', null);
+        $select_groups = Select::whereDate('created_at', $max_date)->where('is_active', true);
+
+        if (!$user->is_admin) {
+            $select_groups = $select_groups->where('group_id', null);
+        }
 
         if ($user->city_id !== null) {
             $select_groups = $select_groups->where('city_id', $user->city_id);
@@ -279,7 +284,8 @@ class CardGroupController extends Controller
         $n = 1;
 
         foreach ($orders as $key => $order) {
-            $selects = $order->select()->whereDate('created_at', Carbon::today())->get()->sortBy('ration_id');
+            $max_date = Select::max('created_at');
+            $selects = $order->select()->whereDate('created_at', $max_date)->get()->sortBy('ration_id');
 
             if (count($selects) === 0) continue;
 
