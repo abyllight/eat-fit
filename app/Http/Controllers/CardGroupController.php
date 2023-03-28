@@ -286,6 +286,7 @@ class CardGroupController extends Controller
 
         foreach ($orders as $key => $order) {
             $max_date = Select::max('created_at');
+            $max_date = explode(" ", $max_date)[0];
             $selects = $order->select()->whereDate('created_at', $max_date)->get()->sortBy('ration_id');
 
             if (count($selects) === 0) continue;
