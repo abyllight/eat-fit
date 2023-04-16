@@ -275,7 +275,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     };
   },
   created: function created() {
-    this.generateCode();
     this.getSelect();
     this.getCuisine();
     this.getRations();

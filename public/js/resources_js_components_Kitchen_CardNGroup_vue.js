@@ -15,6 +15,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vuedraggable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuedraggable */ "./node_modules/vuedraggable/dist/vuedraggable.umd.js");
 /* harmony import */ var vuedraggable__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vuedraggable__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -244,6 +246,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "CardNGroup",
   components: {
@@ -264,12 +267,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     };
   },
   mounted: function mounted() {
-    this.getItems();
+    this.generateCode(); //this.getItems()
+
     this.getDepartments();
   },
   methods: {
-    getItems: function getItems() {
+    generateCode: function generateCode() {
       var _this = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_2___default().get('/api/select/generate-code').then(function (res) {
+        _this.getItems();
+      });
+    },
+    getItems: function getItems() {
+      var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
@@ -277,14 +288,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return axios.get('/api/cards').then(function (res) {
-                  _this.cards = res.data.cards;
-                  _this.groups = res.data.groups;
-                  _this.loading = false;
+                return axios__WEBPACK_IMPORTED_MODULE_2___default().get('/api/cards').then(function (res) {
+                  _this2.cards = res.data.cards;
+                  _this2.groups = res.data.groups;
+                  _this2.loading = false;
                 })["catch"](function (err) {
                   console.log(err);
                 })["finally"](function () {
-                  _this.loading = false;
+                  _this2.loading = false;
                 });
 
               case 2:
@@ -296,7 +307,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     getDepartments: function getDepartments() {
-      var _this2 = this;
+      var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
@@ -304,8 +315,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.next = 2;
-                return axios.get('/api/departments').then(function (response) {
-                  _this2.departments = response.data;
+                return axios__WEBPACK_IMPORTED_MODULE_2___default().get('/api/departments').then(function (response) {
+                  _this3.departments = response.data;
                 })["catch"](function (error) {
                   console.log(error);
                 });
@@ -319,35 +330,35 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     createGroup: function createGroup() {
-      var _this3 = this;
+      var _this4 = this;
 
-      axios.post('/api/cards', {
+      axios__WEBPACK_IMPORTED_MODULE_2___default().post('/api/cards', {
         name: this.group_name
       }).then(function (res) {
-        _this3.groups = res.data;
-        _this3.group_name = null;
-        _this3.dialog = false;
+        _this4.groups = res.data;
+        _this4.group_name = null;
+        _this4.dialog = false;
       });
     },
     deleteGroup: function deleteGroup(id) {
-      var _this4 = this;
+      var _this5 = this;
 
-      axios.post('/api/cards/' + id).then(function (res) {
-        _this4.groups = res.data;
+      axios__WEBPACK_IMPORTED_MODULE_2___default().post('/api/cards/' + id).then(function (res) {
+        _this5.groups = res.data;
 
-        _this4.getItems();
+        _this5.getItems();
       });
     },
     log: function log(evt) {
-      var _this5 = this;
+      var _this6 = this;
 
       var code = evt.item.id;
       var group_id = evt.to.id;
-      axios.post('/api/cards-sort', {
+      axios__WEBPACK_IMPORTED_MODULE_2___default().post('/api/cards-sort', {
         code: code,
         g_id: group_id
       }).then(function (res) {
-        _this5.getItems();
+        _this6.getItems();
       });
     },
     countWeight: function countWeight(items) {
@@ -387,15 +398,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.modal = true;
     },
     changeDep: function changeDep() {
-      var _this6 = this;
+      var _this7 = this;
 
-      axios.post('/api/cards-dep', {
+      axios__WEBPACK_IMPORTED_MODULE_2___default().post('/api/cards-dep', {
         items: this.order.items,
         dep_id: this.order.dep_id
       }).then(function (res) {
-        _this6.modal = false;
+        _this7.modal = false;
 
-        _this6.getItems();
+        _this7.getItems();
       });
     },
     hasResultIncludeIngredient: function hasResultIncludeIngredient(id) {

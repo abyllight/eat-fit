@@ -166,11 +166,12 @@ class OrderController extends Controller
 
     public function getSelect(): JsonResponse
     {
+        $user = Auth::user();
         $management = Management::whereDate('created_at', Carbon::now()->toDateString())->where('type', Management::S_NUM_TYPE)->first();
 
-        $select = Order::where('type', Order::EAT_FIT_SELECT)
+        $select = Order::whereIn('type', [Order::EAT_FIT_SELECT, Order::EAT_FIT_SELECT_MAX])
             ->where('is_active', true)
-            ->where('city_id', City::ASTANA);
+            ->where('city_id', $user->city_id);
 
         $fin = $select->orderBy('size')->get();
 
@@ -247,13 +248,15 @@ class OrderController extends Controller
         ];
 
         $items = Order::getOrderByType(Order::EAT_FIT_SELECT);
+        $max = Order::getOrderByType(Order::EAT_FIT_SELECT_MAX);
+
         $select = [
-            'total' => $items->count(),
-            'xs'    => $items->where('size', Order::XS)->count(),
-            's'     => $items->where('size', Order::S)->count(),
-            'm'     => $items->where('size', Order::M)->count(),
-            'l'     => $items->where('size', Order::L)->count(),
-            'xl'    => $items->where('size', Order::XL)->count()
+            'total' => $items->count() + $max->count(),
+            'xs'    => $items->where('size', Order::XS)->count() + $max->where('size', Order::XS)->count(),
+            's'     => $items->where('size', Order::S)->count() + $max->where('size', Order::S)->count(),
+            'm'     => $items->where('size', Order::M)->count() + $max->where('size', Order::M)->count(),
+            'l'     => $items->where('size', Order::L)->count() + $max->where('size', Order::L)->count(),
+            'xl'    => $items->where('size', Order::XL)->count() + $max->where('size', Order::XL)->count()
         ];
 
         $detox = Order::getOrderByType(Order::EAT_FIT_DETOX)->count();

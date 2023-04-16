@@ -77,7 +77,7 @@ class Order extends Model
 
     const EAT_FIT_ARRAY = [self::EAT_FIT_LITE, self::EAT_FIT_SELECT, self::EAT_FIT_SELECT_MAX, self::EAT_FIT_DETOX, self::EAT_FIT_GO, self::EAT_FIT_SATURDAY];
 
-    const TYPES = ['LITE', 'SELECT', 'DETOX', 'GO', 'CHILL', 'CAKES', 'СУББОТА'];
+    const TYPES = ['LITE', 'SELECT', 'DETOX', 'GO', 'CHILL', 'CAKES', 'СУББОТА', 'SELECT_MAX'];
 
     const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'EAT'];
 

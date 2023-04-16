@@ -222,6 +222,7 @@
 
 <script>
 import draggable from "vuedraggable";
+import axios from "axios";
 export default {
     name: "CardNGroup",
     components: {
@@ -240,10 +241,17 @@ export default {
         original: []
     }),
     mounted() {
-        this.getItems()
+        this.generateCode()
+        //this.getItems()
         this.getDepartments()
     },
     methods: {
+        generateCode() {
+            axios.get('/api/select/generate-code')
+                .then(res => {
+                    this.getItems()
+                })
+        },
         async getItems() {
             await axios.get('/api/cards')
                 .then(res => {

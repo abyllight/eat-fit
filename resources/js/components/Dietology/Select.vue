@@ -239,7 +239,6 @@
             }
         }),
         created() {
-            this.generateCode()
             this.getSelect()
             this.getCuisine()
             this.getRations()
