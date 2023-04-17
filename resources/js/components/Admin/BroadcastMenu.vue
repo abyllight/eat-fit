@@ -3,7 +3,7 @@
         <v-row>
             <v-col class="d-flex justify-space-between">
                 <h3>{{cuisine}}</h3>
-                <v-btn v-if="isActive" @click="dialog=true" color="primary" :loading="loading" :disabled="loading">Отправить</v-btn>
+                <v-btn @click="dialog=true" color="primary" :loading="loading" :disabled="loading">Отправить</v-btn>
             </v-col>
         </v-row>
 
