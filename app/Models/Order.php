@@ -192,7 +192,7 @@ class Order extends Model
         $result = $this->select()->whereDate('created_at', Carbon::today())->get()->sortBy('ration_id');
 
         if ($result->count() === 0) {
-            if ($this->type !== Order::EAT_FIT_SELECT) {
+            if ($this->type !== Order::EAT_FIT_SELECT && $this->type !== Order::EAT_FIT_SELECT_MAX) {
                 $max = Order::where('is_active', true)
                     ->where('city_id', City::ASTANA)->max('s_num');
 
@@ -275,6 +275,9 @@ class Order extends Model
             case Order::EAT_FIT_SELECT:
                 $color = 'green';
                 break;
+            case Order::EAT_FIT_SELECT_MAX:
+                $color = 'green';
+                break;
             case Order::EAT_FIT_DETOX:
                 $color = 'blue';
                 break;
@@ -300,6 +303,9 @@ class Order extends Model
                 $color = 'fff59d';
                 break;
             case Order::EAT_FIT_SELECT:
+                $color = 'a5d6a7';
+                break;
+            case Order::EAT_FIT_SELECT_MAX:
                 $color = 'a5d6a7';
                 break;
             case Order::EAT_FIT_DETOX:

@@ -788,7 +788,7 @@ class SelectController extends Controller
             $spreadsheet->getActiveSheet()->getColumnDimension($letter)->setWidth(25);
         }
 
-        $orders = Order::where('type', Order::EAT_FIT_SELECT)->where('is_active', true)->orderBy('size')->get();
+        $orders = Order::whereIn('type', [Order::EAT_FIT_SELECT, Order::EAT_FIT_SELECT_MAX])->where('is_active', true)->orderBy('size')->get();
         $n = 1;
 
         foreach ($orders as $key => $order) {

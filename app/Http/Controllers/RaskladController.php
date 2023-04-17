@@ -37,7 +37,7 @@ class RaskladController extends Controller
 
         foreach ($sizes as $size) {
 
-            $orders = Order::where('type', Order::EAT_FIT_SELECT)
+            $orders = Order::whereIn('type', [Order::EAT_FIT_SELECT,Order::EAT_FIT_SELECT_MAX])
                 ->where('is_active', true)
                 ->where('size', $size['id'])
                 ->orderBy('name')

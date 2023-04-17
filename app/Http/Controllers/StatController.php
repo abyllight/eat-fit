@@ -24,7 +24,7 @@ class StatController extends Controller
             'xl'    => $items->where('size', Order::XL)->count()
         ];
 
-        $items = Order::where('type', Order::EAT_FIT_SELECT)
+        $items = Order::whereIn('type', [Order::EAT_FIT_SELECT, Order::EAT_FIT_SELECT_MAX])
             ->where('is_active', true)
             ->get();
 
