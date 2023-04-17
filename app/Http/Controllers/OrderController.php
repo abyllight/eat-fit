@@ -410,7 +410,7 @@ class OrderController extends Controller
                 case '678647': //Select
                     $fields['type'] = Order::EAT_FIT_SELECT;
                     break;
-                case '978826': //Select
+                case '978827': //Select
                     $fields['type'] = Order::EAT_FIT_SELECT_MAX;
                     break;
                 case '954721': //Detox
