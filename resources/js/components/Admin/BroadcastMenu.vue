@@ -54,7 +54,7 @@ export default {
             const d = new Date()
             let hour = d.getHours()
             let minute = d.getMinutes()
-            return hour >= 17 && minute >= 0 && hour <= 17 && minute <= 40
+            return hour >= 17 && minute >= 0 && hour <= 20 && minute <= 40
         }
     },
     methods: {
