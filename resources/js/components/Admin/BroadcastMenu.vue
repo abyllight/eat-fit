@@ -3,7 +3,7 @@
         <v-row>
             <v-col class="d-flex justify-space-between">
                 <h3>{{cuisine}}</h3>
-                <v-btn @click="dialog=true" color="primary" :loading="loading" :disabled="loading">Отправить</v-btn>
+                <v-btn v-if="isActive" @click="dialog=true" color="primary" :loading="loading" :disabled="loading">Отправить</v-btn>
             </v-col>
         </v-row>
 
@@ -54,7 +54,7 @@ export default {
             const d = new Date()
             let hour = d.getHours()
             let minute = d.getMinutes()
-            return hour >= 17 && minute >= 0 && hour <= 20 && minute <= 40
+            return hour >= 17 && minute >= 0 && hour <= 17 && minute <= 40
         }
     },
     methods: {
