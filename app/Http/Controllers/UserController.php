@@ -126,10 +126,6 @@ class UserController extends Controller
         $user = User::find($id);
 
         if ($user) {
-            if ($user->roles->isNotEmpty()){
-                $user->roles()->delete();
-            }
-
             if ($user->reports->isNotEmpty()){
                 $user->reports()->delete();
             }
