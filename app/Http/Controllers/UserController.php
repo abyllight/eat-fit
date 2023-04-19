@@ -126,12 +126,12 @@ class UserController extends Controller
         $user = User::find($id);
 
         if ($user) {
-            if ($user->roles()->exists()){
-                $user->roles()->detach();
+            if ($user->roles->isNotEmpty()){
+                $user->roles()->delete();
             }
 
-            if ($user->reports()->exists()){
-                $user->reports()->detach();
+            if ($user->reports->isNotEmpty()){
+                $user->reports()->delete();
             }
 
             $orders1 = Order::where('courier1_id', $user->id)->get();
