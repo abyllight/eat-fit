@@ -96,7 +96,6 @@ class CuisineController extends Controller
             'fb41dbf4-4b29-4ac2-9899-4d0074d43046',
             '2b37ab08-65c4-431f-8db4-1572ed98a72b', //indonesia
             'e823ee09-54fc-4da0-8885-5aa643138174', //hawaii
-            'b8dcd03d-739b-4f31-8e84-2e246b2dfefc', //ukraine
             '42748484-97ee-4a00-9588-a1ad19001b0b', //jordan
             '33063b9d-903c-40c4-b108-821bd5410c67', //halloween
         ];
