@@ -34,8 +34,8 @@ class OrderLogisticCollection extends JsonResource
             'geo' => $this->isGeocoded(),
             'interval' => $this->interval,
             'has_bag' => $this->has_bag,
-            'color' => $this->getTagColor($this->type, strpos($this->name, 'Автосделка:') >= 0),
-            'hex_color' => $this->getHexColor($this->type, strpos($this->name, 'Автосделка:') >= 0)
+            'color' => $this->getTagColor($this->type, strpos($this->name, 'Автосделка:') !== false),
+            'hex_color' => $this->getHexColor($this->type, strpos($this->name, 'Автосделка:') !== false)
         ];
     }
 }
