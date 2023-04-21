@@ -115,7 +115,7 @@ class ListController extends Controller
                             break;
                     }
 
-                    if (str_contains($order->name, 'Автосделка')) {
+                    if (strpos($order->name, 'Автосделка:') !== false) {
                         switch ($order->size) {
                             case Order::XS:
                                 ++$xs_a;
@@ -195,7 +195,7 @@ class ListController extends Controller
                     ->getFill()
                     ->setFillType(Fill::FILL_SOLID)
                     ->getStartColor()
-                    ->setRGB($value->getHexColor($value->type));
+                    ->setRGB($value->getHexColor($value->type, strpos($value->name, 'Автосделка:') !== false));
 
                 //Addition style
                 $sheet->mergeCells('B' . ($count + 1) . ':G' . ($count + 1));
