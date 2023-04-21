@@ -232,7 +232,7 @@ class ListController extends Controller
             );
 
             //Courier name size
-            $sheet->getStyle('A' . ($count + 2))->getFont()->setBold(true)->setSize(30);
+            $sheet->getStyle('A' . ($count + 2))->getFont()->setBold(true)->setSize(20);
             $sheet->getStyle('A' . ($count + 2))->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
 
             $n = $count + 4;
