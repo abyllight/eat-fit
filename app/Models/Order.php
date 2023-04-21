@@ -268,7 +268,7 @@ class Order extends Model
     public function getTagColor(int $type, bool $auto = false): string
     {
         if ($auto) {
-            return 'deep-orange-lighten-2';
+            return 'orange';
         }
 
         $color = '';
