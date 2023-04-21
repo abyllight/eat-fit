@@ -265,17 +265,20 @@ class Order extends Model
         return self::where('is_active', true)->where('type', $type)->where('size', $size)->get();
     }
 
-    public function getTagColor(int $type) {
+    public function getTagColor(int $type, bool $auto = false): string
+    {
+        if ($auto) {
+            return 'deep-orange-lighten-2';
+        }
+
         $color = '';
 
         switch ($type) {
             case Order::EAT_FIT_LITE:
                 $color = 'yellow';
                 break;
-            case Order::EAT_FIT_SELECT:
-                $color = 'green';
-                break;
             case Order::EAT_FIT_SELECT_MAX:
+            case Order::EAT_FIT_SELECT:
                 $color = 'green';
                 break;
             case Order::EAT_FIT_DETOX:
@@ -295,17 +298,19 @@ class Order extends Model
         return $color;
     }
 
-    public function getHexColor(int $type) {
+    public function getHexColor(int $type, bool $auto = false): string
+    {
+        if ($auto) {
+            return 'ff8a65';
+        }
         $color = '';
 
         switch ($type) {
             case Order::EAT_FIT_LITE:
                 $color = 'fff59d';
                 break;
-            case Order::EAT_FIT_SELECT:
-                $color = 'a5d6a7';
-                break;
             case Order::EAT_FIT_SELECT_MAX:
+            case Order::EAT_FIT_SELECT:
                 $color = 'a5d6a7';
                 break;
             case Order::EAT_FIT_DETOX:

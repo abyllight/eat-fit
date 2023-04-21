@@ -28,7 +28,7 @@ class MyOrderCollection extends JsonResource
             'lat' => $this->getLat(),
             'lng' => $this->getLng(),
             'has_bag' => $this->has_bag,
-            'color' => $this->getTagColor($this->type),
+            'color' => $this->getTagColor($this->type, str_contains($this->name, 'Автосделка')),
             'is_notified' => $this->isNotified(),
             'is_reported' => $this->isReported()
         ];
