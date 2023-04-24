@@ -191,7 +191,7 @@ class CardGroupController extends Controller
     }
 
     public function exportStickers(){
-        //Select::generateCode();
+        Select::generateCode();
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();

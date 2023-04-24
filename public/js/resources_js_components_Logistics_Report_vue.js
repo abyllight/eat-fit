@@ -157,6 +157,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Report',
@@ -165,10 +176,13 @@ __webpack_require__.r(__webpack_exports__);
       max: null,
       date: null,
       menu: false,
-      couriers: []
+      couriers: [],
+      fact: null,
+      fact_loading: false
     };
   },
   created: function created() {
+    this.getFact();
     this.fetchReports();
   },
   methods: {
@@ -200,6 +214,36 @@ __webpack_require__.r(__webpack_exports__);
         console.log(response);
       })["catch"](function (error) {
         console.log(error);
+      });
+    },
+    getFact: function getFact() {
+      var _this3 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_0___default().get('/api/management/fact/').then(function (response) {
+        _this3.fact = response.data.fact;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    payFact: function payFact() {
+      var _this4 = this;
+
+      this.fact = true;
+      this.fact_loading = true;
+      axios__WEBPACK_IMPORTED_MODULE_0___default().post('/api/management/fact/').then(function (res) {
+        _this4.$store.dispatch('showAlert', {
+          isVisible: true,
+          msg: res.data.msg,
+          color: 'success',
+          type: 'success'
+        });
+
+        location.reload();
+      })["catch"](function (error) {
+        console.log(error);
+      })["finally"](function () {
+        _this4.fact = false;
+        _this4.fact_loading = false;
       });
     }
   }
@@ -508,7 +552,32 @@ var render = function() {
               ],
               1
             )
-          ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "v-col",
+            {
+              staticClass: "d-flex justify-space-between",
+              attrs: { sm: "12", lg: "6" }
+            },
+            [
+              _c("p"),
+              _vm._v(" "),
+              _c(
+                "v-btn",
+                {
+                  attrs: {
+                    color: "primary",
+                    disabled: _vm.fact,
+                    loading: _vm.fact_loading
+                  },
+                  on: { click: _vm.payFact }
+                },
+                [_vm._v("\n                фактический оплачено\n            ")]
+              )
+            ],
+            1
+          )
         ],
         1
       ),

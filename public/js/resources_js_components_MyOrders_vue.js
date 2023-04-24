@@ -194,6 +194,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "MyOrders",
   data: function data() {
@@ -709,7 +710,7 @@ var render = function() {
                   _vm._v(" "),
                   _vm.payment_type !== "Без оплаты"
                     ? _c("v-text-field", {
-                        attrs: { label: "Сумма", outlined: "" },
+                        attrs: { label: "Сумма", type: "number", outlined: "" },
                         model: {
                           value: _vm.amount,
                           callback: function($$v) {

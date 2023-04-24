@@ -58,6 +58,17 @@
                    </v-btn>
                </a>
            </v-col>
+           <v-col sm="12" lg="6" class="d-flex justify-space-between">
+               <p></p>
+               <v-btn
+                   color="primary"
+                   @click="payFact"
+                   :disabled="fact"
+                   :loading="fact_loading"
+               >
+                   фактический оплачено
+               </v-btn>
+           </v-col>
        </v-row>
        <v-row v-for="courier in couriers" :key="courier.id">
            <v-col>
@@ -151,9 +162,12 @@ export default {
         max: null,
         date: null,
         menu: false,
-        couriers: []
+        couriers: [],
+        fact: null,
+        fact_loading: false,
     }),
     created() {
+        this.getFact()
         this.fetchReports()
     },
     methods: {
@@ -191,6 +205,38 @@ export default {
                 .catch(error => {
                     console.log(error)
                 })
+        },
+        getFact() {
+            axios
+                .get('/api/management/fact/')
+                .then(response => {
+                    this.fact = response.data.fact
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
+        payFact() {
+            this.fact = true
+            this.fact_loading = true
+            axios
+                .post('/api/management/fact/')
+                .then(res => {
+                    this.$store.dispatch('showAlert', {
+                        isVisible: true,
+                        msg: res.data.msg,
+                        color: 'success',
+                        type: 'success'
+                    })
+
+                    location.reload()
+                })
+                .catch(error => {
+                    console.log(error)
+                }).finally(() => {
+                this.fact = false
+                this.fact_loading = false
+            })
         }
     }
 }

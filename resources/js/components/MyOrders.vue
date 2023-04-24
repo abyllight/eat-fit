@@ -156,6 +156,7 @@
                         v-if="payment_type !== 'Без оплаты'"
                         v-model="amount"
                         label="Сумма"
+                        type="number"
                         outlined
                     ></v-text-field>
                 </v-card-text>

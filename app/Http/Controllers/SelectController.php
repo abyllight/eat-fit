@@ -710,7 +710,7 @@ class SelectController extends Controller
     }
 
     public function export(){
-        //Select::generateCode();
+        Select::generateCode();
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();

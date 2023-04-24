@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cuisine;
 use App\Models\Management;
 use App\Models\Order;
+use App\Models\Report;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use AmoCRM\Client;
@@ -42,6 +42,18 @@ class ManagementController extends Controller
             'select' => $select
         ]);
     }
+
+    public function getFact(): JsonResponse
+    {
+        $fact = Management::whereDate('created_at', Carbon::now()->toDateString())
+            ->where('type', Management::FACT_TYPE)
+            ->exists();
+
+        return response()->json([
+            'fact' => $fact,
+        ]);
+    }
+
 
     public function plusOne(int $status, int $type, bool $has_extra = false): array
     {
@@ -81,7 +93,7 @@ class ManagementController extends Controller
                     $task['element_id'] = $value['id'];
                     $task['element_type'] = 2;
                     $task['task_type'] = 1;
-                    $task['text'] = 'Получить обратную связь от клиента';
+                    $task['text'] = 'Получить обратную связь от клиента A';
                     $task['complete_till'] = '23:59';
                     $task['responsible_user_id'] = $value['responsible_user_id'];
                     $task->apiAdd();
@@ -390,6 +402,60 @@ class ManagementController extends Controller
             if(!$management){
                 $m = new Management();
                 $m->type = $type;
+                $m->save();
+            }
+
+            return response()->json([
+                'status' => true,
+                'msg' => 'Success!'
+            ]);
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'msg' => $e->getCode() . '. ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    public function payFact(): JsonResponse
+    {
+        try{
+            $amo = new Client(env('AMO_SUBDOMAIN'), env('AMO_LOGIN'), env('AMO_HASH'));
+
+            $reports = Report::whereDate('created_at', Carbon::now()->toDateString())->get();
+
+            foreach ($reports as $report) {
+                if ($report->amount) {
+                    $amount = (int) $report->amount;
+
+                    $target = $amo->lead->apiList([
+                        'id' => $report->order->id
+                    ]);
+
+                    $fact = null;
+
+                    foreach ($target[0]['custom_fields'] as $field) {
+                        if ($field['id'] === 321139) { //fact
+                            $fact = (int)$field["values"][0]["value"];
+                        }
+                    }
+
+                    $lead = $amo->lead;
+                    $lead->addCustomField(321139, $fact + $amount); //Fact
+                    $lead->addCustomField(869811, null); //Tip oplaty
+                    $lead->addCustomField(466107, false); //Check oplaty
+                    $lead->addCustomField(885893, ''); //Comment oplaty
+
+                    $lead->apiUpdate(31826477, 'now');
+                }
+            }
+
+            $management = Management::whereDate('created_at', Carbon::now()->toDateString())
+                ->where('type', Management::FACT_TYPE)->first();
+
+            if(!$management){
+                $m = new Management();
+                $m->type = Management::FACT_TYPE;
                 $m->save();
             }
 

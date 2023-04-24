@@ -24,5 +24,5 @@ class Management extends Model
     public const SEND_SELECT_TYPE = 5;
     public const S_NUM_TYPE = 6;
     public const WORK_OTKAT_TYPE = 7;
-
+    public const FACT_TYPE = 8;
 }
