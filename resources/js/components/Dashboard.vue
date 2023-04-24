@@ -10,7 +10,7 @@ import axios from "axios";
 export default {
     name: "Dashboard",
     created() {
-        axios.post('/api/management/fact').then(response => {console.log(response)})
+        //axios.post('/api/management/fact').then(response => {console.log(response)})
     }
 }
 </script>
