@@ -21,12 +21,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: "Dashboard",
-  created: function created() {
-    axios__WEBPACK_IMPORTED_MODULE_0___default().post('/api/management/fact').then(function (response) {
-      console.log(response);
-    });
-  }
+  name: "Dashboard"
 });
 
 /***/ }),

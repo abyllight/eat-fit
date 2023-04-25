@@ -208,7 +208,7 @@ export default {
         },
         getFact() {
             axios
-                .get('/api/management/fact/')
+                .get('/api/management/fact')
                 .then(response => {
                     this.fact = response.data.fact
                 })

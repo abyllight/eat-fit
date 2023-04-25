@@ -219,7 +219,7 @@ __webpack_require__.r(__webpack_exports__);
     getFact: function getFact() {
       var _this3 = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_0___default().get('/api/management/fact/').then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default().get('/api/management/fact').then(function (response) {
         _this3.fact = response.data.fact;
       })["catch"](function (error) {
         console.log(error);
@@ -230,7 +230,7 @@ __webpack_require__.r(__webpack_exports__);
 
       this.fact = true;
       this.fact_loading = true;
-      axios__WEBPACK_IMPORTED_MODULE_0___default().post('/api/management/fact/').then(function (res) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default().post('/api/management/fact').then(function (res) {
         _this4.$store.dispatch('showAlert', {
           isVisible: true,
           msg: res.data.msg,
