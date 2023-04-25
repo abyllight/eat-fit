@@ -222,6 +222,7 @@ export default {
             axios
                 .post('/api/management/fact')
                 .then(res => {
+                    console.log(res)
                     this.$store.dispatch('showAlert', {
                         isVisible: true,
                         msg: res.data.msg,
@@ -229,7 +230,7 @@ export default {
                         type: 'success'
                     })
 
-                    location.reload()
+                    //location.reload()
                 })
                 .catch(error => {
                     console.log(error)
