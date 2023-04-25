@@ -429,7 +429,7 @@ class ManagementController extends Controller
                     $amount = (int) $report->amount;
 
                     $target = $amo->lead->apiList([
-                        'id' => $report->order->id
+                        'id' => $report->order->amo_id
                     ]);
 
                     $fact = null;
@@ -446,7 +446,7 @@ class ManagementController extends Controller
                     $lead->addCustomField(466107, false); //Check oplaty
                     $lead->addCustomField(885893, ''); //Comment oplaty
 
-                    $lead->apiUpdate(31826477, 'now');
+                    $lead->apiUpdate($report->order->amo_id, 'now');
                 }
             }
 
