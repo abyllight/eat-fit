@@ -220,7 +220,7 @@ export default {
             this.fact = true
             this.fact_loading = true
             axios
-                .post('/api/management/fact/')
+                .post('/api/management/fact')
                 .then(res => {
                     this.$store.dispatch('showAlert', {
                         isVisible: true,
