@@ -425,28 +425,41 @@ class ManagementController extends Controller
             $reports = Report::whereDate('created_at', Carbon::now()->toDateString())->get();
 
             foreach ($reports as $report) {
-                if ($report->amount) {
-                    $amount = (int) $report->amount;
+                $target = $amo->lead->apiList([
+                    'id' => $report->order->amo_id
+                ]);
 
-                    $target = $amo->lead->apiList([
-                        'id' => $report->order->amo_id
-                    ]);
-
-                    $fact = null;
+                if (count($target) > 0) {
+                    $fact = 0;
+                    $pay_comment = null;
 
                     foreach ($target[0]['custom_fields'] as $field) {
                         if ($field['id'] === 321139) { //fact
                             $fact = (int)$field["values"][0]["value"];
                         }
+
+                        if ($field['id'] === 885893) { //comm oplata
+                            $pay_comment = $field["values"][0]["value"];
+                        }
                     }
 
-                    $lead = $amo->lead;
-                    $lead->addCustomField(321139, $fact + $amount); //Fact
-                    $lead->addCustomField(869811, null); //Tip oplaty
-                    $lead->addCustomField(466107, false); //Check oplaty
-                    $lead->addCustomField(885893, ''); //Comment oplaty
+                    if ($report->amount) {
+                        $amount = (int) $report->amount;
 
-                    $lead->apiUpdate($report->order->amo_id, 'now');
+                        $lead = $amo->lead;
+                        $lead->addCustomField(321139, $fact + $amount); //Fact
+                        $lead->addCustomField(869811, null); //Tip oplaty
+                        $lead->addCustomField(466107, false); //Check oplaty
+                        $lead->addCustomField(885893, ''); //Comment oplaty
+
+                        $lead->apiUpdate($report->order->amo_id, 'now');
+                    }
+
+                    if ($pay_comment === 'Ланч' || $pay_comment === 'ланч' || $pay_comment === 'ЛАНЧ') {
+                        $lead = $amo->lead;
+                        $lead->addCustomField(885893, ''); //Comment oplaty
+                        $lead->apiUpdate($report->order->amo_id, 'now');
+                    }
                 }
             }
 

@@ -341,6 +341,7 @@ class OrderController extends Controller
                 'a1'        => null,
                 'a2'        => null,
                 'logistic'  => null,
+                'pay_comment'  => null,
                 'diet'      => null
             ];
 
@@ -360,6 +361,9 @@ class OrderController extends Controller
                         break;
                     case '321281': //Логистика
                         $fields['logistic'] = $field["values"][0]["value"];
+                        break;
+                    case '885893': //Комм оплата
+                        $fields['pay_comment'] = $field["values"][0]["value"];
                         break;
                     case '478767': //Яндекс
                         $fields['y1'] = $field["values"][0]["value"];
@@ -472,6 +476,7 @@ class OrderController extends Controller
                     'address1'  => $fields['a1'],
                     'address2'  => $fields['a2'],
                     'logistic'  => $fields['logistic'],
+                    'pay_comment'  => $fields['pay_comment'],
                     'diet'      => $fields['diet'],
                     'is_active' => true
                 ]);
@@ -510,6 +515,7 @@ class OrderController extends Controller
         $order->address1 = $fields['a1'];
         $order->address2 = $fields['a2'];
         $order->logistic = $fields['logistic'];
+        $order->pay_comment = $fields['pay_comment'];
 
         if ($order->diet !== $fields['diet']) {
             $order->diet_old = $order->diet;

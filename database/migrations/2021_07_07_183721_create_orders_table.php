@@ -27,6 +27,7 @@ class CreateOrdersTable extends Migration
             $table->integer('interval')->default(0);
             $table->integer('courier_position')->nullable();
             $table->integer('position')->nullable();
+            $table->longText('pay_comment')->nullable();
             $table->longText('logistic')->nullable();
             $table->string('time1')->nullable();
             $table->string('time2')->nullable();

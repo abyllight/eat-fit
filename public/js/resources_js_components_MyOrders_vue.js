@@ -195,6 +195,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "MyOrders",
   data: function data() {
@@ -450,6 +458,24 @@ var render = function() {
                     )
                   ]
                 ),
+                _vm._v(" "),
+                order.pay_comment
+                  ? _c(
+                      "div",
+                      [
+                        _c("v-card-text", { staticClass: "font-weight-bold" }, [
+                          _vm._v(
+                            "\n                    " +
+                              _vm._s(order.pay_comment) +
+                              "\n                "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("v-divider", { staticClass: "my-3" })
+                      ],
+                      1
+                    )
+                  : _vm._e(),
                 _vm._v(" "),
                 _c("v-card-text", [
                   _vm._v(

@@ -231,14 +231,15 @@ __webpack_require__.r(__webpack_exports__);
       this.fact = true;
       this.fact_loading = true;
       axios__WEBPACK_IMPORTED_MODULE_0___default().post('/api/management/fact').then(function (res) {
+        console.log(res);
+
         _this4.$store.dispatch('showAlert', {
           isVisible: true,
           msg: res.data.msg,
           color: 'success',
           type: 'success'
-        });
+        }); //location.reload()
 
-        location.reload();
       })["catch"](function (error) {
         console.log(error);
       })["finally"](function () {

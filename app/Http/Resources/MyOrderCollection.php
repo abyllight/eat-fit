@@ -25,6 +25,7 @@ class MyOrderCollection extends JsonResource
             'time' => $this->getTime(),
             'address' => $this->getAddress(),
             'logistic' => $this->logistic,
+            'pay_comment' => $this->pay_comment,
             'lat' => $this->getLat(),
             'lng' => $this->getLng(),
             'has_bag' => $this->has_bag,

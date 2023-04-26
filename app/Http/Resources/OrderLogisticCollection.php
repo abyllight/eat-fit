@@ -27,6 +27,7 @@ class OrderLogisticCollection extends JsonResource
             'yaddress' => $this->getYaddress(),
             'yaddress_old' => $this->getYaddressOld(),
             'logistic' => $this->logistic,
+            'pay_comment' => $this->pay_comment,
             'lat' => $this->getLat(),
             'lng' => $this->getLng(),
             'courier_name' => $this->getCourierName(),

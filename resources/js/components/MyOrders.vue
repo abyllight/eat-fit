@@ -29,6 +29,14 @@
                     </div>
                     <div><v-card-title>{{index+1}}</v-card-title></div>
                 </div>
+
+                <div v-if="order.pay_comment">
+                    <v-card-text class="font-weight-bold">
+                        {{order.pay_comment}}
+                    </v-card-text>
+                    <v-divider class="my-3"></v-divider>
+                </div>
+
                 <v-card-text>
                     {{order.logistic}}
                 </v-card-text>
