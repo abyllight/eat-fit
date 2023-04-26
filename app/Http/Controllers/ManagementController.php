@@ -455,7 +455,7 @@ class ManagementController extends Controller
                         $lead->apiUpdate($report->order->amo_id, 'now');
                     }
 
-                    if ($pay_comment === 'Ланч' || $pay_comment === 'ланч' || $pay_comment === 'ЛАНЧ') {
+                    if (stripos($pay_comment, 'ланч') !== false) {
                         $lead = $amo->lead;
                         $lead->addCustomField(885893, ''); //Comment oplaty
                         $lead->apiUpdate($report->order->amo_id, 'now');
