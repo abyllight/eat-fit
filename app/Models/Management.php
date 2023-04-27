@@ -25,4 +25,5 @@ class Management extends Model
     public const S_NUM_TYPE = 6;
     public const WORK_OTKAT_TYPE = 7;
     public const FACT_TYPE = 8;
+    public const FACT_TYPE_ALMATY = 9;
 }

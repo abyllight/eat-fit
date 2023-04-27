@@ -238,8 +238,9 @@ __webpack_require__.r(__webpack_exports__);
           msg: res.data.msg,
           color: 'success',
           type: 'success'
-        }); //location.reload()
+        });
 
+        location.reload();
       })["catch"](function (error) {
         console.log(error);
       })["finally"](function () {

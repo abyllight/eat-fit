@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
 use App\Models\Management;
 use App\Models\Order;
 use App\Models\Report;
@@ -9,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use AmoCRM\Client;
 use AmoCRM\Exception;
+use Illuminate\Support\Facades\Auth;
 
 class ManagementController extends Controller
 {
@@ -45,8 +47,11 @@ class ManagementController extends Controller
 
     public function getFact(): JsonResponse
     {
+        $city_id = Auth::user()->city_id ?? City::ASTANA;
+        $fact_type = $city_id === City::ASTANA ? Management::FACT_TYPE : Management::FACT_TYPE_ALMATY;
+
         $fact = Management::whereDate('created_at', Carbon::now()->toDateString())
-            ->where('type', Management::FACT_TYPE)
+            ->where('type', $fact_type)
             ->exists();
 
         return response()->json([
@@ -422,7 +427,13 @@ class ManagementController extends Controller
         try{
             $amo = new Client(env('AMO_SUBDOMAIN'), env('AMO_LOGIN'), env('AMO_HASH'));
 
-            $reports = Report::whereDate('created_at', Carbon::now()->toDateString())->get();
+            $city_id = Auth::user()->city_id ?? City::ASTANA;
+            $fact_type = $city_id === City::ASTANA ? Management::FACT_TYPE : Management::FACT_TYPE_ALMATY;
+
+            $reports = Report::whereDate('created_at', Carbon::now()->toDateString())
+                ->with('order')
+                ->whereRelation('order', 'city_id', '=', $city_id)
+                ->get();
 
             foreach ($reports as $report) {
                 if ($report->amount) {
@@ -456,11 +467,11 @@ class ManagementController extends Controller
             }
 
             $management = Management::whereDate('created_at', Carbon::now()->toDateString())
-                ->where('type', Management::FACT_TYPE)->first();
+                ->where('type', $fact_type)->first();
 
             if(!$management){
                 $m = new Management();
-                $m->type = Management::FACT_TYPE;
+                $m->type = $fact_type;
                 $m->save();
             }
 

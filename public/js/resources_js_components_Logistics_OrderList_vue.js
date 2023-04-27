@@ -97,6 +97,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'OrderList',
@@ -4088,6 +4092,12 @@ var render = function() {
                                 _vm._v(
                                   "\n                            Комментарий\n                        "
                                 )
+                              ]),
+                              _vm._v(" "),
+                              _c("th", { staticClass: "text-left" }, [
+                                _vm._v(
+                                  "\n                            Комм.ОПЛАТА\n                        "
+                                )
                               ])
                             ])
                           ]),
@@ -4137,7 +4147,9 @@ var render = function() {
                                   _vm._v(" "),
                                   _c("td", [_vm._v(_vm._s(order.address))]),
                                   _vm._v(" "),
-                                  _c("td", [_vm._v(_vm._s(order.logistic))])
+                                  _c("td", [_vm._v(_vm._s(order.logistic))]),
+                                  _vm._v(" "),
+                                  _c("td", [_vm._v(_vm._s(order.pay_comment))])
                                 ]
                               )
                             }),

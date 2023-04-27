@@ -230,7 +230,7 @@ export default {
                         type: 'success'
                     })
 
-                    //location.reload()
+                    location.reload()
                 })
                 .catch(error => {
                     console.log(error)
