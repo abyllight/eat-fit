@@ -144,7 +144,7 @@ class ListController extends Controller
             $xl_t = $xl > 0 ? ' [XL - ' . $xl . '] ' : '';
 
             //Merge courier name cells
-            $sheet->mergeCells('A' . $n . ':G' . $n);
+            $sheet->mergeCells('A' . $n . ':H' . $n);
             $sheet->setCellValue(
                 'A' . $n,
                 $courier->name . ' - ' . count($courier->orders) .
@@ -159,13 +159,13 @@ class ListController extends Controller
             $count = $n;
 
             $arrayHeader = [
-                ['#', 'Имя', 'Тег', 'Ланчбэг', 'Время', 'Телефон', 'Адрес']
+                ['#', 'Имя', 'Тег', 'Ланчбэг', 'Время', 'Телефон', 'Адрес', 'Комм.Оплата']
             ];
 
             //Alignment and size of header
             $sheet->fromArray($arrayHeader, NULL, 'A' . $n);
-            $sheet->getStyle('A' . $n . ':G' . $n)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
-            $sheet->getStyle('A' . $n . ':G' . $n)->getFont()->setBold(true)->setSize(13);
+            $sheet->getStyle('A' . $n . ':H' . $n)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+            $sheet->getStyle('A' . $n . ':H' . $n)->getFont()->setBold(true)->setSize(13);
 
 
             foreach ($courier->orders as $v => $value) {
@@ -174,7 +174,7 @@ class ListController extends Controller
                 $bag_color = $value->has_bag ? 'F44336' : 'ffffff';
                 //Alignment of # and A:F row
                 $sheet->getStyle('A' . $count)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-                $sheet->getStyle('A' . $count . ':G' . $count)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+                $sheet->getStyle('A' . $count . ':H' . $count)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
 
                 //Merge # rows
                 $sheet->mergeCells('A' . $count . ':A' . ($count + 1));
@@ -183,7 +183,7 @@ class ListController extends Controller
                 $address = $is_weekend ? $value->address2 : $value->address1;
 
                 $arrayData = [
-                    [$v + 1, $value->name, $value->getTag($value->type, $value->size), $value->has_bag ? 'Ланчбэг' : '-', $time, $value->phone, $address]
+                    [$v + 1, $value->name, $value->getTag($value->type, $value->size), $value->has_bag ? 'Ланчбэг' : '-', $time, $value->phone, $address, $value->pay_comment]
                 ];
 
                 $sheet->fromArray($arrayData, NULL, 'A' . $count);
@@ -198,7 +198,7 @@ class ListController extends Controller
                     ->setRGB($value->getHexColor($value->type, strpos($value->name, 'Автосделка:') !== false));
 
                 //Addition style
-                $sheet->mergeCells('B' . ($count + 1) . ':G' . ($count + 1));
+                $sheet->mergeCells('B' . ($count + 1) . ':H' . ($count + 1));
                 $sheet->setCellValue('B' . ($count + 1), $value->logistic);
                 $sheet->getStyle('B' . ($count + 1))->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
                 $sheet->getStyle('B' . ($count + 1))->getAlignment()->setWrapText(true);
@@ -214,7 +214,7 @@ class ListController extends Controller
                 $count = $count + 1;
             }
 
-            $sheet->getStyle('A' . $n . ':G' . $count)->applyFromArray($borderStyleArray);
+            $sheet->getStyle('A' . $n . ':H' . $count)->applyFromArray($borderStyleArray);
 
             $xs_t = $xs_a > 0 ? ' [XS - ' . ($xs - $xs_a) . ' + '. $xs_a . '] ' : '';
             $s_t = $s_a > 0 ? ' [S - ' . ($s - $s_a) . ' + '. $s_a . '] ' : '';
@@ -247,7 +247,7 @@ class ListController extends Controller
         $sheet->getColumnDimension('E')->setAutoSize(true);
         $sheet->getColumnDimension('F')->setAutoSize(true);
         $sheet->getColumnDimension('G')->setAutoSize(true);
-
+        $sheet->getColumnDimension('H')->setAutoSize(true);
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="Список.xlsx"');
