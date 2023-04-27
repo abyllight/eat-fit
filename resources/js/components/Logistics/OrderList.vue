@@ -48,6 +48,9 @@
                             <th class="text-left">
                                 Комментарий
                             </th>
+                            <th class="text-left">
+                                Комм.ОПЛАТА
+                            </th>
                         </tr>
                         </thead>
                         <draggable :id="courier.id" tag="tbody" group="orders" @end="log">
@@ -65,6 +68,7 @@
                                 <td>{{ order.time }}</td>
                                 <td>{{ order.address }}</td>
                                 <td>{{ order.logistic }}</td>
+                                <td>{{ order.pay_comment }}</td>
                             </tr>
                         </draggable>
                     </template>
