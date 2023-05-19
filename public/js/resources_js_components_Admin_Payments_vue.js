@@ -156,6 +156,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Payments',
@@ -163,7 +164,7 @@ __webpack_require__.r(__webpack_exports__);
     return {
       dialog: false,
       menu: false,
-      date: null,
+      date: new Date().toISOString().split('T')[0],
       items: [],
       item: {},
       types: [],
@@ -174,6 +175,13 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     this.fetchItems();
+  },
+  computed: {
+    total: function total() {
+      return this.items.reduce(function (sum, item) {
+        return sum + item.pay_fact;
+      }, 0);
+    }
   },
   methods: {
     fetchItems: function fetchItems() {
@@ -466,6 +474,8 @@ var render = function() {
           _c(
             "v-col",
             [
+              _c("h2", [_vm._v(_vm._s(_vm.total))]),
+              _vm._v(" "),
               _c("v-simple-table", {
                 scopedSlots: _vm._u([
                   {

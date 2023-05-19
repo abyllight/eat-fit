@@ -34,11 +34,7 @@ class ReportController extends Controller
     public function filter(Request $request): JsonResponse
     {
         $user = Auth::user();
-        $res = Report::where('city_id', $user->city_id);
-
-        if ($request->date) {
-            $res = $res->whereDate('created_at', $request->date);
-        }
+        $res = Report::where('city_id', $user->city_id)->whereDate('created_at', $request->date ?? Carbon::now());
 
         if ($request->has_amount) {
             $res = $res->where('amount', '!=', null);

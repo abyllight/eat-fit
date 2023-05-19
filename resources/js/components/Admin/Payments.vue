@@ -48,6 +48,7 @@
        </v-row>
        <v-row>
            <v-col>
+               <h2>{{total}}</h2>
                <v-simple-table>
                    <template v-slot:default>
                        <thead>
@@ -149,7 +150,7 @@ export default {
     data: () => ({
         dialog: false,
         menu: false,
-        date: null,
+        date: new Date().toISOString().split('T')[0],
         items: [],
         item: {},
         types: [],
@@ -159,6 +160,11 @@ export default {
     }),
     created() {
         this.fetchItems()
+    },
+    computed: {
+        total() {
+            return this.items.reduce((sum, item) => sum + item.pay_fact, 0)
+        }
     },
     methods: {
         fetchItems() {

@@ -83,7 +83,7 @@ class Payment extends Model
     public const CUSTOM_PAYMENTS = [
         [
             'id' => 0,
-            'name' => 'Не выбрано'
+            'name' => 'Все'
         ],
         [
             'id' => 1,

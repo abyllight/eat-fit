@@ -14,7 +14,7 @@
                        <template v-slot:activator="{ on, attrs }">
                            <v-text-field
                                v-model="date"
-                               label="Picker without buttons"
+                               label="Выберите дату"
                                prepend-icon="mdi-calendar"
                                readonly
                                v-bind="attrs"
@@ -163,7 +163,7 @@ export default {
     name: 'Report',
     data: () => ({
         max: null,
-        date: null,
+        date: new Date().toISOString().split('T')[0],
         hasAmount: false,
         payType: null,
         menu: false,
@@ -181,8 +181,6 @@ export default {
             axios
                 .get('/api/reports')
                 .then(response => {
-                    this.max = response.data.max
-                    this.date = response.data.max
                     this.couriers = response.data.reports
                     this.types = response.data.types
                 })
@@ -191,7 +189,6 @@ export default {
                 })
         },
         filter(){
-            console.log(this.date)
             axios
                 .post('/api/reports/filter', {
                     date: this.date,

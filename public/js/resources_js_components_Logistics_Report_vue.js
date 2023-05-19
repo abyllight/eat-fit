@@ -177,7 +177,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       max: null,
-      date: null,
+      date: new Date().toISOString().split('T')[0],
       hasAmount: false,
       payType: null,
       menu: false,
@@ -196,8 +196,6 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       axios__WEBPACK_IMPORTED_MODULE_0___default().get('/api/reports').then(function (response) {
-        _this.max = response.data.max;
-        _this.date = response.data.max;
         _this.couriers = response.data.reports;
         _this.types = response.data.types;
       })["catch"](function (error) {
@@ -207,7 +205,6 @@ __webpack_require__.r(__webpack_exports__);
     filter: function filter() {
       var _this2 = this;
 
-      console.log(this.date);
       axios__WEBPACK_IMPORTED_MODULE_0___default().post('/api/reports/filter', {
         date: this.date,
         has_amount: this.hasAmount,
@@ -453,7 +450,7 @@ var render = function() {
                                   _vm._b(
                                     {
                                       attrs: {
-                                        label: "Picker without buttons",
+                                        label: "Выберите дату",
                                         "prepend-icon": "mdi-calendar",
                                         readonly: ""
                                       },
