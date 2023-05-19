@@ -15,15 +15,10 @@ class CreateOrderHistoriesTable extends Migration
     {
         Schema::create('order_histories', function (Blueprint $table) {
             $table->id();
-            $table->integer('order_id');
-            $table->smallInteger('type')->nullable();
-            $table->smallInteger('size')->nullable();
-            $table->integer('day')->nullable();
-            $table->string('time1')->nullable();
-            $table->string('time2')->nullable();
-            $table->string('yaddress1')->nullable();
-            $table->string('yaddress2')->nullable();
-            $table->longText('diet')->nullable();
+            $table->integer('amo_id');
+            $table->string('name')->nullable();
+            $table->integer('pay_type')->nullable();
+            $table->integer('pay_fact')->nullable();
             $table->timestamps();
         });
     }

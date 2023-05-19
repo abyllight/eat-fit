@@ -118,6 +118,12 @@ export default {
                         icon: 'account-star',
                         roles: ['admin', 'office']
                     },
+                    {
+                        title: 'Оплаты',
+                        link: '/payments',
+                        icon: 'account-star',
+                        roles: ['admin']
+                    },
                 ]
             },
             {

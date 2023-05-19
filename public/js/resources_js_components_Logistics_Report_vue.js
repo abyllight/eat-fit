@@ -168,6 +168,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Report',
@@ -175,10 +178,13 @@ __webpack_require__.r(__webpack_exports__);
     return {
       max: null,
       date: null,
+      hasAmount: false,
+      payType: null,
       menu: false,
       couriers: [],
       fact: null,
-      fact_loading: false
+      fact_loading: false,
+      types: []
     };
   },
   created: function created() {
@@ -193,6 +199,7 @@ __webpack_require__.r(__webpack_exports__);
         _this.max = response.data.max;
         _this.date = response.data.max;
         _this.couriers = response.data.reports;
+        _this.types = response.data.types;
       })["catch"](function (error) {
         console.log(error);
       });
@@ -200,8 +207,11 @@ __webpack_require__.r(__webpack_exports__);
     filter: function filter() {
       var _this2 = this;
 
+      console.log(this.date);
       axios__WEBPACK_IMPORTED_MODULE_0___default().post('/api/reports/filter', {
-        date: this.date
+        date: this.date,
+        has_amount: this.hasAmount,
+        type: this.payType
       }).then(function (response) {
         _this2.menu = false;
         _this2.couriers = response.data.reports;
@@ -411,114 +421,109 @@ var render = function() {
         [
           _c(
             "v-col",
-            { attrs: { cols: "12", sm: "12", lg: "3" } },
+            {
+              staticClass: "d-flex align-center justify-space-between",
+              attrs: { cols: "12", sm: "12" }
+            },
             [
               _c(
-                "v-menu",
-                {
-                  ref: "menu",
-                  attrs: {
-                    "close-on-content-click": false,
-                    "return-value": _vm.date,
-                    transition: "scale-transition",
-                    "offset-y": "",
-                    "min-width": "auto"
-                  },
-                  on: {
-                    "update:returnValue": function($event) {
-                      _vm.date = $event
-                    },
-                    "update:return-value": function($event) {
-                      _vm.date = $event
-                    }
-                  },
-                  scopedSlots: _vm._u([
-                    {
-                      key: "activator",
-                      fn: function(ref) {
-                        var on = ref.on
-                        var attrs = ref.attrs
-                        return [
-                          _c(
-                            "v-text-field",
-                            _vm._g(
-                              _vm._b(
-                                {
-                                  attrs: {
-                                    label: "Выберите дату",
-                                    "prepend-icon": "mdi-calendar",
-                                    readonly: ""
-                                  },
-                                  model: {
-                                    value: _vm.date,
-                                    callback: function($$v) {
-                                      _vm.date = $$v
-                                    },
-                                    expression: "date"
-                                  }
-                                },
-                                "v-text-field",
-                                attrs,
-                                false
-                              ),
-                              on
-                            )
-                          )
-                        ]
-                      }
-                    }
-                  ]),
-                  model: {
-                    value: _vm.menu,
-                    callback: function($$v) {
-                      _vm.menu = $$v
-                    },
-                    expression: "menu"
-                  }
-                },
+                "div",
+                { staticClass: "d-flex align-center" },
                 [
-                  _vm._v(" "),
                   _c(
-                    "v-date-picker",
+                    "v-menu",
                     {
-                      attrs: { max: _vm.max, "no-title": "", scrollable: "" },
+                      attrs: {
+                        "close-on-content-click": false,
+                        "nudge-right": 40,
+                        transition: "scale-transition",
+                        "offset-y": "",
+                        "min-width": "auto"
+                      },
+                      scopedSlots: _vm._u([
+                        {
+                          key: "activator",
+                          fn: function(ref) {
+                            var on = ref.on
+                            var attrs = ref.attrs
+                            return [
+                              _c(
+                                "v-text-field",
+                                _vm._g(
+                                  _vm._b(
+                                    {
+                                      attrs: {
+                                        label: "Picker without buttons",
+                                        "prepend-icon": "mdi-calendar",
+                                        readonly: ""
+                                      },
+                                      model: {
+                                        value: _vm.date,
+                                        callback: function($$v) {
+                                          _vm.date = $$v
+                                        },
+                                        expression: "date"
+                                      }
+                                    },
+                                    "v-text-field",
+                                    attrs,
+                                    false
+                                  ),
+                                  on
+                                )
+                              )
+                            ]
+                          }
+                        }
+                      ]),
                       model: {
-                        value: _vm.date,
+                        value: _vm.menu,
                         callback: function($$v) {
-                          _vm.date = $$v
+                          _vm.menu = $$v
                         },
-                        expression: "date"
+                        expression: "menu"
                       }
                     },
                     [
-                      _c("v-spacer"),
                       _vm._v(" "),
+                      _c("v-date-picker", {
+                        on: {
+                          input: function($event) {
+                            _vm.menu = false
+                          },
+                          change: _vm.filter
+                        },
+                        model: {
+                          value: _vm.date,
+                          callback: function($$v) {
+                            _vm.date = $$v
+                          },
+                          expression: "date"
+                        }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "a",
+                    {
+                      staticClass: "ml-5",
+                      attrs: {
+                        type: "button",
+                        href: "/api/reports/export/" + _vm.date
+                      }
+                    },
+                    [
                       _c(
                         "v-btn",
                         {
-                          attrs: { text: "", color: "primary" },
-                          on: {
-                            click: function($event) {
-                              _vm.menu = false
-                            }
-                          }
+                          attrs: { color: "primary" },
+                          on: { click: _vm.excel }
                         },
                         [
                           _vm._v(
-                            "\n                        Cancel\n                    "
-                          )
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "v-btn",
-                        {
-                          attrs: { text: "", color: "primary" },
-                          on: { click: _vm.filter }
-                        },
-                        [
-                          _vm._v(
-                            "\n                        OK\n                    "
+                            "\n                        Скачать отчет\n                    "
                           )
                         ]
                       )
@@ -527,43 +532,7 @@ var render = function() {
                   )
                 ],
                 1
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c("v-col", { attrs: { sm: "12", lg: "3" } }, [
-            _c(
-              "a",
-              {
-                attrs: {
-                  type: "button",
-                  href: "/api/reports/export/" + _vm.date
-                }
-              },
-              [
-                _c(
-                  "v-btn",
-                  { attrs: { color: "primary" }, on: { click: _vm.excel } },
-                  [
-                    _vm._v(
-                      "\n                    Скачать отчет\n                "
-                    )
-                  ]
-                )
-              ],
-              1
-            )
-          ]),
-          _vm._v(" "),
-          _c(
-            "v-col",
-            {
-              staticClass: "d-flex justify-space-between",
-              attrs: { sm: "12", lg: "6" }
-            },
-            [
-              _c("p"),
+              ),
               _vm._v(" "),
               _c(
                 "v-btn",
@@ -577,6 +546,55 @@ var render = function() {
                 },
                 [_vm._v("\n                фактический оплачено\n            ")]
               )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-row",
+        [
+          _c(
+            "v-col",
+            [
+              _c("v-switch", {
+                attrs: { label: "Фактический оплачено" },
+                on: { change: _vm.filter },
+                model: {
+                  value: _vm.hasAmount,
+                  callback: function($$v) {
+                    _vm.hasAmount = $$v
+                  },
+                  expression: "hasAmount"
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "v-col",
+            [
+              _c("v-select", {
+                attrs: {
+                  items: _vm.types,
+                  "item-value": "name",
+                  "item-text": "name",
+                  label: "Тип оплаты",
+                  outlined: "",
+                  clearable: ""
+                },
+                on: { change: _vm.filter },
+                model: {
+                  value: _vm.payType,
+                  callback: function($$v) {
+                    _vm.payType = $$v
+                  },
+                  expression: "payType"
+                }
+              })
             ],
             1
           )

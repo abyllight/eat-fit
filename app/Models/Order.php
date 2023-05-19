@@ -183,6 +183,11 @@ class Order extends Model
         return $this->hasMany(Select::class, 'order_id', 'id');
     }
 
+    /*public function history(): HasMany
+    {
+        return $this->hasMany(OrderHistory::class, 'order_id', 'id');
+    }*/
+
     public function getPreviousSelect(){
         return $this->select()->whereDate('created_at', Carbon::yesterday())->get();
     }

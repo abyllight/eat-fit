@@ -22,6 +22,7 @@ use App\Http\Controllers\ListController;
 use App\Http\Controllers\ManagementController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PromocodeController;
@@ -69,6 +70,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/management/fact', [ManagementController::class, 'payFact']);
 
     Route::get('/cities', [CityController::class, 'index']);
+
+    Route::get('/payments', [PaymentController::class, 'index']);
+    Route::get('/payments/leads', [PaymentController::class, 'getLeads']);
+    Route::post('/payments', [PaymentController::class, 'setPayFact']);
 
     Route::resource('roles', RoleController::class)->except(['create', 'show', 'edit']);
     Route::resource('providers', ProviderController::class)->except(['create', 'show', 'edit']);

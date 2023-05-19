@@ -139,6 +139,15 @@ const router = new VueRouter({
             component: () => import('./components/Logistics/Report')
         },
         {
+            path: '/payments',
+            name: 'payments',
+            meta: {
+                auth: true,
+                roles: ['admin']
+            },
+            component: () => import('./components/Admin/Payments.vue')
+        },
+        {
             path: '/select',
             name: 'select',
             meta: {

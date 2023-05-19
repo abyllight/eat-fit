@@ -11,6 +11,7 @@ use App\Models\Cuisine;
 use App\Models\Dish;
 use App\Models\Management;
 use App\Models\Order;
+use App\Models\Payment;
 use App\Models\Select;
 use App\Models\SelectWish;
 use App\Models\Wishlist;
@@ -342,6 +343,8 @@ class OrderController extends Controller
                 'a2'        => null,
                 'logistic'  => null,
                 'pay_comment'  => null,
+                /*'pay_fact'  => null,
+                'pay_type'  => null,*/
                 'diet'      => null
             ];
 
@@ -365,6 +368,12 @@ class OrderController extends Controller
                     case '885893': //Комм оплата
                         $fields['pay_comment'] = $field["values"][0]["value"];
                         break;
+                    /*case '321139': //Факт оплата
+                        $fields['pay_fact'] = $field["values"][0]["value"];
+                        break;
+                    case '869811': //Тип оплата
+                        $fields['pay_type'] = $field["values"][0]["enum"];
+                        break;*/
                     case '478767': //Яндекс
                         $fields['y1'] = $field["values"][0]["value"];
                         break;
@@ -424,6 +433,29 @@ class OrderController extends Controller
                     $fields['type'] = Order::EAT_FIT_GO;
                     break;
             }
+            /*switch ($fields['pay_type']) {
+                case '968303': //Kaspi PAY
+                    $fields['pay_type'] = Payment::AMO_PAYMENTS[1]['id'];
+                    break;
+                case '968305': //POS-терминар
+                    $fields['pay_type'] = Payment::AMO_PAYMENTS[2]['id'];
+                    break;
+                case '968307': //Расчетный счет
+                    $fields['pay_type'] = Payment::AMO_PAYMENTS[3]['id'];
+                    break;
+                case '968309': //Наличные курьер
+                    $fields['pay_type'] = Payment::AMO_PAYMENTS[4]['id'];
+                    break;
+                case '968311': //Перевод на карту
+                    $fields['pay_type'] = Payment::AMO_PAYMENTS[5]['id'];
+                    break;
+                case '969831': //Оплачено картой на сайте
+                    $fields['pay_type'] = Payment::AMO_PAYMENTS[6]['id'];
+                    break;
+                default: //Не Выбрано
+                    $fields['pay_type'] = Payment::AMO_PAYMENTS[0]['id'];
+                    break;
+            }*/
 
             //subbota x2v2 50754262
             if ($order['status_id'] === 50754262) {

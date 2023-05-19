@@ -1,65 +1,46 @@
 <template>
    <div>
        <v-row>
-           <v-col cols="12" sm="12" lg="3">
-               <v-menu
-                   ref="menu"
-                   v-model="menu"
-                   :close-on-content-click="false"
-                   :return-value.sync="date"
-                   transition="scale-transition"
-                   offset-y
-                   min-width="auto"
-               >
-                   <template v-slot:activator="{ on, attrs }">
-                       <v-text-field
+           <v-col cols="12" sm="12" class="d-flex align-center justify-space-between">
+               <div class="d-flex align-center">
+                   <v-menu
+                       v-model="menu"
+                       :close-on-content-click="false"
+                       :nudge-right="40"
+                       transition="scale-transition"
+                       offset-y
+                       min-width="auto"
+                   >
+                       <template v-slot:activator="{ on, attrs }">
+                           <v-text-field
+                               v-model="date"
+                               label="Picker without buttons"
+                               prepend-icon="mdi-calendar"
+                               readonly
+                               v-bind="attrs"
+                               v-on="on"
+                           ></v-text-field>
+                       </template>
+                       <v-date-picker
                            v-model="date"
-                           label="Выберите дату"
-                           prepend-icon="mdi-calendar"
-                           readonly
-                           v-bind="attrs"
-                           v-on="on"
-                       ></v-text-field>
-                   </template>
-                   <v-date-picker
-                       v-model="date"
-                       :max="max"
-                       no-title
-                       scrollable
+                           @input="menu = false"
+                           @change="filter"
+                       ></v-date-picker>
+                   </v-menu>
+                   <a
+                       type="button"
+                       :href="`/api/reports/export/${date}`"
+                       class="ml-5"
                    >
-                       <v-spacer></v-spacer>
                        <v-btn
-                           text
                            color="primary"
-                           @click="menu = false"
+                           @click="excel"
                        >
-                           Cancel
+                           Скачать отчет
                        </v-btn>
-                       <v-btn
-                           text
-                           color="primary"
-                           @click="filter"
-                       >
-                           OK
-                       </v-btn>
-                   </v-date-picker>
-               </v-menu>
-           </v-col>
-           <v-col sm="12" lg="3">
-               <a
-                   type="button"
-                   :href="`/api/reports/export/${date}`"
-               >
-                   <v-btn
-                       color="primary"
-                       @click="excel"
-                   >
-                       Скачать отчет
-                   </v-btn>
-               </a>
-           </v-col>
-           <v-col sm="12" lg="6" class="d-flex justify-space-between">
-               <p></p>
+                   </a>
+               </div>
+
                <v-btn
                    color="primary"
                    @click="payFact"
@@ -68,6 +49,28 @@
                >
                    фактический оплачено
                </v-btn>
+           </v-col>
+       </v-row>
+       <v-row>
+           <v-col>
+                <v-switch
+                    v-model="hasAmount"
+                    @change="filter"
+                    label="Фактический оплачено"
+                ></v-switch>
+           </v-col>
+
+           <v-col>
+               <v-select
+                   v-model="payType"
+                   :items="types"
+                   item-value="name"
+                   item-text="name"
+                   label="Тип оплаты"
+                   outlined
+                   clearable
+                    @change="filter"
+               ></v-select>
            </v-col>
        </v-row>
        <v-row v-for="courier in couriers" :key="courier.id">
@@ -161,10 +164,13 @@ export default {
     data: () => ({
         max: null,
         date: null,
+        hasAmount: false,
+        payType: null,
         menu: false,
         couriers: [],
         fact: null,
         fact_loading: false,
+        types: []
     }),
     created() {
         this.getFact()
@@ -178,15 +184,19 @@ export default {
                     this.max = response.data.max
                     this.date = response.data.max
                     this.couriers = response.data.reports
+                    this.types = response.data.types
                 })
                 .catch(error => {
                     console.log(error)
                 })
         },
         filter(){
+            console.log(this.date)
             axios
                 .post('/api/reports/filter', {
-                    date: this.date
+                    date: this.date,
+                    has_amount: this.hasAmount,
+                    type: this.payType
                 })
                 .then(response => {
                     this.menu = false

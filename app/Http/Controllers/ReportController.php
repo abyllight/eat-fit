@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
+use App\Models\Payment;
 use App\Models\Report;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -17,20 +19,36 @@ class ReportController extends Controller
     public function index(): JsonResponse
     {
         $user = Auth::user();
-        $latest = Report::where('city_id', $user->city_id)->latest()->first() ? Report::where('city_id', $user->city_id)->latest()->first()->created_at->toDatestring() : Carbon::today()->toDateString();
-        $res = Report::whereDate('created_at', $latest)->where('city_id', $user->city_id)->get();
+        $res = Report::whereDate('created_at', Carbon::today()->toDateString())->where('city_id', $user->city_id)->get();
         $reports = $this->reportsFormat($res);
+        $payment_types = $user->city_id === Order::ASTANA ? Payment::ASTANA_PAYMENT_TYPES : Payment::ALMATY_PAYMENT_TYPES;
+
 
         return response()->json([
             'status' => true,
             'reports' => $reports,
-            'max' => $latest
+            'types' => $payment_types
         ]);
     }
 
-    public function filter(Request $request){
+    public function filter(Request $request): JsonResponse
+    {
         $user = Auth::user();
-        $res = Report::whereDate('created_at', $request->date)->where('city_id', $user->city_id)->get();
+        $res = Report::where('city_id', $user->city_id);
+
+        if ($request->date) {
+            $res = $res->whereDate('created_at', $request->date);
+        }
+
+        if ($request->has_amount) {
+            $res = $res->where('amount', '!=', null);
+        }
+
+        if ($request->type) {
+            $res = $res->where('payment_type', $request->type);
+        }
+
+        $res = $res->get();
         $reports = $this->reportsFormat($res);
 
         return response()->json([

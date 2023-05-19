@@ -98,7 +98,7 @@ class ManagementController extends Controller
                     $task['element_id'] = $value['id'];
                     $task['element_type'] = 2;
                     $task['task_type'] = 1;
-                    $task['text'] = 'Получить обратную связь от клиента A';
+                    $task['text'] = 'Получить обратную связь от клиента';
                     $task['complete_till'] = '23:59';
                     $task['responsible_user_id'] = $value['responsible_user_id'];
                     $task->apiAdd();
