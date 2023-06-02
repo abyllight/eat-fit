@@ -1,114 +1,19 @@
 <template>
     <div>
-        <!--  Select data section  -->
-        <v-row>
-            <v-col class="d-flex justify-space-between">
-
-                <div>
-                    <div class="d-flex">
-                        <v-btn
-                            class="mr-3"
-                            :disabled="isSelect"
-                            color="primary"
-                            @click="getSelect"
-                            small
-                        >
-                            Select
-                        </v-btn>
-                        <v-btn
-                            class="mr-5"
-                            :disabled="!isSelect"
-                            color="primary"
-                            @click="getLite"
-                            small
-                        >
-                            Lite
-                        </v-btn>
-
-                        <h3>{{cuisine.name}}</h3>
-                    </div>
-                    <stat class="my-3" :stat="select_stat"></stat>
-                </div>
-
-                <div class="mt-2">
-                    <v-btn
-                        v-if="isActive"
-                        class="mr-4"
-                        :loading="amo_loading"
-                        :disabled="amo_loading"
-                        color="primary"
-                        @click="fetchOrdersFromAmo"
-                    >
-                        Получить данные с AMOCRM
-                    </v-btn>
-                    <a
-                        type="button"
-                        href="/api/select/export/stickers"
-                    >
-                        <v-btn
-                            color="primary"
-                        >
-                            Стикеры
-                        </v-btn>
-                    </a>
-                </div>
-            </v-col>
-        </v-row>
+        <v-breadcrumbs large :items="items"></v-breadcrumbs>
 
         <!--   Customer list and select cards   -->
         <v-row>
 
-            <!--  Table list          -->
-            <v-col cols="12">
-                <v-card>
-                    <v-card-title>
-                        <v-text-field
-                            v-model="search"
-                            append-icon="mdi-magnify"
-                            label="Поиск"
-                            single-line
-                            hide-details
-                        ></v-text-field>
-                    </v-card-title>
-                    <v-data-table
-                        height="90vh"
-                        :loading="loading"
-                        loading-text="Loading... Please wait"
-                        :headers="headers"
-                        :items="orders"
-                        :items-per-page="itemsPerPage"
-                        item-key="id"
-                        :search="search"
-                        hide-default-footer
-                        :item-class="itemRowBackground"
-                        @click:row="showOrderDetails"
-                    >
-                        <template v-slot:item.index="{ index }">
-                            {{ index + 1 }}
-                        </template>
-                        <template v-slot:item.selects="{ item }">
-                            <v-chip
-                                v-for="s in item.select"
-                                :key="s.id"
-                                class="ma-1"
-                                :color="s.color"
-                                x-small
-                                label
-                            >{{s.ration}}</v-chip>
-                        </template>
-                    </v-data-table>
-                </v-card>
-            </v-col>
-
             <!--   Cards         -->
-<!--            <v-col v-if="Object.keys(order).length > 0">
+            <v-col v-if="Object.keys(order).length > 0">
 
                 <div class="mb-5 d-flex justify-space-between">
                     <h3>{{order.name}}</h3>
 
-&lt;!&ndash;                    <v-btn color="red" dark small @click="resetResult(order.id)">
-                        Сбросить
-                    </v-btn>&ndash;&gt;
+                    <v-btn color="red" dark small @click="destroySelect">
+                        Удалить
+                    </v-btn>
                 </div>
 
                 <v-row>
@@ -125,6 +30,7 @@
                                 <h3>{{result.ration.name}}</h3>
                                 <span>{{result.weight}} гр</span>
                             </div>
+                            <h3 class="ml-4">{{result.code}}</h3>
                             <v-card-subtitle>{{result.dish_name}}</v-card-subtitle>
 
                             <v-card-text>{{result.description}}</v-card-text>
@@ -170,7 +76,7 @@
                         </v-card>
                     </v-col>
                 </v-row>
-            </v-col>-->
+            </v-col>
         </v-row>
 
         <v-row>
@@ -222,8 +128,20 @@
     import Stat from "./Stat.vue";
     export default {
         name: 'Select',
+        props: ['id'],
         components: {Stat, SelectModal},
         data: () => ({
+            items: [
+                {
+                    text: 'Селекты',
+                    disabled: false,
+                    href: '/select',
+                },
+                {
+                    text: 'Детали',
+                    disabled: true
+                }
+            ],
             amo_loading: false,
             orders: [],
             order: {},
@@ -234,8 +152,7 @@
                 { text: '#', value: 'index' },
                 { text: 'Имя', value: 'name' },
                 { text: 'Тэг', value: 'tag' },
-                { text: 'Город', value: 'city' },
-                { text: 'Selects', value: 'selects' }
+                { text: 'Город', value: 'city' }
             ],
             select_result: [],
             loading: true,
@@ -250,8 +167,8 @@
                 o_id: null
             }
         }),
-        created() {
-            this.getSelect()
+        mounted() {
+            this.getSelectDetailsByOrder()
             this.getCuisine()
             this.getRations()
         },
@@ -266,9 +183,6 @@
             }
         },
         methods: {
-            itemRowBackground(item) {
-                return item.has_select ? 'teal lighten-4' : ''
-            },
             addExtra() {
                 axios.post('/api/select/extra', this.extra)
                     .then(res => {
@@ -279,9 +193,17 @@
                 })
             },
             deleteSelect(id) {
-                axios.delete('/api/select/'+id)
+                axios.delete('/api/select/delete/'+id)
                     .then(res => {
-                        window.location.reload()
+                        this.getSelectDetailsByOrder()
+                    }).catch(err => {
+                    console.log(err)
+                })
+            },
+            destroySelect() {
+                axios.delete('/api/select/destroy/'+this.id)
+                    .then(res => {
+                        this.$router.push({name: 'select'})
                     }).catch(err => {
                     console.log(err)
                 })
@@ -333,19 +255,19 @@
             generateCode() {
                 axios.get('/api/select/generate-code')
             },
-            showOrderDetails(order){
-                this.$router.push({name: 'select_cards', params: {id: order.id}})
-            },
-            async getSelectDetailsByOrder(id){
+            async getSelectDetailsByOrder(){
+                this.extra.o_id = this.id
+
                 this.select_loading = true
                 await axios
-                    .get('/api/selects/order/'+id)
+                    .get('/api/selects/order/'+this.id)
                     .then(response => {
                         this.select_previous = response.data.previous
                         this.select_result = response.data.result
                         this.blacklist = response.data.blacklist
                         this.mix = response.data.blacklist
                         this.wishlist = response.data.wishlist
+                        this.order = response.data.order
                         this.select_loading = false
                     })
                     .catch(error => {

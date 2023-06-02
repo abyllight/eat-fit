@@ -157,6 +157,16 @@ const router = new VueRouter({
             component: () => import('./components/Dietology/Select')
         },
         {
+            path: '/select/:id/cards',
+            name: 'select_cards',
+            props: true,
+            meta: {
+                auth: true,
+                roles: ['admin', 'diet']
+            },
+            component: () => import('./components/Dietology/SelectCards.vue')
+        },
+        {
             path: '/select/:id/:r_id',
             name: 'select-details',
             props: (route) => {

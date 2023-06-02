@@ -25,6 +25,7 @@ class OrderSelectCollection extends JsonResource
             'diet_old' => $this->diet_old,
             'city' => City::getCity($this->city_id),
             'blacklist' => $this->getBlacklistIds(),
+            'select' => $this->select_today()
             //'wishlist' => $this->getWishes(),
             //'previous' => SelectCollection::collection($this->getPreviousSelect()),
             //'result' => SelectCollection::collection($this->getResultSelect())

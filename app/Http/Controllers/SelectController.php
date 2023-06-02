@@ -108,6 +108,17 @@ class SelectController extends Controller
         $select->delete();
     }
 
+    public function destroySelect($id) {
+        $order = Order::find($id);
+        $selects = $order->select;
+
+        foreach ($selects as $select) {
+            $select->ingredients()->detach();
+            $select->wishes()->detach();
+            $select->delete();
+        }
+    }
+
     public function getSelectsByOrder($id): JsonResponse
     {
         $order = Order::find($id);
@@ -119,6 +130,7 @@ class SelectController extends Controller
             ]);
         }
         return response()->json([
+            'order' => $order,
             'blacklist' => $order->getBlackListIds(),
             'wishlist' => $order->wishlist,
             'result' => SelectCollection::collection($order->getResultSelect()),

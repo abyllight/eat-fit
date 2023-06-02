@@ -155,6 +155,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/select/order/{id}', [SelectController::class, 'getSelectByOrder']);
     Route::get('/selects/order/{id}', [SelectController::class, 'getSelectsByOrder']);
     Route::post('/select/reset', [SelectController::class, 'resetResult']);
+    Route::delete('/select/delete/{id}', [SelectController::class, 'deleteSelect']);
+    Route::delete('/select/destroy/{id}', [SelectController::class, 'destroySelect']);
     Route::post('/select/extra', [SelectController::class, 'addExtraSelect']);
     Route::post('/select/tableware', [SelectController::class, 'setTableware']);
     Route::get('/select/rations', [SelectController::class, 'selectRations']);

@@ -3457,7 +3457,19 @@ var render = function() {
   return _c(
     "div",
     [
-      _c("v-breadcrumbs", { attrs: { large: "", items: _vm.items } }),
+      _c(
+        "v-btn",
+        {
+          staticClass: "mb-5",
+          attrs: { color: "black", dark: "" },
+          on: {
+            click: function($event) {
+              return _vm.$router.back()
+            }
+          }
+        },
+        [_vm._v("Назад")]
+      ),
       _vm._v(" "),
       _c(
         "v-row",

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Resources\OrderSelectRationsCollection;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -181,6 +182,12 @@ class Order extends Model
     public function select()
     {
         return $this->hasMany(Select::class, 'order_id', 'id');
+    }
+
+    public function select_today()
+    {
+        $data = $this->select()->whereDate('created_at', Carbon::today())->get();
+        return OrderSelectRationsCollection::collection($data);
     }
 
     /*public function history(): HasMany

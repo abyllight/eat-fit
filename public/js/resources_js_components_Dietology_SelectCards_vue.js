@@ -1,10 +1,10 @@
 "use strict";
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["resources_js_components_Dietology_Select_vue"],{
+(self["webpackChunk"] = self["webpackChunk"] || []).push([["resources_js_components_Dietology_SelectCards_vue"],{
 
-/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Dietology/Select.vue?vue&type=script&lang=js&":
-/*!***********************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Dietology/Select.vue?vue&type=script&lang=js& ***!
-  \***********************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Dietology/SelectCards.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Dietology/SelectCards.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -147,111 +147,26 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Select',
+  props: ['id'],
   components: {
     Stat: _Stat_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
     SelectModal: _Kitchen_SelectModal__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
   data: function data() {
     return {
+      items: [{
+        text: 'Селекты',
+        disabled: false,
+        href: '/select'
+      }, {
+        text: 'Детали',
+        disabled: true
+      }],
       amo_loading: false,
       orders: [],
       order: {},
@@ -270,9 +185,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }, {
         text: 'Город',
         value: 'city'
-      }, {
-        text: 'Selects',
-        value: 'selects'
       }],
       select_result: [],
       loading: true,
@@ -288,8 +200,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
     };
   },
-  created: function created() {
-    this.getSelect();
+  mounted: function mounted() {
+    this.getSelectDetailsByOrder();
     this.getCuisine();
     this.getRations();
   },
@@ -304,9 +216,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   methods: {
-    itemRowBackground: function itemRowBackground(item) {
-      return item.has_select ? 'teal lighten-4' : '';
-    },
     addExtra: function addExtra() {
       var _this = this;
 
@@ -318,33 +227,46 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
     },
     deleteSelect: function deleteSelect(id) {
-      axios__WEBPACK_IMPORTED_MODULE_1___default()["delete"]('/api/select/' + id).then(function (res) {
-        window.location.reload();
+      var _this2 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_1___default()["delete"]('/api/select/delete/' + id).then(function (res) {
+        _this2.getSelectDetailsByOrder();
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    },
+    destroySelect: function destroySelect() {
+      var _this3 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_1___default()["delete"]('/api/select/destroy/' + this.id).then(function (res) {
+        _this3.$router.push({
+          name: 'select'
+        });
       })["catch"](function (err) {
         console.log(err);
       });
     },
     fetchOrdersFromAmo: function fetchOrdersFromAmo() {
-      var _this2 = this;
+      var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _this2.amo_loading = true;
+                _this4.amo_loading = true;
                 _context.next = 3;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/orders/eat-fit').then(function () {
-                  _this2.getSelect();
+                  _this4.getSelect();
                 })["catch"](function (error) {
-                  _this2.$store.dispatch('showAlert', {
+                  _this4.$store.dispatch('showAlert', {
                     'isVisible': true,
                     'msg': error.message,
                     'color': 'error',
                     'type': 'error'
                   });
                 })["finally"](function () {
-                  return _this2.amo_loading = false;
+                  return _this4.amo_loading = false;
                 });
 
               case 3:
@@ -356,7 +278,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     getCuisine: function getCuisine() {
-      var _this3 = this;
+      var _this5 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
@@ -365,12 +287,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _context2.next = 2;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/cuisine/duty').then(function (response) {
-                  _this3.cuisine = response.data.cuisine;
-                  _this3.extra.c_id = _this3.cuisine.id;
+                  _this5.cuisine = response.data.cuisine;
+                  _this5.extra.c_id = _this5.cuisine.id;
                 })["catch"](function (error) {
-                  _this3.loading = false;
+                  _this5.loading = false;
 
-                  _this3.$store.dispatch('showAlert', {
+                  _this5.$store.dispatch('showAlert', {
                     'isVisible': true,
                     'msg': error.message,
                     'color': 'error',
@@ -387,7 +309,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     getRations: function getRations() {
-      var _this4 = this;
+      var _this6 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
@@ -396,7 +318,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _context3.next = 2;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/rations').then(function (response) {
-                  _this4.rations = response.data;
+                  _this6.rations = response.data;
                 })["catch"](function (error) {
                   console.log(error);
                 });
@@ -412,36 +334,30 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     generateCode: function generateCode() {
       axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/select/generate-code');
     },
-    showOrderDetails: function showOrderDetails(order) {
-      this.$router.push({
-        name: 'select_cards',
-        params: {
-          id: order.id
-        }
-      });
-    },
-    getSelectDetailsByOrder: function getSelectDetailsByOrder(id) {
-      var _this5 = this;
+    getSelectDetailsByOrder: function getSelectDetailsByOrder() {
+      var _this7 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                _this5.select_loading = true;
-                _context4.next = 3;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/selects/order/' + id).then(function (response) {
-                  _this5.select_previous = response.data.previous;
-                  _this5.select_result = response.data.result;
-                  _this5.blacklist = response.data.blacklist;
-                  _this5.mix = response.data.blacklist;
-                  _this5.wishlist = response.data.wishlist;
-                  _this5.select_loading = false;
+                _this7.extra.o_id = _this7.id;
+                _this7.select_loading = true;
+                _context4.next = 4;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/selects/order/' + _this7.id).then(function (response) {
+                  _this7.select_previous = response.data.previous;
+                  _this7.select_result = response.data.result;
+                  _this7.blacklist = response.data.blacklist;
+                  _this7.mix = response.data.blacklist;
+                  _this7.wishlist = response.data.wishlist;
+                  _this7.order = response.data.order;
+                  _this7.select_loading = false;
                 })["catch"](function (error) {
                   console.log(error);
                 });
 
-              case 3:
+              case 4:
               case "end":
                 return _context4.stop();
             }
@@ -459,18 +375,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
     },
     activateDeactivate: function activateDeactivate(id) {
-      var _this6 = this;
+      var _this8 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/activate-deactivate', {
         select_id: id
       }).then(function (response) {
-        _this6.getSelectDetailsByOrder(_this6.order.id);
+        _this8.getSelectDetailsByOrder(_this8.order.id);
       })["catch"](function (error) {
         console.log(error);
       });
     },
     getDishesByRation: function getDishesByRation(id) {
-      var _this7 = this;
+      var _this9 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
@@ -479,18 +395,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _context5.next = 2;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/dishes/ration/' + id).then(function (response) {
-                  _this7.dishes = response.data;
+                  _this9.dishes = response.data;
 
-                  if (_this7.dishes.length > 0) {
-                    _this7.dish = _this7.dishes.find(function (obj) {
-                      return obj.id === _this7.result.dish_id;
+                  if (_this9.dishes.length > 0) {
+                    _this9.dish = _this9.dishes.find(function (obj) {
+                      return obj.id === _this9.result.dish_id;
                     });
 
-                    if (!_this7.dish) {
-                      _this7.dish = _this7.dishes[0];
+                    if (!_this9.dish) {
+                      _this9.dish = _this9.dishes[0];
                     }
                   } else {
-                    _this7.dish.ingredients = [];
+                    _this9.dish.ingredients = [];
                   }
                 })["catch"](function (error) {
                   console.log(error);
@@ -519,32 +435,32 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       window.open('https://api.whatsapp.com/send?phone=' + num + '&text=Рацион:%20' + r_name + '%0D%0AНазвание:%20' + name, '_blank');
     },
     resetResult: function resetResult(id) {
-      var _this8 = this;
+      var _this10 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/reset', {
         id: id
       }).then(function (res) {
-        _this8.getSelect();
+        _this10.getSelect();
       });
     },
     getSelect: function getSelect() {
-      var _this9 = this;
+      var _this11 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/orders/select').then(function (res) {
-        _this9.loading = false;
-        _this9.orders = res.data.orders;
-        _this9.select_stat = res.data.stat;
-        _this9.isSelect = true;
+        _this11.loading = false;
+        _this11.orders = res.data.orders;
+        _this11.select_stat = res.data.stat;
+        _this11.isSelect = true;
       });
     },
     getLite: function getLite() {
-      var _this10 = this;
+      var _this12 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/orders/lite').then(function (res) {
-        _this10.loading = false;
-        _this10.orders = res.data.orders;
-        _this10.select_stat = res.data.stat;
-        _this10.isSelect = false;
+        _this12.loading = false;
+        _this12.orders = res.data.orders;
+        _this12.select_stat = res.data.stat;
+        _this12.isSelect = false;
       });
     },
     sendMessage: function sendMessage(id, num) {
@@ -1267,18 +1183,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /***/ }),
 
-/***/ "./resources/js/components/Dietology/Select.vue":
-/*!******************************************************!*\
-  !*** ./resources/js/components/Dietology/Select.vue ***!
-  \******************************************************/
+/***/ "./resources/js/components/Dietology/SelectCards.vue":
+/*!***********************************************************!*\
+  !*** ./resources/js/components/Dietology/SelectCards.vue ***!
+  \***********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _Select_vue_vue_type_template_id_490d1474___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Select.vue?vue&type=template&id=490d1474& */ "./resources/js/components/Dietology/Select.vue?vue&type=template&id=490d1474&");
-/* harmony import */ var _Select_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Select.vue?vue&type=script&lang=js& */ "./resources/js/components/Dietology/Select.vue?vue&type=script&lang=js&");
+/* harmony import */ var _SelectCards_vue_vue_type_template_id_6b2f59ed___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SelectCards.vue?vue&type=template&id=6b2f59ed& */ "./resources/js/components/Dietology/SelectCards.vue?vue&type=template&id=6b2f59ed&");
+/* harmony import */ var _SelectCards_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SelectCards.vue?vue&type=script&lang=js& */ "./resources/js/components/Dietology/SelectCards.vue?vue&type=script&lang=js&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -1288,9 +1204,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 ;
 var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _Select_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _Select_vue_vue_type_template_id_490d1474___WEBPACK_IMPORTED_MODULE_0__.render,
-  _Select_vue_vue_type_template_id_490d1474___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  _SelectCards_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _SelectCards_vue_vue_type_template_id_6b2f59ed___WEBPACK_IMPORTED_MODULE_0__.render,
+  _SelectCards_vue_vue_type_template_id_6b2f59ed___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
   false,
   null,
   null,
@@ -1300,7 +1216,7 @@ var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/js/components/Dietology/Select.vue"
+component.options.__file = "resources/js/components/Dietology/SelectCards.vue"
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
 
 /***/ }),
@@ -1381,18 +1297,18 @@ component.options.__file = "resources/js/components/Kitchen/SelectModal.vue"
 
 /***/ }),
 
-/***/ "./resources/js/components/Dietology/Select.vue?vue&type=script&lang=js&":
-/*!*******************************************************************************!*\
-  !*** ./resources/js/components/Dietology/Select.vue?vue&type=script&lang=js& ***!
-  \*******************************************************************************/
+/***/ "./resources/js/components/Dietology/SelectCards.vue?vue&type=script&lang=js&":
+/*!************************************************************************************!*\
+  !*** ./resources/js/components/Dietology/SelectCards.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Select_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Select.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Dietology/Select.vue?vue&type=script&lang=js&");
- /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Select_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectCards_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./SelectCards.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Dietology/SelectCards.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectCards_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
@@ -1426,18 +1342,18 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/Dietology/Select.vue?vue&type=template&id=490d1474&":
-/*!*************************************************************************************!*\
-  !*** ./resources/js/components/Dietology/Select.vue?vue&type=template&id=490d1474& ***!
-  \*************************************************************************************/
+/***/ "./resources/js/components/Dietology/SelectCards.vue?vue&type=template&id=6b2f59ed&":
+/*!******************************************************************************************!*\
+  !*** ./resources/js/components/Dietology/SelectCards.vue?vue&type=template&id=6b2f59ed& ***!
+  \******************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Select_vue_vue_type_template_id_490d1474___WEBPACK_IMPORTED_MODULE_0__.render),
-/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Select_vue_vue_type_template_id_490d1474___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectCards_vue_vue_type_template_id_6b2f59ed___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectCards_vue_vue_type_template_id_6b2f59ed___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Select_vue_vue_type_template_id_490d1474___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Select.vue?vue&type=template&id=490d1474& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Dietology/Select.vue?vue&type=template&id=490d1474&");
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectCards_vue_vue_type_template_id_6b2f59ed___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./SelectCards.vue?vue&type=template&id=6b2f59ed& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Dietology/SelectCards.vue?vue&type=template&id=6b2f59ed&");
 
 
 /***/ }),
@@ -1474,10 +1390,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Dietology/Select.vue?vue&type=template&id=490d1474&":
-/*!****************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Dietology/Select.vue?vue&type=template&id=490d1474& ***!
-  \****************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Dietology/SelectCards.vue?vue&type=template&id=6b2f59ed&":
+/*!*********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Dietology/SelectCards.vue?vue&type=template&id=6b2f59ed& ***!
+  \*********************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -1492,204 +1408,204 @@ var render = function() {
   return _c(
     "div",
     [
-      _c(
-        "v-row",
-        [
-          _c("v-col", { staticClass: "d-flex justify-space-between" }, [
-            _c(
-              "div",
-              [
-                _c(
-                  "div",
-                  { staticClass: "d-flex" },
-                  [
-                    _c(
-                      "v-btn",
-                      {
-                        staticClass: "mr-3",
-                        attrs: {
-                          disabled: _vm.isSelect,
-                          color: "primary",
-                          small: ""
-                        },
-                        on: { click: _vm.getSelect }
-                      },
-                      [
-                        _vm._v(
-                          "\n                            Select\n                        "
-                        )
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "v-btn",
-                      {
-                        staticClass: "mr-5",
-                        attrs: {
-                          disabled: !_vm.isSelect,
-                          color: "primary",
-                          small: ""
-                        },
-                        on: { click: _vm.getLite }
-                      },
-                      [
-                        _vm._v(
-                          "\n                            Lite\n                        "
-                        )
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c("h3", [_vm._v(_vm._s(_vm.cuisine.name))])
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _c("stat", {
-                  staticClass: "my-3",
-                  attrs: { stat: _vm.select_stat }
-                })
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "mt-2" },
-              [
-                _vm.isActive
-                  ? _c(
-                      "v-btn",
-                      {
-                        staticClass: "mr-4",
-                        attrs: {
-                          loading: _vm.amo_loading,
-                          disabled: _vm.amo_loading,
-                          color: "primary"
-                        },
-                        on: { click: _vm.fetchOrdersFromAmo }
-                      },
-                      [
-                        _vm._v(
-                          "\n                        Получить данные с AMOCRM\n                    "
-                        )
-                      ]
-                    )
-                  : _vm._e(),
-                _vm._v(" "),
-                _c(
-                  "a",
-                  {
-                    attrs: {
-                      type: "button",
-                      href: "/api/select/export/stickers"
-                    }
-                  },
-                  [
-                    _c("v-btn", { attrs: { color: "primary" } }, [
-                      _vm._v(
-                        "\n                            Стикеры\n                        "
-                      )
-                    ])
-                  ],
-                  1
-                )
-              ],
-              1
-            )
-          ])
-        ],
-        1
-      ),
+      _c("v-breadcrumbs", { attrs: { large: "", items: _vm.items } }),
       _vm._v(" "),
       _c(
         "v-row",
         [
-          _c(
-            "v-col",
-            { attrs: { cols: "12" } },
-            [
-              _c(
-                "v-card",
+          Object.keys(_vm.order).length > 0
+            ? _c(
+                "v-col",
                 [
                   _c(
-                    "v-card-title",
+                    "div",
+                    { staticClass: "mb-5 d-flex justify-space-between" },
                     [
-                      _c("v-text-field", {
-                        attrs: {
-                          "append-icon": "mdi-magnify",
-                          label: "Поиск",
-                          "single-line": "",
-                          "hide-details": ""
+                      _c("h3", [_vm._v(_vm._s(_vm.order.name))]),
+                      _vm._v(" "),
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "red", dark: "", small: "" },
+                          on: { click: _vm.destroySelect }
                         },
-                        model: {
-                          value: _vm.search,
-                          callback: function($$v) {
-                            _vm.search = $$v
-                          },
-                          expression: "search"
-                        }
-                      })
+                        [
+                          _vm._v(
+                            "\n                    Удалить\n                "
+                          )
+                        ]
+                      )
                     ],
                     1
                   ),
                   _vm._v(" "),
-                  _c("v-data-table", {
-                    attrs: {
-                      height: "90vh",
-                      loading: _vm.loading,
-                      "loading-text": "Loading... Please wait",
-                      headers: _vm.headers,
-                      items: _vm.orders,
-                      "items-per-page": _vm.itemsPerPage,
-                      "item-key": "id",
-                      search: _vm.search,
-                      "hide-default-footer": "",
-                      "item-class": _vm.itemRowBackground
-                    },
-                    on: { "click:row": _vm.showOrderDetails },
-                    scopedSlots: _vm._u([
-                      {
-                        key: "item.index",
-                        fn: function(ref) {
-                          var index = ref.index
-                          return [
-                            _vm._v(
-                              "\n                            " +
-                                _vm._s(index + 1) +
-                                "\n                        "
-                            )
-                          ]
-                        }
-                      },
-                      {
-                        key: "item.selects",
-                        fn: function(ref) {
-                          var item = ref.item
-                          return _vm._l(item.select, function(s) {
-                            return _c(
-                              "v-chip",
+                  _c(
+                    "v-row",
+                    [
+                      _vm._l(_vm.select_result, function(result, key) {
+                        return _c(
+                          "v-col",
+                          { key: key, attrs: { cols: "12", md: "4" } },
+                          [
+                            _c(
+                              "v-card",
                               {
-                                key: s.id,
-                                staticClass: "ma-1",
                                 attrs: {
-                                  color: s.color,
-                                  "x-small": "",
-                                  label: ""
+                                  color: result.color,
+                                  loading: _vm.select_loading
                                 }
                               },
-                              [_vm._v(_vm._s(s.ration))]
+                              [
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "d-flex justify-space-between align-center pt-4 px-4"
+                                  },
+                                  [
+                                    _c("h3", [
+                                      _vm._v(_vm._s(result.ration.name))
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("span", [
+                                      _vm._v(_vm._s(result.weight) + " гр")
+                                    ])
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c("h3", { staticClass: "ml-4" }, [
+                                  _vm._v(_vm._s(result.code))
+                                ]),
+                                _vm._v(" "),
+                                _c("v-card-subtitle", [
+                                  _vm._v(_vm._s(result.dish_name))
+                                ]),
+                                _vm._v(" "),
+                                _c("v-card-text", [
+                                  _vm._v(_vm._s(result.description))
+                                ]),
+                                _vm._v(" "),
+                                _c(
+                                  "v-card-actions",
+                                  [
+                                    _c(
+                                      "v-btn",
+                                      {
+                                        attrs: { text: "" },
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.openSettings(
+                                              result.id,
+                                              result.r_id
+                                            )
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                                настроить\n                            "
+                                        )
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    result.is_extra
+                                      ? _c(
+                                          "v-btn",
+                                          {
+                                            attrs: { color: "black", text: "" },
+                                            on: {
+                                              click: function($event) {
+                                                return _vm.deleteSelect(
+                                                  result.id
+                                                )
+                                              }
+                                            }
+                                          },
+                                          [
+                                            _vm._v(
+                                              "\n                                Удалить\n                            "
+                                            )
+                                          ]
+                                        )
+                                      : _c(
+                                          "v-btn",
+                                          {
+                                            attrs: { color: "black", text: "" },
+                                            on: {
+                                              click: function($event) {
+                                                return _vm.activateDeactivate(
+                                                  result.id
+                                                )
+                                              }
+                                            }
+                                          },
+                                          [
+                                            _vm._v(
+                                              "\n                                " +
+                                                _vm._s(
+                                                  result.is_active
+                                                    ? "Убрать"
+                                                    : "Вернуть"
+                                                ) +
+                                                "\n                            "
+                                            )
+                                          ]
+                                        )
+                                  ],
+                                  1
+                                )
+                              ],
+                              1
                             )
-                          })
-                        }
-                      }
-                    ])
-                  })
+                          ],
+                          1
+                        )
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "v-col",
+                        { attrs: { cols: "12", md: "4" } },
+                        [
+                          _c(
+                            "v-card",
+                            [
+                              _c("v-card-title", [_vm._v("Дополнительно")]),
+                              _vm._v(" "),
+                              _c(
+                                "v-card-actions",
+                                [
+                                  _c(
+                                    "v-btn",
+                                    {
+                                      attrs: { text: "" },
+                                      on: {
+                                        click: function($event) {
+                                          _vm.dialog = true
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                                Добавить\n                            "
+                                      )
+                                    ]
+                                  )
+                                ],
+                                1
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    2
+                  )
                 ],
                 1
               )
-            ],
-            1
-          )
+            : _vm._e()
         ],
         1
       ),
@@ -1718,7 +1634,7 @@ var render = function() {
                     [
                       _c("v-card-title", [
                         _vm._v(
-                          "\n                            Дополнительно\n                        "
+                          "\n                        Дополнительно\n                    "
                         )
                       ]),
                       _vm._v(" "),
@@ -1761,7 +1677,7 @@ var render = function() {
                             },
                             [
                               _vm._v(
-                                "\n                                Закрыть\n                            "
+                                "\n                            Закрыть\n                        "
                               )
                             ]
                           ),
@@ -1774,7 +1690,7 @@ var render = function() {
                             },
                             [
                               _vm._v(
-                                "\n                                Сохранить\n                            "
+                                "\n                            Сохранить\n                        "
                               )
                             ]
                           )

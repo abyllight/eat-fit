@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-breadcrumbs large :items="items"></v-breadcrumbs>
+        <v-btn @click="$router.back()" class="mb-5" color="black" dark>Назад</v-btn>
         <!--  Select Modal   -->
         <v-row>
             <v-col>

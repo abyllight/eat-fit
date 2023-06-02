@@ -71,19 +71,43 @@ class PaymentController extends Controller
                 'limit_rows' => 400
             ]);
 
+            //456321 стоимость курса
+
             $array = array_merge($bezsubbot, $vrabote, $doljniki, $krazboru, $obratnayasvyaz, $pauza, $probnayadostavka);
 
             OrderHistory::whereDate('created_at', Carbon::today())->where('pay_fact', null)->delete();
 
             foreach ($array as $item) {
                 $found = OrderHistory::where('amo_id', $item['id'])->first();
+                $name = $item['name'];
+                /*$fact = null;
+                $course = null;
 
-                if ($found) continue;
+                foreach ($item['custom_fields'] as $field) {
+                    switch ($field['id']) {
+                        case '321235': //Курс
+                            $fields['course'] = $field["values"][0]["value"];
+                            break;
+                        case '321139': //Факт оплата
+                            $fields['pay_fact'] = $field["values"][0]["value"];
+                            break;
+                        case '869811': //Тип оплата
+                            $fields['pay_type'] = $field["values"][0]["enum"];
+                            break;
+                    }
+                }*/
 
-                $h = new OrderHistory();
-                $h->amo_id = $item['id'];
-                $h->name = $item['name'];
-                $h->save();
+                if ($found) {
+                    $found->name = $name;
+                    $found->save();
+                }else {
+                    $h = new OrderHistory();
+                    $h->amo_id = $item['id'];
+                    $h->name = $name;
+                    $h->save();
+                }
+
+
             }
         }catch (\AmoCRM\Exception $e) {
             return response()->json([
