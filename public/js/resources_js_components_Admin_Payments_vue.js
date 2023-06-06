@@ -157,12 +157,32 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Payments',
   data: function data() {
     return {
       dialog: false,
+      has_diff: false,
       menu: false,
       date: new Date().toISOString().split('T')[0],
       items: [],
@@ -181,6 +201,11 @@ __webpack_require__.r(__webpack_exports__);
       return this.items.reduce(function (sum, item) {
         return sum + item.pay_fact;
       }, 0);
+    },
+    totalDiff: function totalDiff() {
+      return this.items.reduce(function (sum, item) {
+        return sum + item.fact_diff;
+      }, 0);
     }
   },
   methods: {
@@ -191,7 +216,8 @@ __webpack_require__.r(__webpack_exports__);
       axios__WEBPACK_IMPORTED_MODULE_0___default().get('/api/payments', {
         params: {
           date: this.date,
-          pay_type: this.payType
+          pay_type: this.payType,
+          has_diff: this.has_diff
         }
       }).then(function (response) {
         _this.types = response.data.types;
@@ -333,24 +359,50 @@ var render = function() {
       _c(
         "v-row",
         [
-          _c(
-            "v-col",
-            [
-              _c(
-                "v-btn",
-                {
-                  attrs: {
-                    color: "primary",
-                    loading: _vm.loading,
-                    disabled: _vm.loading
+          _c("v-col", [
+            _c(
+              "div",
+              { staticClass: "d-flex justify-space-between align-start" },
+              [
+                _c(
+                  "v-btn",
+                  {
+                    attrs: {
+                      color: "primary",
+                      loading: _vm.loading,
+                      disabled: _vm.loading
+                    },
+                    on: { click: _vm.fetchLeads }
                   },
-                  on: { click: _vm.fetchLeads }
-                },
-                [_vm._v("Получить сделки")]
-              )
-            ],
-            1
-          )
+                  [_vm._v("Получить сделки")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  [
+                    _c("h4", { staticClass: "mb-0" }, [
+                      _vm._v(_vm._s(_vm.totalDiff) + "тг")
+                    ]),
+                    _vm._v(" "),
+                    _c("v-checkbox", {
+                      staticClass: "mt-0",
+                      attrs: { label: "Сверхоплаты" },
+                      on: { click: _vm.fetchItems },
+                      model: {
+                        value: _vm.has_diff,
+                        callback: function($$v) {
+                          _vm.has_diff = $$v
+                        },
+                        expression: "has_diff"
+                      }
+                    })
+                  ],
+                  1
+                )
+              ],
+              1
+            )
+          ])
         ],
         1
       ),
@@ -498,13 +550,25 @@ var render = function() {
                             _vm._v(" "),
                             _c("th", { staticClass: "text-left" }, [
                               _vm._v(
-                                "\n                                Тип оплаты\n                            "
+                                "\n                                Курс\n                            "
                               )
                             ]),
                             _vm._v(" "),
                             _c("th", { staticClass: "text-left" }, [
                               _vm._v(
                                 "\n                                Фактический оплачено\n                            "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("th", { staticClass: "text-left" }, [
+                              _vm._v(
+                                "\n                                Тип оплаты\n                            "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("th", { staticClass: "text-left" }, [
+                              _vm._v(
+                                "\n                                Оплата\n                            "
                               )
                             ])
                           ])
@@ -518,6 +582,10 @@ var render = function() {
                                 _c(
                                   "tr",
                                   {
+                                    class:
+                                      item.fact > item.course
+                                        ? "light-green lighten-4"
+                                        : "",
                                     on: {
                                       click: function($event) {
                                         return _vm.showDetails(item)
@@ -528,6 +596,10 @@ var render = function() {
                                     _c("td", [_vm._v(_vm._s(index + 1))]),
                                     _vm._v(" "),
                                     _c("td", [_vm._v(_vm._s(item.name))]),
+                                    _vm._v(" "),
+                                    _c("td", [_vm._v(_vm._s(item.course))]),
+                                    _vm._v(" "),
+                                    _c("td", [_vm._v(_vm._s(item.fact))]),
                                     _vm._v(" "),
                                     _c("td", [_vm._v(_vm._s(item.pay_type))]),
                                     _vm._v(" "),

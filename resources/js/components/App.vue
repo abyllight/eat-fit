@@ -116,7 +116,7 @@ export default {
                         title: 'Рассылка меню Select',
                         link: '/broadcast-menu',
                         icon: 'account-star',
-                        roles: ['admin', 'office']
+                        roles: ['admin', 'diet']
                     },
                     {
                         title: 'Оплаты',

@@ -2,7 +2,18 @@
    <div>
        <v-row>
            <v-col>
-               <v-btn @click="fetchLeads" color="primary" :loading="loading" :disabled="loading">Получить сделки</v-btn>
+               <div class="d-flex justify-space-between align-start">
+                   <v-btn @click="fetchLeads" color="primary" :loading="loading" :disabled="loading">Получить сделки</v-btn>
+                   <div>
+                       <h4 class="mb-0">{{totalDiff}}тг</h4>
+                       <v-checkbox
+                           v-model="has_diff"
+                           label="Сверхоплаты"
+                           @click="fetchItems"
+                           class="mt-0"
+                       ></v-checkbox>
+                   </div>
+               </div>
            </v-col>
        </v-row>
        <v-row>
@@ -60,18 +71,26 @@
                                    Имя
                                </th>
                                <th class="text-left">
-                                   Тип оплаты
+                                   Курс
                                </th>
                                <th class="text-left">
                                    Фактический оплачено
+                               </th>
+                               <th class="text-left">
+                                   Тип оплаты
+                               </th>
+                               <th class="text-left">
+                                   Оплата
                                </th>
                            </tr>
                        </thead>
                        <tbody>
                         <template v-for="(item, index) in items">
-                            <tr @click="showDetails(item)">
+                            <tr @click="showDetails(item)" :class="item.fact > item.course ? 'light-green lighten-4' : ''">
                                 <td>{{ index + 1 }}</td>
                                 <td>{{ item.name }}</td>
+                                <td>{{ item.course }}</td>
+                                <td>{{ item.fact }}</td>
                                 <td>{{ item.pay_type }}</td>
                                 <td>{{ item.pay_fact }}</td>
                             </tr>
@@ -149,6 +168,7 @@ export default {
     name: 'Payments',
     data: () => ({
         dialog: false,
+        has_diff: false,
         menu: false,
         date: new Date().toISOString().split('T')[0],
         items: [],
@@ -164,6 +184,9 @@ export default {
     computed: {
         total() {
             return this.items.reduce((sum, item) => sum + item.pay_fact, 0)
+        },
+        totalDiff() {
+            return this.items.reduce((sum, item) => sum + item.fact_diff, 0)
         }
     },
     methods: {
@@ -173,7 +196,8 @@ export default {
                 .get('/api/payments', {
                     params: {
                         date: this.date,
-                        pay_type: this.payType
+                        pay_type: this.payType,
+                        has_diff: this.has_diff
                     }
                 })
                 .then(response => {

@@ -402,7 +402,7 @@ const router = new VueRouter({
             name: 'broadcast_menu',
             meta: {
                 auth: true,
-                roles: ['admin']
+                roles: ['admin', 'diet']
             },
             component: () => import('./components/Admin/BroadcastMenu.vue')
         },

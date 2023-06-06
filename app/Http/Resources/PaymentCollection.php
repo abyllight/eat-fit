@@ -20,6 +20,9 @@ class PaymentCollection extends JsonResource
             'id' => $this->id,
             'amo_id' => $this->amo_id,
             'name' => $this->name,
+            'fact' => $this->fact,
+            'fact_diff' => $this->fact_diff,
+            'course' => $this->course,
             'pay_type' => $this->pay_type ? Payment::CUSTOM_PAYMENTS[$this->pay_type]['name'] : null,
             'pay_fact' => $this->pay_fact
         ];

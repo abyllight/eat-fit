@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use AmoCRM\Client;
 use AmoCRM\Exception;
 use App\Http\Resources\PaymentCollection;
-use App\Models\Order;
 use App\Models\OrderHistory;
 use App\Models\Payment;
 use Carbon\Carbon;
@@ -20,6 +19,10 @@ class PaymentController extends Controller
 
         if ($request->pay_type) {
             $history = $history->where('pay_type', $request->pay_type);
+        }
+
+        if ($request->has_diff === 'true') {
+            $history = $history->where('fact_diff', '!=', 0);
         }
 
         $history = $history->orderBy('name')->get();
@@ -71,39 +74,74 @@ class PaymentController extends Controller
                 'limit_rows' => 400
             ]);
 
-            //456321 стоимость курса
-
             $array = array_merge($bezsubbot, $vrabote, $doljniki, $krazboru, $obratnayasvyaz, $pauza, $probnayadostavka);
 
-            OrderHistory::whereDate('created_at', Carbon::today())->where('pay_fact', null)->delete();
+            OrderHistory::whereDate('created_at', Carbon::today())
+                ->where('pay_fact', null)
+                ->orWhere('status', Payment::INIT)
+                ->delete();
 
             foreach ($array as $item) {
-                $found = OrderHistory::where('amo_id', $item['id'])->first();
                 $name = $item['name'];
-                /*$fact = null;
-                $course = null;
+                $fact = 0;
+                $course = 0;
+                $old_id = null;
 
                 foreach ($item['custom_fields'] as $field) {
                     switch ($field['id']) {
-                        case '321235': //Курс
-                            $fields['course'] = $field["values"][0]["value"];
+                        case '456321': //Стоимость Курса
+                            $course = (int)$field["values"][0]["value"];
                             break;
                         case '321139': //Факт оплата
-                            $fields['pay_fact'] = $field["values"][0]["value"];
+                            $fact = (int)$field["values"][0]["value"];
                             break;
-                        case '869811': //Тип оплата
-                            $fields['pay_type'] = $field["values"][0]["enum"];
+                        case '886601': //ID staroy sdelki
+                            $old_id = $field["values"][0]["value"];
                             break;
                     }
-                }*/
+                }
+
+                if ($old_id) {
+                    $found_old = OrderHistory::where('old_amo_id', $old_id)->first();
+                    if ($found_old) {
+                        $found_old->delete();
+                    }
+                }
+
+                $found = OrderHistory::where('amo_id', $item['id'])->first();
 
                 if ($found) {
                     $found->name = $name;
+                    $found->fact = $fact;
+                    $found->course = $course;
                     $found->save();
                 }else {
                     $h = new OrderHistory();
                     $h->amo_id = $item['id'];
                     $h->name = $name;
+                    $h->course = $course;
+                    $h->fact = $fact;
+                    if ($fact > $course) {
+                        $h->status = Payment::BIGGER_THAN_COURSE;
+                        $h->old_amo_id = $item['id'];
+                        $h->fact_diff = $fact - $course;
+                        //886601 ID staroy sdelki
+                        $lead = $amo->lead;
+                        $lead->addCustomField(886601, $item['id']);
+                        $lead->apiUpdate((int)$item['id'], 'now');
+
+                        //Task
+                        /*$task = $amo->task;
+                        $task['element_id'] = $item['id'];
+                        $task['element_type'] = 2;
+                        $task['task_type'] = 1;
+                        $task['text'] = 'Сверх оплата';
+                        $task['complete_till'] = '23:59';
+                        $task['responsible_user_id'] = $item['responsible_user_id'];
+                        $task->apiAdd();*/
+                    }else {
+                        $h->status = Payment::INIT;
+                    }
                     $h->save();
                 }
 
@@ -125,19 +163,10 @@ class PaymentController extends Controller
 
             $lead = $amo->lead;
 
-            $target = $amo->lead->apiList([
-                'id' => $order->amo_id
-            ]);
-
-            $fact = 0;
-
-            foreach ($target[0]['custom_fields'] as $field) {
-                if ($field['id'] === 321139) { //fact
-                    $fact = (int)$field["values"][0]["value"];
-                }
+            $lead->addCustomField(321139, $order->fact + $request->pay_fact); //Fact
+            if ($request->pay_fact < 0) {
+                $lead['status'] = 142;
             }
-
-            $lead->addCustomField(321139, $fact + $request->pay_fact); //Fact
             $lead->apiUpdate($order->amo_id, 'now');
 
             $order->pay_type = $request->pay_type;

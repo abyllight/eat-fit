@@ -9,6 +9,8 @@ class Payment extends Model
 {
     use HasFactory;
 
+    public const INIT = 1;
+    public const BIGGER_THAN_COURSE = 2;
     public const ASTANA_PAYMENT_TYPES = [
         [
             'name' => 'Без оплаты'
