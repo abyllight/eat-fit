@@ -16,7 +16,8 @@ class PaymentController extends Controller
     public function index(Request $request): JsonResponse
     {
         $history = OrderHistory::whereDate('created_at', $request->date ?? Carbon::now());
-
+        $t = $history->get();
+        $refs = $history->get();
         if ($request->pay_type) {
             $history = $history->where('pay_type', $request->pay_type);
         }
@@ -26,12 +27,32 @@ class PaymentController extends Controller
         }
 
         $history = $history->orderBy('name')->get();
+
         $types = Payment::CUSTOM_PAYMENTS;
+
+        $total = [];
+        $refunds = [];
+        $t = $t->where('pay_fact', '>', 0);
+        $refs = $refs->where('pay_fact', '<', 0);
+
+        foreach ($types as $type) {
+            $total[] = [
+                'name' => $type['name'],
+                'sum' => $t->where('pay_type', $type['id'])->sum('pay_fact')
+            ];
+
+            $refunds[] = [
+                'name' => $type['name'],
+                'sum' => $refs->where('pay_type', $type['id'])->sum('pay_fact')
+            ];
+        }
 
         return response()->json([
             'status' => true,
             'types' => $types,
-            'items' => PaymentCollection::collection($history)
+            'items' => PaymentCollection::collection($history),
+            'refunds' => $refunds,
+            'total' => $total
         ]);
     }
 

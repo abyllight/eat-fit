@@ -191,6 +191,8 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex";
+
 export default {
     name: "MyOrders",
     data: () => ({
@@ -207,9 +209,14 @@ export default {
         this.fetchOrders()
     },
     computed: {
+        ...mapGetters({
+            user: 'auth/user'
+        }),
         isActive() {
             const d = new Date()
             let hour = d.getHours()
+
+            if (this.user.city_id === 2) return hour >= 5 && hour <= 11
             return hour >= 5 && hour <= 10
         }
     },

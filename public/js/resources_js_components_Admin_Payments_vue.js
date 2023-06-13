@@ -176,6 +176,35 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Payments',
@@ -186,25 +215,41 @@ __webpack_require__.r(__webpack_exports__);
       menu: false,
       date: new Date().toISOString().split('T')[0],
       items: [],
-      item: {},
+      item: {
+        amo_id: null,
+        course: 0,
+        fact: 0,
+        fact_diff: 0,
+        id: null,
+        name: null,
+        pay_fact: null,
+        pay_type: null
+      },
       types: [],
       payType: null,
       payLoading: false,
-      loading: false
+      loading: false,
+      total: [],
+      refunds: []
     };
   },
   created: function created() {
     this.fetchItems();
   },
   computed: {
-    total: function total() {
-      return this.items.reduce(function (sum, item) {
-        return sum + item.pay_fact;
-      }, 0);
-    },
     totalDiff: function totalDiff() {
       return this.items.reduce(function (sum, item) {
         return sum + item.fact_diff;
+      }, 0);
+    },
+    totalTotal: function totalTotal() {
+      return this.total.reduce(function (sum, item) {
+        return sum + item.sum;
+      }, 0);
+    },
+    totalRefunds: function totalRefunds() {
+      return this.refunds.reduce(function (sum, item) {
+        return sum + item.sum;
       }, 0);
     }
   },
@@ -222,6 +267,9 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (response) {
         _this.types = response.data.types;
         _this.items = response.data.items;
+        _this.total = response.data.total;
+        _this.refunds = response.data.refunds;
+        console.log(response);
       })["catch"](function (error) {
         console.log(error);
       });
@@ -243,7 +291,16 @@ __webpack_require__.r(__webpack_exports__);
       this.dialog = true;
     },
     closeDialog: function closeDialog() {
-      this.item = {};
+      this.item = {
+        amo_id: null,
+        course: 0,
+        fact: 0,
+        fact_diff: 0,
+        id: null,
+        name: null,
+        pay_fact: null,
+        pay_type: null
+      };
       this.dialog = false;
     },
     setPayFact: function setPayFact() {
@@ -523,11 +580,61 @@ var render = function() {
       _c(
         "v-row",
         [
+          _c("v-col", [
+            _c("h5", [_vm._v("Сумма: " + _vm._s(_vm.totalTotal))]),
+            _vm._v(" "),
+            _c(
+              "div",
+              _vm._l(_vm.total, function(t) {
+                return _c(
+                  "v-chip",
+                  {
+                    key: t.name,
+                    staticClass: "ma-1",
+                    attrs: {
+                      small: "",
+                      color: t.sum !== 0 ? "light-green lighten-4" : ""
+                    }
+                  },
+                  [_vm._v(_vm._s(t.name) + " | " + _vm._s(t.sum))]
+                )
+              }),
+              1
+            )
+          ]),
+          _vm._v(" "),
+          _c("v-col", [
+            _c("h5", [_vm._v("Возвраты: " + _vm._s(_vm.totalRefunds))]),
+            _vm._v(" "),
+            _c(
+              "div",
+              _vm._l(_vm.refunds, function(r) {
+                return _c(
+                  "v-chip",
+                  {
+                    key: r.name,
+                    staticClass: "ma-1",
+                    attrs: {
+                      small: "",
+                      color: r.sum !== 0 ? "light-green lighten-4" : ""
+                    }
+                  },
+                  [_vm._v(_vm._s(r.name) + " | " + _vm._s(r.sum))]
+                )
+              }),
+              1
+            )
+          ])
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-row",
+        [
           _c(
             "v-col",
             [
-              _c("h2", [_vm._v(_vm._s(_vm.total))]),
-              _vm._v(" "),
               _c("v-simple-table", {
                 scopedSlots: _vm._u([
                   {
@@ -550,13 +657,19 @@ var render = function() {
                             _vm._v(" "),
                             _c("th", { staticClass: "text-left" }, [
                               _vm._v(
-                                "\n                                Курс\n                            "
+                                "\n                                Стоимость курса\n                            "
                               )
                             ]),
                             _vm._v(" "),
                             _c("th", { staticClass: "text-left" }, [
                               _vm._v(
                                 "\n                                Фактический оплачено\n                            "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("th", { staticClass: "text-left" }, [
+                              _vm._v(
+                                "\n                                Разница\n                            "
                               )
                             ]),
                             _vm._v(" "),
@@ -600,6 +713,8 @@ var render = function() {
                                     _c("td", [_vm._v(_vm._s(item.course))]),
                                     _vm._v(" "),
                                     _c("td", [_vm._v(_vm._s(item.fact))]),
+                                    _vm._v(" "),
+                                    _c("td", [_vm._v(_vm._s(item.fact_diff))]),
                                     _vm._v(" "),
                                     _c("td", [_vm._v(_vm._s(item.pay_type))]),
                                     _vm._v(" "),

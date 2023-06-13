@@ -28,7 +28,6 @@ class Payment extends Model
             'name' => 'Личный Kaspi'
         ]
     ];
-
     public const ALMATY_PAYMENT_TYPES = [
         [
             'name' => 'Без оплаты'
@@ -43,7 +42,6 @@ class Payment extends Model
             'name' => 'Kaspi Gold'
         ]
     ];
-
     public const AMO_PAYMENTS = [
         [
             'id' => 0,

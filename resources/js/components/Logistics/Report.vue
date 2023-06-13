@@ -229,7 +229,6 @@ export default {
             axios
                 .post('/api/management/fact')
                 .then(res => {
-                    console.log(res)
                     this.$store.dispatch('showAlert', {
                         isVisible: true,
                         msg: res.data.msg,

@@ -59,7 +59,32 @@
        </v-row>
        <v-row>
            <v-col>
-               <h2>{{total}}</h2>
+               <h5>Сумма: {{totalTotal}}</h5>
+               <div>
+                   <v-chip
+                       v-for="t in total"
+                       :key="t.name"
+                        small
+                       :color="t.sum !== 0 ? 'light-green lighten-4' : ''"
+                       class="ma-1"
+                   >{{t.name}} | {{t.sum}}</v-chip>
+               </div>
+           </v-col>
+           <v-col>
+               <h5>Возвраты: {{totalRefunds}}</h5>
+               <div>
+                   <v-chip
+                       v-for="r in refunds"
+                       :key="r.name"
+                       small
+                       :color="r.sum !== 0 ? 'light-green lighten-4' : ''"
+                       class="ma-1"
+                   >{{r.name}} | {{r.sum}}</v-chip>
+               </div>
+           </v-col>
+       </v-row>
+       <v-row>
+           <v-col>
                <v-simple-table>
                    <template v-slot:default>
                        <thead>
@@ -71,10 +96,13 @@
                                    Имя
                                </th>
                                <th class="text-left">
-                                   Курс
+                                   Стоимость курса
                                </th>
                                <th class="text-left">
                                    Фактический оплачено
+                               </th>
+                               <th class="text-left">
+                                   Разница
                                </th>
                                <th class="text-left">
                                    Тип оплаты
@@ -91,6 +119,7 @@
                                 <td>{{ item.name }}</td>
                                 <td>{{ item.course }}</td>
                                 <td>{{ item.fact }}</td>
+                                <td>{{ item.fact_diff }}</td>
                                 <td>{{ item.pay_type }}</td>
                                 <td>{{ item.pay_fact }}</td>
                             </tr>
@@ -172,21 +201,35 @@ export default {
         menu: false,
         date: new Date().toISOString().split('T')[0],
         items: [],
-        item: {},
+        item: {
+            amo_id: null,
+            course: 0,
+            fact: 0,
+            fact_diff: 0,
+            id: null,
+            name: null,
+            pay_fact: null,
+            pay_type: null
+        },
         types: [],
         payType: null,
         payLoading: false,
-        loading: false
+        loading: false,
+        total: [],
+        refunds: []
     }),
     created() {
         this.fetchItems()
     },
     computed: {
-        total() {
-            return this.items.reduce((sum, item) => sum + item.pay_fact, 0)
-        },
         totalDiff() {
             return this.items.reduce((sum, item) => sum + item.fact_diff, 0)
+        },
+        totalTotal() {
+            return this.total.reduce((sum, item) => sum + item.sum, 0)
+        },
+        totalRefunds() {
+            return this.refunds.reduce((sum, item) => sum + item.sum, 0)
         }
     },
     methods: {
@@ -203,6 +246,9 @@ export default {
                 .then(response => {
                     this.types = response.data.types
                     this.items = response.data.items
+                    this.total = response.data.total
+                    this.refunds = response.data.refunds
+                    console.log(response)
                 })
                 .catch(error => {
                     console.log(error)
@@ -227,7 +273,16 @@ export default {
             this.dialog = true
         },
         closeDialog() {
-            this.item = {}
+            this.item = {
+                amo_id: null,
+                course: 0,
+                fact: 0,
+                fact_diff: 0,
+                id: null,
+                name: null,
+                pay_fact: null,
+                pay_type: null
+            }
             this.dialog = false
         },
         setPayFact() {
