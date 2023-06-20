@@ -68,7 +68,7 @@ __webpack_require__.r(__webpack_exports__);
       var d = new Date();
       var hour = d.getHours();
       var minute = d.getMinutes();
-      return hour >= 17 && minute >= 0 && hour <= 17 && minute <= 40;
+      return hour >= 17 && minute >= 0 && hour <= 18 && minute <= 40;
     }
   },
   methods: {
