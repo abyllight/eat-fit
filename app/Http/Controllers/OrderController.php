@@ -279,7 +279,7 @@ class OrderController extends Controller
     {
         try {
             $amo = new Client(env('AMO_SUBDOMAIN'), env('AMO_LOGIN'), env('AMO_HASH'));
-            dd($amo->account->apiCurrent()['custom_fields']['leads'][7]);
+
             $trial = $amo->lead->apiList([
                 'status'     => 16536847,
                 'limit_rows' => 100
