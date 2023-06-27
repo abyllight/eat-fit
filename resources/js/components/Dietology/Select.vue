@@ -425,13 +425,7 @@
                         this.select_stat = res.data.stat
                         this.isSelect = false
                     })
-            },
-            sendMessage(id, num) {
-                axios.get('/api/select/message/'+id)
-                    .then(res => {
-                        window.open(`https://api.whatsapp.com/send?phone=${num}&text=${encodeURIComponent(res.data)}`, '_blank');
-                    })
-            },
+            }
         }
     }
 </script>

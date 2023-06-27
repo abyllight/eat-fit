@@ -65,6 +65,7 @@ class Order extends Model
     const EAT_CHILL = 5;
     const CAKES = 6;
     const EAT_FIT_SELECT_MAX = 8;
+    const EAT_FIT_DAILY = 9;
 
     const XS = 1;
     const S = 2;
@@ -76,9 +77,9 @@ class Order extends Model
     const ASTANA = 1;
     const ALMATY = 2;
 
-    const EAT_FIT_ARRAY = [self::EAT_FIT_LITE, self::EAT_FIT_SELECT, self::EAT_FIT_SELECT_MAX, self::EAT_FIT_DETOX, self::EAT_FIT_GO, self::EAT_FIT_SATURDAY];
+    const EAT_FIT_ARRAY = [self::EAT_FIT_LITE, self::EAT_FIT_SELECT, self::EAT_FIT_DAILY, self::EAT_FIT_SELECT_MAX, self::EAT_FIT_DETOX, self::EAT_FIT_GO, self::EAT_FIT_SATURDAY];
 
-    const TYPES = ['LITE', 'SELECT', 'DETOX', 'GO', 'CHILL', 'CAKES', 'СУББОТА', 'SELECT_MAX'];
+    const TYPES = ['LITE', 'SELECT', 'DETOX', 'GO', 'CHILL', 'CAKES', 'СУББОТА', 'SELECT_MAX', 'DAILY'];
 
     const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'EAT'];
 
@@ -305,6 +306,9 @@ class Order extends Model
             case Order::EAT_FIT_SATURDAY:
                 $color = 'red';
                 break;
+            case Order::EAT_FIT_DAILY:
+                $color = 'cyan';
+                break;
         }
 
         return $color;
@@ -336,6 +340,9 @@ class Order extends Model
                 break;
             case Order::EAT_FIT_SATURDAY:
                 $color = 'EF9A9A';
+                break;
+            case Order::EAT_FIT_DAILY:
+                $color = '00BCD4';
                 break;
         }
 

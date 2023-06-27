@@ -48,6 +48,7 @@ class SelectController extends Controller
                     'ration' => $select->ration,
                     'dish_name' => $select->dish_name,
                     'weight' => $select->weight,
+                    'description' => $select->description,
                     'ingredients' => $select->ingredients->sortBy('name')->toArray(),
                     'wishlist' => $select->wishes
                 ];

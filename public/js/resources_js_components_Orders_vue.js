@@ -235,6 +235,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Client',
@@ -247,6 +252,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       lite: [],
       select: [],
       detox: 0,
+      daily: 0,
       go: 0,
       cakes: 0,
       week: '',
@@ -385,6 +391,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this3.lite = response.data.lite;
                   _this3.select = response.data.select;
                   _this3.detox = response.data.detox;
+                  _this3.daily = response.data.daily;
                   _this3.go = response.data.go;
                   _this3.cakes = response.data.cakes;
                 })["catch"](function (error) {
@@ -1660,6 +1667,21 @@ var render = function() {
                         )
                       ],
                       1
+                    )
+                  ])
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "v-card",
+                { staticClass: "mb-5" },
+                [
+                  _c("v-card-title", { staticClass: "text-h5" }, [
+                    _vm._v(
+                      "\n                    Daily: " +
+                        _vm._s(_vm.daily) +
+                        "\n                "
                     )
                   ])
                 ],

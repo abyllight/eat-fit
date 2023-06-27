@@ -546,11 +546,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         _this10.select_stat = res.data.stat;
         _this10.isSelect = false;
       });
-    },
-    sendMessage: function sendMessage(id, num) {
-      axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/select/message/' + id).then(function (res) {
-        window.open("https://api.whatsapp.com/send?phone=".concat(num, "&text=").concat(encodeURIComponent(res.data)), '_blank');
-      });
     }
   }
 });

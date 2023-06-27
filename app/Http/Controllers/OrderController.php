@@ -261,6 +261,7 @@ class OrderController extends Controller
         ];
 
         $detox = Order::getOrderByType(Order::EAT_FIT_DETOX)->count();
+        $daily = Order::getOrderByType(Order::EAT_FIT_DAILY)->count();
         $go = Order::getOrderByType(Order::EAT_FIT_GO)->count();
         $cakes = Order::getOrderByType(Order::CAKES)->count();
 
@@ -269,7 +270,8 @@ class OrderController extends Controller
             'select' => $select,
             'detox' => $detox,
             'go' => $go,
-            'cakes' => $cakes
+            'cakes' => $cakes,
+            'daily' => $daily
         ]);
     }
 
@@ -277,7 +279,7 @@ class OrderController extends Controller
     {
         try {
             $amo = new Client(env('AMO_SUBDOMAIN'), env('AMO_LOGIN'), env('AMO_HASH'));
-
+            //dd($amo->account->apiCurrent()['custom_fields']['leads'][2]);
             $trial = $amo->lead->apiList([
                 'status'     => 16536847,
                 'limit_rows' => 100
@@ -423,7 +425,7 @@ class OrderController extends Controller
                 case '678647': //Select
                     $fields['type'] = Order::EAT_FIT_SELECT;
                     break;
-                case '978827': //Select
+                case '978827': //Select Max
                     $fields['type'] = Order::EAT_FIT_SELECT_MAX;
                     break;
                 case '954721': //Detox
@@ -432,30 +434,10 @@ class OrderController extends Controller
                 case '833911': //FitGo
                     $fields['type'] = Order::EAT_FIT_GO;
                     break;
+                case '979639': //Daily
+                    $fields['type'] = Order::EAT_FIT_DAILY;
+                    break;
             }
-            /*switch ($fields['pay_type']) {
-                case '968303': //Kaspi PAY
-                    $fields['pay_type'] = Payment::AMO_PAYMENTS[1]['id'];
-                    break;
-                case '968305': //POS-терминар
-                    $fields['pay_type'] = Payment::AMO_PAYMENTS[2]['id'];
-                    break;
-                case '968307': //Расчетный счет
-                    $fields['pay_type'] = Payment::AMO_PAYMENTS[3]['id'];
-                    break;
-                case '968309': //Наличные курьер
-                    $fields['pay_type'] = Payment::AMO_PAYMENTS[4]['id'];
-                    break;
-                case '968311': //Перевод на карту
-                    $fields['pay_type'] = Payment::AMO_PAYMENTS[5]['id'];
-                    break;
-                case '969831': //Оплачено картой на сайте
-                    $fields['pay_type'] = Payment::AMO_PAYMENTS[6]['id'];
-                    break;
-                default: //Не Выбрано
-                    $fields['pay_type'] = Payment::AMO_PAYMENTS[0]['id'];
-                    break;
-            }*/
 
             //subbota x2v2 50754262
             if ($order['status_id'] === 50754262) {

@@ -187,6 +187,11 @@
                 </v-card>
                 <v-card class="mb-5">
                     <v-card-title class="text-h5">
+                        Daily: {{ daily }}
+                    </v-card-title>
+                </v-card>
+                <v-card class="mb-5">
+                    <v-card-title class="text-h5">
                         Detox: {{ detox }}
                     </v-card-title>
                 </v-card>
@@ -223,6 +228,7 @@
             lite: [],
             select: [],
             detox: 0,
+            daily: 0,
             go: 0,
             cakes: 0,
             week: '',
@@ -310,6 +316,7 @@
                         this.lite = response.data.lite
                         this.select = response.data.select
                         this.detox = response.data.detox
+                        this.daily = response.data.daily
                         this.go = response.data.go
                         this.cakes = response.data.cakes
                     })
