@@ -279,7 +279,7 @@ class OrderController extends Controller
     {
         try {
             $amo = new Client(env('AMO_SUBDOMAIN'), env('AMO_LOGIN'), env('AMO_HASH'));
-            //dd($amo->account->apiCurrent()['custom_fields']['leads'][2]);
+            dd($amo->account->apiCurrent()['custom_fields']['leads'][7]);
             $trial = $amo->lead->apiList([
                 'status'     => 16536847,
                 'limit_rows' => 100
@@ -462,6 +462,9 @@ class OrderController extends Controller
                     break;
                 case '929511': //Eat
                     $fields['size'] = Order::EAT;
+                    break;
+                case '979641': //Eat
+                    $fields['size'] = Order::EF;
                     break;
             }
 
