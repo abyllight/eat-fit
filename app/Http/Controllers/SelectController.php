@@ -84,7 +84,7 @@ class SelectController extends Controller
         }
 
         $order = $select->order;
-        $previous = Select::where('ration_id', $select->ration_id)->whereDate('created_at', Carbon::yesterday())->first();
+        $previous = Select::where('ration_id', $select->ration_id)->where('order_id', $order->id)->whereDate('created_at', Carbon::yesterday())->first();
 
         if ($previous) {
             $previous = new SelectCollection($previous);
