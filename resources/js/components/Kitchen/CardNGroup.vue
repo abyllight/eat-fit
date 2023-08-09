@@ -242,7 +242,6 @@ export default {
     }),
     mounted() {
         this.generateCode()
-        //this.getItems()
         this.getDepartments()
     },
     methods: {

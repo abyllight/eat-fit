@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class Select extends Model
 {
@@ -113,9 +114,13 @@ class Select extends Model
 
     public static function generateCode()
     {
+        $user = Auth::user();
+        $city_id = $user->city_id ?? City::ASTANA;
+
         $groups = Select::with('ingredients')
             ->whereDate('created_at', Carbon::today())
             ->where('dish_id', '!=', null)
+            ->where('city_id', $city_id)
             ->get()
             ->groupBy('ration_id');
 
@@ -126,7 +131,6 @@ class Select extends Model
             $ids = [];
             //beautify
             foreach ($group as $item) {
-
                 if ($item->order) {
                     if (!$item->order->is_active) {
                         $item->is_active = false;
@@ -136,7 +140,6 @@ class Select extends Model
                         }
                     }
                 }
-
 
                 $code = null;
 

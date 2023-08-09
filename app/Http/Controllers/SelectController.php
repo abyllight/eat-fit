@@ -14,6 +14,7 @@ use App\Models\SelectWish;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
@@ -23,7 +24,14 @@ class SelectController extends Controller
 {
     public function index(): JsonResponse
     {
-        $orders = Order::where('s_num', '!=', null)->where('city_id', City::ASTANA)->where('is_active', true)->orderBy('s_num')->get();
+        $user = Auth::user();
+        $city_id = $user->city_id ?? City::ASTANA;
+
+        $orders = Order::where('s_num', '!=', null)
+            ->where('city_id', $city_id)
+            ->where('is_active', true)
+            ->orderBy('s_num')
+            ->get();
         $arr = [];
 
         $max_date = Select::max('created_at');

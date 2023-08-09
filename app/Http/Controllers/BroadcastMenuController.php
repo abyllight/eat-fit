@@ -11,6 +11,7 @@ use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BroadcastMenuController extends Controller
 {
@@ -33,7 +34,12 @@ class BroadcastMenuController extends Controller
 
     public function performText(): array
     {
-        $orders = Order::where('is_active', true)->where('city_id', City::ASTANA)->where('s_num', '!=', null)->get();
+        $user = Auth::user();
+        $city_id = $user->city_id ?? City::ASTANA;
+        $orders = Order::where('is_active', true)
+            ->where('city_id', $city_id)
+            ->where('s_num', '!=', null)
+            ->get();
         $duty_cuisine = Cuisine::where('is_on_duty', true)->first();
 
         $arr = [];
@@ -59,7 +65,13 @@ class BroadcastMenuController extends Controller
 
     public function performTextWeb(): array
     {
-        $orders = Order::where('is_active', true)->where('city_id', City::ASTANA)->where('s_num', '!=', null)->get();
+        $user = Auth::user();
+        $city_id = $user->city_id ?? City::ASTANA;
+
+        $orders = Order::where('is_active', true)
+            ->where('city_id', $city_id)
+            ->where('s_num', '!=', null)
+            ->get();
         $duty_cuisine = Cuisine::where('is_on_duty', true)->first();
 
         $arr = [];

@@ -22,8 +22,6 @@ class CardGroupController extends Controller
 {
     public function index(): JsonResponse
     {
-        //Select::generateCode();
-
         $user = Auth::user();
         $arr = [];
         $groups = [];
@@ -281,7 +279,14 @@ class CardGroupController extends Controller
             $spreadsheet->getActiveSheet()->getColumnDimension($letter)->setWidth(25);
         }
 
-        $orders = Order::where('s_num', '!=', null)->where('city_id', City::ASTANA)->where('is_active', true)->orderBy('s_num')->get();
+        $user = Auth::user();
+        $city_id = $user->city_id ?? City::ASTANA;
+
+        $orders = Order::where('s_num', '!=', null)
+            ->where('city_id', $city_id)
+            ->where('is_active', true)
+            ->orderBy('s_num')
+            ->get();
         $n = 1;
 
         foreach ($orders as $key => $order) {

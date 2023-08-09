@@ -260,7 +260,6 @@ export default {
         openDialog(order) {
             if (!order.is_active) return
             this.order = order
-            console.log(order)
             this.dialog = true
         },
         done(id) {

@@ -216,8 +216,12 @@ class OrderController extends Controller
 
     public function getLite(): JsonResponse
     {
+        $user = Auth::user();
+        $city_id = $user->city_id ?? City::ASTANA;
+
         $lite = Order::where('type', Order::EAT_FIT_LITE)
             ->where('is_active', true)
+            ->where('city_id', $city_id)
             ->orderBy('size')
             ->get();
 
