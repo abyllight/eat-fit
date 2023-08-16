@@ -17,7 +17,7 @@ class MoySkladController extends Controller
     }
 
     public function doWebhook(Request $request) {
-        $url = $request->json();
+        $url = $request->query('id') ?? $request->query('requestId');
 
         if ($url) {
             //$access_token = $this->doAuth();
