@@ -21,6 +21,7 @@ use App\Http\Controllers\IngredientController;
 use App\Http\Controllers\ListController;
 use App\Http\Controllers\ManagementController;
 use App\Http\Controllers\MapController;
+use App\Http\Controllers\MoySkladController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductCategoryController;
@@ -231,5 +232,6 @@ Route::get('/optimize', [HelperController::class, 'optimize']);
 Route::get('/storage', [HelperController::class, 'storage']);
 
 Route::get('/webhook', [AdminController::class, 'webhook']);
+Route::get('/moysklad', [MoySkladController::class, 'doWebhook']);
 
 

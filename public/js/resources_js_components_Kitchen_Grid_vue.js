@@ -388,7 +388,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     openDialog: function openDialog(order) {
       if (!order.is_active) return;
       this.order = order;
-      console.log(order);
       this.dialog = true;
     },
     done: function done(id) {
