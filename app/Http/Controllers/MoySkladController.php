@@ -19,16 +19,18 @@ class MoySkladController extends Controller
     public function doWebhook(Request $request) {
         $url = $request->query('id');
         $type = $request->query('type');
+
+        $moy_sklad = new MoySklad();
+        $moy_sklad->url = $url;
+        $moy_sklad->data = $type;
+        $moy_sklad->save();
         if ($url) {
             //$access_token = $this->doAuth();
             /*$customer_order = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $access_token
             ])->get($url);*/
 
-            $moy_sklad = new MoySklad();
-            $moy_sklad->url = $url;
-            $moy_sklad->data = $type;
-            $moy_sklad->save();
+
         }
         /*$create_retail_demand = Http::withHeaders([
             'Authorization' => 'Bearer ' . $access_token,
