@@ -18,7 +18,7 @@ class MoySkladController extends Controller
 
     public function doWebhook(Request $request) {
         $url = $request->query('requestId');
-
+        $data = $request->all();
         if ($url) {
             //$access_token = $this->doAuth();
             /*$customer_order = Http::withHeaders([
@@ -27,6 +27,7 @@ class MoySkladController extends Controller
 
             $moy_sklad = new MoySklad();
             $moy_sklad->url = $url;
+            $moy_sklad->data = $data;
             $moy_sklad->save();
         }
         /*$create_retail_demand = Http::withHeaders([
