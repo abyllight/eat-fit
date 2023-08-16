@@ -17,8 +17,8 @@ class MoySkladController extends Controller
     }
 
     public function doWebhook(Request $request) {
-        $url = $request->query('id');
-        $type = $request->query('type');
+        $url = $request->query('requestId');
+        $type = $request->dump();
 
         $moy_sklad = new MoySklad();
         $moy_sklad->url = $url;
