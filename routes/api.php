@@ -232,6 +232,6 @@ Route::get('/optimize', [HelperController::class, 'optimize']);
 Route::get('/storage', [HelperController::class, 'storage']);
 
 Route::get('/webhook', [AdminController::class, 'webhook']);
-Route::post('/moysklad', [MoySkladController::class, 'doWebhook']);
+Route::get('/moysklad', [MoySkladController::class, 'doWebhook']);
 
 
