@@ -35,7 +35,7 @@ class MoySkladController extends Controller
             if ($request->query('id')) {
                 $last_order = Http::withHeaders([
                     'Authorization' => 'Bearer ' . $access_token
-                ])->get('https://online.moysklad.ru/api/remap/1.2/entity/customerorder/');
+                ])->get('https://online.moysklad.ru/api/remap/1.2/entity/customerorder/' . $request->query('id'));
 
                 $last_order = $last_order->json();
             }
