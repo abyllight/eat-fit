@@ -28,7 +28,7 @@ class MoySkladController extends Controller
 
     //director https://online.moysklad.ru/api/remap/1.2/entity/employee/1f6007c8-31a6-11ed-0a80-09cb0037328c
     //ne uto4nil https://online.moysklad.ru/api/remap/1.2/entity/customentity/8447381f-8cd1-11ed-0a80-014000e2ec30/df10c6db-8cd5-11ed-0a80-0ffb00dcc0b3
-    public function doWebhook(Request $request) {
+    public function createRetailDemand(Request $request) {
             $access_token = $this->doAuth();
             $last_order = null;
 
@@ -42,7 +42,7 @@ class MoySkladController extends Controller
 
             if ($last_order) {
                 $store = array_key_exists('store', $last_order) ? $last_order['store']['meta']['href'] : null;
-                //dd($store, $last_order);
+
                 if ($store) {
                     $retail_store = Http::withHeaders([
                         'Authorization' => 'Bearer ' . $access_token
@@ -115,12 +115,13 @@ class MoySkladController extends Controller
                                             "uuidHref" => "https://online.moysklad.ru/app/#employee/edit?id=1f6007c8-31a6-11ed-0a80-09cb0037328c"
                                         ]
                                     ]
-                                ]
+                                ],
                             ];
 
                             //source 872a58d7-9980-11ed-0a80-0c3c001c7e62
                             //setup 833ff40e-df58-11ed-0a80-0f3a0009403a
                             //sale 164fb8bb-e0d4-11ed-0a80-04cf0014dd06
+                            //owner 0b1fbffe-3a10-11ee-0a80-08b000260921
                             if (array_key_exists('attributes', $last_order)) {
                                 foreach ($last_order['attributes'] as $attribute) {
                                     //source
@@ -192,6 +193,8 @@ class MoySkladController extends Controller
                                     return response()->json('Retail demand successfully created');
                                 }
                             }
+
+                            return response()->json('Retail demand created');
                         }
 
                         Log::alert('Retail shift not found ' . $last_order['id']);
@@ -206,6 +209,62 @@ class MoySkladController extends Controller
                 return response()->json('Store not found');
             }
 
-            return response()->json('Retail demand created');
+            return response()->json('Order not found');
+    }
+
+    public function setOwnerToCustomerOrder(Request $request) {
+        $access_token = $this->doAuth();
+        $last_order = null;
+
+        if ($request->query('id')) {
+            $last_order = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $access_token
+            ])->get('https://online.moysklad.ru/api/remap/1.2/entity/customerorder/' . $request->query('id'));
+
+            $last_order = $last_order->json();
+        }
+
+        if ($last_order) {
+            if (array_key_exists('attributes', $last_order)) {
+                foreach ($last_order['attributes'] as $attribute) {
+
+                    //test responsible
+                    if ($attribute['id'] === '0b1fbffe-3a10-11ee-0a80-08b000260921') {
+                        $full_name = $attribute['value']['name'];
+                        $full_name = explode(' ',$full_name);
+
+                        $employee = Http::withHeaders([
+                            'Authorization' => 'Bearer ' . $access_token
+                        ])->get('https://online.moysklad.ru/api/remap/1.2/entity/employee', [
+                            'limit' => 1,
+                            'filter' => 'firstName=' . $full_name[0]. ';lastName=' . $full_name[1]
+                        ]);
+
+                        $employee = $employee->json();
+
+                        if ($employee) {
+                            $employee = $employee['rows'][0];
+
+                            Http::withHeaders([
+                                'Authorization' => 'Bearer ' . $access_token
+                            ])->put('https://online.moysklad.ru/api/remap/1.2/entity/customerorder/2cb93285-426b-11ee-0a80-13bd0021bd3c', [
+                                'owner' => [
+                                    'meta' => $employee['meta']
+                                ]
+                            ]);
+
+                            Log::alert('Customer order updated ' . $last_order['id']);
+                            return response()->json('Customer order updated');
+
+                        }else {
+                            Log::alert('Employee not found ' . $last_order['id']);
+                            return response()->json('Employee not found');
+                        }
+                    }
+                }
+            }
+        }
+
+        return response()->json('Order not found');
     }
 }
