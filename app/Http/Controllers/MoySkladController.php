@@ -28,21 +28,19 @@ class MoySkladController extends Controller
 
     //director https://online.moysklad.ru/api/remap/1.2/entity/employee/1f6007c8-31a6-11ed-0a80-09cb0037328c
     //ne uto4nil https://online.moysklad.ru/api/remap/1.2/entity/customentity/8447381f-8cd1-11ed-0a80-014000e2ec30/df10c6db-8cd5-11ed-0a80-0ffb00dcc0b3
-    public function doWebhook() {
+    public function doWebhook(Request $request) {
             $access_token = $this->doAuth();
+            $last_order = null;
 
-            $last_order = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $access_token
-            ])->get('https://online.moysklad.ru/api/remap/1.2/entity/customerorder', [
-                'order' => 'moment,desc',
-                'limit' => 1
-            ]);
+            if ($request->query('id')) {
+                $last_order = Http::withHeaders([
+                    'Authorization' => 'Bearer ' . $access_token
+                ])->get('https://online.moysklad.ru/api/remap/1.2/entity/customerorder/');
 
-            $last_order = $last_order->json();
+                $last_order = $last_order->json();
+            }
 
             if ($last_order) {
-                $last_order = $last_order['rows'][0];
-                //dd($last_order);
                 $store = array_key_exists('store', $last_order) ? $last_order['store']['meta']['href'] : null;
                 //dd($store, $last_order);
                 if ($store) {

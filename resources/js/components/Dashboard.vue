@@ -6,7 +6,13 @@
 
 <script>
 export default {
-    name: "Dashboard"
+    name: "Dashboard",
+    /*mounted() {
+        axios.get('/api/moysklad')
+            .then(res => {
+                console.log(res)
+            })
+    }*/
 }
 </script>
 
