@@ -66,7 +66,10 @@ class MoySkladController extends Controller
                         $retail_shift = $retail_shift->json();
                         if ($retail_shift) {
                             $retail_shift = $retail_shift['rows'][0];
-
+                            $cash = 0.0;
+                            $no_cash = 0.0;
+                            $qr = 0.0;
+                            $positions = null;
                             $attributes = [
                                 [//source
                                     'meta' => [
@@ -122,6 +125,7 @@ class MoySkladController extends Controller
                             //setup 833ff40e-df58-11ed-0a80-0f3a0009403a
                             //sale 164fb8bb-e0d4-11ed-0a80-04cf0014dd06
                             //owner 0b1fbffe-3a10-11ee-0a80-08b000260921
+                            //payment method e9e86f71-4344-11ee-0a80-0ee900395ef1
                             if (array_key_exists('attributes', $last_order)) {
                                 foreach ($last_order['attributes'] as $attribute) {
                                     //source
@@ -144,6 +148,40 @@ class MoySkladController extends Controller
                                         $attributes[2]['value']['meta']['metadataHref'] = $attribute['value']['meta']['metadataHref'];
                                         $attributes[2]['value']['meta']['uuidHref'] = $attribute['value']['meta']['uuidHref'];
                                     }
+
+                                    //Payment method
+                                    if ($attribute['id'] === 'e9e86f71-4344-11ee-0a80-0ee900395ef1') {
+                                        $payment_method = $attribute['value']['name'];
+
+                                        if ($payment_method === 'Картой') {
+                                            $no_cash = (float)$last_order['sum'];
+                                        }
+
+                                        if ($payment_method === 'Наличными') {
+                                            $cash = (float)$last_order['sum'];
+                                        }
+
+                                        if ($payment_method === 'По QR-коду') {
+                                            $qr = (float)$last_order['sum'];
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (array_key_exists('positions', $last_order)) {
+                                $positions = Http::withHeaders([
+                                    'Authorization' => 'Bearer ' . $access_token
+                                ])->get($last_order['meta']['href'] . '/positions');
+                                $positions = $positions->json();
+
+                                if (count($positions['rows']) > 0) {
+                                    $positions = $positions['rows'];
+                                    //dd($positions);
+                                    $positions = array_map(function ($x) {
+                                        unset($x['meta']);
+                                        unset($x['id']);
+                                        return $x;
+                                    }, $positions);
                                 }
                             }
 
@@ -163,38 +201,17 @@ class MoySkladController extends Controller
                                 'attributes' => $attributes,
                                 'agent' => $agent,
                                 'customerOrder' => $last_order,
-                                'vatEnabled' => false
+                                'vatEnabled' => false,
+                                'positions' => $positions,
+                                'qrSum' => $qr,
+                                'cashSum' => $cash,
+                                'noCashSum' => $no_cash,
+                                'prepaymentCashSum' => 0.0,
+                                'prepaymentNoCashSum' => 0.0,
+                                'prepaymentQrSum' => 0.0,
                             ]);
 
-                            $retail_demand = $create_retail_demand->json();
-
-                            if (array_key_exists('positions', $last_order)) {
-                                $positions = Http::withHeaders([
-                                    'Authorization' => 'Bearer ' . $access_token
-                                ])->get($last_order['meta']['href'] . '/positions');
-                                $positions = $positions->json();
-
-                                if (count($positions['rows']) > 0) {
-                                    $positions = $positions['rows'];
-                                    //dd($positions);
-                                    $positions = array_map(function ($x) {
-                                        unset($x['meta']);
-                                        unset($x['id']);
-                                        return $x;
-                                    }, $positions);
-
-                                    Http::withHeaders([
-                                        'Authorization' => 'Bearer ' . $access_token,
-                                        'Content-Type' => 'application/json'
-                                    ])->post($retail_demand['meta']['href'] . '/positions', [
-                                        $positions
-                                    ]);
-
-                                    Log::alert('RETAIL demand successfully created ' . $last_order['id']);
-                                    return response()->json('Retail demand successfully created');
-                                }
-                            }
-
+                            Log::alert('Retail demand created ' . $last_order['id']);
                             return response()->json('Retail demand created');
                         }
 
