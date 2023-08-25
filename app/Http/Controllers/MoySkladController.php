@@ -162,6 +162,7 @@ class MoySkladController extends Controller
                                 ],
                                 'attributes' => $attributes,
                                 'agent' => $agent,
+                                'customerOrder' => $last_order,
                                 'vatEnabled' => false
                             ]);
 
