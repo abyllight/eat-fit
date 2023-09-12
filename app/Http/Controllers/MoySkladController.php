@@ -219,7 +219,9 @@ class MoySkladController extends Controller
                                 Log::alert('Retail demand created ' . $last_order['id']);
                                 return response()->json('Retail demand created');
                             }
-                            Log::alert('Retail demand ERROR' . $create_retail_demand->json());
+
+                            $create_retail_demand = $create_retail_demand->json();
+                            Log::alert('Retail demand ERROR' . $create_retail_demand['errors'][0]['error']);
                             return response()->json('Retail demand error');
                         }
 
