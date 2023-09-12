@@ -68,7 +68,7 @@ class MoySkladController extends Controller
 
                         $retail_shift = $retail_shift->json();
 
-                        if ($retail_shift) {
+                        if (array_key_exists('rows', $retail_shift) && count($retail_shift['rows']) > 0) {
                             $retail_shift = $retail_shift['rows'][0];
                             $cash = 0.0;
                             $no_cash = 0.0;
@@ -221,7 +221,7 @@ class MoySkladController extends Controller
                             }
 
                             $create_retail_demand = $create_retail_demand->json();
-                            Log::alert('Retail demand ERROR' . $create_retail_demand['errors'][0]['error']);
+                            Log::alert('Retail demand ERROR ' . $create_retail_demand['errors'][0]['error'] . ' ' . $create_retail_demand['errors'][0]['code']);
                             return response()->json('Retail demand error');
                         }
 
