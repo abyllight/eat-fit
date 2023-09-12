@@ -344,6 +344,7 @@ class MoySkladController extends Controller
         $lead = $lead->json();
         //dd($lead);
         $phone = null;
+        $contact_name = null;
 
         //Get contact phone
         if (array_key_exists('contacts', $lead['_embedded'])) {
@@ -355,6 +356,7 @@ class MoySkladController extends Controller
 
                 if ($contact->status() === 200) {
                     $contact = $contact->json();
+                    $contact_name = $contact['name'];
 
                     if (array_key_exists('custom_fields_values', $contact)
                         && count($contact['custom_fields_values']) > 0
@@ -370,7 +372,6 @@ class MoySkladController extends Controller
         }
 
         $access_token = $this->doAuth();
-        $agent = null;
 
         if ($phone) {
             $found_agent = Http::withHeaders([
@@ -384,13 +385,24 @@ class MoySkladController extends Controller
 
             if (array_key_exists('rows', $found_agent) && count($found_agent['rows']) > 0) {
                 $agent = $found_agent['rows'][0]['meta'];
+            }else {
+                $new_agent = Http::withHeaders([
+                    'Authorization' => 'Bearer ' . $access_token,
+                    'Content-Type' => 'application/json'
+                ])->post('https://online.moysklad.ru/api/remap/1.2/entity/counterparty', [
+                    'name' => $contact_name ?? Carbon::now(),
+                    'phone' => $phone
+                ]);
+
+                $new_agent = $new_agent->json();
+                $agent = $new_agent['meta'];
             }
         }else {
             $new_agent = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $access_token,
                 'Content-Type' => 'application/json'
             ])->post('https://online.moysklad.ru/api/remap/1.2/entity/counterparty', [
-                'name' => Carbon::now()
+                'name' => $contact_name ?? Carbon::now()
             ]);
 
             $new_agent = $new_agent->json();
