@@ -332,13 +332,14 @@ class MoySkladController extends Controller
 
         if ($lead->status() === 401) {
             $this->getNewAccessToken();
+
+            $lead = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('AMOCRM_ACCESS_TOKEN')
+            ])->get('https://avtosvetkzinboxru373.amocrm.ru/api/v4/leads/' . $id, [
+                'with' => 'contacts'
+            ]);
         }
 
-        $lead = Http::withHeaders([
-            'Authorization' => 'Bearer ' . env('AMOCRM_ACCESS_TOKEN')
-        ])->get('https://avtosvetkzinboxru373.amocrm.ru/api/v4/leads/' . $id, [
-            'with' => 'contacts'
-        ]);
         $lead = $lead->json();
         //dd($lead);
         $phone = null;
