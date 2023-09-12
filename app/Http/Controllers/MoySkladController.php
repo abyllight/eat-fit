@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\MoySklad;
+use AmoCRM\Client;
+use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -15,6 +17,10 @@ class MoySkladController extends Controller
 
         $req = Http::withBasicAuth($login, $pass)->post('https://online.moysklad.ru/api/remap/1.2/security/token');
         return $req->json()['access_token'];
+    }
+
+    public function isExpire() {
+
     }
 
     //Source
@@ -32,14 +38,14 @@ class MoySkladController extends Controller
             $access_token = $this->doAuth();
             $last_order = null;
 
-            if ($request->query('id')) {
+            //if ($request->query('id')) {
                 $last_order = Http::withHeaders([
                     'Authorization' => 'Bearer ' . $access_token
-                ])->get('https://online.moysklad.ru/api/remap/1.2/entity/customerorder/' . $request->query('id'));
+                ])->get('https://online.moysklad.ru/api/remap/1.2/entity/customerorder/4e517953-47d4-11ee-0a80-02b700393f09');
 
                 $last_order = $last_order->json();
-            }
-
+            //}
+            dd($last_order);
             if ($last_order) {
                 $store = array_key_exists('store', $last_order) ? $last_order['store']['meta']['href'] : null;
 
@@ -284,5 +290,255 @@ class MoySkladController extends Controller
         }
 
         return response()->json('Order not found');
+    }
+
+    public function getNewAccessToken() {
+        $amo = Http::withHeaders([
+            'Content-Type' => 'application/json'
+        ])->post('https://avtosvetkzinboxru373.amocrm.ru/oauth2/access_token', [
+                'client_id' => env('AMO_ID'),
+                'client_secret' => env('AMO_SECRET'),
+                'grant_type' => 'refresh_token',
+                'refresh_token' => env('AMOCRM_REFRESH_TOKEN'),
+                'redirect_uri' => 'https://back.eatandfit.kz/api/moysklad-amo'
+            ]);
+
+        if ($amo->status() === 200 || $amo->status() === 201) {
+            $amo = $amo->json();
+            putenv('AMOCRM_ACCESS_TOKEN=' . $amo['access_token']);
+            putenv('AMOCRM_REFRESH_TOKEN=' . $amo['refresh_token']);
+        }
+    }
+    public function createCustomerOrder(Request $request): JsonResponse
+    {
+        Log::alert('Request ' . $request);
+        /*$amo = Http::withHeaders([
+            'Content-Type' => 'application/json'
+        ])->post('https://avtosvetkzinboxru373.amocrm.ru/oauth2/access_token', [
+            'client_id' => env('AMO_ID'),
+            'client_secret' => env('AMO_SECRET'),
+            'grant_type' => 'authorization_code',
+            'code' => 'def502002f1cd264b6a807fa6d6e71b72cbbc1a1a5e612f9fe51619f71f9b733581696551c9260aca98a0a92c958987a2fbcf7875b038562a3c1372feac772bdcb6edd14ddff018972e31a0242e1a9b61b1cdca892eaba2319f239a2ecad812fd3a80a1613211526593978b0e61dbd62485223f31ee50731b3932a953c19d9a8f696cad83ce2990e76dda83f3738edac2a33a7d3daea29861889d41d032101c6989bbc2bb76e7787a63f82d3e1d43984627cc7029e09f98223e0cda8baa8054fbca03a1dcdf87b9baf6eff3a47907b7b8000dc0f60c4696fadc0ac2fd34f04258fcbe1361e98ebfeedbfd5556a74689a0ca1e2214707aecc24c501f9bacb24043d696ecdc63453d97017085330ac3c227fcc68650e6c50c5e7d564f99fd9288e152f1fb79934604c9b0548d5f10d00b9265bb8df555a264ecfc85137cda33466dc95218395471252f82b84118a8787de904e1ede1cf9fec415a0bfaa3b2b48bf62222a8087ef9e793cff23024e20e32956d0253698b9c3c887ccb7388fac90e099bfe2e6535b66dd57d4042e0eef27d09bf37d5f7222ecfc4a95dd29f803ee1ef451598cca5d086d7df5d54adec6554b33fb50445fb678a7ce77dad0240561492a6f6a2e8b30602a9f9df1292159e68de57a910f782435148157a1c009365d7ccb41c96555bd8bae7d83388ff4ddb2fba53d6a3e3e08630995f61b42',
+            'redirect_uri' => 'https://back.eatandfit.kz/api/moysklad-amo'
+        ]);
+
+        $amo_access_token = $amo->json();
+        dd($amo_access_token);*/
+        //$this->getNewAccessToken();
+        $id = $request->leads['status'][0]['id'];
+        $lead = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('AMOCRM_ACCESS_TOKEN')
+        ])->get('https://avtosvetkzinboxru373.amocrm.ru/api/v4/leads/' . $id, [
+            'with' => 'contacts'
+        ]);
+
+        if ($lead->status() === 401) {
+            dd('asd');
+            $this->getNewAccessToken();
+        }
+
+        $lead = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('AMOCRM_ACCESS_TOKEN')
+        ])->get('https://avtosvetkzinboxru373.amocrm.ru/api/v4/leads/' . $id, [
+            'with' => 'contacts'
+        ]);
+        $lead = $lead->json();
+        //dd($lead);
+        $phone = null;
+
+        //Get contact phone
+        if (array_key_exists('contacts', $lead['_embedded'])) {
+            if (count($lead['_embedded']['contacts']) > 0) {
+                $contact_id = $lead['_embedded']['contacts'][0]['id'];
+                $contact = Http::withHeaders([
+                    'Authorization' => 'Bearer ' . env('AMOCRM_ACCESS_TOKEN')
+                ])->get('https://avtosvetkzinboxru373.amocrm.ru/api/v4/contacts/' . $contact_id);
+
+                if ($contact->status() === 200) {
+                    $contact = $contact->json();
+
+                    if (array_key_exists('custom_fields_values', $contact)
+                        && count($contact['custom_fields_values']) > 0
+                    ) {
+                        foreach ($contact['custom_fields_values'] as $field) {
+                            if ($field['field_id'] === 2468443) {
+                                $phone = $field['values'][0]['value'];
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+
+        $access_token = $this->doAuth();
+        $agent = null;
+
+        if ($phone) {
+            $found_agent = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $access_token,
+                'Content-Type' => 'application/json'
+            ])->get('https://online.moysklad.ru/api/remap/1.2/entity/counterparty', [
+                'filter' => 'phone=' . $phone
+            ]);
+
+            $found_agent = $found_agent->json();
+
+            if (array_key_exists('rows', $found_agent) && count($found_agent['rows']) > 0) {
+                $agent = $found_agent['rows'][0]['meta'];
+            }
+        }else {
+            $new_agent = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $access_token,
+                'Content-Type' => 'application/json'
+            ])->post('https://online.moysklad.ru/api/remap/1.2/entity/counterparty', [
+                'name' => Carbon::now()
+            ]);
+
+            $new_agent = $new_agent->json();
+            $agent = $new_agent['meta'];
+        }
+
+        if ($agent) {
+            $attributes = [];
+            $store = null;
+
+            foreach ($lead['custom_fields_values'] as $field) {
+                //Sklad
+                if ($field['field_id'] === 2469455) {
+                    $store_id = $field['values'][0]['enum_code'];
+                    $store = [
+                        'meta' => [
+                            'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/store/' . $store_id,
+                            "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/entity/store/metadata",
+                            "type" => "store",
+                            "mediaType" => "application/json"
+                        ]
+                    ];
+                }
+
+                //Marka
+                if ($field['field_id'] === 2609137) {
+                    $found_mark = Http::withHeaders([
+                        'Authorization' => 'Bearer ' . $access_token,
+                        'Content-Type' => 'application/json'
+                    ])->get('https://online.moysklad.ru/api/remap/1.2/entity/customentity/4018fdab-5206-11ed-0a80-0703001e621a', [
+                        'filter' => 'name=' . $field['values'][0]['value']
+                    ]);
+
+                    if ($found_mark->status() === 200) {
+                        $found_mark = $found_mark->json();
+
+                        if (array_key_exists('rows', $found_mark) && count($found_mark['rows']) > 0) {
+                            $attributes[] = [
+                                'meta' => [
+                                    'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/customerorder/metadata/attributes/497d37c2-5206-11ed-0a80-0e0d001d7351',
+                                    'type' => 'attributemetadata',
+                                    'mediaType' => 'application/json'
+                                ],
+                                'value' => [
+                                    'meta' => $found_mark['rows'][0]['meta']
+                                ]
+                            ];
+                        }
+                    }
+                }
+
+                //Model
+                if ($field['field_id'] === 2609143) {
+                    $attributes[] = [
+                        'meta' => [
+                            'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/customerorder/metadata/attributes/368eda5c-5209-11ed-0a80-05c2001d72a8',
+                            'type' => 'attributemetadata',
+                            'mediaType' => 'application/json'
+                        ],
+                        'value' => $field['values'][0]['value']
+                    ];
+                }
+
+                //Source
+                if ($field['field_id'] === 2609149) {
+                    $found_source = Http::withHeaders([
+                        'Authorization' => 'Bearer ' . $access_token,
+                        'Content-Type' => 'application/json'
+                    ])->get('https://online.moysklad.ru/api/remap/1.2/entity/customentity/8447381f-8cd1-11ed-0a80-014000e2ec30', [
+                        'filter' => 'name=' . $field['values'][0]['value']
+                    ]);
+
+                    if ($found_source->status() === 200) {
+                        $found_source = $found_source->json();
+
+                        if (array_key_exists('rows', $found_source) && count($found_source['rows']) > 0) {
+                            $attributes[] = [
+                                'meta' => [
+                                    'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/customerorder/metadata/attributes/872a58d7-9980-11ed-0a80-0c3c001c7e62',
+                                    'type' => 'attributemetadata',
+                                    'mediaType' => 'application/json'
+                                ],
+                                'value' => [
+                                    'meta' => $found_source['rows'][0]['meta']
+                                ]
+                            ];
+                        }
+                    }
+                }
+
+                /*//Setup test
+                if ($field['field_id'] === 2609149) {
+                    $found_source = Http::withHeaders([
+                        'Authorization' => 'Bearer ' . $access_token,
+                        'Content-Type' => 'application/json'
+                    ])->get('https://online.moysklad.ru/api/remap/1.2/entity/customentity/8447381f-8cd1-11ed-0a80-014000e2ec30', [
+                        'filter' => 'name=' . $field['values'][0]['value']
+                    ]);
+
+                    if ($found_source->status() === 200) {
+                        $found_source = $found_source->json();
+
+                        if (array_key_exists('rows', $found_source) && count($found_source['rows']) > 0) {
+                            $attributes[] = [
+                                'meta' => [
+                                    'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/customerorder/metadata/attributes/0b1fbffe-3a10-11ee-0a80-08b000260921',
+                                    'type' => 'attributemetadata',
+                                    'mediaType' => 'application/json'
+                                ],
+                                'value' => [
+                                    'meta' => $found_source['rows'][0]['meta']
+                                ]
+                            ];
+                        }
+                    }
+                }*/
+            }
+
+            $new_order = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $access_token,
+                'Content-Type' => 'application/json'
+            ])->post('https://online.moysklad.ru/api/remap/1.2/entity/customerorder', [
+                'organization' => [
+                    "meta" => [
+                        "href" => "https://online.moysklad.ru/api/remap/1.2/entity/organization/1f71907c-31a6-11ed-0a80-09cb003732d1",
+                        "type" => "organization",
+                        "mediaType" => "application/json"
+                    ]
+                ],
+                'agent' => [
+                    'meta' => $agent
+                ],
+                'store' => $store,
+                'attributes' => $attributes
+            ]);
+
+            if ($new_order->status() === 200 || $new_order->status() === 201) {
+                $new_order = $new_order->json();
+                Log::alert('Customer order created ' . $new_order['id']);
+                return response()->json('Agent trouble');
+            }
+        }else {
+            Log::alert('Agent trouble ' . $lead['id']);
+            return response()->json('Agent trouble');
+        }
+
+        return response()->json('Customer order creation end');
     }
 }

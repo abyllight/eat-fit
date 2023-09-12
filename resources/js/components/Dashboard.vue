@@ -8,7 +8,7 @@
 export default {
     name: "Dashboard",
     /*mounted() {
-        axios.get('/api/moysklad/create-demand')
+        axios.get('/api/moysklad/create-order')
             .then(res => {
                 console.log(res)
             })

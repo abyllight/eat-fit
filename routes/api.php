@@ -234,6 +234,7 @@ Route::get('/storage', [HelperController::class, 'storage']);
 Route::get('/webhook', [AdminController::class, 'webhook']);
 Route::post('/moysklad/create-demand', [MoySkladController::class, 'createRetailDemand']);
 Route::post('/moysklad/set-owner', [MoySkladController::class, 'setOwnerToCustomerOrder']);
+Route::post('/moysklad/create-order', [MoySkladController::class, 'createCustomerOrder']);
 
 
 
