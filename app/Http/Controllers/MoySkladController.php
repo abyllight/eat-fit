@@ -19,10 +19,6 @@ class MoySkladController extends Controller
         return $req->json()['access_token'];
     }
 
-    public function isExpire() {
-
-    }
-
     //Source
     //https://online.moysklad.ru/api/remap/1.2/entity/retaildemand/metadata/attributes/e8ce5c74-8cd4-11ed-0a80-0ec600de235f
 
@@ -34,18 +30,19 @@ class MoySkladController extends Controller
 
     //director https://online.moysklad.ru/api/remap/1.2/entity/employee/1f6007c8-31a6-11ed-0a80-09cb0037328c
     //ne uto4nil https://online.moysklad.ru/api/remap/1.2/entity/customentity/8447381f-8cd1-11ed-0a80-014000e2ec30/df10c6db-8cd5-11ed-0a80-0ffb00dcc0b3
-    public function createRetailDemand(Request $request) {
+    public function createRetailDemand(Request $request): JsonResponse
+    {
             $access_token = $this->doAuth();
             $last_order = null;
 
-            //if ($request->query('id')) {
+            if ($request->query('id')) {
                 $last_order = Http::withHeaders([
                     'Authorization' => 'Bearer ' . $access_token
-                ])->get('https://online.moysklad.ru/api/remap/1.2/entity/customerorder/4e517953-47d4-11ee-0a80-02b700393f09');
+                ])->get('https://online.moysklad.ru/api/remap/1.2/entity/customerorder/' . $request->query('id'));
 
                 $last_order = $last_order->json();
-            //}
-            dd($last_order);
+            }
+
             if ($last_order) {
                 $store = array_key_exists('store', $last_order) ? $last_order['store']['meta']['href'] : null;
 
@@ -236,7 +233,8 @@ class MoySkladController extends Controller
             return response()->json('Order not found');
     }
 
-    public function setOwnerToCustomerOrder(Request $request) {
+    public function setOwnerToCustomerOrder(Request $request): JsonResponse
+    {
         $access_token = $this->doAuth();
         $last_order = null;
 
@@ -311,7 +309,7 @@ class MoySkladController extends Controller
     }
     public function createCustomerOrder(Request $request): JsonResponse
     {
-        Log::alert('Request ' . $request);
+        //Log::alert('Request ' . $request);
         /*$amo = Http::withHeaders([
             'Content-Type' => 'application/json'
         ])->post('https://avtosvetkzinboxru373.amocrm.ru/oauth2/access_token', [
@@ -333,7 +331,6 @@ class MoySkladController extends Controller
         ]);
 
         if ($lead->status() === 401) {
-            dd('asd');
             $this->getNewAccessToken();
         }
 
@@ -365,7 +362,6 @@ class MoySkladController extends Controller
                                 $phone = $field['values'][0]['value'];
                             }
                         }
-
                     }
                 }
             }
@@ -522,6 +518,7 @@ class MoySkladController extends Controller
                         "mediaType" => "application/json"
                     ]
                 ],
+                'applicable' => true,
                 'agent' => [
                     'meta' => $agent
                 ],
