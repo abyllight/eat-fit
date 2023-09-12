@@ -20,7 +20,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Dashboard"
   /*mounted() {
-      axios.get('/api/moysklad/create-order')
+      axios.get('/api/moysklad/create-demand')
           .then(res => {
               console.log(res)
           })

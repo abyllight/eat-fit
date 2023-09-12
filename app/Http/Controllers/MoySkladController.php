@@ -55,7 +55,7 @@ class MoySkladController extends Controller
                     ]);
 
                     $retail_store = $retail_store->json();
-                    if ($retail_store) {
+                    if ($retail_store && array_key_exists('rows', $retail_store) && count($retail_store['rows']) > 0) {
                         $retail_store = $retail_store['rows'][0];
 
                         $retail_shift = Http::withHeaders([
@@ -67,6 +67,7 @@ class MoySkladController extends Controller
                         ]);
 
                         $retail_shift = $retail_shift->json();
+
                         if ($retail_shift) {
                             $retail_shift = $retail_shift['rows'][0];
                             $cash = 0.0;
@@ -177,7 +178,7 @@ class MoySkladController extends Controller
                                 ])->get($last_order['meta']['href'] . '/positions');
                                 $positions = $positions->json();
 
-                                if (count($positions['rows']) > 0) {
+                                if (array_key_exists('rows', $positions) && count($positions['rows']) > 0) {
                                     $positions = $positions['rows'];
                                     //dd($positions);
                                     $positions = array_map(function ($x) {
