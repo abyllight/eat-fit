@@ -215,8 +215,12 @@ class MoySkladController extends Controller
                                 'prepaymentQrSum' => 0.0,
                             ]);
 
-                            Log::alert('Retail demand created ' . $last_order['id']);
-                            return response()->json('Retail demand created');
+                            if ($create_retail_demand->status() === 200 || $create_retail_demand->status() === 201) {
+                                Log::alert('Retail demand created ' . $last_order['id']);
+                                return response()->json('Retail demand created');
+                            }
+                            Log::alert('Retail demand ERROR' . $create_retail_demand->json());
+                            return response()->json('Retail demand error');
                         }
 
                         Log::alert('Retail shift not found ' . $last_order['id']);
