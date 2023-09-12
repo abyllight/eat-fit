@@ -309,6 +309,7 @@ class MoySkladController extends Controller
     }
     public function createCustomerOrder(Request $request): JsonResponse
     {
+        //$this->getNewAccessToken();
         //Log::alert('Request ' . $request);
         /*$amo = Http::withHeaders([
             'Content-Type' => 'application/json'
@@ -316,7 +317,7 @@ class MoySkladController extends Controller
             'client_id' => env('AMO_ID'),
             'client_secret' => env('AMO_SECRET'),
             'grant_type' => 'authorization_code',
-            'code' => 'def502002f1cd264b6a807fa6d6e71b72cbbc1a1a5e612f9fe51619f71f9b733581696551c9260aca98a0a92c958987a2fbcf7875b038562a3c1372feac772bdcb6edd14ddff018972e31a0242e1a9b61b1cdca892eaba2319f239a2ecad812fd3a80a1613211526593978b0e61dbd62485223f31ee50731b3932a953c19d9a8f696cad83ce2990e76dda83f3738edac2a33a7d3daea29861889d41d032101c6989bbc2bb76e7787a63f82d3e1d43984627cc7029e09f98223e0cda8baa8054fbca03a1dcdf87b9baf6eff3a47907b7b8000dc0f60c4696fadc0ac2fd34f04258fcbe1361e98ebfeedbfd5556a74689a0ca1e2214707aecc24c501f9bacb24043d696ecdc63453d97017085330ac3c227fcc68650e6c50c5e7d564f99fd9288e152f1fb79934604c9b0548d5f10d00b9265bb8df555a264ecfc85137cda33466dc95218395471252f82b84118a8787de904e1ede1cf9fec415a0bfaa3b2b48bf62222a8087ef9e793cff23024e20e32956d0253698b9c3c887ccb7388fac90e099bfe2e6535b66dd57d4042e0eef27d09bf37d5f7222ecfc4a95dd29f803ee1ef451598cca5d086d7df5d54adec6554b33fb50445fb678a7ce77dad0240561492a6f6a2e8b30602a9f9df1292159e68de57a910f782435148157a1c009365d7ccb41c96555bd8bae7d83388ff4ddb2fba53d6a3e3e08630995f61b42',
+            'code' => 'def50200bd965d17cb75931b3e381d5ea2a0baa648d62c52563d90d786b222c76485446d3c2079a19978079e63240d0e4e40b52f16d9583fb3b4428b66dd3e8a7612caf5e258ba3279a39030314bc0b0974976c8b9b1180fbf59979c9e7415505c5cc9f6ff9ffbae6ef0b5732579372e0ec0709c890c9494c34ba148c2de4077590df1e1177426dd0efa6c275fc5e125e1c6e066beef8083a13bda1fca38bc891896c1dabd962199aab92820770cdd513c5ac58127a57b7e82f20060d15939f4787129655c7a6b0cd774221c9a54676a1e2d3b3e603b91111b9543e6093d1ee58f8927336da8678f870eac0f8af66d9e53690b20221488a055b02bb0db2ccf2931c3514012181eaae28fdf60347aa2e79aa274673a2a612f3aea9a6d3c6c5bc5239f607eb69b25b688c0678f7c1b03c4d781cb20e1c8486558d32672a370791aabda611ed9f99839b9b950429d1596c1d54c34bfbf19dee8bd10a82b8b2d7f3b0a21126a66be4cf7d17b27147071224d9765b9049901ed0986acac6bb6d50c6fd19691d8617f82486e35a8ba8f52658f89258052000c8ef4df2d9ec5057a91d8e44e3f9508e89dc19a60258aaa945156248561697f3948a5bc7a7ca06af1ce9a62415419a80a3a5a56e7010761983930ae63117f9019261e692836f6c4e9f130552a39273a8a49c8e03bc7e5e76748e7133574427f1078156abc3abc',
             'redirect_uri' => 'https://back.eatandfit.kz/api/moysklad-amo'
         ]);
 
@@ -329,8 +330,8 @@ class MoySkladController extends Controller
         ])->get('https://avtosvetkzinboxru373.amocrm.ru/api/v4/leads/' . $id, [
             'with' => 'contacts'
         ]);
-
-        if ($lead->status() === 401) {
+        //dd($lead->json());
+        /*if ($lead->status() === 401) {
             $this->getNewAccessToken();
 
             $lead = Http::withHeaders([
@@ -338,7 +339,7 @@ class MoySkladController extends Controller
             ])->get('https://avtosvetkzinboxru373.amocrm.ru/api/v4/leads/' . $id, [
                 'with' => 'contacts'
             ]);
-        }
+        }*/
 
         $lead = $lead->json();
         //dd($lead);
