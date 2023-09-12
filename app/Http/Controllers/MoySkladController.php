@@ -412,6 +412,77 @@ class MoySkladController extends Controller
         if ($agent) {
             $attributes = [];
             $store = null;
+            $responsible = null;
+
+            //Korme
+            if ($lead['responsible_user_id'] === 9990914) {
+                //Онищук
+                $responsible = [
+                    'meta' => [
+                        'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/employee/f828c207-a877-11ed-0a80-095d0011cb58',
+                        "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/entity/employee/metadata",
+                        "type" => "employee",
+                        "mediaType" => "application/json",
+                        "uuidHref" => "https://online.moysklad.ru/app/#employee/edit?id=f828c207-a877-11ed-0a80-095d0011cb58"
+                    ]
+                ];
+            }
+
+            //Tauelsizdik
+            if ($lead['responsible_user_id'] === 9990926) {
+                //Корчевой
+                $responsible = [
+                    'meta' => [
+                        'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/employee/90238af2-2fa6-11ee-0a80-0b350036e8ea',
+                        "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/entity/employee/metadata",
+                        "type" => "employee",
+                        "mediaType" => "application/json",
+                        "uuidHref" => "https://online.moysklad.ru/app/#employee/edit?id=90238af2-2fa6-11ee-0a80-0b350036e8ea"
+                    ]
+                ];
+            }
+
+            //Vlasenko M V
+            if ($lead['responsible_user_id'] === 9934174) {
+                //Vlasenko M V
+                $responsible = [
+                    'meta' => [
+                        'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/employee/1f6007c8-31a6-11ed-0a80-09cb0037328c',
+                        "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/entity/employee/metadata",
+                        "type" => "employee",
+                        "mediaType" => "application/json",
+                        "uuidHref" => "https://online.moysklad.ru/app/#employee/edit?id=1f6007c8-31a6-11ed-0a80-09cb0037328c"
+                    ]
+                ];
+            }
+
+            //Mikhasev
+            if ($lead['responsible_user_id'] === 9990930) {
+                //Mikhasev
+                $responsible = [
+                    'meta' => [
+                        'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/employee/fbb5c198-582d-11ed-0a80-0c910022d680',
+                        "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/entity/employee/metadata",
+                        "type" => "employee",
+                        "mediaType" => "application/json",
+                        "uuidHref" => "https://online.moysklad.ru/app/#employee/edit?id=fbb5c198-582d-11ed-0a80-0c910022d680"
+                    ]
+                ];
+            }
+
+            //Danila
+            if ($lead['responsible_user_id'] === 9990934) {
+                //Mikhasev
+                $responsible = [
+                    'meta' => [
+                        'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/employee/c4ff92dd-531e-11ed-0a80-0703002a5a61',
+                        "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/entity/employee/metadata",
+                        "type" => "employee",
+                        "mediaType" => "application/json",
+                        "uuidHref" => "https://online.moysklad.ru/app/#employee/edit?id=c4ff92dd-531e-11ed-0a80-0703002a5a61"
+                    ]
+                ];
+            }
 
             foreach ($lead['custom_fields_values'] as $field) {
                 //Sklad
@@ -492,33 +563,6 @@ class MoySkladController extends Controller
                         }
                     }
                 }
-
-                /*//Setup test
-                if ($field['field_id'] === 2609149) {
-                    $found_source = Http::withHeaders([
-                        'Authorization' => 'Bearer ' . $access_token,
-                        'Content-Type' => 'application/json'
-                    ])->get('https://online.moysklad.ru/api/remap/1.2/entity/customentity/8447381f-8cd1-11ed-0a80-014000e2ec30', [
-                        'filter' => 'name=' . $field['values'][0]['value']
-                    ]);
-
-                    if ($found_source->status() === 200) {
-                        $found_source = $found_source->json();
-
-                        if (array_key_exists('rows', $found_source) && count($found_source['rows']) > 0) {
-                            $attributes[] = [
-                                'meta' => [
-                                    'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/customerorder/metadata/attributes/0b1fbffe-3a10-11ee-0a80-08b000260921',
-                                    'type' => 'attributemetadata',
-                                    'mediaType' => 'application/json'
-                                ],
-                                'value' => [
-                                    'meta' => $found_source['rows'][0]['meta']
-                                ]
-                            ];
-                        }
-                    }
-                }*/
             }
 
             $new_order = Http::withHeaders([
@@ -536,14 +580,44 @@ class MoySkladController extends Controller
                 'agent' => [
                     'meta' => $agent
                 ],
+                'owner' => $responsible,
                 'store' => $store,
-                'attributes' => $attributes
+                'attributes' => $attributes,
+                'state' => [
+                    "meta" => [
+                        "href" => "https://online.moysklad.ru/api/remap/1.2/entity/customerorder/metadata/states/1f84df83-31a6-11ed-0a80-09cb003732f8",
+                        "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/entity/customerorder/metadata",
+                        "type" => "state",
+                        "mediaType" => "application/json"
+                    ]
+                ]
             ]);
 
             if ($new_order->status() === 200 || $new_order->status() === 201) {
                 $new_order = $new_order->json();
                 Log::alert('Customer order created ' . $new_order['id']);
-                return response()->json('Agent trouble');
+
+                $update_lead = Http::withHeaders([
+                    'Authorization' => 'Bearer ' . env('AMOCRM_ACCESS_TOKEN')
+                ])->patch('https://avtosvetkzinboxru373.amocrm.ru/api/v4/leads/' . $id, [
+                    'custom_fields_values' => [
+                        [
+                            "field_id" => 2634140,
+                            "values" => [
+                                [
+                                    "value" => "https://online.moysklad.ru/app/#customerorder/edit?id=" . $new_order['id']
+                                ]
+                            ]
+                        ]
+                    ]
+                ]);
+
+                if ($update_lead->status() === 200 || $update_lead->status() === 201) {
+                    Log::alert('Update lead link ' . $new_order['id']);
+                }
+
+                return response()->json('Customer order created');
+
             }
         }else {
             Log::alert('Agent trouble ' . $lead['id']);
