@@ -207,7 +207,7 @@ class MoySkladController extends Controller
                                         'mediaType' => 'application/json'
                                     ]
                                 ],
-                                'description' => $last_order['description'],
+                                'description' => array_key_exists('description', $last_order) ? $last_order['description'] : null,
                                 'attributes' => $attributes,
                                 'agent' => $agent,
                                 'owner' => $owner,
