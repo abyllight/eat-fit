@@ -371,7 +371,7 @@ class OrderController extends Controller
                     case '321281': //Логистика
                         $fields['logistic'] = $field["values"][0]["value"];
                         break;
-                    case '885893': //Комм оплата
+                    case '888763': //Комм оплата
                         $fields['pay_comment'] = $field["values"][0]["value"];
                         break;
                     /*case '321139': //Факт оплата
