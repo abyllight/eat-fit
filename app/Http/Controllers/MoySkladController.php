@@ -365,6 +365,7 @@ class MoySkladController extends Controller
         }
 
         $lead = $lead->json();
+        Log::alert('Lead ' . $lead['id']);
 
         $phone = null;
         $contact_name = null;
