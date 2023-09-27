@@ -353,7 +353,7 @@ class MoySkladController extends Controller
         ])->get('https://avtosvetkzinboxru373.amocrm.ru/api/v4/leads/' . $id, [
             'with' => 'contacts'
         ]);
-        //dd($lead->json());
+
         if ($lead->status() === 401) {
             $this->getNewAccessToken();
 
@@ -365,7 +365,7 @@ class MoySkladController extends Controller
         }
 
         $lead = $lead->json();
-        //dd($lead);
+
         $phone = null;
         $contact_name = null;
 
@@ -488,75 +488,78 @@ class MoySkladController extends Controller
             $store = null;
             $responsible = null;
 
-            //Korme
-            if ($lead['responsible_user_id'] === 9990914) {
-                //Онищук
-                $responsible = [
-                    'meta' => [
-                        'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/employee/f828c207-a877-11ed-0a80-095d0011cb58',
-                        "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/entity/employee/metadata",
-                        "type" => "employee",
-                        "mediaType" => "application/json",
-                        "uuidHref" => "https://online.moysklad.ru/app/#employee/edit?id=f828c207-a877-11ed-0a80-095d0011cb58"
-                    ]
-                ];
-            }
+            if (array_key_exists('responsible_user_id', $lead)) {
+                //Korme
+                if ($lead['responsible_user_id'] === 9990914) {
+                    //Онищук
+                    $responsible = [
+                        'meta' => [
+                            'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/employee/f828c207-a877-11ed-0a80-095d0011cb58',
+                            "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/entity/employee/metadata",
+                            "type" => "employee",
+                            "mediaType" => "application/json",
+                            "uuidHref" => "https://online.moysklad.ru/app/#employee/edit?id=f828c207-a877-11ed-0a80-095d0011cb58"
+                        ]
+                    ];
+                }
 
-            //Tauelsizdik
-            if ($lead['responsible_user_id'] === 9990926) {
-                //Корчевой
-                $responsible = [
-                    'meta' => [
-                        'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/employee/90238af2-2fa6-11ee-0a80-0b350036e8ea',
-                        "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/entity/employee/metadata",
-                        "type" => "employee",
-                        "mediaType" => "application/json",
-                        "uuidHref" => "https://online.moysklad.ru/app/#employee/edit?id=90238af2-2fa6-11ee-0a80-0b350036e8ea"
-                    ]
-                ];
-            }
+                //Tauelsizdik
+                if ($lead['responsible_user_id'] === 9990926) {
+                    //Корчевой
+                    $responsible = [
+                        'meta' => [
+                            'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/employee/90238af2-2fa6-11ee-0a80-0b350036e8ea',
+                            "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/entity/employee/metadata",
+                            "type" => "employee",
+                            "mediaType" => "application/json",
+                            "uuidHref" => "https://online.moysklad.ru/app/#employee/edit?id=90238af2-2fa6-11ee-0a80-0b350036e8ea"
+                        ]
+                    ];
+                }
 
-            //Vlasenko M V
-            if ($lead['responsible_user_id'] === 9934174) {
                 //Vlasenko M V
-                $responsible = [
-                    'meta' => [
-                        'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/employee/1f6007c8-31a6-11ed-0a80-09cb0037328c',
-                        "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/entity/employee/metadata",
-                        "type" => "employee",
-                        "mediaType" => "application/json",
-                        "uuidHref" => "https://online.moysklad.ru/app/#employee/edit?id=1f6007c8-31a6-11ed-0a80-09cb0037328c"
-                    ]
-                ];
+                if ($lead['responsible_user_id'] === 9934174) {
+                    //Vlasenko M V
+                    $responsible = [
+                        'meta' => [
+                            'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/employee/1f6007c8-31a6-11ed-0a80-09cb0037328c',
+                            "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/entity/employee/metadata",
+                            "type" => "employee",
+                            "mediaType" => "application/json",
+                            "uuidHref" => "https://online.moysklad.ru/app/#employee/edit?id=1f6007c8-31a6-11ed-0a80-09cb0037328c"
+                        ]
+                    ];
+                }
+
+                //Mikhasev
+                if ($lead['responsible_user_id'] === 9990930) {
+                    //Mikhasev
+                    $responsible = [
+                        'meta' => [
+                            'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/employee/fbb5c198-582d-11ed-0a80-0c910022d680',
+                            "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/entity/employee/metadata",
+                            "type" => "employee",
+                            "mediaType" => "application/json",
+                            "uuidHref" => "https://online.moysklad.ru/app/#employee/edit?id=fbb5c198-582d-11ed-0a80-0c910022d680"
+                        ]
+                    ];
+                }
+
+                //Danila
+                if ($lead['responsible_user_id'] === 9990934) {
+                    //Mikhasev
+                    $responsible = [
+                        'meta' => [
+                            'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/employee/c4ff92dd-531e-11ed-0a80-0703002a5a61',
+                            "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/entity/employee/metadata",
+                            "type" => "employee",
+                            "mediaType" => "application/json",
+                            "uuidHref" => "https://online.moysklad.ru/app/#employee/edit?id=c4ff92dd-531e-11ed-0a80-0703002a5a61"
+                        ]
+                    ];
+                }
             }
 
-            //Mikhasev
-            if ($lead['responsible_user_id'] === 9990930) {
-                //Mikhasev
-                $responsible = [
-                    'meta' => [
-                        'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/employee/fbb5c198-582d-11ed-0a80-0c910022d680',
-                        "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/entity/employee/metadata",
-                        "type" => "employee",
-                        "mediaType" => "application/json",
-                        "uuidHref" => "https://online.moysklad.ru/app/#employee/edit?id=fbb5c198-582d-11ed-0a80-0c910022d680"
-                    ]
-                ];
-            }
-
-            //Danila
-            if ($lead['responsible_user_id'] === 9990934) {
-                //Mikhasev
-                $responsible = [
-                    'meta' => [
-                        'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/employee/c4ff92dd-531e-11ed-0a80-0703002a5a61',
-                        "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/entity/employee/metadata",
-                        "type" => "employee",
-                        "mediaType" => "application/json",
-                        "uuidHref" => "https://online.moysklad.ru/app/#employee/edit?id=c4ff92dd-531e-11ed-0a80-0703002a5a61"
-                    ]
-                ];
-            }
 
             foreach ($lead['custom_fields_values'] as $field) {
                 //Sklad
