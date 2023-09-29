@@ -90,7 +90,7 @@ class ManagementController extends Controller
 
                 if($day >= $course) {
                     $lead['status_id'] = 16567015; // Обратная связь
-                }else if(($day === 2 && $course > 2) || $day === 7 || $day === 12 || $day === 18){
+                }else if(($day === 1 && $course > 2) || $day === 7 || $day === 12 || $day === 18){
                     $day++;
                     $lead->addCustomField(328089, $day);
 
@@ -98,7 +98,7 @@ class ManagementController extends Controller
                     $task['element_id'] = $value['id'];
                     $task['element_type'] = 2;
                     $task['task_type'] = 1;
-                    $task['text'] = 'Получить обратную связь от клиента ПРОВЕРКА ОТ БЭКА';
+                    $task['text'] = 'Получить обратную связь от клиента';
                     $task['complete_till'] = '23:59';
                     $task['responsible_user_id'] = $value['responsible_user_id'];
                     $task->apiAdd();
@@ -454,14 +454,16 @@ class ManagementController extends Controller
                     $lead->addCustomField(321139, $fact + $amount); //Fact
                     $lead->addCustomField(869811, null); //Tip oplaty
                     $lead->addCustomField(466107, false); //Check oplaty
-                    $lead->addCustomField(888763, ''); //Comment oplaty
+                    $lead->addCustomField(888763, ''); //Comment oplaty1
+                    $lead->addCustomField(889029, ''); //Comment oplaty
 
                     $lead->apiUpdate($report->order->amo_id, 'now');
                 }
 
                 if ($report->order->pay_comment && stripos($report->order->pay_comment, 'ланч') !== false) {
                     $lead = $amo->lead;
-                    $lead->addCustomField(888763, ''); //Comment oplaty
+                    $lead->addCustomField(888763, ''); //Comment oplaty1
+                    $lead->addCustomField(889029, ''); //Comment oplaty
                     $lead->apiUpdate($report->order->amo_id, 'now');
                 }
             }

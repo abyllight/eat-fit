@@ -485,6 +485,30 @@ class MoySkladController extends Controller
                         ]
                     ]
                 ],
+                /*[//visit date
+                    'meta' => [
+                        'href' => "https://online.moysklad.ru/api/remap/1.2/entity/customerorder/metadata/attributes/d7d619f5-293b-11ee-0a80-02b70020a6ee",
+                        "type" => "attributemetadata",
+                        "mediaType" => "application/json"
+                    ],
+                    'value' => ''
+                ],*/
+                [//source
+                    'meta' => [
+                        'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/customerorder/metadata/attributes/872a58d7-9980-11ed-0a80-0c3c001c7e62',
+                        'type' => 'attributemetadata',
+                        'mediaType' => 'application/json'
+                    ],
+                    'value' => [
+                        'meta' => [
+                            'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/customentity/8447381f-8cd1-11ed-0a80-014000e2ec30/df10c6db-8cd5-11ed-0a80-0ffb00dcc0b3',
+                            "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/context/companysettings/metadata/customEntities/8447381f-8cd1-11ed-0a80-014000e2ec30",
+                            "type" => "customentity",
+                            "mediaType" => "application/json",
+                            "uuidHref" => "https://online.moysklad.ru/app/#custom_8447381f-8cd1-11ed-0a80-014000e2ec30/edit?id=df10c6db-8cd5-11ed-0a80-0ffb00dcc0b3"
+                        ]
+                    ]
+                ]
             ];
             $store = null;
             $responsible = null;
@@ -628,7 +652,7 @@ class MoySkladController extends Controller
                         $found_source = $found_source->json();
 
                         if (array_key_exists('rows', $found_source) && count($found_source['rows']) > 0) {
-                            $attributes[] = [
+                            $attributes[3] = [
                                 'meta' => [
                                     'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/customerorder/metadata/attributes/872a58d7-9980-11ed-0a80-0c3c001c7e62',
                                     'type' => 'attributemetadata',
@@ -668,6 +692,12 @@ class MoySkladController extends Controller
                         }
                     }
                 }
+
+                /*//Visit date
+                if ($field['field_id'] === 2469445) {
+                    $date = $field['values'][0]['value'];
+                    $attributes[3]['value'] = Carbon::createFromTimestamp($date)->toDateTimeString();
+                }*/
             }
 
             $new_order = Http::withHeaders([
