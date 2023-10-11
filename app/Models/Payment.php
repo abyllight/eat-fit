@@ -19,9 +19,6 @@ class Payment extends Model
             'name' => 'Наличный расчет'
         ],
         [
-            'name' => 'POS-терминал КС'
-        ],
-        [
             'name' => 'Kaspi POS'
         ],
         [
