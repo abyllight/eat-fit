@@ -67,8 +67,7 @@ __webpack_require__.r(__webpack_exports__);
     isActive: function isActive() {
       var d = new Date();
       var hour = d.getHours();
-      var minute = d.getMinutes();
-      return hour >= 17 && minute >= 0 && hour <= 18 && minute <= 40;
+      return hour >= 17 && hour <= 18;
     }
   },
   methods: {

@@ -14,6 +14,7 @@ class AdminController extends Controller
 {
     public function webhook(): JsonResponse
     {
+        dd('no');
         try {
             $amo = new Client(env('AMO_SUBDOMAIN'), env('AMO_LOGIN'), env('AMO_HASH'));
 

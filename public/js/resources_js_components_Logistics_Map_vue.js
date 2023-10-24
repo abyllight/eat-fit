@@ -192,7 +192,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     var _this = this;
 
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-      var cities, city_id, self;
+      var cities, city_id, myCircle, myGeoObject, self;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -217,6 +217,65 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 center: cities[city_id - 1].coords,
                 zoom: 11
               });
+              myCircle = new ymaps.Circle([// Координаты центра круга.
+              [51.059496, 71.426799], // Радиус круга в метрах.
+              650], {
+                // Описываем свойства круга.
+                // Содержимое балуна.
+                balloonContent: "Family village",
+                // Содержимое хинта.
+                hintContent: "Family village"
+              }, {
+                // Задаем опции круга.
+                // Включаем возможность перетаскивания круга.
+                draggable: false,
+                // Цвет заливки.
+                // Последний байт (77) определяет прозрачность.
+                // Прозрачность заливки также можно задать используя опцию "fillOpacity".
+                fillColor: "#00FF00",
+                // Цвет обводки.
+                strokeColor: "#0000FF",
+                // Общая прозрачность (как для заливки, так и для обводки).
+                opacity: 0.5,
+                // Ширина обводки.
+                strokeWidth: 5,
+                // Стиль обводки.
+                strokeStyle: 'shortdash'
+              });
+              myGeoObject = new ymaps.GeoObject({
+                // Описываем геометрию геообъекта.
+                geometry: {
+                  // Тип геометрии - "Многоугольник".
+                  type: "Polygon",
+                  // Указываем координаты вершин многоугольника.
+                  coordinates: [// Координаты вершин внешнего контура.
+                  [[51.183672, 71.394630], [51.177513, 71.389668], [51.170547, 71.368844], [51.126510, 71.359811], [51.084045, 71.389438], [51.074404, 71.421354], [51.097147, 71.468311], [51.107770, 71.497896], [51.130314, 71.501945], [51.130314, 71.501945], [51.186674, 71.421104]]],
+                  // Задаем правило заливки внутренних контуров по алгоритму "nonZero".
+                  fillRule: "nonZero"
+                },
+                // Описываем свойства геообъекта.
+                properties: {
+                  // Содержимое балуна.
+                  balloonContent: "Многоугольник"
+                }
+              }, {
+                // Описываем опции геообъекта.
+                // Цвет заливки.
+                fillColor: '#00FF00',
+                // Цвет обводки.
+                strokeColor: '#0000FF',
+                // Общая прозрачность (как для заливки, так и для обводки).
+                opacity: 0.5,
+                // Ширина обводки.
+                strokeWidth: 5,
+                // Стиль обводки.
+                strokeStyle: 'shortdash'
+              }); // Добавляем многоугольник на карту.
+
+              _this.map.geoObjects.add(myGeoObject);
+
+              _this.map.geoObjects.add(myCircle);
+
               _this.clusterer = new ymaps.Clusterer({
                 clusterDisableClickZoom: true,
                 groupByCoordinates: true,
@@ -266,7 +325,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 }
               });
 
-            case 11:
+            case 15:
             case "end":
               return _context.stop();
           }
