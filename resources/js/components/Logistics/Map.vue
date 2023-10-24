@@ -202,12 +202,6 @@ export default {
             zoom: 11
         })
 
-        let searchControl = new ymaps.control.SearchControl({
-            options: {
-                provider: 'yandex#search'
-            }
-        });
-
         let myCircle = new ymaps.Circle([
             // Координаты центра круга.
             [51.059496, 71.426799],
@@ -284,7 +278,6 @@ export default {
         // Добавляем многоугольник на карту.
         this.map.geoObjects.add(myGeoObject);
         this.map.geoObjects.add(myCircle);
-        this.map.controls.add(searchControl)
 
         this.clusterer = new ymaps.Clusterer({
             clusterDisableClickZoom: true,
