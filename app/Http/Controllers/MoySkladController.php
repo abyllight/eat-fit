@@ -92,7 +92,7 @@ class MoySkladController extends Controller
                                         ]
                                     ]
                                 ],
-                                [//sale
+                                /*[//sale
                                     'meta' => [
                                         'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/retaildemand/metadata/attributes/a712b5ef-e0d4-11ed-0a80-0f3f0015d063',
                                         'type' => 'attributemetadata',
@@ -107,7 +107,7 @@ class MoySkladController extends Controller
                                             "uuidHref" => "https://online.moysklad.ru/app/#employee/edit?id=1f6007c8-31a6-11ed-0a80-09cb0037328c"
                                         ]
                                     ]
-                                ],
+                                ],*/
                                 [//setup
                                     'meta' => [
                                         'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/retaildemand/metadata/attributes/54ecd644-215f-11ee-0a80-10fe001e6aed',
@@ -140,18 +140,18 @@ class MoySkladController extends Controller
                                         $attributes[0]['value']['meta']['uuidHref'] = $attribute['value']['meta']['uuidHref'];
                                     }
 
-                                    //sale
+                                    /*//sale
                                     if ($attribute['id'] === '164fb8bb-e0d4-11ed-0a80-04cf0014dd06') {
                                         $attributes[1]['value']['meta']['href'] = $attribute['value']['meta']['href'];
                                         $attributes[1]['value']['meta']['metadataHref'] = $attribute['value']['meta']['metadataHref'];
                                         $attributes[1]['value']['meta']['uuidHref'] = $attribute['value']['meta']['uuidHref'];
-                                    }
+                                    }*/
 
                                     //setup
                                     if ($attribute['id'] === '833ff40e-df58-11ed-0a80-0f3a0009403a') {
-                                        $attributes[2]['value']['meta']['href'] = $attribute['value']['meta']['href'];
-                                        $attributes[2]['value']['meta']['metadataHref'] = $attribute['value']['meta']['metadataHref'];
-                                        $attributes[2]['value']['meta']['uuidHref'] = $attribute['value']['meta']['uuidHref'];
+                                        $attributes[1]['value']['meta']['href'] = $attribute['value']['meta']['href'];
+                                        $attributes[1]['value']['meta']['metadataHref'] = $attribute['value']['meta']['metadataHref'];
+                                        $attributes[1]['value']['meta']['uuidHref'] = $attribute['value']['meta']['uuidHref'];
                                     }
 
                                     //Payment method
@@ -228,7 +228,7 @@ class MoySkladController extends Controller
                             }
 
                             $create_retail_demand = $create_retail_demand->json();
-                            Log::alert('Retail demand ERROR ' . $create_retail_demand['errors'][0]['error'] . ' ' . $create_retail_demand['errors'][0]['code']);
+                            Log::alert('Retail demand ERROR ' . $last_order['id'] . $create_retail_demand['errors'][0]['error'] . ' ' . $create_retail_demand['errors'][0]['code']);
                             return response()->json('Retail demand error');
                         }
 

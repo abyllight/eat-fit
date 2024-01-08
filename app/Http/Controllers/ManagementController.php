@@ -188,59 +188,62 @@ class ManagementController extends Controller
 
     public function shiftOtkat(int $status, int $type): JsonResponse
     {
+        dd('safd');
         try{
             $amo = new Client(env('AMO_SUBDOMAIN'), env('AMO_LOGIN'), env('AMO_HASH'));
+            $ids = [];
+            foreach ($ids as $id) {
+                $items = $amo->lead->apiList([
+                    'limit_rows' => 500,
+                    'id' => $id,
+                ]);
+                //dd($items);
+                foreach ($items as $item){
+                    $budget = (int)$item['price'];
+                    $otrabotano = null;
 
-            $items = $amo->lead->apiList([
-                'limit_rows' => 500,
-                'id' => 31733463,
-            ]);
-            dd($items);
-            foreach ($items as $item){
-                $budget = (int)$item['price'];
-                $otrabotano = null;
+                    //$order = Order::where('amo_id', $item['id'])->orderBy('created_at','desc')->first();
 
-                $order = Order::where('amo_id', $item['id'])->orderBy('created_at','desc')->first();
-
-                foreach ($item['custom_fields'] as $field){
-                    if ($field['id'] === 495367){ //Отработано
-                        $otrabotano = (int)$field["values"][0]["value"];
+                    foreach ($item['custom_fields'] as $field){
+                        if ($field['id'] === 495367){ //Отработано
+                            $otrabotano = (int)$field["values"][0]["value"];
+                        }
                     }
+
+                    $lead = $amo->lead;
+
+                    if ($otrabotano != null){
+                        $otrabotano -= $budget;
+
+                        $lead->addCustomField(495367,
+                            $otrabotano
+                        );
+                    }else{
+                        $lead->addCustomField(495367,
+                            $budget
+                        );
+                    }
+
+                    /*if($order && $order->courier) {
+                        $lead->addCustomField(489499,
+                            $order->courier->phone
+                        );
+                        $lead->addCustomField(489497,
+                            $order->courier->name
+                        );
+                    }*/
+
+                    $lead->apiUpdate((int)$item['id'], 'now');
                 }
-
-                $lead = $amo->lead;
-
-                if ($otrabotano != null){
-                    $otrabotano -= $budget;
-
-                    $lead->addCustomField(495367,
-                        $otrabotano
-                    );
-                }else{
-                    $lead->addCustomField(495367,
-                        $budget
-                    );
-                }
-
-                if($order && $order->courier) {
-                    $lead->addCustomField(489499,
-                        $order->courier->phone
-                    );
-                    $lead->addCustomField(489497,
-                        $order->courier->name
-                    );
-                }
-
-                $lead->apiUpdate((int)$item['id'], 'now');
             }
 
-            $management = Management::whereDate('created_at', Carbon::now()->toDateString())->where('type', $type)->first();
+            /*$management = Management::whereDate('created_at', Carbon::now()->toDateString())->where('type', $type)->first();
 
             if(!$management){
                 $m = new Management();
                 $m->type = $type;
                 $m->save();
-            }
+            }*/
 
             return response()->json([
                 'status' => true,
@@ -252,6 +255,22 @@ class ManagementController extends Controller
                 'msg' => $e->getCode() . '. ' . $e->getMessage()
             ]);
         }
+    }
+
+    public function shiftTrialOtkat(): JsonResponse
+    {
+        $status = Management::TRIAL_STATUS;
+        $type = Management::TRIAL_TYPE;
+
+        return $this->shiftOtkat($status, $type);
+    }
+
+    public function shiftWorkOtkat(): JsonResponse
+    {
+        $status = Management::WORK_STATUS;
+        $type = Management::WORK_TYPE;
+
+        return $this->shiftOtkat($status, $type);
     }
     public function shift(int $status, int $type): JsonResponse
     {
