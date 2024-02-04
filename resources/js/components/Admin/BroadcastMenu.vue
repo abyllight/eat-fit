@@ -53,7 +53,7 @@ export default {
         isActive() {
             const d = new Date()
             let hour = d.getHours()
-            return hour >= 17 && hour <= 18
+            return hour >= 17 && hour <= 20
         }
     },
     methods: {

@@ -133,6 +133,7 @@ class Select extends Model
             foreach ($group as $item) {
                 if ($item->order) {
                     if (!$item->order->is_active) {
+                        //comment is active
                         $item->is_active = false;
                         if ($item->s_num) {
                             $item->s_num = null;

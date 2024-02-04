@@ -209,7 +209,7 @@ class Order extends Model
             if ($this->type !== Order::EAT_FIT_SELECT && $this->type !== Order::EAT_FIT_SELECT_MAX) {
                 $max = Order::where('is_active', true)
                     ->where('city_id', City::ASTANA)->max('s_num');
-
+//change to $this->>city_id
                 $this->s_num = $max + 1;
                 $this->save();
             }

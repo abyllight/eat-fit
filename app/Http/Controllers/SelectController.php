@@ -10,6 +10,7 @@ use App\Models\Ingredient;
 use App\Models\Order;
 use App\Models\Ration;
 use App\Models\Select;
+use App\Models\SelectIngredient;
 use App\Models\SelectWish;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -305,6 +306,11 @@ class SelectController extends Controller
             ]);
         }
 
+        /*$si = SelectIngredient::where('select_id', $select->id)->where('ingredient_id', $request->ingredient_id)->first();
+        $si->is_visible = true;
+        $si->save();
+
+        //$select->ingredients()->attach($request->ingredient_id);*/
         $select->ingredients()->attach($request->ingredient_id);
 
         if ($select->status === Select::WITHOUT){
