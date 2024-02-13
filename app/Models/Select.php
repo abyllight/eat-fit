@@ -127,11 +127,11 @@ class Select extends Model
         $duty_cuisine = Cuisine::where('is_on_duty', true)->first();
 
         foreach ($groups as $group){
-
             $ids = [];
+
             //beautify
             foreach ($group as $item) {
-                if ($item->order) {
+                /*if ($item->order) {
                     if (!$item->order->is_active) {
                         //comment is active
                         $item->is_active = false;
@@ -140,7 +140,7 @@ class Select extends Model
                             $item->save();
                         }
                     }
-                }
+                }*/
 
                 $code = null;
 
