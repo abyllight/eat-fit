@@ -15,7 +15,11 @@ class MoySkladController extends Controller
         $login = env('MOYSKLAD_LOGIN');
         $pass = env('MOYSKLAD_PASS');
 
-        $req = Http::withBasicAuth($login, $pass)->post('https://online.moysklad.ru/api/remap/1.2/security/token');
+        $req = Http::withBasicAuth($login, $pass)
+            ->withHeaders([
+                'Accept-Encoding' => 'gzip'
+            ])->post('https://api.moysklad.ru/api/remap/1.2/security/token');
+
         return $req->json()['access_token'];
     }
 
@@ -37,8 +41,9 @@ class MoySkladController extends Controller
 
             if ($request->query('id')) {
                 $last_order = Http::withHeaders([
-                    'Authorization' => 'Bearer ' . $access_token
-                ])->get('https://online.moysklad.ru/api/remap/1.2/entity/customerorder/' . $request->query('id'));
+                    'Authorization' => 'Bearer ' . $access_token,
+                    'Accept-Encoding' => 'gzip'
+                ])->get('https://api.moysklad.ru/api/remap/1.2/entity/customerorder/' . $request->query('id'));
 
                 $last_order = $last_order->json();
             }
@@ -48,8 +53,9 @@ class MoySkladController extends Controller
 
                 if ($store) {
                     $retail_store = Http::withHeaders([
-                        'Authorization' => 'Bearer ' . $access_token
-                    ])->get('https://online.moysklad.ru/api/remap/1.2/entity/retailstore', [
+                        'Authorization' => 'Bearer ' . $access_token,
+                        'Accept-Encoding' => 'gzip'
+                    ])->get('https://api.moysklad.ru/api/remap/1.2/entity/retailstore', [
                         'limit' => 1,
                         'filter' => 'store=' . $store
                     ]);
@@ -59,8 +65,9 @@ class MoySkladController extends Controller
                         $retail_store = $retail_store['rows'][0];
 
                         $retail_shift = Http::withHeaders([
-                            'Authorization' => 'Bearer ' . $access_token
-                        ])->get('https://online.moysklad.ru/api/remap/1.2/entity/retailshift', [
+                            'Authorization' => 'Bearer ' . $access_token,
+                            'Accept-Encoding' => 'gzip'
+                        ])->get('https://api.moysklad.ru/api/remap/1.2/entity/retailshift', [
                             'order' => 'moment,desc',
                             'limit' => 1,
                             'filter' => 'retailStore=' . $retail_store['meta']['href']
@@ -78,17 +85,17 @@ class MoySkladController extends Controller
                             $attributes = [
                                 [//source
                                     'meta' => [
-                                        'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/retaildemand/metadata/attributes/e8ce5c74-8cd4-11ed-0a80-0ec600de235f',
+                                        'href' => 'https://api.moysklad.ru/api/remap/1.2/entity/retaildemand/metadata/attributes/e8ce5c74-8cd4-11ed-0a80-0ec600de235f',
                                         'type' => 'attributemetadata',
                                         'mediaType' => 'application/json'
                                     ],
                                     'value' => [
                                         'meta' => [
-                                            'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/customentity/8447381f-8cd1-11ed-0a80-014000e2ec30/df10c6db-8cd5-11ed-0a80-0ffb00dcc0b3',
-                                            "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/context/companysettings/metadata/customEntities/8447381f-8cd1-11ed-0a80-014000e2ec30",
+                                            'href' => 'https://api.moysklad.ru/api/remap/1.2/entity/customentity/8447381f-8cd1-11ed-0a80-014000e2ec30/df10c6db-8cd5-11ed-0a80-0ffb00dcc0b3',
+                                            "metadataHref" => "https://api.moysklad.ru/api/remap/1.2/context/companysettings/metadata/customEntities/8447381f-8cd1-11ed-0a80-014000e2ec30",
                                             "type" => "customentity",
                                             "mediaType" => "application/json",
-                                            "uuidHref" => "https://online.moysklad.ru/app/#custom_8447381f-8cd1-11ed-0a80-014000e2ec30/edit?id=df10c6db-8cd5-11ed-0a80-0ffb00dcc0b3"
+                                            "uuidHref" => "https://api.moysklad.ru/app/#custom_8447381f-8cd1-11ed-0a80-014000e2ec30/edit?id=df10c6db-8cd5-11ed-0a80-0ffb00dcc0b3"
                                         ]
                                     ]
                                 ],
@@ -110,17 +117,17 @@ class MoySkladController extends Controller
                                 ],*/
                                 [//setup
                                     'meta' => [
-                                        'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/retaildemand/metadata/attributes/54ecd644-215f-11ee-0a80-10fe001e6aed',
+                                        'href' => 'https://api.moysklad.ru/api/remap/1.2/entity/retaildemand/metadata/attributes/54ecd644-215f-11ee-0a80-10fe001e6aed',
                                         'type' => 'attributemetadata',
                                         'mediaType' => 'application/json'
                                     ],
                                     'value' => [
                                         'meta' => [
-                                            'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/employee/1f6007c8-31a6-11ed-0a80-09cb0037328c',
-                                            "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/entity/employee/metadata",
+                                            'href' => 'https://api.moysklad.ru/api/remap/1.2/entity/employee/1f6007c8-31a6-11ed-0a80-09cb0037328c',
+                                            "metadataHref" => "https://api.moysklad.ru/api/remap/1.2/entity/employee/metadata",
                                             "type" => "employee",
                                             "mediaType" => "application/json",
-                                            "uuidHref" => "https://online.moysklad.ru/app/#employee/edit?id=1f6007c8-31a6-11ed-0a80-09cb0037328c"
+                                            "uuidHref" => "https://api.moysklad.ru/app/#employee/edit?id=1f6007c8-31a6-11ed-0a80-09cb0037328c"
                                         ]
                                     ]
                                 ],
@@ -175,7 +182,8 @@ class MoySkladController extends Controller
 
                             if (array_key_exists('positions', $last_order)) {
                                 $positions = Http::withHeaders([
-                                    'Authorization' => 'Bearer ' . $access_token
+                                    'Authorization' => 'Bearer ' . $access_token,
+                                    'Accept-Encoding' => 'gzip'
                                 ])->get($last_order['meta']['href'] . '/positions');
                                 $positions = $positions->json();
 
@@ -198,8 +206,9 @@ class MoySkladController extends Controller
 
                             $create_retail_demand = Http::withHeaders([
                                 'Authorization' => 'Bearer ' . $access_token,
-                                'Content-Type' => 'application/json'
-                            ])->post('https://online.moysklad.ru/api/remap/1.2/entity/retaildemand', [
+                                'Content-Type' => 'application/json',
+                                'Accept-Encoding' => 'gzip'
+                            ])->post('https://api.moysklad.ru/api/remap/1.2/entity/retaildemand', [
                                 'retailShift' => [
                                     'meta' => [
                                         'href' => $retail_shift['meta']['href'],
@@ -254,8 +263,9 @@ class MoySkladController extends Controller
 
         if ($request->query('id')) {
             $last_order = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $access_token
-            ])->get('https://online.moysklad.ru/api/remap/1.2/entity/customerorder/' . $request->query('id'));
+                'Authorization' => 'Bearer ' . $access_token,
+                'Accept-Encoding' => 'gzip'
+            ])->get('https://api.moysklad.ru/api/remap/1.2/entity/customerorder/' . $request->query('id'));
 
             $last_order = $last_order->json();
         }
@@ -270,8 +280,9 @@ class MoySkladController extends Controller
                         $full_name = explode(' ',$full_name);
 
                         $employee = Http::withHeaders([
-                            'Authorization' => 'Bearer ' . $access_token
-                        ])->get('https://online.moysklad.ru/api/remap/1.2/entity/employee', [
+                            'Authorization' => 'Bearer ' . $access_token,
+                            'Accept-Encoding' => 'gzip'
+                        ])->get('https://api.moysklad.ru/api/remap/1.2/entity/employee', [
                             'limit' => 1,
                             'filter' => 'firstName=' . $full_name[0]. ';lastName=' . $full_name[1]
                         ]);
@@ -282,8 +293,9 @@ class MoySkladController extends Controller
                             $employee = $employee['rows'][0];
 
                             Http::withHeaders([
-                                'Authorization' => 'Bearer ' . $access_token
-                            ])->put('https://online.moysklad.ru/api/remap/1.2/entity/customerorder/2cb93285-426b-11ee-0a80-13bd0021bd3c', [
+                                'Authorization' => 'Bearer ' . $access_token,
+                                'Accept-Encoding' => 'gzip'
+                            ])->put('https://api.moysklad.ru/api/remap/1.2/entity/customerorder/2cb93285-426b-11ee-0a80-13bd0021bd3c', [
                                 'owner' => [
                                     'meta' => $employee['meta']
                                 ]
@@ -402,8 +414,9 @@ class MoySkladController extends Controller
         if ($phone) {
             $found_agent = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $access_token,
-                'Content-Type' => 'application/json'
-            ])->get('https://online.moysklad.ru/api/remap/1.2/entity/counterparty', [
+                'Content-Type' => 'application/json',
+                'Accept-Encoding' => 'gzip'
+            ])->get('https://api.moysklad.ru/api/remap/1.2/entity/counterparty', [
                 'filter' => 'phone=' . $phone
             ]);
 
@@ -414,8 +427,9 @@ class MoySkladController extends Controller
             }else {
                 $new_agent = Http::withHeaders([
                     'Authorization' => 'Bearer ' . $access_token,
-                    'Content-Type' => 'application/json'
-                ])->post('https://online.moysklad.ru/api/remap/1.2/entity/counterparty', [
+                    'Content-Type' => 'application/json',
+                    'Accept-Encoding' => 'gzip'
+                ])->post('https://api.moysklad.ru/api/remap/1.2/entity/counterparty', [
                     'name' => $contact_name ?? Carbon::now(),
                     'phone' => $phone
                 ]);
@@ -426,8 +440,9 @@ class MoySkladController extends Controller
         }else {
             $new_agent = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $access_token,
-                'Content-Type' => 'application/json'
-            ])->post('https://online.moysklad.ru/api/remap/1.2/entity/counterparty', [
+                'Content-Type' => 'application/json',
+                'Accept-Encoding' => 'gzip'
+            ])->post('https://api.moysklad.ru/api/remap/1.2/entity/counterparty', [
                 'name' => $contact_name ?? Carbon::now()
             ]);
 
@@ -439,30 +454,30 @@ class MoySkladController extends Controller
             $attributes = [
                 [//sale
                     'meta' => [
-                        'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/customerorder/metadata/attributes/164fb8bb-e0d4-11ed-0a80-04cf0014dd06',
+                        'href' => 'https://api.moysklad.ru/api/remap/1.2/entity/customerorder/metadata/attributes/164fb8bb-e0d4-11ed-0a80-04cf0014dd06',
                         'type' => 'attributemetadata',
                         'mediaType' => 'application/json'
                     ],
                     'value' => [
                         'meta' => [
-                            'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/employee/1f6007c8-31a6-11ed-0a80-09cb0037328c',
-                            "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/entity/employee/metadata",
+                            'href' => 'https://api.moysklad.ru/api/remap/1.2/entity/employee/1f6007c8-31a6-11ed-0a80-09cb0037328c',
+                            "metadataHref" => "https://api.moysklad.ru/api/remap/1.2/entity/employee/metadata",
                             "type" => "employee",
                             "mediaType" => "application/json",
-                            "uuidHref" => "https://online.moysklad.ru/app/#employee/edit?id=1f6007c8-31a6-11ed-0a80-09cb0037328c"
+                            "uuidHref" => "https://api.moysklad.ru/app/#employee/edit?id=1f6007c8-31a6-11ed-0a80-09cb0037328c"
                         ]
                     ]
                 ],
                 [//setup
                     'meta' => [
-                        'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/customerorder/metadata/attributes/833ff40e-df58-11ed-0a80-0f3a0009403a',
+                        'href' => 'https://api.moysklad.ru/api/remap/1.2/entity/customerorder/metadata/attributes/833ff40e-df58-11ed-0a80-0f3a0009403a',
                         'type' => 'attributemetadata',
                         'mediaType' => 'application/json'
                     ],
                     'value' => [
                         'meta' => [
-                            'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/employee/1f6007c8-31a6-11ed-0a80-09cb0037328c',
-                            "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/entity/employee/metadata",
+                            'href' => 'https://api.moysklad.ru/api/remap/1.2/entity/employee/1f6007c8-31a6-11ed-0a80-09cb0037328c',
+                            "metadataHref" => "https://api.moysklad.ru/api/remap/1.2/entity/employee/metadata",
                             "type" => "employee",
                             "mediaType" => "application/json",
                             "uuidHref" => "https://online.moysklad.ru/app/#employee/edit?id=1f6007c8-31a6-11ed-0a80-09cb0037328c"

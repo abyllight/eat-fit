@@ -312,6 +312,7 @@ class SelectController extends Controller
 
         //$select->ingredients()->attach($request->ingredient_id);*/
         $select->ingredients()->attach($request->ingredient_id);
+        //$select->ingredients()->updateExistingPivot($request->ingredient_id, ['is_visible' => true]);
 
         if ($select->status === Select::WITHOUT){
             $has_removed_ingredients = $this->hasRemovedIngredients($select);
@@ -362,6 +363,7 @@ class SelectController extends Controller
         $select->save();
 
         $select->ingredients()->detach($request->ingredient_id);
+        //$select->ingredients()->updateExistingPivot($request->ingredient_id, ['is_visible' => true]);
 
         return response()->json([
             'status' => true,

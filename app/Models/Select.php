@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
@@ -35,10 +36,14 @@ class Select extends Model
         return $this->belongsTo(Ration::class, 'ration_id', 'id');
     }
 
-    public function ingredients()
+    public function ingredients(): BelongsToMany
     {
-        return $this->belongsToMany(Ingredient::class, 'select_ingredients', 'select_id', 'ingredient_id')
-                ->withPivot('analog_id', 'is_editable', 'is_visible');
+        return $this->belongsToMany(
+            Ingredient::class,
+            'select_ingredients',
+            'select_id',
+            'ingredient_id'
+        )->withPivot('analog_id', 'is_editable', 'is_visible');
     }
 
     public function dish()

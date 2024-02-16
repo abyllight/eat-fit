@@ -53,9 +53,14 @@ class Ingredient extends Model
         return $this->belongsToMany(Order::class, 'blacklists', 'ingredient_id', 'order_id');
     }
 
-    public function selects()
+    public function selects(): BelongsToMany
     {
-        return $this->belongsToMany(Select::class, 'select_ingredients', 'ingredient_id', 'select_id');
+        return $this->belongsToMany(
+            Select::class,
+            'select_ingredients',
+            'ingredient_id',
+            'select_id'
+        )->withPivot('analog_id', 'is_editable', 'is_visible');
     }
 
     public function is_custom()
