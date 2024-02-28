@@ -361,7 +361,7 @@ class MoySkladController extends Controller
         //$this->getNewAccessToken();
         $id = $request->leads['status'][0]['id'];
         $lead = Http::withHeaders([
-            'Authorization' => 'Bearer ' . env('AMOCRM_ACCESS_TOKEN')
+            'Authorization' => 'Bearer ' . env('AMOCRM_LONG_TOKEN')
         ])->get('https://avtosvetkzinboxru373.amocrm.ru/api/v4/leads/' . $id, [
             'with' => 'contacts'
         ]);
@@ -370,7 +370,7 @@ class MoySkladController extends Controller
             $this->getNewAccessToken();
 
             $lead = Http::withHeaders([
-                'Authorization' => 'Bearer ' . env('AMOCRM_ACCESS_TOKEN')
+                'Authorization' => 'Bearer ' . env('AMOCRM_LONG_TOKEN')
             ])->get('https://avtosvetkzinboxru373.amocrm.ru/api/v4/leads/' . $id, [
                 'with' => 'contacts'
             ]);
@@ -388,7 +388,7 @@ class MoySkladController extends Controller
                 if (count($lead['_embedded']['contacts']) > 0) {
                     $contact_id = $lead['_embedded']['contacts'][0]['id'];
                     $contact = Http::withHeaders([
-                        'Authorization' => 'Bearer ' . env('AMOCRM_ACCESS_TOKEN')
+                        'Authorization' => 'Bearer ' . env('AMOCRM_LONG_TOKEN')
                     ])->get('https://avtosvetkzinboxru373.amocrm.ru/api/v4/contacts/' . $contact_id);
 
                     if ($contact->status() === 200) {
@@ -752,7 +752,7 @@ class MoySkladController extends Controller
                 Log::alert('Customer order created ' . $new_order['id']);
 
                 $update_lead = Http::withHeaders([
-                    'Authorization' => 'Bearer ' . env('AMOCRM_ACCESS_TOKEN')
+                    'Authorization' => 'Bearer ' . env('AMOCRM_LONG_TOKEN')
                 ])->patch('https://avtosvetkzinboxru373.amocrm.ru/api/v4/leads/' . $id, [
                     'custom_fields_values' => [
                         [
