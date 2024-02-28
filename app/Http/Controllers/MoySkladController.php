@@ -486,23 +486,23 @@ class MoySkladController extends Controller
                 ],
                 [//payment type
                     'meta' => [
-                        'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/customerorder/metadata/attributes/e9e86f71-4344-11ee-0a80-0ee900395ef1',
+                        'href' => 'https://api.moysklad.ru/api/remap/1.2/entity/customerorder/metadata/attributes/e9e86f71-4344-11ee-0a80-0ee900395ef1',
                         'type' => 'attributemetadata',
                         'mediaType' => 'application/json'
                     ],
                     'value' => [
                         'meta' => [
-                            'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/customentity/b8e8ef37-4344-11ee-0a80-11f300387c50/c513d9d1-4344-11ee-0a80-096d00397696',
-                            "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/context/companysettings/metadata/customEntities/b8e8ef37-4344-11ee-0a80-11f300387c50",
+                            'href' => 'https://api.moysklad.ru/api/remap/1.2/entity/customentity/b8e8ef37-4344-11ee-0a80-11f300387c50/c513d9d1-4344-11ee-0a80-096d00397696',
+                            "metadataHref" => "https://api.moysklad.ru/api/remap/1.2/context/companysettings/metadata/customEntities/b8e8ef37-4344-11ee-0a80-11f300387c50",
                             "type" => "customentity",
                             "mediaType" => "application/json",
-                            "uuidHref" => "https://online.moysklad.ru/app/#custom_b8e8ef37-4344-11ee-0a80-11f300387c50/edit?id=c513d9d1-4344-11ee-0a80-096d00397696"
+                            "uuidHref" => "https://api.moysklad.ru/app/#custom_b8e8ef37-4344-11ee-0a80-11f300387c50/edit?id=c513d9d1-4344-11ee-0a80-096d00397696"
                         ]
                     ]
                 ],
                 [//visit date
                     'meta' => [
-                        'href' => "https://online.moysklad.ru/api/remap/1.2/entity/customerorder/metadata/attributes/d7d619f5-293b-11ee-0a80-02b70020a6ee",
+                        'href' => "https://api.moysklad.ru/api/remap/1.2/entity/customerorder/metadata/attributes/d7d619f5-293b-11ee-0a80-02b70020a6ee",
                         "type" => "attributemetadata",
                         "mediaType" => "application/json"
                     ],
@@ -510,17 +510,17 @@ class MoySkladController extends Controller
                 ],
                 [//source
                     'meta' => [
-                        'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/customerorder/metadata/attributes/872a58d7-9980-11ed-0a80-0c3c001c7e62',
+                        'href' => 'https://api.moysklad.ru/api/remap/1.2/entity/customerorder/metadata/attributes/872a58d7-9980-11ed-0a80-0c3c001c7e62',
                         'type' => 'attributemetadata',
                         'mediaType' => 'application/json'
                     ],
                     'value' => [
                         'meta' => [
-                            'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/customentity/8447381f-8cd1-11ed-0a80-014000e2ec30/df10c6db-8cd5-11ed-0a80-0ffb00dcc0b3',
-                            "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/context/companysettings/metadata/customEntities/8447381f-8cd1-11ed-0a80-014000e2ec30",
+                            'href' => 'https://api.moysklad.ru/api/remap/1.2/entity/customentity/8447381f-8cd1-11ed-0a80-014000e2ec30/df10c6db-8cd5-11ed-0a80-0ffb00dcc0b3',
+                            "metadataHref" => "https://api.moysklad.ru/api/remap/1.2/context/companysettings/metadata/customEntities/8447381f-8cd1-11ed-0a80-014000e2ec30",
                             "type" => "customentity",
                             "mediaType" => "application/json",
-                            "uuidHref" => "https://online.moysklad.ru/app/#custom_8447381f-8cd1-11ed-0a80-014000e2ec30/edit?id=df10c6db-8cd5-11ed-0a80-0ffb00dcc0b3"
+                            "uuidHref" => "https://api.moysklad.ru/app/#custom_8447381f-8cd1-11ed-0a80-014000e2ec30/edit?id=df10c6db-8cd5-11ed-0a80-0ffb00dcc0b3"
                         ]
                     ]
                 ]
@@ -534,11 +534,11 @@ class MoySkladController extends Controller
                     //Онищук
                     $responsible = [
                         'meta' => [
-                            'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/employee/f828c207-a877-11ed-0a80-095d0011cb58',
-                            "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/entity/employee/metadata",
+                            'href' => 'https://api.moysklad.ru/api/remap/1.2/entity/employee/f828c207-a877-11ed-0a80-095d0011cb58',
+                            "metadataHref" => "https://api.moysklad.ru/api/remap/1.2/entity/employee/metadata",
                             "type" => "employee",
                             "mediaType" => "application/json",
-                            "uuidHref" => "https://online.moysklad.ru/app/#employee/edit?id=f828c207-a877-11ed-0a80-095d0011cb58"
+                            "uuidHref" => "https://api.moysklad.ru/app/#employee/edit?id=f828c207-a877-11ed-0a80-095d0011cb58"
                         ]
                     ];
                 }
@@ -548,11 +548,11 @@ class MoySkladController extends Controller
                     //Корчевой
                     $responsible = [
                         'meta' => [
-                            'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/employee/90238af2-2fa6-11ee-0a80-0b350036e8ea',
-                            "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/entity/employee/metadata",
+                            'href' => 'https://api.moysklad.ru/api/remap/1.2/entity/employee/90238af2-2fa6-11ee-0a80-0b350036e8ea',
+                            "metadataHref" => "https://api.moysklad.ru/api/remap/1.2/entity/employee/metadata",
                             "type" => "employee",
                             "mediaType" => "application/json",
-                            "uuidHref" => "https://online.moysklad.ru/app/#employee/edit?id=90238af2-2fa6-11ee-0a80-0b350036e8ea"
+                            "uuidHref" => "https://api.moysklad.ru/app/#employee/edit?id=90238af2-2fa6-11ee-0a80-0b350036e8ea"
                         ]
                     ];
                 }
@@ -562,11 +562,11 @@ class MoySkladController extends Controller
                     //Vlasenko M V
                     $responsible = [
                         'meta' => [
-                            'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/employee/1f6007c8-31a6-11ed-0a80-09cb0037328c',
-                            "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/entity/employee/metadata",
+                            'href' => 'https://api.moysklad.ru/api/remap/1.2/entity/employee/1f6007c8-31a6-11ed-0a80-09cb0037328c',
+                            "metadataHref" => "https://api.moysklad.ru/api/remap/1.2/entity/employee/metadata",
                             "type" => "employee",
                             "mediaType" => "application/json",
-                            "uuidHref" => "https://online.moysklad.ru/app/#employee/edit?id=1f6007c8-31a6-11ed-0a80-09cb0037328c"
+                            "uuidHref" => "https://api.moysklad.ru/app/#employee/edit?id=1f6007c8-31a6-11ed-0a80-09cb0037328c"
                         ]
                     ];
                 }
@@ -576,11 +576,11 @@ class MoySkladController extends Controller
                     //Mikhasev
                     $responsible = [
                         'meta' => [
-                            'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/employee/fbb5c198-582d-11ed-0a80-0c910022d680',
-                            "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/entity/employee/metadata",
+                            'href' => 'https://api.moysklad.ru/api/remap/1.2/entity/employee/fbb5c198-582d-11ed-0a80-0c910022d680',
+                            "metadataHref" => "https://api.moysklad.ru/api/remap/1.2/entity/employee/metadata",
                             "type" => "employee",
                             "mediaType" => "application/json",
-                            "uuidHref" => "https://online.moysklad.ru/app/#employee/edit?id=fbb5c198-582d-11ed-0a80-0c910022d680"
+                            "uuidHref" => "https://api.moysklad.ru/app/#employee/edit?id=fbb5c198-582d-11ed-0a80-0c910022d680"
                         ]
                     ];
                 }
@@ -590,11 +590,11 @@ class MoySkladController extends Controller
                     //Mikhasev
                     $responsible = [
                         'meta' => [
-                            'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/employee/c4ff92dd-531e-11ed-0a80-0703002a5a61',
-                            "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/entity/employee/metadata",
+                            'href' => 'https://api.moysklad.ru/api/remap/1.2/entity/employee/c4ff92dd-531e-11ed-0a80-0703002a5a61',
+                            "metadataHref" => "https://api.moysklad.ru/api/remap/1.2/entity/employee/metadata",
                             "type" => "employee",
                             "mediaType" => "application/json",
-                            "uuidHref" => "https://online.moysklad.ru/app/#employee/edit?id=c4ff92dd-531e-11ed-0a80-0703002a5a61"
+                            "uuidHref" => "https://api.moysklad.ru/app/#employee/edit?id=c4ff92dd-531e-11ed-0a80-0703002a5a61"
                         ]
                     ];
                 }
@@ -607,8 +607,8 @@ class MoySkladController extends Controller
                     $store_id = $field['values'][0]['enum_code'];
                     $store = [
                         'meta' => [
-                            'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/store/' . $store_id,
-                            "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/entity/store/metadata",
+                            'href' => 'https://api.moysklad.ru/api/remap/1.2/entity/store/' . $store_id,
+                            "metadataHref" => "https://api.moysklad.ru/api/remap/1.2/entity/store/metadata",
                             "type" => "store",
                             "mediaType" => "application/json"
                         ]
@@ -619,8 +619,9 @@ class MoySkladController extends Controller
                 if ($field['field_id'] === 2609137) {
                     $found_mark = Http::withHeaders([
                         'Authorization' => 'Bearer ' . $access_token,
-                        'Content-Type' => 'application/json'
-                    ])->get('https://online.moysklad.ru/api/remap/1.2/entity/customentity/4018fdab-5206-11ed-0a80-0703001e621a', [
+                        'Content-Type' => 'application/json',
+                        'Accept-Encoding' => 'gzip'
+                    ])->get('https://api.moysklad.ru/api/remap/1.2/entity/customentity/4018fdab-5206-11ed-0a80-0703001e621a', [
                         'filter' => 'name=' . $field['values'][0]['value']
                     ]);
 
@@ -630,7 +631,7 @@ class MoySkladController extends Controller
                         if (array_key_exists('rows', $found_mark) && count($found_mark['rows']) > 0) {
                             $attributes[] = [
                                 'meta' => [
-                                    'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/customerorder/metadata/attributes/497d37c2-5206-11ed-0a80-0e0d001d7351',
+                                    'href' => 'https://api.moysklad.ru/api/remap/1.2/entity/customerorder/metadata/attributes/497d37c2-5206-11ed-0a80-0e0d001d7351',
                                     'type' => 'attributemetadata',
                                     'mediaType' => 'application/json'
                                 ],
@@ -646,7 +647,7 @@ class MoySkladController extends Controller
                 if ($field['field_id'] === 2609143) {
                     $attributes[] = [
                         'meta' => [
-                            'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/customerorder/metadata/attributes/368eda5c-5209-11ed-0a80-05c2001d72a8',
+                            'href' => 'https://api.moysklad.ru/api/remap/1.2/entity/customerorder/metadata/attributes/368eda5c-5209-11ed-0a80-05c2001d72a8',
                             'type' => 'attributemetadata',
                             'mediaType' => 'application/json'
                         ],
@@ -658,8 +659,9 @@ class MoySkladController extends Controller
                 if ($field['field_id'] === 2609149) {
                     $found_source = Http::withHeaders([
                         'Authorization' => 'Bearer ' . $access_token,
-                        'Content-Type' => 'application/json'
-                    ])->get('https://online.moysklad.ru/api/remap/1.2/entity/customentity/8447381f-8cd1-11ed-0a80-014000e2ec30', [
+                        'Content-Type' => 'application/json',
+                        'Accept-Encoding' => 'gzip'
+                    ])->get('https://api.moysklad.ru/api/remap/1.2/entity/customentity/8447381f-8cd1-11ed-0a80-014000e2ec30', [
                         'filter' => 'name=' . $field['values'][0]['value']
                     ]);
 
@@ -669,7 +671,7 @@ class MoySkladController extends Controller
                         if (array_key_exists('rows', $found_source) && count($found_source['rows']) > 0) {
                             $attributes[4] = [
                                 'meta' => [
-                                    'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/customerorder/metadata/attributes/872a58d7-9980-11ed-0a80-0c3c001c7e62',
+                                    'href' => 'https://api.moysklad.ru/api/remap/1.2/entity/customerorder/metadata/attributes/872a58d7-9980-11ed-0a80-0c3c001c7e62',
                                     'type' => 'attributemetadata',
                                     'mediaType' => 'application/json'
                                 ],
@@ -685,8 +687,9 @@ class MoySkladController extends Controller
                 if ($field['field_id'] === 2625003) {
                     $found_payment = Http::withHeaders([
                         'Authorization' => 'Bearer ' . $access_token,
-                        'Content-Type' => 'application/json'
-                    ])->get('https://online.moysklad.ru/api/remap/1.2/entity/customentity/b8e8ef37-4344-11ee-0a80-11f300387c50', [
+                        'Content-Type' => 'application/json',
+                        'Accept-Encoding' => 'gzip'
+                    ])->get('https://api.moysklad.ru/api/remap/1.2/entity/customentity/b8e8ef37-4344-11ee-0a80-11f300387c50', [
                         'filter' => 'name=' . $field['values'][0]['value']
                     ]);
 
@@ -696,7 +699,7 @@ class MoySkladController extends Controller
                         if (array_key_exists('rows', $found_payment) && count($found_payment['rows']) > 0) {
                             $attributes[2] = [
                                 'meta' => [
-                                    'href' => 'https://online.moysklad.ru/api/remap/1.2/entity/customerorder/metadata/attributes/e9e86f71-4344-11ee-0a80-0ee900395ef1',
+                                    'href' => 'https://api.moysklad.ru/api/remap/1.2/entity/customerorder/metadata/attributes/e9e86f71-4344-11ee-0a80-0ee900395ef1',
                                     'type' => 'attributemetadata',
                                     'mediaType' => 'application/json'
                                 ],
@@ -717,11 +720,12 @@ class MoySkladController extends Controller
 
             $new_order = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $access_token,
-                'Content-Type' => 'application/json'
-            ])->post('https://online.moysklad.ru/api/remap/1.2/entity/customerorder', [
+                'Content-Type' => 'application/json',
+                'Accept-Encoding' => 'gzip'
+            ])->post('https://api.moysklad.ru/api/remap/1.2/entity/customerorder', [
                 'organization' => [
                     "meta" => [
-                        "href" => "https://online.moysklad.ru/api/remap/1.2/entity/organization/1f71907c-31a6-11ed-0a80-09cb003732d1",
+                        "href" => "https://api.moysklad.ru/api/remap/1.2/entity/organization/1f71907c-31a6-11ed-0a80-09cb003732d1",
                         "type" => "organization",
                         "mediaType" => "application/json"
                     ]
@@ -735,8 +739,8 @@ class MoySkladController extends Controller
                 'attributes' => $attributes,
                 'state' => [
                     "meta" => [
-                        "href" => "https://online.moysklad.ru/api/remap/1.2/entity/customerorder/metadata/states/1f84df83-31a6-11ed-0a80-09cb003732f8",
-                        "metadataHref" => "https://online.moysklad.ru/api/remap/1.2/entity/customerorder/metadata",
+                        "href" => "https://api.moysklad.ru/api/remap/1.2/entity/customerorder/metadata/states/1f84df83-31a6-11ed-0a80-09cb003732f8",
+                        "metadataHref" => "https://api.moysklad.ru/api/remap/1.2/entity/customerorder/metadata",
                         "type" => "state",
                         "mediaType" => "application/json"
                     ]
@@ -775,5 +779,110 @@ class MoySkladController extends Controller
         }
 
         return response()->json('Customer order creation end');
+    }
+
+    public function changeStage(Request $request): JsonResponse
+    {
+        $order = null;
+
+        if ($request->query('id')) {
+            $access_token = $this->doAuth();
+            $order = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $access_token,
+                'Accept-Encoding' => 'gzip'
+            ])->get('https://api.moysklad.ru/api/remap/1.2/entity/customerorder/' . $request->query('id'));
+
+            $order = $order->json();
+        }
+
+        if (!$order) {
+            Log::alert('Order not found ' . $request->query('id'));
+            return response()->json('Order not found');
+        }
+
+        //AMOCRM states
+        //Принят в работу 64614074
+        //Готов к выдаче 64614546
+        //Успешно реализовано 142
+        //Предварительный рассчет 64615118
+
+        $state = $order['state']['meta']['href'];
+        $status_id = null;
+
+        //Moysklad states
+        $states = [
+            [
+                'moy' => '84eff092-2210-11ee-0a80-0efa0004d21e', //Предварительный рассчет
+                'amo' => 64615118 //Предварительный рассчет
+            ],
+            [
+                'moy' => '4b3ef0d5-40a4-11ed-0a80-0b95000a5688', //Авто/Фары в работе
+                'amo' => 64614074 //Принят в работу
+            ],
+            [
+                'moy' => 'a9eade0f-6f1a-11ed-0a80-0fea0062fd72', //Готово к выдаче - ожидаем оплату
+                'amo' => 64614546 //Готов к выдаче
+            ],
+            [
+                'moy' => '06aa843b-ad60-11ed-0a80-0bc10000fd8c', //Успешная Сделка
+                'amo' => 142 //Успешно реализовано
+            ]
+        ];
+        $has_state = false;
+
+        foreach ($states as $s) {
+            if (str_contains($state, $s['moy'])) {
+                $has_state = true;
+                $status_id = $s['amo'];
+                break;
+            }
+        }
+
+        if ($has_state) {
+            $lead_id = null;
+
+            if (array_key_exists('attributes', $order)) {
+                foreach ($order['attributes'] as $attribute) {
+                    //Lead id
+                    if ($attribute['id'] === '4e5f9189-d571-11ee-0a80-02ac0064d218') {
+                        $lead_id = $attribute['value'];
+                    }
+                }
+            }
+
+            if (!$lead_id) {
+                Log::alert('Lead id not found ' . $order['id']);
+                return response()->json('Lead id not found');
+            }
+
+            $lead = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('AMOCRM_LONG_TOKEN')
+            ])->get('https://avtosvetkzinboxru373.amocrm.ru/api/v4/leads/' . $lead_id);
+
+            if ($lead->status() !== 200) {
+                Log::alert('AMO Lead not found ' . $lead->status());
+                return response()->json('AMO Lead id not found');
+            }
+
+            $data = [
+                'status_id' => $status_id
+            ];
+
+            if ($status_id === 142) {
+                $data['price'] = $order['sum'];
+            }
+
+            $update_lead = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('AMOCRM_LONG_TOKEN'),
+                'Content-type' => 'application/json'
+            ])->patch('https://avtosvetkzinboxru373.amocrm.ru/api/v4/leads/' . $lead_id, $data);
+
+            if ($update_lead->status() === 200 || $update_lead->status() === 201) {
+                Log::alert('Updated lead ' . $lead_id);
+                return response()->json('Amo lead status updated' . $lead_id);
+            }
+        }
+
+        return response()->json('Customer order doesnt fit statuses');
     }
 }

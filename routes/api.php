@@ -234,6 +234,6 @@ Route::get('/storage', [HelperController::class, 'storage']);
 Route::post('/moysklad/create-demand', [MoySkladController::class, 'createRetailDemand']);
 Route::post('/moysklad/set-owner', [MoySkladController::class, 'setOwnerToCustomerOrder']);
 Route::post('/moysklad/create-order', [MoySkladController::class, 'createCustomerOrder']);
-
+Route::post('/moysklad/change-stage', [MoySkladController::class, 'changeStage']);
 
 
