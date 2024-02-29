@@ -34,19 +34,10 @@ class MoySkladController extends Controller
 
     //director https://online.moysklad.ru/api/remap/1.2/entity/employee/1f6007c8-31a6-11ed-0a80-09cb0037328c
     //ne uto4nil https://online.moysklad.ru/api/remap/1.2/entity/customentity/8447381f-8cd1-11ed-0a80-014000e2ec30/df10c6db-8cd5-11ed-0a80-0ffb00dcc0b3
-    public function createRetailDemand(Request $request): JsonResponse
+    public function createRetailDemand($order, $access_token): JsonResponse
     {
-            $access_token = $this->doAuth();
-            $last_order = null;
-
-            if ($request->query('id')) {
-                $last_order = Http::withHeaders([
-                    'Authorization' => 'Bearer ' . $access_token,
-                    'Accept-Encoding' => 'gzip'
-                ])->get('https://api.moysklad.ru/api/remap/1.2/entity/customerorder/' . $request->query('id'));
-
-                $last_order = $last_order->json();
-            }
+            //$access_token = $this->doAuth();
+            $last_order = $order;
 
             if ($last_order) {
                 $store = array_key_exists('store', $last_order) ? $last_order['store']['meta']['href'] : null;
@@ -61,6 +52,7 @@ class MoySkladController extends Controller
                     ]);
 
                     $retail_store = $retail_store->json();
+
                     if ($retail_store && array_key_exists('rows', $retail_store) && count($retail_store['rows']) > 0) {
                         $retail_store = $retail_store['rows'][0];
 
@@ -784,6 +776,7 @@ class MoySkladController extends Controller
     public function changeStage(Request $request): JsonResponse
     {
         $order = null;
+        $access_token = null;
 
         if ($request->query('id')) {
             $access_token = $this->doAuth();
@@ -838,51 +831,52 @@ class MoySkladController extends Controller
             }
         }
 
-        if ($has_state) {
-            $lead_id = null;
+        if (!$has_state) {
+            Log::alert('Customer order doesnt fit statuses ' . $order['id']);
+            return response()->json('Customer order doesnt fit statuses');
+        }
 
-            if (array_key_exists('attributes', $order)) {
-                foreach ($order['attributes'] as $attribute) {
-                    //Lead id
-                    if ($attribute['id'] === '4e5f9189-d571-11ee-0a80-02ac0064d218') {
-                        $lead_id = $attribute['value'];
-                    }
+        $lead_id = null;
+
+        if (array_key_exists('attributes', $order)) {
+            foreach ($order['attributes'] as $attribute) {
+                //Lead id
+                if ($attribute['id'] === '4e5f9189-d571-11ee-0a80-02ac0064d218') {
+                    $lead_id = $attribute['value'];
                 }
-            }
-
-            if (!$lead_id) {
-                Log::alert('Lead id not found ' . $order['id']);
-                return response()->json('Lead id not found');
-            }
-
-            $lead = Http::withHeaders([
-                'Authorization' => 'Bearer ' . env('AMOCRM_LONG_TOKEN')
-            ])->get('https://avtosvetkzinboxru373.amocrm.ru/api/v4/leads/' . $lead_id);
-
-            if ($lead->status() !== 200) {
-                Log::alert('AMO Lead not found ' . $lead->status());
-                return response()->json('AMO Lead id not found');
-            }
-
-            $data = [
-                'status_id' => $status_id
-            ];
-
-            if ($status_id === 142) {
-                $data['price'] = $order['sum'];
-            }
-
-            $update_lead = Http::withHeaders([
-                'Authorization' => 'Bearer ' . env('AMOCRM_LONG_TOKEN'),
-                'Content-type' => 'application/json'
-            ])->patch('https://avtosvetkzinboxru373.amocrm.ru/api/v4/leads/' . $lead_id, $data);
-
-            if ($update_lead->status() === 200 || $update_lead->status() === 201) {
-                Log::alert('Updated lead ' . $lead_id);
-                return response()->json('Amo lead status updated' . $lead_id);
             }
         }
 
-        return response()->json('Customer order doesnt fit statuses');
+        $data = [
+            'status_id' => $status_id
+        ];
+
+        if ($status_id === 142) {
+            $data['price'] = $order['sum'];
+            $this->createRetailDemand($order, $access_token);
+        }
+
+        $this->updateLead($lead_id, $data, $order['id']);
+
+        return response()->json('SUCCESS! AMO AND MOYSKLAD STATUSES OK!');
+    }
+
+    public function updateLead($lead_id, array $fields, $order_id): bool
+    {
+        if (!$lead_id) {
+            Log::alert('Lead id not found ' . $order_id);
+            return false;
+        }
+
+        $update_lead = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('AMOCRM_LONG_TOKEN'),
+            'Content-type' => 'application/json'
+        ])->patch('https://avtosvetkzinboxru373.amocrm.ru/api/v4/leads/' . $lead_id, $fields);
+
+        if ($update_lead->status() === 200 || $update_lead->status() === 201) {
+            Log::alert('Updated lead ' . $lead_id);
+        }
+
+        return $update_lead->status() === 200 || $update_lead->status() === 201;
     }
 }
