@@ -235,23 +235,26 @@ class MoySkladController extends Controller
                         if ($create_retail_demand->status() === 200 || $create_retail_demand->status() === 201) {
                             Log::alert('Retail demand created ' . $last_order['id']);
 
-                            $lead_id = null;
+                            $state = $last_order['state']['meta']['href'];
+                            if (str_contains($state, '06aa843b-ad60-11ed-0a80-0bc10000fd8c')) {
+                                $lead_id = null;
 
-                            if (array_key_exists('attributes', $last_order)) {
-                                foreach ($last_order['attributes'] as $attribute) {
-                                    //Lead id
-                                    if ($attribute['id'] === '4e5f9189-d571-11ee-0a80-02ac0064d218') {
-                                        $lead_id = $attribute['value'];
+                                if (array_key_exists('attributes', $last_order)) {
+                                    foreach ($last_order['attributes'] as $attribute) {
+                                        //Lead id
+                                        if ($attribute['id'] === '4e5f9189-d571-11ee-0a80-02ac0064d218') {
+                                            $lead_id = $attribute['value'];
+                                        }
                                     }
                                 }
+
+                                $data = [
+                                    'status_id' => 142,
+                                    'price' => $last_order['sum']
+                                ];
+
+                                $this->updateLead($lead_id, $data, $last_order['id']);
                             }
-
-                            $data = [
-                                'status_id' => 142,
-                                'price' => $last_order['sum']
-                            ];
-
-                            $this->updateLead($lead_id, $data, $last_order['id']);
                         }
 
                         $create_retail_demand = $create_retail_demand->json();
