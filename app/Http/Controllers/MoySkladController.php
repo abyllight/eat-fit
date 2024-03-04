@@ -80,7 +80,6 @@ class MoySkladController extends Controller
                         $retail_shift = $retail_shift['rows'][0];
                         $cash = 0.0;
                         $no_cash = 0.0;
-                        $qr = 0.0;
                         $positions = null;
                         $owner = null;
                         $attributes = [
@@ -166,16 +165,12 @@ class MoySkladController extends Controller
                                 if ($attribute['id'] === 'e9e86f71-4344-11ee-0a80-0ee900395ef1') {
                                     $payment_method = $attribute['value']['name'];
 
-                                    if ($payment_method === 'Картой') {
+                                    if ($payment_method === 'Картой' || $payment_method === 'Банковский перевод' || $payment_method === 'Рассрочка') {
                                         $no_cash = (float)$last_order['sum'];
                                     }
 
                                     if ($payment_method === 'Наличными') {
                                         $cash = (float)$last_order['sum'];
-                                    }
-
-                                    if ($payment_method === 'По QR-коду') {
-                                        $qr = (float)$last_order['sum'];
                                     }
                                 }
                             }
@@ -224,7 +219,7 @@ class MoySkladController extends Controller
                             'customerOrder' => $last_order,
                             'vatEnabled' => false,
                             'positions' => $positions,
-                            'qrSum' => $qr,
+                            'qrSum' => 0.0,
                             'cashSum' => $cash,
                             'noCashSum' => $no_cash,
                             'prepaymentCashSum' => 0.0,
