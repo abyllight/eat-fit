@@ -242,10 +242,9 @@ class MoySkladController extends Controller
                                         }
                                     }
                                 }
-
                                 $data = [
                                     'status_id' => 142,
-                                    'price' => $last_order['sum']
+                                    'price' => (int)($last_order['sum']/100)
                                 ];
 
                                 $this->updateLead($lead_id, $data, $last_order['id']);
