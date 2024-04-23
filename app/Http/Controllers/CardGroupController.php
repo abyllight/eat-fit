@@ -264,7 +264,7 @@ class CardGroupController extends Controller
             ],
         ];
 
-        $letters = ['D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q'];
+        $letters = ['D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 
         $sheet->getStyle('A1:M1')->applyFromArray($blackStyleArray);
 
