@@ -254,6 +254,7 @@ class MoySkladController extends Controller
 
                                 $this->updateLead($lead_id, $data, $last_order['id']);
                             }
+                            return response()->json('Retail demand success');
                         }
 
                         $create_retail_demand = $create_retail_demand->json();
@@ -887,7 +888,7 @@ class MoySkladController extends Controller
     {
         if (!$lead_id) {
             Log::alert('Lead id not found ' . $order_id);
-            return false;
+            return response()->json('Lead id not found ' . $order_id);
         }
 
         $update_lead = Http::withHeaders([
