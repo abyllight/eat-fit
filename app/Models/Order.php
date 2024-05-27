@@ -77,6 +77,8 @@ class Order extends Model
 
     const ASTANA = 1;
     const ALMATY = 2;
+    const KARAGANDY = 3;
+    const TEMIRTAU = 4;
 
     const EAT_FIT_ARRAY = [self::EAT_FIT_LITE, self::EAT_FIT_SELECT, self::EAT_FIT_DAILY, self::EAT_FIT_SELECT_MAX, self::EAT_FIT_DETOX, self::EAT_FIT_GO, self::EAT_FIT_SATURDAY];
 

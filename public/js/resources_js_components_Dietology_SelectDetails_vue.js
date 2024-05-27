@@ -1027,6 +1027,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -1092,7 +1105,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       errors: [],
       r1_val: null,
       r2_val: null,
-      departments: []
+      departments: [],
+      selected_previous: {}
     };
   },
   mounted: function mounted() {
@@ -1310,6 +1324,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _context7.next = 2;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/select/order/' + _this9.id).then(function (response) {
                   _this9.order = response.data.order;
+                  console.log(response);
                   _this9.previous = response.data.previous;
                   _this9.result = response.data.result;
                   _this9.blacklist = response.data.blacklist;
@@ -1734,6 +1749,33 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       })["catch"](function (error) {
         console.log(error);
       });
+    },
+    choosePrev: function choosePrev(item) {
+      this.selected_previous = item;
+    },
+    choosePrevAsSelect: function choosePrevAsSelect() {
+      var _this27 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/copy', {
+        id: this.id,
+        prev_id: this.selected_previous.id
+      }).then(function (response) {
+        if (!response.data.status) {
+          _this27.$store.dispatch('showAlert', {
+            'isVisible': true,
+            'msg': response.data.msg,
+            'color': 'error',
+            'type': 'error'
+          });
+        }
+
+        _this27.result = response.data.data;
+
+        _this27.getSelectDetailsByOrder();
+      })["catch"](function (error) {
+        console.log(error);
+      });
+      console.log(this.selected_previous);
     }
   }
 });
@@ -3692,39 +3734,41 @@ var render = function() {
         "v-row",
         { staticClass: "py-3" },
         [
-          _vm.previous
+          _vm.previous.length > 0
             ? _c(
                 "v-col",
                 { attrs: { cols: "3" } },
                 [
-                  _c("h4", [_vm._v(_vm._s(_vm.previous.created_at))]),
+                  _c("h4", [_vm._v("Предыдущие селекты")]),
                   _vm._v(" "),
-                  _c("span", [_vm._v(_vm._s(_vm.previous.cuisine))]),
+                  _c("span", [_vm._v(_vm._s(_vm.cuisine.name))]),
                   _vm._v(" "),
-                  _vm.previous.dish_name
-                    ? _c(
-                        "v-card",
-                        {
-                          staticClass: "mb-5 mt-3",
-                          attrs: { color: "blue-grey lighten-5" }
-                        },
-                        [
-                          _c("v-card-title", [
-                            _vm._v(_vm._s(_vm.previous.dish_name))
-                          ]),
-                          _vm._v(" "),
-                          _c("v-card-subtitle", [
-                            _vm._v(_vm._s(_vm.previous.description))
-                          ])
-                        ],
-                        1
-                      )
-                    : _vm._e(),
+                  _c("v-select", {
+                    staticClass: "mt-5",
+                    attrs: {
+                      label: "Предыдущие селекты",
+                      items: _vm.previous,
+                      outlined: "",
+                      dense: "",
+                      "item-value": "id",
+                      "item-text": function(item) {
+                        return item.created_at + " - " + item.dish_name
+                      },
+                      "return-object": ""
+                    },
+                    model: {
+                      value: _vm.selected_previous,
+                      callback: function($$v) {
+                        _vm.selected_previous = $$v
+                      },
+                      expression: "selected_previous"
+                    }
+                  }),
                   _vm._v(" "),
                   _c(
                     "v-list",
                     { attrs: { dense: "" } },
-                    _vm._l(_vm.previous.ingredients, function(ing, i) {
+                    _vm._l(_vm.selected_previous.ingredients, function(ing, i) {
                       return _c(
                         "v-list-item",
                         {
@@ -3748,7 +3792,18 @@ var render = function() {
                       )
                     }),
                     1
-                  )
+                  ),
+                  _vm._v(" "),
+                  Object.keys(_vm.selected_previous).length > 0
+                    ? _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "primary" },
+                          on: { click: _vm.choosePrevAsSelect }
+                        },
+                        [_vm._v("Выбрать")]
+                      )
+                    : _vm._e()
                 ],
                 1
               )

@@ -109,18 +109,26 @@
 
             <!-- Previous   -->
             <v-col
-                v-if="previous"
+                v-if="previous.length > 0"
                 cols="3"
             >
-                <h4>{{previous.created_at}}</h4>
-                <span>{{previous.cuisine}}</span>
-                <v-card class="mb-5 mt-3" v-if="previous.dish_name" color="blue-grey lighten-5">
-                    <v-card-title>{{previous.dish_name}}</v-card-title>
-                    <v-card-subtitle>{{previous.description}}</v-card-subtitle>
-                </v-card>
+                <h4>Предыдущие селекты</h4>
+                <span>{{cuisine.name}}</span>
+                <v-select
+                    v-model="selected_previous"
+                    label="Предыдущие селекты"
+                    :items="previous"
+                    outlined
+                    dense
+                    class="mt-5"
+                    item-value="id"
+                    :item-text="item => item.created_at +' - '+ item.dish_name"
+                    return-object
+                ></v-select>
+
                 <v-list dense>
                     <v-list-item
-                        v-for="(ing, i) in previous.ingredients"
+                        v-for="(ing, i) in selected_previous.ingredients"
                         :key="i"
                         :class="hasResultIncludeIngredient(ing.id) ? 'yellow lighten-3' : ''"
                     >
@@ -129,6 +137,11 @@
                         </v-list-item-content>
                     </v-list-item>
                 </v-list>
+
+                <v-btn v-if="Object.keys(selected_previous).length > 0"
+                       color="primary"
+                       @click="choosePrevAsSelect"
+                >Выбрать</v-btn>
             </v-col>
 
             <!-- Today   -->
@@ -495,7 +508,8 @@
             errors: [],
             r1_val: null,
             r2_val: null,
-            departments: []
+            departments: [],
+            selected_previous: {}
         }),
         mounted() {
             this.getSelectDetailsByOrder()
@@ -623,7 +637,7 @@
                     .get('/api/select/order/'+this.id)
                     .then(response => {
                         this.order = response.data.order
-
+                        console.log(response)
                         this.previous = response.data.previous
                         this.result = response.data.result
                         this.blacklist = response.data.blacklist
@@ -997,6 +1011,32 @@
                     .catch(error => {
                         console.log(error)
                     })
+            },
+            choosePrev(item) {
+                this.selected_previous = item
+            },
+            choosePrevAsSelect() {
+                axios
+                    .post('/api/select/copy', {
+                        id: this.id,
+                        prev_id: this.selected_previous.id
+                    })
+                    .then(response => {
+                        if (!response.data.status){
+                            this.$store.dispatch('showAlert', {
+                                'isVisible': true,
+                                'msg': response.data.msg,
+                                'color': 'error',
+                                'type': 'error'
+                            })
+                        }
+                        this.result = response.data.data
+                        this.getSelectDetailsByOrder()
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+                console.log(this.selected_previous)
             }
         }
     }

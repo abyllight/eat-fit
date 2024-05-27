@@ -11,6 +11,8 @@ class City extends Model
 
     const ASTANA = 1;
     const ALMATY = 2;
+    const KARAGANDY = 3;
+    const TEMIRTAU = 4;
 
     const cities = [
         [
@@ -20,6 +22,14 @@ class City extends Model
         [
             'id' => 2,
             'name' => 'Алматы'
+        ],
+        [
+            'id' => 3,
+            'name' => 'Қарағанды'
+        ],
+        [
+            'id' => 4,
+            'name' => 'Теміртау'
         ]
     ];
 

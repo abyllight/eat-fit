@@ -93,10 +93,14 @@ class SelectController extends Controller
         }
 
         $order = $select->order;
-        $previous = Select::where('ration_id', $select->ration_id)->where('order_id', $order->id)->whereDate('created_at', Carbon::yesterday())->first();
+        $previous = Select::where('ration_id', $select->ration_id)
+            ->where('order_id', $order->id)
+            ->where('cuisine_id', $select->cuisine_id)
+            ->whereDate('created_at', '<', Carbon::today())
+            ->get();
 
         if ($previous) {
-            $previous = new SelectCollection($previous);
+            $previous = SelectCollection::collection($previous);
         }else {
             $previous = [];
         }
@@ -258,6 +262,47 @@ class SelectController extends Controller
         $select->save();
 
         $select->ingredients()->sync($dish->getIngredientIds());
+
+        return response()->json([
+            'status' => true,
+            'msg' => 'Success',
+            'data' => new SelectCollection($select)
+        ]);
+    }
+
+    public function copySelect(Request $request): JsonResponse
+    {
+        $prev_select = Select::find($request->prev_id);
+
+        if (!$prev_select) {
+            return response()->json([
+                'status' => false,
+                'msg' => 'Select not found'
+            ]);
+        }
+
+        $select = Select::find($request->id);
+        $select->dish_name = $prev_select->dish_name;
+        $select->description = $prev_select->description;
+        $select->tableware_id = $prev_select->tableware_id;
+        $select->weight = $prev_select->weight;
+        $select->is_extra = $prev_select->is_extra;
+
+        $select->save();
+
+        $select->ingredients()->detach();
+
+        $si = SelectIngredient::where('select_id', $prev_select->id)->get();
+
+        foreach ($si as $item) {
+            SelectIngredient::create([
+                'select_id' => $select->id,
+                'ingredient_id' => $item->ingredient_id,
+                'analog_id' => $item->analog_id,
+                'is_editable' => $item->is_editable,
+                'is_visible' => $item->is_visible
+            ]);
+        }
 
         return response()->json([
             'status' => true,

@@ -420,6 +420,13 @@ class OrderController extends Controller
                 case '977021': //Almaty
                     $fields['city_id'] = Order::ALMATY;
                     break;
+                case '982469': //Karagandy
+                    $fields['city_id'] = Order::ASTANA;
+                    break;
+                case '982471': //Temirtau
+                    $fields['city_id'] = Order::ASTANA;
+                    break;
+                default: $fields['city_id'] = Order::ASTANA;
             }
 
             switch ($fields['type']) {

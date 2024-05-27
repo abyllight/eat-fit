@@ -139,6 +139,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/select/all', [SelectController::class, 'index']);
     Route::get('/select/message/{id}', [SelectController::class, 'getMessage']);
     Route::post('select/add/dish', [SelectController::class, 'setDishToSelect']);
+    Route::post('select/copy', [SelectController::class, 'copySelect']);
     Route::post('select/add/details', [SelectController::class, 'saveSelectDetails']);
     Route::post('select/add/ingredient', [SelectController::class, 'addIngredientFromSelect']);
     Route::post('select/remove/ingredient', [SelectController::class, 'removeIngredientFromSelect']);
