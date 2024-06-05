@@ -90,7 +90,7 @@ class ManagementController extends Controller
 
                 if($day >= $course) {
                     $lead['status_id'] = 16567015; // Обратная связь
-                }else if(($day === 1 && $course > 2) || $day === 7 || $day === 12 || $day === 18){
+                }else if(($day === 1 && $course > 2) || $day === 12 || $day === 18){
                     $day++;
                     $lead->addCustomField(328089, $day);
 
