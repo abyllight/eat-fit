@@ -122,7 +122,7 @@
                     dense
                     class="mt-5"
                     item-value="id"
-                    :item-text="item => item.created_at +' - '+ item.dish_name"
+                    :item-text="item => item.created_at + ' - ' + '(' + item.cuisine + ')' + item.dish_name"
                     return-object
                 ></v-select>
 

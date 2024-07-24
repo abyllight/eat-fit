@@ -95,8 +95,7 @@ class SelectController extends Controller
         $order = $select->order;
         $previous = Select::where('ration_id', $select->ration_id)
             ->where('order_id', $order->id)
-            ->where('cuisine_id', $select->cuisine_id)
-            ->whereDate('created_at', '<', Carbon::today())
+            ->whereDate('created_at', '<=', Carbon::today())
             ->get();
 
         if ($previous) {
