@@ -236,7 +236,7 @@ class MoySkladController extends Controller
                             Log::alert('Retail demand created ' . $last_order['id']);
 
                             $state = $last_order['state']['meta']['href'];
-
+                            Log::alert('Order state ' . $state);
                             //Если успешная сделка
                             if (str_contains($state, '06aa843b-ad60-11ed-0a80-0bc10000fd8c')) {
                                 $lead_id = null;
