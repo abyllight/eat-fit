@@ -3752,7 +3752,14 @@ var render = function() {
                       dense: "",
                       "item-value": "id",
                       "item-text": function(item) {
-                        return item.created_at + " - " + item.dish_name
+                        return (
+                          item.created_at +
+                          " - " +
+                          "(" +
+                          item.cuisine +
+                          ")" +
+                          item.dish_name
+                        )
                       },
                       "return-object": ""
                     },

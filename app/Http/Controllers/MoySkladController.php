@@ -236,14 +236,19 @@ class MoySkladController extends Controller
                             Log::alert('Retail demand created ' . $last_order['id']);
 
                             $state = $last_order['state']['meta']['href'];
+
+                            //Если успешная сделка
                             if (str_contains($state, '06aa843b-ad60-11ed-0a80-0bc10000fd8c')) {
                                 $lead_id = null;
 
+                                Log::alert('Order changed to success' . $last_order['id']);
+                                Log::alert('Order state' . $state);
                                 if (array_key_exists('attributes', $last_order)) {
                                     foreach ($last_order['attributes'] as $attribute) {
                                         //Lead id
                                         if ($attribute['id'] === '4e5f9189-d571-11ee-0a80-02ac0064d218') {
                                             $lead_id = $attribute['value'];
+                                            Log::alert('Found order lead ID' . $lead_id);
                                         }
                                     }
                                 }
@@ -884,7 +889,7 @@ class MoySkladController extends Controller
         return response()->json('SUCCESS! AMO AND MOYSKLAD STATUSES OK!');
     }
 
-    public function updateLead($lead_id, array $fields, $order_id)
+    public function updateLead($lead_id, array $fields, $order_id): JsonResponse
     {
         if (!$lead_id) {
             Log::alert('Lead id not found ' . $order_id);
