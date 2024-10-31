@@ -23,6 +23,9 @@ class Payment extends Model
         ],
         [
             'name' => 'Личный Kaspi'
+        ],
+        [
+            'name' => 'Forte терминал'
         ]
     ];
     public const ALMATY_PAYMENT_TYPES = [
