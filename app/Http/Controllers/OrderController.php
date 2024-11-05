@@ -124,6 +124,10 @@ class OrderController extends Controller
         $order->yaddress1 = $request->yaddress1;
         $order->address1 = $request->address1;
         $order->logistic = $request->logistic;
+        $order->lat1 = $request->lat1;
+        $order->lng1 = $request->lng1;
+        $order->lat2 = $request->lat2;
+        $order->lng2 = $request->lng2;
 
         $order->yaddress2 = !$request->yaddress2 ? $request->yaddress1 : $request->yaddress2;
         $order->address2 = !$request->address2 ? $request->address1 : $request->address2;

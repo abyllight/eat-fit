@@ -107,6 +107,18 @@
                                     outlined
                                     :error-messages="errors.address1"
                                 ></v-text-field>
+                                <v-text-field
+                                    v-model="lat1"
+                                    label="Широта"
+                                    outlined
+                                    :error-messages="errors.lat1"
+                                ></v-text-field>
+                                <v-text-field
+                                    v-model="lng1"
+                                    label="Долгота"
+                                    outlined
+                                    :error-messages="errors.lng1"
+                                ></v-text-field>
                                 <v-textarea
                                     v-model="logistic"
                                     label="Комментарий"
@@ -205,6 +217,18 @@
                                     label="Адрес"
                                     outlined
                                     :error-messages="errors.address2"
+                                ></v-text-field>
+                                <v-text-field
+                                    v-model="lat2"
+                                    label="Широта"
+                                    outlined
+                                    :error-messages="errors.lat2"
+                                ></v-text-field>
+                                <v-text-field
+                                    v-model="lng2"
+                                    label="Долгота"
+                                    outlined
+                                    :error-messages="errors.lng2"
                                 ></v-text-field>
                                 <v-dialog
                                     ref="start2"
@@ -399,6 +423,10 @@ export default {
         time2_end: null,
         yaddress1: null,
         yaddress2: null,
+        lat1: null,
+        lng1: null,
+        lat2: null,
+        lng2: null,
         address1: null,
         address2: null,
         logistic: null,
@@ -446,6 +474,10 @@ export default {
                             this.yaddress1 = order.yaddress1
                             this.address1 = order.address1
                             this.logistic = order.logistic
+                            this.lat1 = order.lat1
+                            this.lng1 = order.lng1
+                            this.lat2 = order.lat2
+                            this.lng2 = order.lng2
                             if (order.time1 != null){
                                 const t1 = order.time1.split("-");
                                 this.time1_start = t1[0]
@@ -503,7 +535,11 @@ export default {
                 time1_start: this.time1_start,
                 time2_start: this.time2_start,
                 time1_end: this.time1_end,
-                time2_end: this.time2_end
+                time2_end: this.time2_end,
+                lat1: this.lat1,
+                lng1: this.lng1,
+                lat2: this.lat2,
+                lng2: this.lng2
             }
 
             axios({

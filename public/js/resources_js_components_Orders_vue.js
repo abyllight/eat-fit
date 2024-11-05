@@ -863,6 +863,30 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "CrudOrder",
   props: {
@@ -933,6 +957,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       time2_end: null,
       yaddress1: null,
       yaddress2: null,
+      lat1: null,
+      lng1: null,
+      lat2: null,
+      lng2: null,
       address1: null,
       address2: null,
       logistic: null,
@@ -994,6 +1022,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     _this.yaddress1 = order.yaddress1;
                     _this.address1 = order.address1;
                     _this.logistic = order.logistic;
+                    _this.lat1 = order.lat1;
+                    _this.lng1 = order.lng1;
+                    _this.lat2 = order.lat2;
+                    _this.lng2 = order.lng2;
 
                     if (order.time1 != null) {
                       var t1 = order.time1.split("-");
@@ -1063,7 +1095,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         time1_start: this.time1_start,
         time2_start: this.time2_start,
         time1_end: this.time1_end,
-        time2_end: this.time2_end
+        time2_end: this.time2_end,
+        lat1: this.lat1,
+        lng1: this.lng1,
+        lat2: this.lat2,
+        lng2: this.lng2
       };
       axios({
         method: this.method,
@@ -2045,6 +2081,36 @@ var render = function() {
                                 }
                               }),
                               _vm._v(" "),
+                              _c("v-text-field", {
+                                attrs: {
+                                  label: "Широта",
+                                  outlined: "",
+                                  "error-messages": _vm.errors.lat1
+                                },
+                                model: {
+                                  value: _vm.lat1,
+                                  callback: function($$v) {
+                                    _vm.lat1 = $$v
+                                  },
+                                  expression: "lat1"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("v-text-field", {
+                                attrs: {
+                                  label: "Долгота",
+                                  outlined: "",
+                                  "error-messages": _vm.errors.lng1
+                                },
+                                model: {
+                                  value: _vm.lng1,
+                                  callback: function($$v) {
+                                    _vm.lng1 = $$v
+                                  },
+                                  expression: "lng1"
+                                }
+                              }),
+                              _vm._v(" "),
                               _c("v-textarea", {
                                 attrs: {
                                   label: "Комментарий",
@@ -2355,6 +2421,36 @@ var render = function() {
                                         _vm.address2 = $$v
                                       },
                                       expression: "address2"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("v-text-field", {
+                                    attrs: {
+                                      label: "Широта",
+                                      outlined: "",
+                                      "error-messages": _vm.errors.lat2
+                                    },
+                                    model: {
+                                      value: _vm.lat2,
+                                      callback: function($$v) {
+                                        _vm.lat2 = $$v
+                                      },
+                                      expression: "lat2"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("v-text-field", {
+                                    attrs: {
+                                      label: "Долгота",
+                                      outlined: "",
+                                      "error-messages": _vm.errors.lng2
+                                    },
+                                    model: {
+                                      value: _vm.lng2,
+                                      callback: function($$v) {
+                                        _vm.lng2 = $$v
+                                      },
+                                      expression: "lng2"
                                     }
                                   }),
                                   _vm._v(" "),
