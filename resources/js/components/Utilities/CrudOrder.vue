@@ -204,7 +204,7 @@
                                     </v-time-picker>
                                 </v-dialog>
                             </v-col>
-                            <v-col v-if="isEatFit" sm="12" lg="4">
+                            <v-col sm="12" lg="4">
                                 <h4 class="mb-3">Адрес 2</h4>
                                 <v-text-field
                                     v-model="yaddress2"
