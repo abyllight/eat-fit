@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class MapController extends Controller
 {
-    protected $link = 'https://geocode-maps.yandex.ru/1.x/?apikey=df752091-7d67-4202-af5c-322b09947c85&geocode=';
+    protected $link = 'https://geocode-maps.yandex.ru/1.x/?apikey=8d71ca56-3ec8-4ec9-9e05-5b5833c1e149&geocode=';
 
     public function filter(Request $request): JsonResponse
     {
