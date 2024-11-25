@@ -2385,355 +2385,332 @@ var render = function() {
                             1
                           ),
                           _vm._v(" "),
-                          _vm.isEatFit
-                            ? _c(
-                                "v-col",
-                                { attrs: { sm: "12", lg: "4" } },
-                                [
-                                  _c("h4", { staticClass: "mb-3" }, [
-                                    _vm._v("Адрес 2")
+                          _c(
+                            "v-col",
+                            { attrs: { sm: "12", lg: "4" } },
+                            [
+                              _c("h4", { staticClass: "mb-3" }, [
+                                _vm._v("Адрес 2")
+                              ]),
+                              _vm._v(" "),
+                              _c("v-text-field", {
+                                attrs: {
+                                  label: "Яндекс адрес",
+                                  outlined: "",
+                                  "error-messages": _vm.errors.yaddress2
+                                },
+                                model: {
+                                  value: _vm.yaddress2,
+                                  callback: function($$v) {
+                                    _vm.yaddress2 = $$v
+                                  },
+                                  expression: "yaddress2"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("v-text-field", {
+                                attrs: {
+                                  label: "Адрес",
+                                  outlined: "",
+                                  "error-messages": _vm.errors.address2
+                                },
+                                model: {
+                                  value: _vm.address2,
+                                  callback: function($$v) {
+                                    _vm.address2 = $$v
+                                  },
+                                  expression: "address2"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("v-text-field", {
+                                attrs: {
+                                  label: "Широта",
+                                  outlined: "",
+                                  "error-messages": _vm.errors.lat2
+                                },
+                                model: {
+                                  value: _vm.lat2,
+                                  callback: function($$v) {
+                                    _vm.lat2 = $$v
+                                  },
+                                  expression: "lat2"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("v-text-field", {
+                                attrs: {
+                                  label: "Долгота",
+                                  outlined: "",
+                                  "error-messages": _vm.errors.lng2
+                                },
+                                model: {
+                                  value: _vm.lng2,
+                                  callback: function($$v) {
+                                    _vm.lng2 = $$v
+                                  },
+                                  expression: "lng2"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "v-dialog",
+                                {
+                                  ref: "start2",
+                                  attrs: {
+                                    "return-value": _vm.time2_start,
+                                    persistent: "",
+                                    width: "290px"
+                                  },
+                                  on: {
+                                    "update:returnValue": function($event) {
+                                      _vm.time2_start = $event
+                                    },
+                                    "update:return-value": function($event) {
+                                      _vm.time2_start = $event
+                                    }
+                                  },
+                                  scopedSlots: _vm._u([
+                                    {
+                                      key: "activator",
+                                      fn: function(ref) {
+                                        var on = ref.on
+                                        var attrs = ref.attrs
+                                        return [
+                                          _c(
+                                            "v-text-field",
+                                            _vm._g(
+                                              _vm._b(
+                                                {
+                                                  attrs: {
+                                                    label: "С",
+                                                    readonly: "",
+                                                    outlined: ""
+                                                  },
+                                                  model: {
+                                                    value: _vm.time2_start,
+                                                    callback: function($$v) {
+                                                      _vm.time2_start = $$v
+                                                    },
+                                                    expression: "time2_start"
+                                                  }
+                                                },
+                                                "v-text-field",
+                                                attrs,
+                                                false
+                                              ),
+                                              on
+                                            )
+                                          )
+                                        ]
+                                      }
+                                    }
                                   ]),
-                                  _vm._v(" "),
-                                  _c("v-text-field", {
-                                    attrs: {
-                                      label: "Яндекс адрес",
-                                      outlined: "",
-                                      "error-messages": _vm.errors.yaddress2
+                                  model: {
+                                    value: _vm.timeModal3,
+                                    callback: function($$v) {
+                                      _vm.timeModal3 = $$v
                                     },
-                                    model: {
-                                      value: _vm.yaddress2,
-                                      callback: function($$v) {
-                                        _vm.yaddress2 = $$v
-                                      },
-                                      expression: "yaddress2"
-                                    }
-                                  }),
+                                    expression: "timeModal3"
+                                  }
+                                },
+                                [
                                   _vm._v(" "),
-                                  _c("v-text-field", {
-                                    attrs: {
-                                      label: "Адрес",
-                                      outlined: "",
-                                      "error-messages": _vm.errors.address2
-                                    },
-                                    model: {
-                                      value: _vm.address2,
-                                      callback: function($$v) {
-                                        _vm.address2 = $$v
-                                      },
-                                      expression: "address2"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("v-text-field", {
-                                    attrs: {
-                                      label: "Широта",
-                                      outlined: "",
-                                      "error-messages": _vm.errors.lat2
-                                    },
-                                    model: {
-                                      value: _vm.lat2,
-                                      callback: function($$v) {
-                                        _vm.lat2 = $$v
-                                      },
-                                      expression: "lat2"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("v-text-field", {
-                                    attrs: {
-                                      label: "Долгота",
-                                      outlined: "",
-                                      "error-messages": _vm.errors.lng2
-                                    },
-                                    model: {
-                                      value: _vm.lng2,
-                                      callback: function($$v) {
-                                        _vm.lng2 = $$v
-                                      },
-                                      expression: "lng2"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c(
-                                    "v-dialog",
-                                    {
-                                      ref: "start2",
-                                      attrs: {
-                                        "return-value": _vm.time2_start,
-                                        persistent: "",
-                                        width: "290px"
-                                      },
-                                      on: {
-                                        "update:returnValue": function($event) {
-                                          _vm.time2_start = $event
-                                        },
-                                        "update:return-value": function(
-                                          $event
-                                        ) {
-                                          _vm.time2_start = $event
-                                        }
-                                      },
-                                      scopedSlots: _vm._u(
-                                        [
-                                          {
-                                            key: "activator",
-                                            fn: function(ref) {
-                                              var on = ref.on
-                                              var attrs = ref.attrs
-                                              return [
-                                                _c(
-                                                  "v-text-field",
-                                                  _vm._g(
-                                                    _vm._b(
-                                                      {
-                                                        attrs: {
-                                                          label: "С",
-                                                          readonly: "",
-                                                          outlined: ""
-                                                        },
-                                                        model: {
-                                                          value:
-                                                            _vm.time2_start,
-                                                          callback: function(
-                                                            $$v
-                                                          ) {
-                                                            _vm.time2_start = $$v
-                                                          },
-                                                          expression:
-                                                            "time2_start"
-                                                        }
-                                                      },
-                                                      "v-text-field",
-                                                      attrs,
-                                                      false
-                                                    ),
-                                                    on
-                                                  )
-                                                )
-                                              ]
-                                            }
+                                  _vm.timeModal3
+                                    ? _c(
+                                        "v-time-picker",
+                                        {
+                                          attrs: { "full-width": "" },
+                                          model: {
+                                            value: _vm.time2_start,
+                                            callback: function($$v) {
+                                              _vm.time2_start = $$v
+                                            },
+                                            expression: "time2_start"
                                           }
-                                        ],
-                                        null,
-                                        false,
-                                        503019722
-                                      ),
-                                      model: {
-                                        value: _vm.timeModal3,
-                                        callback: function($$v) {
-                                          _vm.timeModal3 = $$v
                                         },
-                                        expression: "timeModal3"
-                                      }
-                                    },
-                                    [
-                                      _vm._v(" "),
-                                      _vm.timeModal3
-                                        ? _c(
-                                            "v-time-picker",
+                                        [
+                                          _c("v-spacer"),
+                                          _vm._v(" "),
+                                          _c(
+                                            "v-btn",
                                             {
-                                              attrs: { "full-width": "" },
-                                              model: {
-                                                value: _vm.time2_start,
-                                                callback: function($$v) {
-                                                  _vm.time2_start = $$v
-                                                },
-                                                expression: "time2_start"
+                                              attrs: {
+                                                text: "",
+                                                color: "primary"
+                                              },
+                                              on: {
+                                                click: function($event) {
+                                                  _vm.timeModal3 = false
+                                                }
                                               }
                                             },
                                             [
-                                              _c("v-spacer"),
-                                              _vm._v(" "),
-                                              _c(
-                                                "v-btn",
-                                                {
-                                                  attrs: {
-                                                    text: "",
-                                                    color: "primary"
-                                                  },
-                                                  on: {
-                                                    click: function($event) {
-                                                      _vm.timeModal3 = false
-                                                    }
-                                                  }
-                                                },
-                                                [
-                                                  _vm._v(
-                                                    "\n                                        Cancel\n                                    "
-                                                  )
-                                                ]
-                                              ),
-                                              _vm._v(" "),
-                                              _c(
-                                                "v-btn",
-                                                {
-                                                  attrs: {
-                                                    text: "",
-                                                    color: "primary"
-                                                  },
-                                                  on: {
-                                                    click: function($event) {
-                                                      return _vm.$refs.start2.save(
-                                                        _vm.time2_start
-                                                      )
-                                                    }
-                                                  }
-                                                },
-                                                [
-                                                  _vm._v(
-                                                    "\n                                        OK\n                                    "
-                                                  )
-                                                ]
+                                              _vm._v(
+                                                "\n                                        Cancel\n                                    "
                                               )
-                                            ],
-                                            1
-                                          )
-                                        : _vm._e()
-                                    ],
-                                    1
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "v-dialog",
-                                    {
-                                      ref: "end2",
-                                      attrs: {
-                                        "return-value": _vm.time2_end,
-                                        persistent: "",
-                                        width: "290px"
-                                      },
-                                      on: {
-                                        "update:returnValue": function($event) {
-                                          _vm.time2_end = $event
-                                        },
-                                        "update:return-value": function(
-                                          $event
-                                        ) {
-                                          _vm.time2_end = $event
-                                        }
-                                      },
-                                      scopedSlots: _vm._u(
-                                        [
-                                          {
-                                            key: "activator",
-                                            fn: function(ref) {
-                                              var on = ref.on
-                                              var attrs = ref.attrs
-                                              return [
-                                                _c(
-                                                  "v-text-field",
-                                                  _vm._g(
-                                                    _vm._b(
-                                                      {
-                                                        attrs: {
-                                                          label: "До",
-                                                          readonly: "",
-                                                          outlined: ""
-                                                        },
-                                                        model: {
-                                                          value: _vm.time2_end,
-                                                          callback: function(
-                                                            $$v
-                                                          ) {
-                                                            _vm.time2_end = $$v
-                                                          },
-                                                          expression:
-                                                            "time2_end"
-                                                        }
-                                                      },
-                                                      "v-text-field",
-                                                      attrs,
-                                                      false
-                                                    ),
-                                                    on
-                                                  )
-                                                )
-                                              ]
-                                            }
-                                          }
-                                        ],
-                                        null,
-                                        false,
-                                        4125835918
-                                      ),
-                                      model: {
-                                        value: _vm.timeModal4,
-                                        callback: function($$v) {
-                                          _vm.timeModal4 = $$v
-                                        },
-                                        expression: "timeModal4"
-                                      }
-                                    },
-                                    [
-                                      _vm._v(" "),
-                                      _vm.timeModal4
-                                        ? _c(
-                                            "v-time-picker",
+                                            ]
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "v-btn",
                                             {
-                                              attrs: { "full-width": "" },
-                                              model: {
-                                                value: _vm.time2_end,
-                                                callback: function($$v) {
-                                                  _vm.time2_end = $$v
-                                                },
-                                                expression: "time2_end"
+                                              attrs: {
+                                                text: "",
+                                                color: "primary"
+                                              },
+                                              on: {
+                                                click: function($event) {
+                                                  return _vm.$refs.start2.save(
+                                                    _vm.time2_start
+                                                  )
+                                                }
                                               }
                                             },
                                             [
-                                              _c("v-spacer"),
-                                              _vm._v(" "),
-                                              _c(
-                                                "v-btn",
-                                                {
-                                                  attrs: {
-                                                    text: "",
-                                                    color: "primary"
-                                                  },
-                                                  on: {
-                                                    click: function($event) {
-                                                      _vm.timeModal4 = false
-                                                    }
-                                                  }
-                                                },
-                                                [
-                                                  _vm._v(
-                                                    "\n                                        Cancel\n                                    "
-                                                  )
-                                                ]
-                                              ),
-                                              _vm._v(" "),
-                                              _c(
-                                                "v-btn",
-                                                {
-                                                  attrs: {
-                                                    text: "",
-                                                    color: "primary"
-                                                  },
-                                                  on: {
-                                                    click: function($event) {
-                                                      return _vm.$refs.end2.save(
-                                                        _vm.time2_end
-                                                      )
-                                                    }
-                                                  }
-                                                },
-                                                [
-                                                  _vm._v(
-                                                    "\n                                        OK\n                                    "
-                                                  )
-                                                ]
+                                              _vm._v(
+                                                "\n                                        OK\n                                    "
                                               )
-                                            ],
-                                            1
+                                            ]
                                           )
-                                        : _vm._e()
-                                    ],
-                                    1
-                                  )
+                                        ],
+                                        1
+                                      )
+                                    : _vm._e()
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "v-dialog",
+                                {
+                                  ref: "end2",
+                                  attrs: {
+                                    "return-value": _vm.time2_end,
+                                    persistent: "",
+                                    width: "290px"
+                                  },
+                                  on: {
+                                    "update:returnValue": function($event) {
+                                      _vm.time2_end = $event
+                                    },
+                                    "update:return-value": function($event) {
+                                      _vm.time2_end = $event
+                                    }
+                                  },
+                                  scopedSlots: _vm._u([
+                                    {
+                                      key: "activator",
+                                      fn: function(ref) {
+                                        var on = ref.on
+                                        var attrs = ref.attrs
+                                        return [
+                                          _c(
+                                            "v-text-field",
+                                            _vm._g(
+                                              _vm._b(
+                                                {
+                                                  attrs: {
+                                                    label: "До",
+                                                    readonly: "",
+                                                    outlined: ""
+                                                  },
+                                                  model: {
+                                                    value: _vm.time2_end,
+                                                    callback: function($$v) {
+                                                      _vm.time2_end = $$v
+                                                    },
+                                                    expression: "time2_end"
+                                                  }
+                                                },
+                                                "v-text-field",
+                                                attrs,
+                                                false
+                                              ),
+                                              on
+                                            )
+                                          )
+                                        ]
+                                      }
+                                    }
+                                  ]),
+                                  model: {
+                                    value: _vm.timeModal4,
+                                    callback: function($$v) {
+                                      _vm.timeModal4 = $$v
+                                    },
+                                    expression: "timeModal4"
+                                  }
+                                },
+                                [
+                                  _vm._v(" "),
+                                  _vm.timeModal4
+                                    ? _c(
+                                        "v-time-picker",
+                                        {
+                                          attrs: { "full-width": "" },
+                                          model: {
+                                            value: _vm.time2_end,
+                                            callback: function($$v) {
+                                              _vm.time2_end = $$v
+                                            },
+                                            expression: "time2_end"
+                                          }
+                                        },
+                                        [
+                                          _c("v-spacer"),
+                                          _vm._v(" "),
+                                          _c(
+                                            "v-btn",
+                                            {
+                                              attrs: {
+                                                text: "",
+                                                color: "primary"
+                                              },
+                                              on: {
+                                                click: function($event) {
+                                                  _vm.timeModal4 = false
+                                                }
+                                              }
+                                            },
+                                            [
+                                              _vm._v(
+                                                "\n                                        Cancel\n                                    "
+                                              )
+                                            ]
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "v-btn",
+                                            {
+                                              attrs: {
+                                                text: "",
+                                                color: "primary"
+                                              },
+                                              on: {
+                                                click: function($event) {
+                                                  return _vm.$refs.end2.save(
+                                                    _vm.time2_end
+                                                  )
+                                                }
+                                              }
+                                            },
+                                            [
+                                              _vm._v(
+                                                "\n                                        OK\n                                    "
+                                              )
+                                            ]
+                                          )
+                                        ],
+                                        1
+                                      )
+                                    : _vm._e()
                                 ],
                                 1
                               )
-                            : _vm._e()
+                            ],
+                            1
+                          )
                         ],
                         1
                       ),

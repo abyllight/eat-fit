@@ -300,7 +300,7 @@ class OrderController extends Controller
 
             $work = $amo->lead->apiList([
                 'status'     => 16566964,
-                'limit_rows' => 400
+                'limit_rows' => 500
             ]);
 
             $array = array_merge($work, $trial, $go);
