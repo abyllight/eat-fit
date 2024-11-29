@@ -290,12 +290,12 @@ class OrderController extends Controller
 
             $trial = $amo->lead->apiList([
                 'status'     => 16536847,
-                'limit_rows' => 100
+                'limit_rows' => 500
             ]);
 
             $go = $amo->lead->apiList([
                 'status'     => 40592380,
-                'limit_rows' => 100
+                'limit_rows' => 500
             ]);
 
             $work = $amo->lead->apiList([
