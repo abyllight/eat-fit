@@ -40,12 +40,12 @@ class BroadcastMenuController extends Controller
             ->where('city_id', $city_id)
             ->where('s_num', '!=', null)
             ->get();
-        $duty_cuisine = Cuisine::where('is_on_duty', true)->first();
+        //$duty_cuisine = Cuisine::where('is_on_duty', true)->first();
 
         $arr = [];
 
         foreach ($orders as $order) {
-            $text = '*'.$duty_cuisine->name .'*'. PHP_EOL.PHP_EOL;
+            $text = '*'. 'SELECT' .'*'. PHP_EOL.PHP_EOL;
             $selects = $order->select()->whereDate('created_at', Carbon::today())->where('is_active', true)->get()->sortBy('ration_id');
 
             foreach ($selects as $select) {
@@ -72,12 +72,12 @@ class BroadcastMenuController extends Controller
             ->where('city_id', $city_id)
             ->where('s_num', '!=', null)
             ->get();
-        $duty_cuisine = Cuisine::where('is_on_duty', true)->first();
+        //$duty_cuisine = Cuisine::where('is_on_duty', true)->first();
 
         $arr = [];
 
         foreach ($orders as $order) {
-            $text = '<b>'.$duty_cuisine->name .'</b><br/><br/>';
+            $text = '<b>'.'SELECT'.'</b><br/><br/>';
             $selects = $order->select()->whereDate('created_at', Carbon::today())->where('is_active', true)->get()->sortBy('ration_id');
 
             foreach ($selects as $select) {
