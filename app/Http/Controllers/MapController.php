@@ -8,6 +8,7 @@ use App\Models\Week;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class MapController extends Controller
 {
@@ -72,26 +73,32 @@ class MapController extends Controller
             $yaddress = $is_weekend ? $order->yaddress2 : $order->yaddress1;
 
             if ($yaddress) {
-                $xml = simplexml_load_file($this->link . urlencode($yaddress));
-                $lat_lng = explode(" ", $xml->GeoObjectCollection->featureMember->GeoObject->Point->pos);
+                $json = Http::get('https://geocode.maps.co/search?q='. urlencode($yaddress) .'&api_key=67add68cafb44088155851mus16d809')
+                    ->json();
 
-                if (!$lat_lng) {
+                if (!$json || count($json) == 0) {
+
+                    /*dd($json, $yaddress);
                     return response()->json([
                         'status' => false,
-                        'message' => 'Не удалось геокодировать адрес' . $order->name . ' ' . $yaddress
-                    ]);
+                        'message' => 'Не удалось геокодировать адрес ' . $order->name . ' ' . $yaddress
+                    ]);*/
+                    continue;
                 }
 
+                $lat = $json[0]['lat'];
+                $lon = $json[0]['lon'];
+
                 if ($is_weekend) {
-                    $order->lat2 = $lat_lng[1];
-                    $order->lng2 = $lat_lng[0];
+                    $order->lat2 = $lat;
+                    $order->lng2 = $lon;
                 }else {
-                    $order->lat1 = $lat_lng[1];
-                    $order->lng1 = $lat_lng[0];
+                    $order->lat1 = $lat;
+                    $order->lng1 = $lon;
 
                     if($order->yaddress1 === $order->yaddress2){
-                        $order->lat2 = $lat_lng[1];
-                        $order->lng2 = $lat_lng[0];
+                        $order->lat2 = $lat;
+                        $order->lng2 = $lon;
                     }
                 }
                 $order->save();
