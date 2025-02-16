@@ -62,32 +62,33 @@ class MapController extends Controller
             ]);
         }
 
-        $context = stream_context_create(array('ssl'=>array(
+        /*$context = stream_context_create(array('ssl'=>array(
             'verify_peer' => false,
             "verify_peer_name"=>false
         )));
 
-        libxml_set_streams_context($context);
+        libxml_set_streams_context($context);*/
 
         foreach ($orders as $order) {
             $yaddress = $is_weekend ? $order->yaddress2 : $order->yaddress1;
 
             if ($yaddress) {
-                $json = Http::get('https://geocode.maps.co/search?q='. urlencode($yaddress) .'&api_key=67add68cafb44088155851mus16d809')
-                    ->json();
+                $response = Http::get('https://catalog.api.2gis.com/3.0/items/geocode?q=' .
+                urlencode($yaddress)
+                . '&fields=items.point,items.geometry.centroid&key=cb61dfb6-0964-4f83-b770-fceaf282b96f')->json();
+                /*$xml = simplexml_load_file($this->link . urlencode($yaddress));
+                $lat_lng = explode(" ", $xml->GeoObjectCollection->featureMember->GeoObject->Point->pos);*/
 
-                if (!$json || count($json) == 0) {
-
-                    /*dd($json, $yaddress);
+                if (!$response || (isset($response['meta']) && $response['meta']['code'] !== 200)) {
+                    var_dump($response, $yaddress);
                     return response()->json([
                         'status' => false,
-                        'message' => 'Не удалось геокодировать адрес ' . $order->name . ' ' . $yaddress
-                    ]);*/
-                    continue;
+                        'message' => 'Не удалось геокодировать адрес' . $order->name . ' ' . $yaddress
+                    ]);
                 }
 
-                $lat = $json[0]['lat'];
-                $lon = $json[0]['lon'];
+                $lat = $response['result']['items'][0]['point']['lat'];
+                $lon = $response['result']['items'][0]['point']['lon'];
 
                 if ($is_weekend) {
                     $order->lat2 = $lat;
