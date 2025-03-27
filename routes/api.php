@@ -69,6 +69,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/management/select', [ManagementController::class, 'sendSelect']);
     Route::get('/management/fact', [ManagementController::class, 'getFact']);
     Route::post('/management/fact', [ManagementController::class, 'payFact']);
+    Route::post('/management/otkat', [ManagementController::class, 'shiftOtkat']);
+
 
     Route::get('/cities', [CityController::class, 'index']);
 

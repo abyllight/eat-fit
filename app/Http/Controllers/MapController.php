@@ -8,7 +8,6 @@ use App\Models\Week;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
 
 class MapController extends Controller
 {
@@ -62,44 +61,37 @@ class MapController extends Controller
             ]);
         }
 
-        /*$context = stream_context_create(array('ssl'=>array(
+        $context = stream_context_create(array('ssl'=>array(
             'verify_peer' => false,
             "verify_peer_name"=>false
         )));
 
-        libxml_set_streams_context($context);*/
+        libxml_set_streams_context($context);
 
         foreach ($orders as $order) {
             $yaddress = $is_weekend ? $order->yaddress2 : $order->yaddress1;
 
             if ($yaddress) {
-                $response = Http::get('https://catalog.api.2gis.com/3.0/items/geocode?q=' .
-                urlencode($yaddress)
-                . '&fields=items.point,items.geometry.centroid&key=cb61dfb6-0964-4f83-b770-fceaf282b96f')->json();
-                /*$xml = simplexml_load_file($this->link . urlencode($yaddress));
-                $lat_lng = explode(" ", $xml->GeoObjectCollection->featureMember->GeoObject->Point->pos);*/
+                $xml = simplexml_load_file($this->link . urlencode($yaddress));
+                $lat_lng = explode(" ", $xml->GeoObjectCollection->featureMember->GeoObject->Point->pos);
 
-                if (!$response || (isset($response['meta']) && $response['meta']['code'] !== 200)) {
-                    var_dump($response, $yaddress);
+                if (!$lat_lng) {
                     return response()->json([
                         'status' => false,
                         'message' => 'Не удалось геокодировать адрес' . $order->name . ' ' . $yaddress
                     ]);
                 }
 
-                $lat = $response['result']['items'][0]['point']['lat'];
-                $lon = $response['result']['items'][0]['point']['lon'];
-
                 if ($is_weekend) {
-                    $order->lat2 = $lat;
-                    $order->lng2 = $lon;
+                    $order->lat2 = $lat_lng[1];
+                    $order->lng2 = $lat_lng[0];
                 }else {
-                    $order->lat1 = $lat;
-                    $order->lng1 = $lon;
+                    $order->lat1 = $lat_lng[1];
+                    $order->lng1 = $lat_lng[0];
 
                     if($order->yaddress1 === $order->yaddress2){
-                        $order->lat2 = $lat;
-                        $order->lng2 = $lon;
+                        $order->lat2 = $lat_lng[1];
+                        $order->lng2 = $lat_lng[0];
                     }
                 }
                 $order->save();
