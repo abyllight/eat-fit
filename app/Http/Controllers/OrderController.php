@@ -334,8 +334,8 @@ class OrderController extends Controller
             ->whereIn('type', Order::EAT_FIT_ARRAY)
             ->update(['is_active' => false, 'updated_at' => DB::raw('updated_at')]);
 
-        Select::whereDate('created_at', '=', Carbon::today())
-                ->update(['is_active' => false]);
+        /*Select::whereDate('created_at', '=', Carbon::today())
+                ->update(['is_active' => false]);*/
 
         foreach ($orders['data'] as $order) {
             $fields = [
@@ -603,14 +603,14 @@ class OrderController extends Controller
             $order->yaddress2_old = null;
         }
 
-        $selects = $order->select()->whereDate('created_at', Carbon::today())->get();
+        /*$selects = $order->select()->whereDate('created_at', Carbon::today())->get();
 
         if (count($selects) > 0) {
             foreach ($selects as $select) {
               $select->is_active = true;
               $select->save();
             }
-        }
+        }*/
 
         $order->is_active = true;
         $order->save();
