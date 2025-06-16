@@ -170,7 +170,16 @@
                             return-object
                             outlined
                             label="Блюда"
-                        ></v-select>
+                        >
+                            <template v-slot:item="{ item, props }">
+                                <v-list-item v-bind="props">
+                                    <v-list-item-content>
+                                        <v-list-item-title>{{ item.name }}</v-list-item-title>
+                                        <v-list-item-subtitle>{{ item.cuisine_name }}</v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </template>
+                        </v-select>
                     </v-col>
                     <v-col cols="3" v-if="dish">
                         <v-btn
@@ -837,7 +846,8 @@
                         ration_id: this.r_id,
                         cuisine_id: this.cuisine.id,
                         dish_id: this.dish.id,
-                        ingredient_id: id
+                        ingredient_id: id,
+                        is_extra: this.result.is_extra
                     })
                     .then(response => {
                         if (!response.data.status){

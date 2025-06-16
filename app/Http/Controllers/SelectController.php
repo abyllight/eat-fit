@@ -379,6 +379,7 @@ class SelectController extends Controller
         $select = Select::where('order_id', $request->order_id)
             ->where('cuisine_id', $request->cuisine_id)
             ->where('ration_id', $request->ration_id)
+            ->where('is_extra', $request->is_extra)
             ->whereDate('created_at', Carbon::today())
             ->first();
 
@@ -420,6 +421,7 @@ class SelectController extends Controller
         $select = Select::where('order_id', $request->order_id)
             ->where('cuisine_id', $request->cuisine_id)
             ->where('ration_id', $request->ration_id)
+            ->where('is_extra', $request->is_extra)
             ->whereDate('created_at', Carbon::today())
             ->first();
 

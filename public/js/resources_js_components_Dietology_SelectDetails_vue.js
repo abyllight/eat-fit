@@ -352,6 +352,27 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Dishes",
@@ -361,6 +382,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   data: function data() {
     return {
       dishes: [],
+      total: 1,
+      name: null,
+      filter: {
+        page: 1,
+        name: ''
+      },
       dish: {
         name: '',
         time: 0,
@@ -399,8 +426,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return axios.get('/api/dishes').then(function (response) {
-                  _this.dishes = response.data;
+                return axios.get('/api/dishes?page=' + _this.filter.page + '&name=' + _this.filter.name).then(function (response) {
+                  _this.dishes = response.data.data;
+                  _this.total = response.data.meta.last_page;
                 })["catch"](function (error) {
                   console.log(error);
                 });
@@ -481,6 +509,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }, _callee4);
       }))();
+    },
+    changePage: function changePage(event) {
+      this.filter.page = event;
+      this.getDishes();
     },
     action: function action() {
       if (this.edit === 1) {
@@ -593,6 +625,15 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -1556,7 +1597,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         ration_id: this.r_id,
         cuisine_id: this.cuisine.id,
         dish_id: this.dish.id,
-        ingredient_id: id
+        ingredient_id: id,
+        is_extra: this.result.is_extra
       }).then(function (response) {
         if (!response.data.status) {
           _this18.$store.dispatch('showAlert', {
@@ -3171,6 +3213,30 @@ var render = function() {
         [
           _c(
             "v-col",
+            [
+              _c("v-text-field", {
+                attrs: { outlined: "", label: "Название" },
+                on: { change: _vm.getDishes },
+                model: {
+                  value: _vm.filter.name,
+                  callback: function($$v) {
+                    _vm.$set(_vm.filter, "name", $$v)
+                  },
+                  expression: "filter.name"
+                }
+              })
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-row",
+        [
+          _c(
+            "v-col",
             { attrs: { cols: "12" } },
             [
               _c("v-simple-table", {
@@ -3264,7 +3330,26 @@ var render = function() {
                     proxy: true
                   }
                 ])
-              })
+              }),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "mt-8" },
+                [
+                  _c("v-pagination", {
+                    attrs: { length: _vm.total, "total-visible": 10 },
+                    on: { input: _vm.changePage },
+                    model: {
+                      value: _vm.filter.page,
+                      callback: function($$v) {
+                        _vm.$set(_vm.filter, "page", $$v)
+                      },
+                      expression: "filter.page"
+                    }
+                  })
+                ],
+                1
+              )
             ],
             1
           )
@@ -3872,6 +3957,44 @@ var render = function() {
                               outlined: "",
                               label: "Блюда"
                             },
+                            scopedSlots: _vm._u(
+                              [
+                                {
+                                  key: "item",
+                                  fn: function(ref) {
+                                    var item = ref.item
+                                    var props = ref.props
+                                    return [
+                                      _c(
+                                        "v-list-item",
+                                        _vm._b({}, "v-list-item", props, false),
+                                        [
+                                          _c(
+                                            "v-list-item-content",
+                                            [
+                                              _c("v-list-item-title", [
+                                                _vm._v(_vm._s(item.name))
+                                              ]),
+                                              _vm._v(" "),
+                                              _c("v-list-item-subtitle", [
+                                                _vm._v(
+                                                  _vm._s(item.cuisine_name)
+                                                )
+                                              ])
+                                            ],
+                                            1
+                                          )
+                                        ],
+                                        1
+                                      )
+                                    ]
+                                  }
+                                }
+                              ],
+                              null,
+                              false,
+                              3891082796
+                            ),
                             model: {
                               value: _vm.dish,
                               callback: function($$v) {

@@ -18,6 +18,7 @@ class DishCollection extends JsonResource
         return [
             'id' => $this->id,
             'cuisine_id' => $this->cuisine_id,
+            'cuisine_name' => $this->cuisine ? $this->cuisine->name : null,
             'i_name' => $this->iiko_name,
             'name' => $this->name,
             'department_id' => $this->department_id,

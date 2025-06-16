@@ -14,9 +14,18 @@ use Illuminate\Http\Request;
 
 class DishController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(Request $request)
     {
-        return response()->json(DishCollection::collection(Dish::where('is_custom', true)->orderBy('ration_id')->orderBy('name')->get()));
+        $items = Dish::where('is_custom', true);
+
+        if ($request->name) {
+            $items->where('name', 'like', '%' . $request->query('name') . '%');
+        }
+
+         $items = $items->orderBy('ration_id')
+            ->orderBy('name')
+            ->paginate(10);
+        return DishCollection::collection($items);
     }
 
     public function show($id): JsonResponse

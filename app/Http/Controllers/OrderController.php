@@ -334,6 +334,9 @@ class OrderController extends Controller
             ->whereIn('type', Order::EAT_FIT_ARRAY)
             ->update(['is_active' => false, 'updated_at' => DB::raw('updated_at')]);
 
+        Select::whereDate('created_at', '=', Carbon::today())
+                ->update(['is_active' => false]);
+
         foreach ($orders['data'] as $order) {
             $fields = [
                 'amo_id'    => $order['id'],
@@ -598,6 +601,15 @@ class OrderController extends Controller
 
         if($now->diffInDays($order->updated_at) > 1 && $order->yaddress2_old) {
             $order->yaddress2_old = null;
+        }
+
+        $selects = $order->select()->whereDate('created_at', Carbon::today())->get();
+
+        if (count($selects) > 0) {
+            foreach ($selects as $select) {
+              $select->is_active = true;
+              $select->save();
+            }
         }
 
         $order->is_active = true;

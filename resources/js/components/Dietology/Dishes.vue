@@ -10,6 +10,18 @@
                 </v-btn>
             </v-col>
         </v-row>
+
+        <v-row>
+            <v-col>
+                <v-text-field
+                    v-model="filter.name"
+                    outlined
+                    label="Название"
+                    @change="getDishes"
+                ></v-text-field>
+            </v-col>
+        </v-row>
+
         <v-row>
             <v-col cols="12">
                 <v-simple-table dense>
@@ -55,6 +67,15 @@
                         </tbody>
                     </template>
                 </v-simple-table>
+
+                <div class="mt-8">
+                    <v-pagination
+                        @input="changePage"
+                        v-model="filter.page"
+                        :length="total"
+                        :total-visible="10"
+                    ></v-pagination>
+                </div>
             </v-col>
         </v-row>
         <v-row justify="center">
@@ -155,6 +176,12 @@ export default {
     components: { TiptapVuetify },
     data: () => ({
         dishes: [],
+        total: 1,
+        name: null,
+        filter: {
+            page: 1,
+            name: ''
+        },
         dish: {
             name: '',
             time: 0,
@@ -201,9 +228,10 @@ export default {
     methods: {
         async getDishes(){
             await axios
-                .get('/api/dishes')
+                .get('/api/dishes?page=' + this.filter.page + '&name=' + this.filter.name)
                 .then(response => {
-                    this.dishes = response.data
+                    this.dishes = response.data.data
+                    this.total = response.data.meta.last_page
                 })
                 .catch(error => {
                     console.log(error)
@@ -238,6 +266,10 @@ export default {
                 .catch(error => {
                     console.log(error)
                 })
+        },
+        changePage(event) {
+            this.filter.page = event
+            this.getDishes()
         },
         action(){
             if (this.edit === 1){
