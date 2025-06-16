@@ -163,6 +163,7 @@
                     </v-col>
                     <v-col cols="6" v-if="dish">
                         <v-select
+                            ref="dish_select"
                             v-model="dish"
                             dense
                             :items="dishes"
@@ -172,7 +173,7 @@
                             label="Блюда"
                         >
                             <template v-slot:item="{ item, props }">
-                                <v-list-item v-bind="props">
+                                <v-list-item @click="selectDish(item)" v-bind="props">
                                     <v-list-item-content>
                                         <v-list-item-title>{{ item.name }}</v-list-item-title>
                                         <v-list-item-subtitle>{{ item.cuisine_name }}</v-list-item-subtitle>
@@ -600,6 +601,10 @@
                     .catch(error => {
                         console.log(error)
                     })
+            },
+            selectDish(item) {
+                this.dish = item
+                this.$refs.dish_select.blur()
             },
             async getCuisine(){
                 await axios

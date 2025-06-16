@@ -1081,6 +1081,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 
 
@@ -1299,6 +1300,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }, _callee5);
       }))();
+    },
+    selectDish: function selectDish(item) {
+      this.dish = item;
+      this.$refs.dish_select.blur();
     },
     getCuisine: function getCuisine() {
       var _this7 = this;
@@ -3949,6 +3954,7 @@ var render = function() {
                         { attrs: { cols: "6" } },
                         [
                           _c("v-select", {
+                            ref: "dish_select",
                             attrs: {
                               dense: "",
                               items: _vm.dishes,
@@ -3967,7 +3973,18 @@ var render = function() {
                                     return [
                                       _c(
                                         "v-list-item",
-                                        _vm._b({}, "v-list-item", props, false),
+                                        _vm._b(
+                                          {
+                                            on: {
+                                              click: function($event) {
+                                                return _vm.selectDish(item)
+                                              }
+                                            }
+                                          },
+                                          "v-list-item",
+                                          props,
+                                          false
+                                        ),
                                         [
                                           _c(
                                             "v-list-item-content",
@@ -3993,7 +4010,7 @@ var render = function() {
                               ],
                               null,
                               false,
-                              3891082796
+                              2738822632
                             ),
                             model: {
                               value: _vm.dish,
