@@ -6,11 +6,13 @@ use App\Models\City;
 use App\Models\Management;
 use App\Models\Order;
 use App\Models\Report;
+use App\Services\AmoCrmService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use AmoCRM\Client;
 use AmoCRM\Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class ManagementController extends Controller
 {
@@ -431,49 +433,54 @@ class ManagementController extends Controller
     public function shift(int $status, int $type): JsonResponse
     {
         try{
-            $amo = new Client(env('AMO_SUBDOMAIN'), env('AMO_LOGIN'), env('AMO_HASH'));
+            $amo = new AmoCrmService();
 
-            $items = $amo->lead->apiList([
-                'limit_rows' => 500,
-                'status' => $status,
-            ]);
+            $items = $amo->getLeadsByStatus(793612, $status, 500);
 
-            foreach ($items as $item){
+            foreach ($items as $item) {
                 $budget = (int)$item['price'];
+
                 $otrabotano = null;
 
                 $order = Order::where('amo_id', $item['id'])->orderBy('created_at','desc')->first();
 
-                foreach ($item['custom_fields'] as $field){
-                    if ($field['id'] === 495367){ //Отработано
+                foreach ($item['custom_fields_value'] as $field){
+                    if ($field['field_id'] === 495367){ //Отработано
                         $otrabotano = (int)$field["values"][0]["value"];
                     }
                 }
+                $customFields = [];
 
-                $lead = $amo->lead;
+                // Field 495367
+                $customFields[] = [
+                    'field_id' => 495367,
+                    'values'   => [
+                        ['value' => $otrabotano !== null ? $otrabotano + $budget : $budget]
+                    ]
+                ];
 
-                if ($otrabotano != null){
-                    $otrabotano += $budget;
-
-                    $lead->addCustomField(495367,
-                        $otrabotano
-                    );
-                }else{
-                    $lead->addCustomField(495367,
-                        $budget
-                    );
+                // If courier exists
+                if ($order && $order->courier) {
+                    $customFields[] = [
+                        'field_id' => 489499,
+                        'values'   => [
+                            ['value' => $order->courier->phone]
+                        ]
+                    ];
+                    $customFields[] = [
+                        'field_id' => 489497,
+                        'values'   => [
+                            ['value' => $order->courier->name]
+                        ]
+                    ];
                 }
 
-                if($order && $order->courier) {
-                    $lead->addCustomField(489499,
-                        $order->courier->phone
-                    );
-                    $lead->addCustomField(489497,
-                        $order->courier->name
-                    );
-                }
-
-                $lead->apiUpdate((int)$item['id'], 'now');
+                Http::withHeaders([
+                    'Authorization' => 'Bearer ' . env('AMO_ADMIN_LONG_TOKEN'),
+                    'Content-Type'  => 'application/json',
+                ])->patch("https://eatandfitkz.amocrm.ru/api/v4/leads/{$item['id']}", [
+                    'custom_fields_values' => $customFields
+                ]);
             }
 
             $management = Management::whereDate('created_at', Carbon::now()->toDateString())->where('type', $type)->first();

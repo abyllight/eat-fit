@@ -15,11 +15,13 @@ use App\Models\Payment;
 use App\Models\Select;
 use App\Models\SelectWish;
 use App\Models\Wishlist;
+use App\Services\AmoCrmService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class OrderController extends Controller
 {
@@ -286,8 +288,12 @@ class OrderController extends Controller
     public function fetch(): array
     {
         try {
-            $amo = new Client(env('AMO_SUBDOMAIN'), env('AMO_LOGIN'), env('AMO_HASH'));
-
+            //$amo = new Client(env('AMO_SUBDOMAIN'), env('AMO_LOGIN'), env('AMO_HASH'));
+            $amo = new AmoCrmService();
+            $trial = $amo->getLeadsByStatus(793612, 16536847, 500);
+            $go = $amo->getLeadsByStatus(4359841, 40592380, 500);
+            $work = $amo->getLeadsByStatus(793612, 16566964, 500);
+            /*//4359841
             $trial = $amo->lead->apiList([
                 'status'     => 16536847,
                 'limit_rows' => 500
@@ -301,10 +307,9 @@ class OrderController extends Controller
             $work = $amo->lead->apiList([
                 'status'     => 16566964,
                 'limit_rows' => 500
-            ]);
+            ]);*/
 
             $array = array_merge($work, $trial, $go);
-
             return [
                 'status' => true,
                 'data' => $array
@@ -338,6 +343,7 @@ class OrderController extends Controller
                 ->update(['is_active' => false]);*/
 
         foreach ($orders['data'] as $order) {
+            //dd($order);
             $fields = [
                 'amo_id'    => $order['id'],
                 'name'      => $order['name'],
@@ -361,8 +367,9 @@ class OrderController extends Controller
                 'diet'      => null
             ];
 
-            foreach ($order['custom_fields'] as $field) {
-                switch ($field['id']) {
+            foreach ($order['custom_fields_values'] as $field) {
+
+                switch ($field['field_id']) {
                     case '328089': //День
                         $fields['day'] = $field["values"][0]["value"];
                         break;
@@ -406,16 +413,16 @@ class OrderController extends Controller
                         $fields['whatsapp'] = $field["values"][0]["value"];
                         break;
                     case '321197': //Тип
-                        $fields['type'] = $field["values"][0]["enum"];
+                        $fields['type'] = $field["values"][0]["enum_id"];
                         break;
                     case '327953': //Размер
-                        $fields['size'] = $field["values"][0]["enum"];
+                        $fields['size'] = $field["values"][0]["enum_id"];
                         break;
                     case '321277': //Комм. (Кухня)
                         $fields['diet'] = $field["values"][0]["value"];
                         break;
                     case '881669': //City
-                        $fields['city_id'] = $field["values"][0]["enum"];
+                        $fields['city_id'] = $field;
                         break;
                 }
             }
