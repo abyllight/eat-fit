@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class CourierController extends Controller
 {
@@ -43,17 +44,22 @@ class CourierController extends Controller
 
         if ($order){
             try {
-                $amo = new Client(env('AMO_SUBDOMAIN'), env('AMO_LOGIN'), env('AMO_HASH'));
+                $payload = [];
+                $payload['status_id'] = 27248140;
+                $payload['custom_fields_values'][] = [
+                    'field_id' => 489499,
+                    'values'   => [['value' => $phone]],
+                ];
 
-                $lead = $amo->lead;
-                $lead['status_id'] = 27248140;
-                $lead->addCustomField(489499,
-                    $phone
-                );
-                $lead->addCustomField(489497,
-                    $user->name
-                );
-                $lead->apiUpdate($order->amo_id, 'now');
+                $payload['custom_fields_values'][] = [
+                    'field_id' => 489497,
+                    'values'   => [['value' => $user->name]],
+                ];
+
+                Http::withHeaders([
+                    'Authorization' => 'Bearer ' . env('AMO_ADMIN_LONG_TOKEN'),
+                    'Content-Type'  => 'application/json',
+                ])->patch("https://eatandfitkz.amocrm.ru/api/v4/leads/{$order->amo_id}", $payload);
 
                 $now = Carbon::now();
                 $founded_report = Report::where('order_id', $order->id)

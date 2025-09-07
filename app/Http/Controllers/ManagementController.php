@@ -65,20 +65,17 @@ class ManagementController extends Controller
     public function plusOne(int $status, int $type, bool $has_extra = false): array
     {
         try {
-            $amo = new Client(env('AMO_SUBDOMAIN'), env('AMO_LOGIN'), env('AMO_HASH'));
+            $amo = new AmoCrmService();
 
-            $array = $amo->lead->apiList([
-                'limit_rows' => 500,
-                'status' => $status
-            ]);
+            $array = $amo->getLeadsByStatus(793612, $status, 500);
 
             foreach ($array as $value) {
 
                 $day = 0;
                 $course = 0;
 
-                foreach ($value['custom_fields'] as $field) {
-                    switch ($field["id"]) {
+                foreach ($value['custom_fields_values'] as $field) {
+                    switch ($field["field_id"]) {
                         case '328089': //Day
                             $day = (int) $field["values"][0]["value"];
                             break;
@@ -88,51 +85,69 @@ class ManagementController extends Controller
                     }
                 }
 
-                $lead = $amo->lead;
+                $leadId = (int) $value['id'];
+                $updatePayload = [];
 
                 if($day >= $course) {
-                    $lead['status_id'] = 16567015; // Обратная связь
+                    $updatePayload['status_id'] = 16567015; // Обратная связь
                 }else if(($day === 1 && $course > 2) || $day === 12 || $day === 18){
                     $day++;
-                    $lead->addCustomField(328089, $day);
+                    $updatePayload['custom_fields_values'][] = [
+                        'field_id' => 328089,
+                        'values'   => [['value' => $day]],
+                    ];
 
-                    $task = $amo->task;
-                    $task['element_id'] = $value['id'];
-                    $task['element_type'] = 2;
-                    $task['task_type'] = 1;
-                    $task['text'] = 'Получить обратную связь от клиента';
-                    $task['complete_till'] = '23:59';
-                    $task['responsible_user_id'] = $value['responsible_user_id'];
-                    $task->apiAdd();
+                    $taskPayload = [
+                        [
+                            'entity_id'          => $leadId,
+                            'entity_type'        => 'leads',
+                            'task_type_id'       => 1, // Call
+                            'text'               => 'Получить обратную связь от клиента',
+                            'complete_till'      => strtotime('23:59'),
+                            'responsible_user_id'=> $value['responsible_user_id'],
+                        ]
+                    ];
+
+                    Http::withHeaders([
+                        'Authorization' => 'Bearer ' . env('AMO_ADMIN_LONG_TOKEN'),
+                        'Content-Type'  => 'application/json',
+                    ])->post("https://eatandfitkz.amocrm.ru/api/v4/tasks", $taskPayload);
                 }else {
                     $day++;
-                    $lead->addCustomField(328089, $day);
+                    $updatePayload['custom_fields_values'][] = [
+                        'field_id' => 328089,
+                        'values'   => [['value' => $day]],
+                    ];
                 }
 
                 if ($has_extra) {
                     $budget = (int)$value['price'];
                     $otrabotano = null;
 
-                    foreach ($value['custom_fields'] as $field){
-                        if ($field['id'] === 495367) { //Отработано
-                            $otrabotano = (int)$field["values"][0]["value"];
+                    foreach ($value['custom_fields_values'] as $field) {
+                        if ($field['field_id'] === 495367) { // Отработано
+                            $otrabotano = (int) $field["values"][0]["value"];
                         }
                     }
 
-                    if ($otrabotano != null){
+                    if ($otrabotano !== null) {
                         $otrabotano += $budget;
-
-                        $lead->addCustomField(495367,
-                            $otrabotano
-                        );
-                    }else{
-                        $lead->addCustomField(495367,
-                            $budget
-                        );
+                    } else {
+                        $otrabotano = $budget;
                     }
+
+                    $updatePayload['custom_fields_values'][] = [
+                        'field_id' => 495367,
+                        'values'   => [['value' => $otrabotano]],
+                    ];
                 }
 
-                $lead->apiUpdate((int)$value['id'], 'now');
+                if (!empty($updatePayload)) {
+                    Http::withHeaders([
+                        'Authorization' => 'Bearer ' . env('AMO_ADMIN_LONG_TOKEN'),
+                        'Content-Type'  => 'application/json',
+                    ])->patch("https://eatandfitkz.amocrm.ru/api/v4/leads/{$leadId}", $updatePayload);
+                }
             }
 
             $management = Management::whereDate('created_at', Carbon::now()->toDateString())->where('type', $type)->first();
@@ -444,7 +459,7 @@ class ManagementController extends Controller
 
                 $order = Order::where('amo_id', $item['id'])->orderBy('created_at','desc')->first();
 
-                foreach ($item['custom_fields_value'] as $field){
+                foreach ($item['custom_fields_values'] as $field){
                     if ($field['field_id'] === 495367){ //Отработано
                         $otrabotano = (int)$field["values"][0]["value"];
                     }

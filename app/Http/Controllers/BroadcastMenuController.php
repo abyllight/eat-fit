@@ -8,10 +8,12 @@ use App\Models\City;
 use App\Models\Cuisine;
 use App\Models\Management;
 use App\Models\Order;
+use App\Services\AmoCrmService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class BroadcastMenuController extends Controller
 {
@@ -111,16 +113,29 @@ class BroadcastMenuController extends Controller
         $type = Management::SEND_SELECT_TYPE;
 
         try{
-            $amo = new Client(env('AMO_SUBDOMAIN'), env('AMO_LOGIN'), env('AMO_HASH'));
-
             $data = $this->performText();
 
             foreach ($data as $item) {
-                $lead = $amo->lead;
-                $lead['status_id'] = $status;
-                $lead->addCustomField(885091, $item['text']);
+                $payload = [
+                    [
+                        'status_id' => $status,
+                        'pipeline_id' => 793612,
+                        'custom_fields_values' => [
+                            [
+                                'field_id' => 885091, // your custom field ID
+                                'values'   => [
+                                    ['value' => (string) $item['text']]
+                                ]
+                            ]
+                        ]
+                    ]
+                ];
 
-                $lead->apiUpdate($item['id'], 'now');
+
+                Http::withHeaders([
+                    'Authorization' => 'Bearer ' . env('AMO_ADMIN_LONG_TOKEN'),
+                    'Content-Type'  => 'application/json',
+                ])->patch("https://eatandfitkz.amocrm.ru/api/v4/leads/{$item['id']}", $payload);
             }
             return response()->json([
                 'status' => true,

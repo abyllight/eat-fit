@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Http;
 
 class AmoCrmService
 {
-    protected string $baseUrl;
-    protected string $accessToken;
+    public $baseUrl;
+    public $accessToken;
 
     public function __construct()
     {
@@ -33,7 +33,7 @@ class AmoCrmService
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $this->accessToken,
                 'Content-Type'  => 'application/json',
-            ])->get($this->baseUrl . '/api/v4/leads', [
+            ])->get($this->baseUrl . '/api/v4/leads/leads', [
                 'limit' => $perPage,
                 'page'  => $page,
                 'filter[statuses][0][pipeline_id]' => $pipelineId,
