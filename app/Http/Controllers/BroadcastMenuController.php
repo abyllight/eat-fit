@@ -117,20 +117,17 @@ class BroadcastMenuController extends Controller
 
             foreach ($data as $item) {
                 $payload = [
-                    [
-                        'status_id' => $status,
-                        'pipeline_id' => 793612,
-                        'custom_fields_values' => [
-                            [
-                                'field_id' => 885091, // your custom field ID
-                                'values'   => [
-                                    ['value' => (string) $item['text']]
-                                ]
+                    'status_id' => $status,
+                    'pipeline_id' => 793612,
+                    'custom_fields_values' => [
+                        [
+                            'field_id' => 885091,
+                            'values'   => [
+                                ['value' => (string) $item['text']]
                             ]
                         ]
                     ]
                 ];
-
 
                 Http::withHeaders([
                     'Authorization' => 'Bearer ' . env('AMO_ADMIN_LONG_TOKEN'),
