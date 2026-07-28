@@ -13,6 +13,7 @@ use AmoCRM\Client;
 use AmoCRM\Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class ManagementController extends Controller
 {
@@ -205,218 +206,145 @@ class ManagementController extends Controller
 
     public function shiftOtkat(): JsonResponse
     {
+        set_time_limit(0);
+
         dd('safd');
         try{
-            $amo = new Client(env('AMO_SUBDOMAIN'), env('AMO_LOGIN'), env('AMO_HASH'));
-            $ids = [33569457,
-                33569289,
-                33569233,
-                33568003,
-                33568001,
-                33567881,
-                33567857,
-                33567795,
-                33567717,
-                33567355,
-                33567311,
-                33567001,
-                33566781,
-                33563997,
-                33563945,
-                33563819,
-                33563511,
-                33563269,
-                33563259,
-                33563185,
-                33562177,
-                33561867,
-                33561809,
-                33561557,
-                33561207,
-                33560673,
-                33560453,
-                33560107,
-                33555617,
-                33555415,
-                33552617,
-                33549275,
-                33547781,
-                33547755,
-                33547689,
-                33547561,
-                33546483,
-                33546277,
-                33546111,
-                33545071,
-                33544517,
-                33544427,
-                33543993,
-                33541979,
-                33541923,
-                33541367,
-                33540001,
-                33539713,
-                33538691,
-                33538141,
-                33538119,
-                33537497,
-                33536603,
-                33534841,
-                33534807,
-                33532765,
-                33532683,
-                33532287,
-                33532089,
-                33532087,
-                33531921,
-                33530081,
-                33524515,
-                33524509,
-                33524007,
-                33523663,
-                33523613,
-                33523595,
-                33523097,
-                33522093,
-                33522091,
-                33521963,
-                33521917,
-                33520961,
-                33520509,
-                33520381,
-                33517391,
-                33516643,
-                33515727,
-                33514821,
-                33513289,
-                33512815,
-                33511383,
-                33511231,
-                33507791,
-                33507769,
-                33507761,
-                33507747,
-                33507737,
-                33507723,
-                33507715,
-                33507689,
-                33507433,
-                33507085,
-                33506973,
-                33506791,
-                33505807,
-                33501119,
-                33500549,
-                33500455,
-                33500365,
-                33499087,
-                33498763,
-                33498331,
-                33497771,
-                33496875,
-                33495845,
-                33495725,
-                33493435,
-                33493431,
-                33489455,
-                33489453,
-                33489093,
-                33487975,
-                33487619,
-                33487549,
-                33487013,
-                33486883,
-                33486871,
-                33486855,
-                33486351,
-                33486343,
-                33485495,
-                33483255,
-                33482001,
-                33480257,
-                33479189,
-                33478299,
-                33476693,
-                33475099,
-                33475063,
-                33473857,
-                33473161,
-                33472725,
-                33472691,
-                33467893,
-                33464931,
-                33463479,
-                33458507,
-                33458473,
-                33455177,
-                33454511,
-                33449887,
-                33445865,
-                33440797,
-                33428929,
-                33419795,
-                33418263,
-                33417893,
-                33406643,
-                33396027,
-                33393147,
-                33348669,
-                33240271,
-                32704259,
-                32302741,
-                31478439];
+            //$amo = new Client(env('AMO_SUBDOMAIN'), env('AMO_LOGIN'), env('AMO_HASH'));
+            $ids = [
+                34671975,
+                34671933,
+                34671753,
+                34671547,
+                34671271,
+                34670819,
+                34670805,
+                34670501,
+                34670493,
+                34670417,
+                34670095,
+                34666429,
+                34666133,
+                34665043,
+                34664583,
+                34664271,
+                34663197,
+                34662245,
+                34661817,
+                34661807,
+                34661743,
+                34661043,
+                34659411,
+                34658695,
+                34658355,
+                34658249,
+                34657663,
+                34656365,
+                34655085,
+                34653733,
+                34651831,
+                34651147,
+                34650433,
+                34649671,
+                34649401,
+                34649001,
+                34648629,
+                34647593,
+                34647037,
+                34646825,
+                34646455,
+                34645597,
+                34644727,
+                34644385,
+                34641227,
+                34640429,
+                34639035,
+                34638815,
+                34636495,
+                34636315,
+                34636091,
+                34635657,
+                34635463,
+                34634275,
+                34633109,
+                34633089,
+                34630937,
+                34630827,
+                34630055,
+                34629555,
+                34629185,
+                34628805,
+                34627609,
+                34624305,
+                34621667,
+                34618853,
+                34615171,
+                34611511,
+                34610081,
+                34608935,
+                34608853,
+                34604611,
+                34604595,
+                34601189,
+                34596895,
+                34594151,
+                34593597,
+                34593553,
+                34589955,
+                34589525,
+                34589399,
+                34588189,
+                34563725,
+                34553389,
+                34552385,
+                34541085,
+                34538753,
+                34488415,
+                34487229,
+                34428511,
+                34410277,
+                34366703,
+                34306187,
+                33522683
+            ];
             foreach ($ids as $id) {
-                $items = $amo->lead->apiList([
-                    'limit_rows' => 500,
-                    'id' => $id,
-                ]);
-                //dd($items);
-                foreach ($items as $item){
-                    $budget = (int)$item['price'];
-                    $otrabotano = null;
+                $item = Http::withHeaders([
+                    'Authorization' => 'Bearer ' . env('AMO_ADMIN_LONG_TOKEN'),
+                    'Content-Type'  => 'application/json',
+                ])->get(rtrim(env('AMOCRM_BASE_URL')) . '/api/v4/leads/' . $id)->json();
+                $budget = (int)$item['price'];
+                $otrabotano = null;
 
-                    //$order = Order::where('amo_id', $item['id'])->orderBy('created_at','desc')->first();
-
-                    foreach ($item['custom_fields'] as $field){
-                        if ($field['id'] === 495367){ //Отработано
-                            $otrabotano = (int)$field["values"][0]["value"];
+                if (!empty($item['custom_fields_values'])) {
+                    foreach ($item['custom_fields_values'] as $field) {
+                        if ($field['field_id'] === 495367) {
+                            $otrabotano = (int)$field['values'][0]['value'];
                         }
                     }
-
-                    $lead = $amo->lead;
-
-                    if ($otrabotano != null){
-                        $otrabotano -= $budget;
-
-                        $lead->addCustomField(495367,
-                            $otrabotano
-                        );
-                    }else{
-                        $lead->addCustomField(495367,
-                            $budget
-                        );
-                    }
-
-                    /*if($order && $order->courier) {
-                        $lead->addCustomField(489499,
-                            $order->courier->phone
-                        );
-                        $lead->addCustomField(489497,
-                            $order->courier->name
-                        );
-                    }*/
-
-                    $lead->apiUpdate((int)$item['id'], 'now');
                 }
+
+                if ($otrabotano !== null) {
+                    $otrabotano -= $budget;
+                } else {
+                    $otrabotano = $budget;
+                }
+
+                $payload = [
+                    'custom_fields_values' => [
+                        [
+                            'field_id' => 495367,
+                            'values' => [
+                                ['value' => $otrabotano],
+                            ]
+                        ]
+                    ]
+                ];
+
+                Http::withHeaders([
+                    'Authorization' => 'Bearer ' . env('AMO_ADMIN_LONG_TOKEN'),
+                    'Content-Type'  => 'application/json',
+                ])->patch("https://eatandfitkz.amocrm.ru/api/v4/leads/{$item['id']}", $payload);
             }
-
-            /*$management = Management::whereDate('created_at', Carbon::now()->toDateString())->where('type', $type)->first();
-
-            if(!$management){
-                $m = new Management();
-                $m->type = $type;
-                $m->save();
-            }*/
 
             return response()->json([
                 'status' => true,
@@ -622,8 +550,6 @@ class ManagementController extends Controller
     public function payFact(): JsonResponse
     {
         try{
-            $amo = new Client(env('AMO_SUBDOMAIN'), env('AMO_LOGIN'), env('AMO_HASH'));
-
             $city_id = Auth::user()->city_id ?? City::ASTANA;
             $fact_type = $city_id === City::ASTANA ? Management::FACT_TYPE : Management::FACT_TYPE_ALMATY;
 
@@ -634,34 +560,74 @@ class ManagementController extends Controller
 
             foreach ($reports as $report) {
                 if ($report->amount) {
-                    $target = $amo->lead->apiList([
-                        'id' => $report->order->amo_id
-                    ]);
+                    $response = Http::withHeaders([
+                        'Authorization' => 'Bearer ' . env('AMO_ADMIN_LONG_TOKEN'),
+                    ])->get("https://eatandfitkz.amocrm.ru/api/v4/leads/{$report->order->amo_id}");
 
-                    $amount = (int) $report->amount;
+                    if ($response->failed()) {
+                        Log::error('Failed to fetch lead', ['id' => 34085789, 'resp' => $response->json()]);
+                        continue;
+                    }
+
+                    $leadData = $response->json();
+                    $customFields = $leadData['custom_fields_values'] ?? [];
+
                     $fact = 0;
 
-                    foreach ($target[0]['custom_fields'] as $field) {
-                        if ($field['id'] === 321139) { //fact
-                            $fact = (int)$field["values"][0]["value"];
+                    foreach ($customFields as $field) {
+                        if ($field['field_id'] === 321139 && !empty($field['values'][0]['value'])) { // fact
+                            $fact = (int)$field['values'][0]['value'];
                         }
                     }
 
-                    $lead = $amo->lead;
-                    $lead->addCustomField(321139, $fact + $amount); //Fact
-                    $lead->addCustomField(869811, null); //Tip oplaty
-                    $lead->addCustomField(466107, false); //Check oplaty
-                    $lead->addCustomField(888763, ''); //Comment oplaty1
-                    $lead->addCustomField(889029, ''); //Comment oplaty
+                    $payload = [
+                        'custom_fields_values' => [
+                            [
+                                'field_id' => 321139, // Fact
+                                'values' => [['value' => $fact + 0]]
+                            ],
+                            /*[
+                                'field_id' => 869811, // Tip oplaty
+                                'values' => [['value' => '']] // reset
+                            ],*/
+                            [
+                                'field_id' => 466107, // Check oplaty
+                                'values' => [['value' => false]]
+                            ],
+                            [
+                                'field_id' => 888763, // Comment oplaty1
+                                'values' => [['value' => '']]
+                            ],
+                            [
+                                'field_id' => 889029, // Comment oplaty
+                                'values' => [['value' => '']]
+                            ]
+                        ]
+                    ];
 
-                    $lead->apiUpdate($report->order->amo_id, 'now');
+                    Http::withHeaders([
+                        'Authorization' => 'Bearer ' . env('AMO_ADMIN_LONG_TOKEN'),
+                    ])->patch("https://eatandfitkz.amocrm.ru/api/v4/leads/34085789", $payload);
                 }
 
                 if ($report->order->pay_comment && stripos($report->order->pay_comment, 'ланч') !== false) {
-                    $lead = $amo->lead;
-                    $lead->addCustomField(888763, ''); //Comment oplaty1
-                    $lead->addCustomField(889029, ''); //Comment oplaty
-                    $lead->apiUpdate($report->order->amo_id, 'now');
+                    $payload = [
+                        'id' => (int) $report->order->amo_id,
+                        'custom_fields_values' => [
+                            [
+                                'field_id' => 888763,
+                                'values' => [['value' => '']]
+                            ],
+                            [
+                                'field_id' => 889029,
+                                'values' => [['value' => '']]
+                            ]
+                        ]
+                    ];
+
+                    Http::withHeaders([
+                        'Authorization' => 'Bearer ' . env('AMO_ADMIN_LONG_TOKEN'),
+                    ])->patch("https://eatandfitkz.amocrm.ru/api/v4/leads/{$report->order->amo_id}", [$payload]);
                 }
             }
 

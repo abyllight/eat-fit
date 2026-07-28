@@ -58,6 +58,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Login',
   data: function data() {
@@ -70,6 +72,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     };
   },
   methods: {
+    doSmth: function doSmth() {
+      axios.post('/api/management/otkat').then(function (res) {
+        console.log(res);
+      });
+    },
     submit: function submit() {
       var _this = this;
 
@@ -277,7 +284,7 @@ var render = function() {
                   },
                   on: { click: _vm.submit }
                 },
-                [_vm._v("\n                Войти\n            ")]
+                [_vm._v("\n                    Войти\n                ")]
               )
             ],
             1

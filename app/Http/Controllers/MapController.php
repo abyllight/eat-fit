@@ -136,11 +136,11 @@ class MapController extends Controller
             $time = $value[0][$time_val];
             if (!$time) continue;
 
-            $pieces = explode("-", $time);
-            $dfrom  = intval((float) $pieces[0] * 100);
-            $dto    = intval((float) $pieces[1] * 100);
-            $dfrom  = $dfrom ?? null;
-            $dto    = $dto ?? null;
+            $pieces = explode("-", str_replace(':', '.', trim($time)));
+            if (count($pieces) < 2) continue;
+
+            $dfrom = intval((float) trim($pieces[0]) * 100);
+            $dto   = intval((float) trim($pieces[1]) * 100);
 
             for($i = 0; $i < count($intervals); $i++) {
 

@@ -21,12 +21,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Dashboard",
   methods: {
-    /*doSmth() {
-        axios.post('/api/management/otkat')
-            .then(res => {
-                console.log(res)
-            })
-    }*/
+    doSmth: function doSmth() {
+      axios.post('/api/management/otkat').then(function (res) {
+        console.log(res);
+      });
+    }
   }
   /*mounted() {
       axios.get('/api/moysklad/create-demand')
@@ -123,11 +122,17 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("h2", [
-      _vm._v("Здравствуй, " + _vm._s(this.$store.state.auth.user.name) + "!")
-    ])
-  ])
+  return _c(
+    "div",
+    [
+      _c("h2", [
+        _vm._v("Здравствуй, " + _vm._s(this.$store.state.auth.user.name) + "!")
+      ]),
+      _vm._v(" "),
+      _c("v-btn", { on: { click: _vm.doSmth } }, [_vm._v("test")])
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
