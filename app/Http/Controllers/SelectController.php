@@ -29,10 +29,14 @@ class SelectController extends Controller
         $city_id = $user->city_id ?? City::ASTANA;
 
         $orders = Order::where('s_num', '!=', null)
-            ->where('city_id', $city_id)
-            ->where('is_active', true)
-            ->orderBy('s_num')
-            ->get();
+            ->where('is_active', true);
+
+        // Diet role sees the select matrix of ALL cities
+        if (!$user->isDiet()) {
+            $orders->where('city_id', $city_id);
+        }
+
+        $orders = $orders->orderBy('s_num')->get();
         $arr = [];
 
         $max_date = Select::max('created_at');

@@ -120,16 +120,22 @@ class Select extends Model
     public static function generateCode()
     {
         $user = Auth::user();
-        $city_id = $user->city_id ?? City::ASTANA;
 
+        // Diet role generates codes for ALL cities; codes stay grouped
+        // per city so each kitchen keeps its own batch numbering
+        $cities = $user && $user->isDiet()
+            ? [City::ASTANA, City::ALMATY]
+            : [$user->city_id ?? City::ASTANA];
+
+        $duty_cuisine = Cuisine::where('is_on_duty', true)->first();
+
+        foreach ($cities as $city_id) {
         $groups = Select::with('ingredients')
             ->whereDate('created_at', Carbon::today())
             ->where('dish_id', '!=', null)
             ->where('city_id', $city_id)
             ->get()
             ->groupBy('ration_id');
-
-        $duty_cuisine = Cuisine::where('is_on_duty', true)->first();
 
         foreach ($groups as $group){
             $ids = [];
@@ -200,6 +206,7 @@ class Select extends Model
                 $item->code = $ration->code . '-' . $ids[$key]['code'];
                 $item->save();
             }
+        }
         }
     }
 }

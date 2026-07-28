@@ -177,10 +177,18 @@ class OrderController extends Controller
         $management = Management::whereDate('created_at', Carbon::now()->toDateString())->where('type', Management::S_NUM_TYPE)->first();
 
         $select = Order::whereIn('type', [Order::EAT_FIT_SELECT, Order::EAT_FIT_SELECT_MAX])
-            ->where('is_active', true)
-            ->where('city_id', $user->city_id);
+            ->where('is_active', true);
 
-        $fin = $select->orderBy('size')->get();
+        // Diet role sees select clients of ALL cities; everyone else stays city-scoped
+        if (!$user->isDiet()) {
+            $select->where('city_id', $user->city_id);
+        }
+
+        // For the all-cities view, keep each city's block contiguous so
+        // per-city kitchen numbering (s_num) stays sequential
+        $fin = $user->isDiet()
+            ? $select->orderBy('city_id')->orderBy('size')->get()
+            : $select->orderBy('size')->get();
 
         if(!$management){
             $m = new Management();

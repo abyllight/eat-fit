@@ -70,6 +70,11 @@ class User extends Authenticatable
         return in_array('courier', $slugs);
     }
 
+    public function isDiet(): bool
+    {
+        return in_array('diet', $this->getRoleSlugs());
+    }
+
     public function addresses()
     {
         return $this->hasMany(Address::class, 'courier_id', 'id');
