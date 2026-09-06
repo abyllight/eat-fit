@@ -724,14 +724,32 @@ class SelectController extends Controller
         Select::generateCode();
     }
 
+    /**
+     * Codes are numbered independently per city (Astana "З-1" and Almaty "З-1"
+     * are different dishes), so these pages must never mix cities. Everyone is
+     * scoped to their own city; diet may switch via ?city_id to print either.
+     */
+    private function stickersCityId(): int
+    {
+        $user = Auth::user();
+
+        if ($user->isDiet() && request()->filled('city_id')) {
+            return (int) request('city_id');
+        }
+
+        return $user->city_id ?? City::ASTANA;
+    }
+
     public function selectRations(): JsonResponse
     {
         $rations = Ration::all();
+        $city_id = $this->stickersCityId();
         $arr = [];
 
         foreach ($rations as $key => $ration) {
             $selects = Select::whereDate('created_at', Carbon::today())
                 ->where('ration_id', $ration->id)
+                ->where('city_id', $city_id)
                 ->where('code', '!=', null)
                 ->orderBy('ration_id')
                 ->get()
@@ -756,6 +774,7 @@ class SelectController extends Controller
 
         $selects = Select::whereDate('created_at', Carbon::today())
             ->where('ration_id', $ration->id)
+            ->where('city_id', $this->stickersCityId())
             ->where('code', '!=', null)
             ->orderBy('ration_id')
             ->get()
