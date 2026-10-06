@@ -760,7 +760,8 @@ class SelectController extends Controller
             $arr[$key] = [
                 'ration_id' => $ration->id,
                 'ration' => $ration->name,
-                'items' => []
+                // distinct codes of the ration today; the tile shows their count
+                'items' => $selects->keys()->values()
             ];
         }
 

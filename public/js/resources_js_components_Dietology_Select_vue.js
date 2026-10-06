@@ -241,6 +241,60 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -281,6 +335,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       isSelect: true,
       dialog: false,
       rations: [],
+      // diet only: null = all cities, otherwise a city id
+      cityFilter: null,
+      cities: [{
+        id: 1,
+        name: 'Астана'
+      }, {
+        id: 2,
+        name: 'Алматы'
+      }],
       extra: {
         r_id: null,
         c_id: null,
@@ -294,6 +357,45 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     this.getRations();
   },
   computed: {
+    // only diet works with both cities; everyone else exports their own
+    isDiet: function isDiet() {
+      return this.$store.getters['auth/user'].role_slugs.includes('diet');
+    },
+    filteredOrders: function filteredOrders() {
+      var _this = this;
+
+      if (!this.isSelect || !this.cityFilter) return this.orders;
+      return this.orders.filter(function (o) {
+        return o.city_id === _this.cityFilter;
+      });
+    },
+    cityCounts: function cityCounts() {
+      var counts = {};
+      this.orders.forEach(function (o) {
+        counts[o.city_id] = (counts[o.city_id] || 0) + 1;
+      });
+      return counts;
+    },
+    // server stat for the full list; recomputed here when a city is picked
+    visibleStat: function visibleStat() {
+      if (!this.isSelect || !this.cityFilter) return this.select_stat;
+      var rows = this.filteredOrders;
+
+      var bySize = function bySize(size) {
+        return rows.filter(function (o) {
+          return o.size === size;
+        }).length;
+      };
+
+      return {
+        total: rows.length,
+        xs: bySize(1),
+        s: bySize(2),
+        m: bySize(3),
+        l: bySize(4),
+        xl: bySize(5)
+      };
+    },
     isDutyDishId: function isDutyDishId() {
       return this.dishes[0].id === this.dish.id;
     },
@@ -304,14 +406,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   methods: {
+    cityName: function cityName(id) {
+      var city = this.cities.find(function (c) {
+        return c.id === id;
+      });
+      return city ? city.name : '';
+    },
     itemRowBackground: function itemRowBackground(item) {
       return item.has_select ? 'teal lighten-4' : '';
     },
     addExtra: function addExtra() {
-      var _this = this;
+      var _this2 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/extra', this.extra).then(function (res) {
-        _this.dialog = false;
+        _this2.dialog = false;
         window.location.reload();
       })["catch"](function (err) {
         console.log(err);
@@ -325,26 +433,26 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
     },
     fetchOrdersFromAmo: function fetchOrdersFromAmo() {
-      var _this2 = this;
+      var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _this2.amo_loading = true;
+                _this3.amo_loading = true;
                 _context.next = 3;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/orders/eat-fit').then(function () {
-                  _this2.getSelect();
+                  _this3.getSelect();
                 })["catch"](function (error) {
-                  _this2.$store.dispatch('showAlert', {
+                  _this3.$store.dispatch('showAlert', {
                     'isVisible': true,
                     'msg': error.message,
                     'color': 'error',
                     'type': 'error'
                   });
                 })["finally"](function () {
-                  return _this2.amo_loading = false;
+                  return _this3.amo_loading = false;
                 });
 
               case 3:
@@ -356,7 +464,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     getCuisine: function getCuisine() {
-      var _this3 = this;
+      var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
@@ -365,12 +473,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _context2.next = 2;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/cuisine/duty').then(function (response) {
-                  _this3.cuisine = response.data.cuisine;
-                  _this3.extra.c_id = _this3.cuisine.id;
+                  _this4.cuisine = response.data.cuisine;
+                  _this4.extra.c_id = _this4.cuisine.id;
                 })["catch"](function (error) {
-                  _this3.loading = false;
+                  _this4.loading = false;
 
-                  _this3.$store.dispatch('showAlert', {
+                  _this4.$store.dispatch('showAlert', {
                     'isVisible': true,
                     'msg': error.message,
                     'color': 'error',
@@ -387,7 +495,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     getRations: function getRations() {
-      var _this4 = this;
+      var _this5 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
@@ -396,7 +504,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _context3.next = 2;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/rations').then(function (response) {
-                  _this4.rations = response.data;
+                  _this5.rations = response.data;
                 })["catch"](function (error) {
                   console.log(error);
                 });
@@ -421,22 +529,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
     },
     getSelectDetailsByOrder: function getSelectDetailsByOrder(id) {
-      var _this5 = this;
+      var _this6 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                _this5.select_loading = true;
+                _this6.select_loading = true;
                 _context4.next = 3;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/selects/order/' + id).then(function (response) {
-                  _this5.select_previous = response.data.previous;
-                  _this5.select_result = response.data.result;
-                  _this5.blacklist = response.data.blacklist;
-                  _this5.mix = response.data.blacklist;
-                  _this5.wishlist = response.data.wishlist;
-                  _this5.select_loading = false;
+                  _this6.select_previous = response.data.previous;
+                  _this6.select_result = response.data.result;
+                  _this6.blacklist = response.data.blacklist;
+                  _this6.mix = response.data.blacklist;
+                  _this6.wishlist = response.data.wishlist;
+                  _this6.select_loading = false;
                 })["catch"](function (error) {
                   console.log(error);
                 });
@@ -459,18 +567,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
     },
     activateDeactivate: function activateDeactivate(id) {
-      var _this6 = this;
+      var _this7 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/activate-deactivate', {
         select_id: id
       }).then(function (response) {
-        _this6.getSelectDetailsByOrder(_this6.order.id);
+        _this7.getSelectDetailsByOrder(_this7.order.id);
       })["catch"](function (error) {
         console.log(error);
       });
     },
     getDishesByRation: function getDishesByRation(id) {
-      var _this7 = this;
+      var _this8 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
@@ -479,18 +587,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _context5.next = 2;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/dishes/ration/' + id).then(function (response) {
-                  _this7.dishes = response.data;
+                  _this8.dishes = response.data;
 
-                  if (_this7.dishes.length > 0) {
-                    _this7.dish = _this7.dishes.find(function (obj) {
-                      return obj.id === _this7.result.dish_id;
+                  if (_this8.dishes.length > 0) {
+                    _this8.dish = _this8.dishes.find(function (obj) {
+                      return obj.id === _this8.result.dish_id;
                     });
 
-                    if (!_this7.dish) {
-                      _this7.dish = _this7.dishes[0];
+                    if (!_this8.dish) {
+                      _this8.dish = _this8.dishes[0];
                     }
                   } else {
-                    _this7.dish.ingredients = [];
+                    _this8.dish.ingredients = [];
                   }
                 })["catch"](function (error) {
                   console.log(error);
@@ -519,32 +627,32 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       window.open('https://api.whatsapp.com/send?phone=' + num + '&text=Рацион:%20' + r_name + '%0D%0AНазвание:%20' + name, '_blank');
     },
     resetResult: function resetResult(id) {
-      var _this8 = this;
+      var _this9 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/api/select/reset', {
         id: id
       }).then(function (res) {
-        _this8.getSelect();
+        _this9.getSelect();
       });
     },
     getSelect: function getSelect() {
-      var _this9 = this;
-
-      axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/orders/select').then(function (res) {
-        _this9.loading = false;
-        _this9.orders = res.data.orders;
-        _this9.select_stat = res.data.stat;
-        _this9.isSelect = true;
-      });
-    },
-    getLite: function getLite() {
       var _this10 = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/orders/lite').then(function (res) {
+      axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/orders/select').then(function (res) {
         _this10.loading = false;
         _this10.orders = res.data.orders;
         _this10.select_stat = res.data.stat;
-        _this10.isSelect = false;
+        _this10.isSelect = true;
+      });
+    },
+    getLite: function getLite() {
+      var _this11 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_1___default().get('/api/orders/lite').then(function (res) {
+        _this11.loading = false;
+        _this11.orders = res.data.orders;
+        _this11.select_stat = res.data.stat;
+        _this11.isSelect = false;
       });
     }
   }
@@ -1541,8 +1649,57 @@ var render = function() {
                 _vm._v(" "),
                 _c("stat", {
                   staticClass: "my-3",
-                  attrs: { stat: _vm.select_stat }
-                })
+                  attrs: { stat: _vm.visibleStat }
+                }),
+                _vm._v(" "),
+                _vm.isDiet && _vm.isSelect
+                  ? _c(
+                      "v-chip-group",
+                      {
+                        attrs: { "active-class": "primary--text" },
+                        model: {
+                          value: _vm.cityFilter,
+                          callback: function($$v) {
+                            _vm.cityFilter = $$v
+                          },
+                          expression: "cityFilter"
+                        }
+                      },
+                      [
+                        _c(
+                          "v-chip",
+                          { attrs: { value: null, label: "", small: "" } },
+                          [
+                            _vm._v(
+                              "\n                            Все: " +
+                                _vm._s(_vm.orders.length) +
+                                "\n                        "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _vm._l(_vm.cities, function(c) {
+                          return _c(
+                            "v-chip",
+                            {
+                              key: c.id,
+                              attrs: { value: c.id, label: "", small: "" }
+                            },
+                            [
+                              _vm._v(
+                                "\n                            " +
+                                  _vm._s(c.name) +
+                                  ": " +
+                                  _vm._s(_vm.cityCounts[c.id] || 0) +
+                                  "\n                        "
+                              )
+                            ]
+                          )
+                        })
+                      ],
+                      2
+                    )
+                  : _vm._e()
               ],
               1
             ),
@@ -1571,23 +1728,108 @@ var render = function() {
                     )
                   : _vm._e(),
                 _vm._v(" "),
-                _c(
-                  "a",
-                  {
-                    attrs: {
-                      type: "button",
-                      href: "/api/select/export/stickers"
-                    }
-                  },
-                  [
-                    _c("v-btn", { attrs: { color: "primary" } }, [
-                      _vm._v(
-                        "\n                            Стикеры\n                        "
-                      )
-                    ])
-                  ],
-                  1
-                )
+                _vm.isDiet && _vm.cityFilter
+                  ? _c(
+                      "v-btn",
+                      {
+                        attrs: {
+                          color: "primary",
+                          href:
+                            "/api/select/export/stickers?city_id=" +
+                            _vm.cityFilter
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n                        Стикеры · " +
+                            _vm._s(_vm.cityName(_vm.cityFilter)) +
+                            "\n                    "
+                        )
+                      ]
+                    )
+                  : _vm.isDiet
+                  ? _c(
+                      "v-menu",
+                      {
+                        attrs: { "offset-y": "" },
+                        scopedSlots: _vm._u([
+                          {
+                            key: "activator",
+                            fn: function(ref) {
+                              var on = ref.on
+                              var attrs = ref.attrs
+                              return [
+                                _c(
+                                  "v-btn",
+                                  _vm._g(
+                                    _vm._b(
+                                      { attrs: { color: "primary" } },
+                                      "v-btn",
+                                      attrs,
+                                      false
+                                    ),
+                                    on
+                                  ),
+                                  [
+                                    _vm._v(
+                                      "\n                                Стикеры\n                                "
+                                    ),
+                                    _c("v-icon", { attrs: { right: "" } }, [
+                                      _vm._v("mdi-menu-down")
+                                    ])
+                                  ],
+                                  1
+                                )
+                              ]
+                            }
+                          }
+                        ])
+                      },
+                      [
+                        _vm._v(" "),
+                        _c(
+                          "v-list",
+                          _vm._l(_vm.cities, function(c) {
+                            return _c(
+                              "v-list-item",
+                              {
+                                key: c.id,
+                                attrs: {
+                                  href:
+                                    "/api/select/export/stickers?city_id=" +
+                                    c.id
+                                }
+                              },
+                              [
+                                _c("v-list-item-title", [
+                                  _vm._v(_vm._s(c.name))
+                                ])
+                              ],
+                              1
+                            )
+                          }),
+                          1
+                        )
+                      ],
+                      1
+                    )
+                  : _c(
+                      "a",
+                      {
+                        attrs: {
+                          type: "button",
+                          href: "/api/select/export/stickers"
+                        }
+                      },
+                      [
+                        _c("v-btn", { attrs: { color: "primary" } }, [
+                          _vm._v(
+                            "\n                            Стикеры\n                        "
+                          )
+                        ])
+                      ],
+                      1
+                    )
               ],
               1
             )
@@ -1634,7 +1876,7 @@ var render = function() {
                       loading: _vm.loading,
                       "loading-text": "Loading... Please wait",
                       headers: _vm.headers,
-                      items: _vm.orders,
+                      items: _vm.filteredOrders,
                       "items-per-page": _vm.itemsPerPage,
                       "item-key": "id",
                       search: _vm.search,

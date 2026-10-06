@@ -27,7 +27,29 @@
 
                         <h3>{{cuisine.name}}</h3>
                     </div>
-                    <stat class="my-3" :stat="select_stat"></stat>
+                    <stat class="my-3" :stat="visibleStat"></stat>
+                    <v-chip-group
+                        v-if="isDiet && isSelect"
+                        v-model="cityFilter"
+                        active-class="primary--text"
+                    >
+                        <v-chip
+                            :value="null"
+                            label
+                            small
+                        >
+                            Все: {{ orders.length }}
+                        </v-chip>
+                        <v-chip
+                            v-for="c in cities"
+                            :key="c.id"
+                            :value="c.id"
+                            label
+                            small
+                        >
+                            {{ c.name }}: {{ cityCounts[c.id] || 0 }}
+                        </v-chip>
+                    </v-chip-group>
                 </div>
 
                 <div class="mt-2">
@@ -41,7 +63,39 @@
                     >
                         Получить данные с AMOCRM
                     </v-btn>
+                    <v-btn
+                        v-if="isDiet && cityFilter"
+                        color="primary"
+                        :href="'/api/select/export/stickers?city_id=' + cityFilter"
+                    >
+                        Стикеры · {{ cityName(cityFilter) }}
+                    </v-btn>
+                    <v-menu
+                        v-else-if="isDiet"
+                        offset-y
+                    >
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                                color="primary"
+                                v-bind="attrs"
+                                v-on="on"
+                            >
+                                Стикеры
+                                <v-icon right>mdi-menu-down</v-icon>
+                            </v-btn>
+                        </template>
+                        <v-list>
+                            <v-list-item
+                                v-for="c in cities"
+                                :key="c.id"
+                                :href="'/api/select/export/stickers?city_id=' + c.id"
+                            >
+                                <v-list-item-title>{{c.name}}</v-list-item-title>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
                     <a
+                        v-else
                         type="button"
                         href="/api/select/export/stickers"
                     >
@@ -75,7 +129,7 @@
                         :loading="loading"
                         loading-text="Loading... Please wait"
                         :headers="headers"
-                        :items="orders"
+                        :items="filteredOrders"
                         :items-per-page="itemsPerPage"
                         item-key="id"
                         :search="search"
@@ -244,6 +298,18 @@
             isSelect: true,
             dialog: false,
             rations: [],
+            // diet only: null = all cities, otherwise a city id
+            cityFilter: null,
+            cities: [
+                {
+                    id: 1,
+                    name: 'Астана'
+                },
+                {
+                    id: 2,
+                    name: 'Алматы'
+                }
+            ],
             extra: {
                 r_id: null,
                 c_id: null,
@@ -256,6 +322,38 @@
             this.getRations()
         },
         computed: {
+            // only diet works with both cities; everyone else exports their own
+            isDiet() {
+                return this.$store.getters['auth/user'].role_slugs.includes('diet')
+            },
+            filteredOrders() {
+                if (!this.isSelect || !this.cityFilter) return this.orders
+
+                return this.orders.filter(o => o.city_id === this.cityFilter)
+            },
+            cityCounts() {
+                const counts = {}
+                this.orders.forEach(o => {
+                    counts[o.city_id] = (counts[o.city_id] || 0) + 1
+                })
+                return counts
+            },
+            // server stat for the full list; recomputed here when a city is picked
+            visibleStat() {
+                if (!this.isSelect || !this.cityFilter) return this.select_stat
+
+                const rows = this.filteredOrders
+                const bySize = size => rows.filter(o => o.size === size).length
+
+                return {
+                    total: rows.length,
+                    xs: bySize(1),
+                    s: bySize(2),
+                    m: bySize(3),
+                    l: bySize(4),
+                    xl: bySize(5)
+                }
+            },
             isDutyDishId() {
                 return this.dishes[0].id === this.dish.id
             },
@@ -266,6 +364,10 @@
             }
         },
         methods: {
+            cityName(id) {
+                const city = this.cities.find(c => c.id === id)
+                return city ? city.name : ''
+            },
             itemRowBackground(item) {
                 return item.has_select ? 'teal lighten-4' : ''
             },

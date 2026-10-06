@@ -45,6 +45,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "SelectRations",
   data: function data() {
@@ -52,10 +69,28 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       rations: [],
       dialog: false,
       item: {},
-      ingredients: []
+      ingredients: [],
+      cityId: 1,
+      cities: [{
+        id: 1,
+        name: 'Астана'
+      }, {
+        id: 2,
+        name: 'Алматы'
+      }]
     };
   },
+  computed: {
+    user: function user() {
+      return this.$store.getters['auth/user'];
+    },
+    // only diet works with both cities; everyone else is scoped to their own on the server
+    isDiet: function isDiet() {
+      return this.user.role_slugs.includes('diet');
+    }
+  },
   created: function created() {
+    this.cityId = Number(this.$route.query.city_id) || this.user.city_id || 1;
     this.generateCode();
     this.getList();
   },
@@ -74,7 +109,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return axios.get('/api/select/rations').then(function (response) {
+                return axios.get('/api/select/rations', {
+                  params: _this.isDiet ? {
+                    city_id: _this.cityId
+                  } : {}
+                }).then(function (response) {
                   _this.rations = response.data;
                 })["catch"](function (error) {
                   console.log(error);
@@ -88,12 +127,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee);
       }))();
     },
+    changeCity: function changeCity() {
+      this.$router.replace({
+        query: {
+          city_id: this.cityId
+        }
+      })["catch"](function () {});
+      this.getList();
+    },
     openDetails: function openDetails(id) {
       this.$router.push({
         name: 'stickers',
         params: {
           id: id
-        }
+        },
+        query: this.isDiet ? {
+          city_id: this.cityId
+        } : {}
       });
     }
   }
@@ -188,6 +238,30 @@ var render = function() {
   return _c(
     "div",
     [
+      _vm.isDiet
+        ? _c(
+            "v-btn-toggle",
+            {
+              staticClass: "mb-5",
+              attrs: { mandatory: "", dense: "", color: "primary" },
+              on: { change: _vm.changeCity },
+              model: {
+                value: _vm.cityId,
+                callback: function($$v) {
+                  _vm.cityId = $$v
+                },
+                expression: "cityId"
+              }
+            },
+            _vm._l(_vm.cities, function(c) {
+              return _c("v-btn", { key: c.id, attrs: { value: c.id } }, [
+                _vm._v("\n            " + _vm._s(c.name) + "\n        ")
+              ])
+            }),
+            1
+          )
+        : _vm._e(),
+      _vm._v(" "),
       _vm.rations.length === 0
         ? _c("p", [_vm._v("Пусто")])
         : _c(

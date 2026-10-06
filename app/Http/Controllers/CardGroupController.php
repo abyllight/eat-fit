@@ -282,6 +282,12 @@ class CardGroupController extends Controller
         $user = Auth::user();
         $city_id = $user->city_id ?? City::ASTANA;
 
+        // Codes are numbered per city, so one sheet is always one city.
+        // Diet works with both and picks which one to export via ?city_id.
+        if ($user->isDiet() && in_array((int) request('city_id'), [City::ASTANA, City::ALMATY], true)) {
+            $city_id = (int) request('city_id');
+        }
+
         $orders = Order::where('s_num', '!=', null)
             ->where('city_id', $city_id)
             ->where('is_active', true)
@@ -343,7 +349,11 @@ class CardGroupController extends Controller
         }
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="Select.xlsx"');
+        $filename = $user->isDiet()
+            ? ($city_id === City::ALMATY ? 'Select-Almaty.xlsx' : 'Select-Astana.xlsx')
+            : 'Select.xlsx';
+
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Cache-Control: max-age=0');
 
         $writer = new Xlsx($spreadsheet);

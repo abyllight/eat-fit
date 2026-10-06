@@ -1,5 +1,22 @@
 <template>
     <div>
+        <v-btn-toggle
+            v-if="isDiet"
+            v-model="cityId"
+            mandatory
+            dense
+            color="primary"
+            class="mb-5"
+            @change="changeCity"
+        >
+            <v-btn
+                v-for="c in cities"
+                :key="c.id"
+                :value="c.id"
+            >
+                {{c.name}}
+            </v-btn>
+        </v-btn-toggle>
         <p v-if="rations.length === 0">Пусто</p>
         <v-row v-else>
             <v-col
@@ -31,9 +48,30 @@ export default {
         rations: [],
         dialog: false,
         item: {},
-        ingredients: []
+        ingredients: [],
+        cityId: 1,
+        cities: [
+            {
+                id: 1,
+                name: 'Астана'
+            },
+            {
+                id: 2,
+                name: 'Алматы'
+            }
+        ]
     }),
+    computed: {
+        user() {
+            return this.$store.getters['auth/user']
+        },
+        // only diet works with both cities; everyone else is scoped to their own on the server
+        isDiet() {
+            return this.user.role_slugs.includes('diet')
+        }
+    },
     created() {
+        this.cityId = Number(this.$route.query.city_id) || this.user.city_id || 1
         this.generateCode()
         this.getList()
     },
@@ -46,15 +84,23 @@ export default {
             })
         },
         async getList() {
-            await axios.get('/api/select/rations')
+            await axios.get('/api/select/rations', {params: this.isDiet ? {city_id: this.cityId} : {}})
                 .then(response => {
                     this.rations = response.data
                 }).catch(error => {
                     console.log(error)
                 })
         },
+        changeCity() {
+            this.$router.replace({query: {city_id: this.cityId}}).catch(() => {})
+            this.getList()
+        },
         openDetails(id) {
-            this.$router.push({name: 'stickers', params: {id: id}})
+            this.$router.push({
+                name: 'stickers',
+                params: {id: id},
+                query: this.isDiet ? {city_id: this.cityId} : {}
+            })
         },
     }
 }

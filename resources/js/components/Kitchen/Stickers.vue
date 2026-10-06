@@ -1,5 +1,13 @@
 <template>
     <div>
+        <v-chip
+            v-if="cityName"
+            class="mb-5"
+            color="primary"
+            outlined
+        >
+            {{cityName}}
+        </v-chip>
         <v-row>
             <v-col
                 v-for="s in stickers"
@@ -75,12 +83,21 @@ export default {
         item: {},
         ingredients: []
     }),
+    computed: {
+        // set only for diet, who picks the city on the rations page
+        cityId() {
+            return Number(this.$route.query.city_id) || null
+        },
+        cityName() {
+            return {1: 'Астана', 2: 'Алматы'}[this.cityId]
+        }
+    },
     created() {
        this.getStickersByRationId()
     },
     methods: {
         getStickersByRationId(){
-            axios.get('/api/select/stickers/'+this.id)
+            axios.get('/api/select/stickers/'+this.id, {params: this.cityId ? {city_id: this.cityId} : {}})
                 .then(res => {
                     console.log(res)
                     this.stickers = res.data

@@ -78,6 +78,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Stickers",
@@ -90,6 +98,18 @@ __webpack_require__.r(__webpack_exports__);
       ingredients: []
     };
   },
+  computed: {
+    // set only for diet, who picks the city on the rations page
+    cityId: function cityId() {
+      return Number(this.$route.query.city_id) || null;
+    },
+    cityName: function cityName() {
+      return {
+        1: 'Астана',
+        2: 'Алматы'
+      }[this.cityId];
+    }
+  },
   created: function created() {
     this.getStickersByRationId();
   },
@@ -97,7 +117,11 @@ __webpack_require__.r(__webpack_exports__);
     getStickersByRationId: function getStickersByRationId() {
       var _this = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_0___default().get('/api/select/stickers/' + this.id).then(function (res) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default().get('/api/select/stickers/' + this.id, {
+        params: this.cityId ? {
+          city_id: this.cityId
+        } : {}
+      }).then(function (res) {
         console.log(res);
         _this.stickers = res.data;
       });
@@ -205,6 +229,14 @@ var render = function() {
   return _c(
     "div",
     [
+      _vm.cityName
+        ? _c(
+            "v-chip",
+            { staticClass: "mb-5", attrs: { color: "primary", outlined: "" } },
+            [_vm._v("\n        " + _vm._s(_vm.cityName) + "\n    ")]
+          )
+        : _vm._e(),
+      _vm._v(" "),
       _c(
         "v-row",
         _vm._l(_vm.stickers, function(s) {
