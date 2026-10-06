@@ -430,7 +430,7 @@ class OrderController extends Controller
                         $fields['diet'] = $field["values"][0]["value"];
                         break;
                     case '881669': //City
-                        $fields['city_id'] = $field;
+                        $fields['city_id'] = $field["values"][0]["enum_id"] ?? null;
                         break;
                 }
             }
