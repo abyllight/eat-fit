@@ -34,14 +34,29 @@ class BroadcastMenuController extends Controller
         }
     }
 
-    public function performText(): array
+    /**
+     * Clients whose menu is broadcast: diet covers both cities (Astana block
+     * first, then Almaty), everyone else only their own city.
+     */
+    private function broadcastOrders()
     {
         $user = Auth::user();
-        $city_id = $user->city_id ?? City::ASTANA;
-        $orders = Order::where('is_active', true)
-            ->where('city_id', $city_id)
+
+        $cities = $user->isDiet()
+            ? [City::ASTANA, City::ALMATY]
+            : [$user->city_id ?? City::ASTANA];
+
+        return Order::where('is_active', true)
+            ->whereIn('city_id', $cities)
             ->where('s_num', '!=', null)
+            ->orderBy('city_id')
+            ->orderBy('s_num')
             ->get();
+    }
+
+    public function performText(): array
+    {
+        $orders = $this->broadcastOrders();
         //$duty_cuisine = Cuisine::where('is_on_duty', true)->first();
 
         $arr = [];
@@ -58,6 +73,7 @@ class BroadcastMenuController extends Controller
             $arr[] = [
                 'id' => $order->amo_id,
                 'name' => $order->name,
+                'city' => City::getCity($order->city_id),
                 'text' => $text
             ];
         }
@@ -67,13 +83,7 @@ class BroadcastMenuController extends Controller
 
     public function performTextWeb(): array
     {
-        $user = Auth::user();
-        $city_id = $user->city_id ?? City::ASTANA;
-
-        $orders = Order::where('is_active', true)
-            ->where('city_id', $city_id)
-            ->where('s_num', '!=', null)
-            ->get();
+        $orders = $this->broadcastOrders();
         //$duty_cuisine = Cuisine::where('is_on_duty', true)->first();
 
         $arr = [];
@@ -90,6 +100,7 @@ class BroadcastMenuController extends Controller
             $arr[] = [
                 'id' => $order->amo_id,
                 'name' => $order->name,
+                'city' => City::getCity($order->city_id),
                 'text' => $text
             ];
         }

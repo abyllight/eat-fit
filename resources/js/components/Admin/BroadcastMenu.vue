@@ -2,7 +2,7 @@
     <div>
         <v-row>
             <v-col class="d-flex justify-space-between">
-                <h3>{{cuisine}}</h3>
+                <h3>{{cuisine}} <small class="grey--text">{{items.length}} клиентов</small></h3>
                 <v-btn v-if="isActive" @click="dialog=true" color="primary" :loading="loading" :disabled="loading">Отправить</v-btn>
             </v-col>
         </v-row>
@@ -10,11 +10,12 @@
         <v-row>
             <v-col
                 v-for="item in items"
-                :key="item.name"
+                :key="item.id"
                 cols="3"
             >
                 <v-card>
                     <v-card-title>{{item.name}}</v-card-title>
+                    <v-card-subtitle>{{item.city}}</v-card-subtitle>
                     <v-card-text v-html="item.text">
                     </v-card-text>
                 </v-card>

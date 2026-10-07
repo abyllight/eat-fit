@@ -50,6 +50,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "BroadcastMenu",
   data: function data() {
@@ -188,7 +189,12 @@ var render = function() {
             "v-col",
             { staticClass: "d-flex justify-space-between" },
             [
-              _c("h3", [_vm._v(_vm._s(_vm.cuisine))]),
+              _c("h3", [
+                _vm._v(_vm._s(_vm.cuisine) + " "),
+                _c("small", { staticClass: "grey--text" }, [
+                  _vm._v(_vm._s(_vm.items.length) + " клиентов")
+                ])
+              ]),
               _vm._v(" "),
               _vm.isActive
                 ? _c(
@@ -220,12 +226,14 @@ var render = function() {
         _vm._l(_vm.items, function(item) {
           return _c(
             "v-col",
-            { key: item.name, attrs: { cols: "3" } },
+            { key: item.id, attrs: { cols: "3" } },
             [
               _c(
                 "v-card",
                 [
                   _c("v-card-title", [_vm._v(_vm._s(item.name))]),
+                  _vm._v(" "),
+                  _c("v-card-subtitle", [_vm._v(_vm._s(item.city))]),
                   _vm._v(" "),
                   _c("v-card-text", {
                     domProps: { innerHTML: _vm._s(item.text) }
