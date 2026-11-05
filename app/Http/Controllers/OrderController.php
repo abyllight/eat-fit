@@ -233,7 +233,8 @@ class OrderController extends Controller
         $user = Auth::user();
         $city_id = $user->city_id ?? City::ASTANA;
 
-        $lite = Order::where('type', Order::EAT_FIT_LITE)
+        // Daily goes with Lite
+        $lite = Order::whereIn('type', [Order::EAT_FIT_LITE, Order::EAT_FIT_DAILY])
             ->where('is_active', true)
             ->where('city_id', $city_id)
             ->orderBy('size')
@@ -245,7 +246,9 @@ class OrderController extends Controller
             's'     => $lite->where('size', Order::S)->count(),
             'm'     => $lite->where('size', Order::M)->count(),
             'l'     => $lite->where('size', Order::L)->count(),
-            'xl'    => $lite->where('size', Order::XL)->count()
+            'xl'    => $lite->where('size', Order::XL)->count(),
+            'daily_lite' => $lite->where('size', Order::LITE)->count(),
+            'daily_maxi' => $lite->where('size', Order::MAXI)->count()
         ];
 
         return response()->json([
@@ -279,7 +282,12 @@ class OrderController extends Controller
         ];
 
         $detox = Order::getOrderByType(Order::EAT_FIT_DETOX)->count();
-        $daily = Order::getOrderByType(Order::EAT_FIT_DAILY)->count();
+        $items = Order::getOrderByType(Order::EAT_FIT_DAILY);
+        $daily = [
+            'total' => $items->count(),
+            'lite'  => $items->where('size', Order::LITE)->count(),
+            'maxi'  => $items->where('size', Order::MAXI)->count()
+        ];
         $go = Order::getOrderByType(Order::EAT_FIT_GO)->count();
         $cakes = Order::getOrderByType(Order::CAKES)->count();
 
@@ -467,7 +475,8 @@ class OrderController extends Controller
                 case '833911': //FitGo
                     $fields['type'] = Order::EAT_FIT_GO;
                     break;
-                case '979639': //Daily
+                case '979639': //Daily (old id)
+                case '991254': //Daily
                     $fields['type'] = Order::EAT_FIT_DAILY;
                     break;
             }
@@ -498,6 +507,12 @@ class OrderController extends Controller
                     break;
                 case '979641': //Eat
                     $fields['size'] = Order::EF;
+                    break;
+                case '991250': //Lite
+                    $fields['size'] = Order::LITE;
+                    break;
+                case '991252': //Maxi
+                    $fields['size'] = Order::MAXI;
                     break;
             }
 

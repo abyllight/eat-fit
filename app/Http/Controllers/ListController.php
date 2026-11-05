@@ -68,6 +68,7 @@ class ListController extends Controller
         $n = 1;
         $xs = $s = $m = $l = $xl = 0;
         $xs_a = $s_a = $m_a = $l_a = $xl_a = 0;
+        $daily_lite = $daily_maxi = 0;
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -96,6 +97,11 @@ class ListController extends Controller
         foreach ($couriers as $courier) {
 
             foreach ($courier->orders as $order) {
+                if ($order->type === Order::EAT_FIT_DAILY) {
+                    $daily_lite += $order->size === Order::LITE ? 1 : 0;
+                    $daily_maxi += $order->size === Order::MAXI ? 1 : 0;
+                }
+
                 if($order->type === Order::EAT_FIT_LITE) {
                     switch ($order->size) {
                         case Order::XS:
@@ -209,7 +215,7 @@ class ListController extends Controller
             $sheet->setCellValue(
                 'A' . ($count + 2),
                 $courier->name . ' - ' . count($courier->orders) .
-                ' | Lite '. $xs_t . $s_t . $m_t . $l_t . $xl_t
+                ' | Lite '. $xs_t . $s_t . $m_t . $l_t . $xl_t . $daily_t
             );
 
             //Courier name size
@@ -222,6 +228,7 @@ class ListController extends Controller
             $m_t = $m_a > 0 ? ' [M - ' . ($m - $m_a) . ' + '. $m_a . '] ' : '4';
             $l_t = $l_a > 0 ? ' [L - ' . ($l - $l_a) . ' + '. $l_a . '] ' : '4';
             $xl_t = $xl_a > 0 ? ' [XL - ' . ($xl - $xl_a) . ' + '. $xl_a . '] ' : '4';
+            $daily_t = $daily_lite + $daily_maxi > 0 ? ' | Daily [LITE - ' . $daily_lite . '] [MAXI - ' . $daily_maxi . '] ' : '';
 
             //Merge courier name cells
             $sheet->mergeCells('A' . ($count + 3) . ':G' . ($count + 3));
@@ -240,6 +247,7 @@ class ListController extends Controller
 
             $xs = $s = $m = $l = $xl = 0;
             $xs_a = $s_a = $m_a = $l_a = $xl_a = 0;
+            $daily_lite = $daily_maxi = 0;
         }
 
         $sheet->getColumnDimension('B')->setAutoSize(true);

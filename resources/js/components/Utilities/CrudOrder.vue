@@ -37,9 +37,9 @@
                                     :error-messages="errors.type"
                                 ></v-select>
                                 <v-select
-                                    v-if="type === 1 || type === 2"
+                                    v-if="type === 1 || type === 2 || type === 9"
                                     v-model="size"
-                                    :items="sizes"
+                                    :items="type === 9 ? dailySizes : sizes"
                                     item-text="name"
                                     item-value="id"
                                     label="Размер"
@@ -370,6 +370,20 @@ export default {
             {
                 id: 6,
                 name: 'Cakes'
+            },
+            {
+                id: 9,
+                name: 'Daily'
+            }
+        ],
+        dailySizes: [
+            {
+                id: 8,
+                name: 'LITE'
+            },
+            {
+                id: 9,
+                name: 'MAXI'
             }
         ],
         sizes: [
@@ -438,7 +452,7 @@ export default {
     }),
     computed:{
         isEatFit(){
-            return this.type === 1 || this.type === 2 || this.type === 3
+            return this.type === 1 || this.type === 2 || this.type === 3 || this.type === 9
         },
         method(){
             return this.isEdit ? 'PATCH' : 'POST'

@@ -37,6 +37,15 @@
         >
             XL: {{ stat.xl }}
         </v-chip>
+        <v-chip
+            v-if="stat.daily_lite || stat.daily_maxi"
+            class="ml-2"
+            color="cyan"
+            text-color="white"
+            label
+        >
+            Daily LITE: {{ stat.daily_lite }} · MAXI: {{ stat.daily_maxi }}
+        </v-chip>
     </div>
 </template>
 

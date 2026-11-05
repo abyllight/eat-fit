@@ -39,10 +39,21 @@ class StatController extends Controller
             'xl'    => $items->where('size', Order::XL)->count()
         ];
 
+        $items = Order::where('type', Order::EAT_FIT_DAILY)
+            ->where('is_active', true)
+            ->get();
+
+        $daily = [
+            'total' => $items->count(),
+            'lite'  => $items->where('size', Order::LITE)->count(),
+            'maxi'  => $items->where('size', Order::MAXI)->count()
+        ];
+
         return response()->json([
             'status' => true,
             'lite' => $lite,
-            'select' => $select
+            'select' => $select,
+            'daily' => $daily
         ]);
     }
 }

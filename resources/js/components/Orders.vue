@@ -187,8 +187,24 @@
                 </v-card>
                 <v-card class="mb-5">
                     <v-card-title class="text-h5">
-                        Daily: {{ daily }}
+                        Daily: {{ daily.total }}
                     </v-card-title>
+                    <v-card-text>
+                        <div>
+                            <v-chip
+                                class="ma-2"
+                                label
+                            >
+                                LITE: {{ daily.lite }}
+                            </v-chip>
+                            <v-chip
+                                class="ma-2"
+                                label
+                            >
+                                MAXI: {{ daily.maxi }}
+                            </v-chip>
+                        </div>
+                    </v-card-text>
                 </v-card>
                 <v-card class="mb-5">
                     <v-card-title class="text-h5">
@@ -228,7 +244,7 @@
             lite: [],
             select: [],
             detox: 0,
-            daily: 0,
+            daily: {},
             go: 0,
             cakes: 0,
             week: '',

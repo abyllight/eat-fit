@@ -74,6 +74,8 @@ class Order extends Model
     const XL = 5;
     const EAT = 6;
     const EF = 7;
+    const LITE = 8;
+    const MAXI = 9;
 
     const ASTANA = 1;
     const ALMATY = 2;
@@ -84,7 +86,7 @@ class Order extends Model
 
     const TYPES = ['LITE', 'SELECT', 'DETOX', 'GO', 'CHILL', 'CAKES', 'СУББОТА', 'SELECT_MAX', 'DAILY'];
 
-    const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'EAT', 'EF'];
+    const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'EAT', 'EF', 'LITE', 'MAXI'];
 
     public static function isWeek(): bool
     {
