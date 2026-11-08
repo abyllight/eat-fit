@@ -148,6 +148,7 @@ class ListController extends Controller
             $m_t  = $m  > 0 ? ' [M - ' . $m . '] ' : '';
             $l_t  = $l  > 0 ? ' [L - ' . $l . '] ' : '';
             $xl_t = $xl > 0 ? ' [XL - ' . $xl . '] ' : '';
+            $daily_t = $daily_lite + $daily_maxi > 0 ? ' | Daily [LITE - ' . $daily_lite . '] [MAXI - ' . $daily_maxi . '] ' : '';
 
             $n = $n + 1;
             $count = $n;
@@ -228,7 +229,6 @@ class ListController extends Controller
             $m_t = $m_a > 0 ? ' [M - ' . ($m - $m_a) . ' + '. $m_a . '] ' : '4';
             $l_t = $l_a > 0 ? ' [L - ' . ($l - $l_a) . ' + '. $l_a . '] ' : '4';
             $xl_t = $xl_a > 0 ? ' [XL - ' . ($xl - $xl_a) . ' + '. $xl_a . '] ' : '4';
-            $daily_t = $daily_lite + $daily_maxi > 0 ? ' | Daily [LITE - ' . $daily_lite . '] [MAXI - ' . $daily_maxi . '] ' : '';
 
             //Merge courier name cells
             $sheet->mergeCells('A' . ($count + 3) . ':G' . ($count + 3));
