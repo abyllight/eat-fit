@@ -52,11 +52,19 @@ class ListController extends Controller
                 $order->position = $num;
                 $order->courier_position = $num;
 
+                $courier_changed = false;
+
                 if ($id === $order_id) {
+                    $old_courier_id = $is_weekend ? $order->courier2_id : $order->courier1_id;
+                    $courier_changed = (int) $old_courier_id !== (int) $courier_id;
                     $is_weekend ? $order->courier2_id = $courier_id : $order->courier1_id = $courier_id;
                 }
 
                 $order->save();
+
+                if ($courier_changed) {
+                    $order->pushCourierToAmo();
+                }
             }
         }
     }

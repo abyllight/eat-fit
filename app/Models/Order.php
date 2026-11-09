@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Http\Resources\OrderSelectRationsCollection;
+use App\Services\AmoCrmService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -154,6 +155,24 @@ class Order extends Model
     public function getCourierId()
     {
         return self::isWeek() ? $this->courier1_id : $this->courier2_id;
+    }
+
+    /**
+     * Send the current courier (name + phone) to the amo deal, after the response is sent,
+     * so the screen does not wait for amo. No courier → the fields are cleared.
+     */
+    public function pushCourierToAmo(): void
+    {
+        if (!$this->amo_id) {
+            return;
+        }
+
+        $leadId  = (int) $this->amo_id;
+        $courier = $this->getCourierId() ? User::find($this->getCourierId()) : null;
+
+        dispatch(function () use ($leadId, $courier) {
+            (new AmoCrmService())->setLeadCourier($leadId, $courier);
+        })->afterResponse();
     }
 
     public function reports(): HasMany

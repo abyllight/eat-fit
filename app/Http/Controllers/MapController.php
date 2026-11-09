@@ -228,6 +228,10 @@ class MapController extends Controller
 
         $order->save();
 
+        if ((int) $courier_id !== (int) $c_id) {
+            $order->pushCourierToAmo();
+        }
+
         return response()->json($order->courier);
     }
 }
